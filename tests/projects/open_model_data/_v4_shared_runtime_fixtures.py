@@ -45,13 +45,13 @@ from learn_ukrainian_v4_runtime import semantic_inputs
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import ActionsPrincipal, canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
-from learn_ukrainian_v4_runtime.pg_schema import apply_pg_schema
 from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
     authorize_author_execution,
 )
 from lu_machinery.fleet_comms.request_executor import (
     RequestExecutor,
 )
+from lu_machinery.pg_schema import apply_pg_schema
 from packaging.markers import Marker, default_environment
 from packaging.requirements import Requirement
 from psycopg import sql

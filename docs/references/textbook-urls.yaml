@@ -1,8 +1,8 @@
 # Canonical read-online URLs for the Ukrainian school textbooks cited as
 # `role: textbook` resources (source_ref: docs/references/textbooks-txt/<file>.txt).
-# Keyed by the .txt filename stem. Consumed by scripts/audit/stamp_textbook_urls.py,
-# which stamps `url:` onto matching textbook resource entries so the renderer shows a
-# clickable citation (title → link) instead of the internal source_ref path.
+# Keyed by the .txt filename stem. The `url:` values on matching textbook resource
+# entries were stamped from this file, so the renderer shows a clickable citation
+# (title → link) instead of the internal source_ref path.
 #
 # Host: pidruchnyk.com.ua (free read-online + PDF). Every URL VERIFIED live 2026-07-05.
 # Fallbacks if a page ever moves: osvita.ua/school/textbook, shkola.in.ua, 4book.org.

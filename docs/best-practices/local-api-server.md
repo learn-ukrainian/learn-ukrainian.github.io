@@ -137,7 +137,7 @@ mounted ahead of the machinery routers; the static catch-all stays last:
 - Curriculum state and dashboards (product, `scripts/project_api/`):
   `state_router.py` (curriculum half), `dashboard_router.py`,
   `dashboard_helpers.py`, `state_*`, `batch_progress.py`.
-- Agent communication (machinery, `scripts/api/`): `comms_router.py`, with legacy
+- Agent communication (machinery, `lu_machinery/api/`): `comms_router.py`, with legacy
   broker routes marked deprecated and channel routes as the current surface.
 - Operational dashboards: `runtime_router.py`, `delegate_router.py` and
   `telemetry_router.py` (machinery); `admin_router.py`, `build_events_router.py`,

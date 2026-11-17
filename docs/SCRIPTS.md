@@ -1150,10 +1150,9 @@ Generates human-readable status reports from cached per-module audit results.
 
 Use this before content generation to verify plan files still match `scripts/audit/config.py` constraints.
 
-### Migrations and readable plan output
+### Readable plan output
 
 ```bash
-.venv/bin/python scripts/migrate/migrate_to_v2.py b1
 .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
 ```
 

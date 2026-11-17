@@ -73,7 +73,6 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 - `agents_extensions/shared/rules/*.md` — shared source (canonical). `.claude/`, `.agent/`, `.codex/`, `.gemini/` are deploy targets.
 - `agents_extensions/codex/` — Codex-owned overlays such as durable memory.
-- `docs/archive/2026-07-goal-driven-runs.md` — `/goal` convention (#1884; ARCHIVED 2026-07-07, dormant)
 - `agents_extensions/shared/rules/mcp-sources-and-dictionaries.md` — MCP tool inventory
 - `agents_extensions/shared/rules/critical-rules.md` (loaded via Monitor API, see `_load-via-api.md`)
 
@@ -113,7 +112,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-122 document families and 33 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+117 document families and 33 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -127,8 +126,8 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `monitor-api-docs` | doc_family | current | `docs/MONITOR-API.md`, `docs/monitor-api/**` | Monitor (Ops) API reference, the read-only work-projection API spec and the agent cold-start measurement log. |
 | `machinery-cutover` | doc_family | current | `docs/machinery/**` | Plans for moving product code off the in-tree machinery mirror. Each plan waits on designated approval before anyone executes it. |
 | `core-lesson-contracts` | doc_family | current | `docs/north-star.md`, `docs/lesson-contract.md`, `docs/lesson-schema-design.md`, `docs/style-guide.md`, `docs/lesson-schema.yaml` | Curriculum north star, lesson contract v4, lesson schema design and the generated lesson schema, plus the human-editor style guide. |
-| `top-level-point-in-time-audits` | evidence | historical | `docs/api-endpoint-consumer-map-2026-05-06.md`, `docs/api-stability-audit-2026-05-06.md`, `docs/monitor-api-ui-audit-2026-06-07.md`, `docs/corpus-gap-audit.md`, `docs/personal-name-audit.md`, `docs/phase-2-config-audit-report.md`, `docs/phase-4-exemplar-report.md`, `docs/rag-gap-1026.md`, `docs/atlas-data-coverage-strategy.md` | One-time audit evidence at the docs root - Monitor API consumer and stability audits, corpus and RAG gap audits, config and exemplar reports, personal-name and Atlas coverage audits. |
-| `top-level-historical-notes` | doc_family | historical | `docs/MASTER-PLAN.md`, `docs/cleanup-plan-2026-q2.md`, `docs/orchestrator-frictions.md`, `docs/prompt-budgets.md`, `docs/salvage-manifest.md`, `docs/session-state-2026-04-04.md`, `docs/state-reconciliation.md`, `docs/v5-v3-to-v6-phase-mapping.md`, `docs/wiki-rebuild-plan.md` | Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot kept for history. |
+| `top-level-point-in-time-audits` | evidence | historical | `docs/api-endpoint-consumer-map-2026-05-06.md`, `docs/corpus-gap-audit.md`, `docs/rag-gap-1026.md`, `docs/atlas-data-coverage-strategy.md` | One-time audit evidence at the docs root - the Monitor API endpoint consumer map, corpus and RAG gap audits and the Atlas coverage audit. |
+| `top-level-historical-notes` | doc_family | historical | `docs/MASTER-PLAN.md`, `docs/cleanup-plan-2026-q2.md`, `docs/prompt-budgets.md`, `docs/salvage-manifest.md`, `docs/v5-v3-to-v6-phase-mapping.md`, `docs/wiki-rebuild-plan.md` | Old plans, V6-era budgets and phase mapping, the reboot salvage manifest and the wiki rebuild plan, kept for history. |
 | `architecture-adr` | doc_family | current | `docs/architecture/adr/**` | Numbered architecture decision records with template and generated index; permanent, superseded only by a later ADR. |
 | `architecture-research` | evidence | historical | `docs/architecture/research/**` | April 2026 embedder survey and chunk-policy bake-off results. |
 | `architecture-specs` | doc_family | current | `docs/architecture/*` | Architecture specs, plans, RFCs and audits - V7 pipeline, system topology, data-foundry architecture, ADR-style notes outside adr/, UI template specs and Astro evaluations. |
@@ -152,9 +151,8 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `session-state-routers` | doc_family | current | `docs/session-state/**` | Compatibility handoff routers per agent served by the session API; body-light pointers only, no new handoffs here. |
 | `handoffs-march-2026` | doc_family | historical | `docs/handoffs/**` | End-of-session handoff notes from March 2026; handoffs now go through Fleet Comms and the thread-handoff flow. |
 | `token-usage-reports` | generated | historical | `docs/token-usage/**` | A generated April 2026 Claude token report and a hand-written token waste report; not current usage. The generator was removed, so the report is frozen. |
-| `dispatch-briefs` | doc_family | historical | `docs/dispatch-briefs/**` | One-shot worker dispatch briefs (April to September 2026) and two batch folders; each describes finished task scope. |
+| `dispatch-briefs` | doc_family | historical | `docs/dispatch-briefs/**` | The few finished one-shot worker dispatch briefs (May and June 2026) that live docs, scripts or the source permissions register still cite, plus one OpenCode brief kept by policy; each describes finished task scope. |
 | `dispatch-briefs-reusable` | doc_family | current | `docs/dispatch-briefs/luna-max-closeout-contract.md` | Reusable brief fragment - the GPT-6 Luna closeout contract. |
-| `dispatch-briefs-upgrade-pilot` | doc_family | superseded → `docs/epics/fresh-build-build-program.md` | `docs/dispatch-briefs/2026-09-12-cu-p0-pilot-*.md` | Writer, repair and review briefs for the abandoned --upgrade phase-0 pilot. |
 | `plans` | doc_family | current | `docs/plans/*` | Named plans of record and roadmaps; GitHub issue state wins over stale plan text. |
 | `plans-plan-mode-files` | doc_family | historical | `docs/plans/euphony-engine.md`, `docs/plans/glowing-petting-aho.md`, `docs/plans/jiggly-soaring-forest.md` | Auto-named Claude plan-mode files and the Euphony plan from the V4 to V6 era (February to April 2026). |
 | `plans-state-standard-gap-analyses` | evidence | historical | `docs/plans/a2-state-standard-gap-analysis.md`, `docs/plans/b1-state-standard-gap-analysis.md`, `docs/plans/c1-state-standard-gap-analysis.md`, `docs/plans/cross-level-reconciliation.md` | March/April 2026 analyses of the old curriculum plans against the State Standard 2024. |
@@ -176,18 +174,14 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `references-textbook-urls` | registry | current | `docs/references/textbook-urls.yaml` | Maps textbook ids to source URLs for stamping textbook links. |
 | `references-external` | resource_catalogue | historical | `docs/references/external/**` | A saved external HTML article. |
 | `experiments-and-reboot-references` | evidence | historical | `docs/experiments/**`, `docs/reboot/**` | The April 2026 five-writer bake-off (plan, results, prompts) and hand-crafted reboot Phase 8 reference material. |
-| `archive` | doc_family | historical | `docs/archive/**` | Frozen archive of retired V5/V6-era guides, analyses, plans, root scratch files and old eval docs. |
-| `audits-core` | evidence | historical | `docs/audits/*` | Dated June/July 2026 score ledgers, readiness and quality audits of the old core modules (A1, A2, B1, B2). |
+| `archive` | doc_family | historical | `docs/archive/**` | Frozen archive - the retired OES and RUTH curriculum plans, the old Claude-Gemini cooperation protocol, the RAG literary catalogue and contents, the root-scratch README and the old eval harness docs. |
 | `audits-bio` | evidence | historical | `docs/audits/bio-*` | BIO track audits - gap audit and its frozen tally, readiness matrix, Bilash gate reviews, expansion research and the decolonization checklist. |
 | `audits-bio-lit-cross-reference` | generated | current | `docs/audits/bio-lit-cross-reference-*.md` | Regenerated list of bio modules lacking LIT counterparts, plus exclusions. |
-| `audits-folk` | evidence | historical | `docs/audits/folk-*` | June 2026 FOLK preflight readiness and reading coverage audits. |
-| `audits-tooling` | evidence | historical | `docs/audits/codeql-*`, `docs/audits/prompt-audit-fable-5-1-2026-09-01.md`, `docs/audits/slovnyk-me-ingestion-feasibility.md` | CodeQL triage and its cleanup diff, a September prompt-size audit and the slovnyk.me ingestion feasibility study. |
+| `audits-tooling` | evidence | historical | `docs/audits/slovnyk-me-ingestion-feasibility.md` | The slovnyk.me ingestion feasibility study; scripts/ingest/slovnyk_me_ingest.py reads it as its default notes file. |
 | `audits-open-model-data` | evidence | current | `docs/audits/2026-09-11-uldr-program-audit.md` | September 2026 ULDR program audit; earlier verdicts inside apply only to their named heads. |
-| `reports-analyses` | evidence | historical | `docs/reports/*` | Dated analysis reports - vocabulary audits, A1 macro review, April diagnoses, dashboard endpoint audit and the July model qualification benchmark. |
-| `reports-oneshot-scripts-and-drafts` | generated | historical | `docs/reports/*.py`, `docs/reports/gh_comment_*.md`, `docs/reports/gh_issue_chunking.md` | April 2026 one-off migration scripts and drafted GitHub comments; not wired into any tool. |
-| `reports-a1-reviews` | evidence | historical | `docs/reports/a1_reviews/**` | January 2026 per-module AI review scorecards of the old A1 modules. |
-| `issues-reports` | evidence | historical | `docs/issues/**` | January/February 2026 B1/B2/C1 rebuild audit reports, completion notes and OES/C1-BIO research artefacts; not GitHub issues. |
-| `dev-notes` | doc_family | historical | `docs/dev/**` | January to March 2026 developer notes, migration contexts, vocabulary workflow notes and naturalness scans of the old modules. |
+| `reports-analyses` | evidence | historical | `docs/reports/*` | The April 2026 A1 colors diagnosis that the A1 colors plan cites. |
+| `issues-reports` | evidence | historical | `docs/issues/**` | Early 2026 OES and RUTH research artefacts and the activity spec that the OES and RUTH plans cite; not GitHub issues. |
+| `dev-notes` | doc_family | historical | `docs/dev/**` | Developer notes that skills, rules, templates or the installed release still cite - content module enhancement, LIT migration strategy, the metadata YAML schema, public agent text and agent success metrics. |
 | `status-snapshots` | generated | historical | `docs/status/**` | February 2026 per-level STATUS.md snapshots; live status is the per-module status JSON and the Monitor API. |
 | `prompts-legacy-orchestrators` | doc_family | superseded → `agents_extensions/shared/skills/curriculum-lifecycle/SKILL.md` | `docs/prompts/orchestrators/**` | Legacy per-track orchestrator prompt suite kept as hash-checked evaluation and historical reference; not lifecycle authority. |
 | `prompts-templates` | doc_family | current | `docs/prompts/*` | Curriculum prompt templates - A2 certification and plan writing, B1 batch build template, tutor prompt reference. |

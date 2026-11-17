@@ -11,14 +11,14 @@ and `http://localhost:8765/redoc` (ReDoc).
 
 **Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page).
 
-This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/**` and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `lu_machinery/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `lu_machinery/api/**` (the installed lu-machinery release) and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `lu_machinery/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
 ## Code layout: machinery and product halves (C-4687)
 
 One Monitor process on port 8765 serves both halves, so every URL is the same
 for the operator and for agents.
 
-- **Machinery** — `scripts/api/`: fleet, runtime, delegate, comms, epics,
+- **Machinery** — `lu_machinery/api/` in the installed lu-machinery release: fleet, runtime, delegate, comms, epics,
   occupancy, rules, session, orient composition, static delivery and the
   contract registry. It never imports product code.
 - **Product** — `scripts/project_api/`: curriculum state (`/api/state/*`
@@ -3703,7 +3703,7 @@ To prevent runtime crashes and version skew caused by git mutations (e.g., switc
 - **Post-Successful-Startup Guarantee:** Upon startup, the FastAPI lifespan (`preload_all()`) eagerly imports the entire static import closure of the API, along with all dynamic adapter modules (walked from `lu_machinery/agent_runtime/adapters/`) and dynamic migration scripts. This ensures that all required Python modules are resident in `sys.modules` from the start.
 - **Parent Process Only:** The import pinning guarantee is strictly scoped to the parent API process.
 - **Subprocess Design Intent:** Subprocess children spawned by the API (such as git, gh, or agent dispatches) execute code from the current working tree by design, using standard loose text/JSON contracts.
-- **Guard Rails:** The guarantee is continuously verified via an AST-walking guard test (`tests/api/test_import_pinning.py`). The test asserts that all nested imports inside `scripts/api/` are registered in the preload lists (`PRELOAD_MODULES` or `OPTIONAL_MODULES`) or marked with an explicit inline comment: `# lazy-ok: <reason>`. Any unregistered dynamic imports or unregistered dynamic loaders will cause the test suite to fail.
+- **Guard Rails:** Every nested import inside `lu_machinery/api/` must be registered in the preload lists (`PRELOAD_MODULES` or `OPTIONAL_MODULES` in `lu_machinery/api/preload.py`) or marked with an explicit inline comment: `# lazy-ok: <reason>`. The AST-walking guard test that enforced this (`tests/api/test_import_pinning.py`) was removed in #11329, so the rule is now a review convention, not a test.
 
 ### PR-B Symlink & Snapshot Follow-Up
 In the follow-up PR-B release, this guarantee is reinforced by serving the API from immutable, release-dir code snapshots (with staging→rename symlink promotion), ensuring complete separation between running code and the live repository data.

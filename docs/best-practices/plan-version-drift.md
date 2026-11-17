@@ -1,5 +1,7 @@
 # Plan-Version Drift Prevention
 
+> **Status:** historical. The V6 code this page describes (`v6_build.py`, its plan-hash helpers and the one-shot plan-hash migration) has been removed; the rule of thumb still applies to any build that reads a plan.
+
 ## What it is
 
 Plan-version drift occurs when writer artifacts (skeleton, write, exercises) are generated from plan version N, then the plan is edited to version N+1 (e.g. via `add_dialogue_situations.py` or manual edits), but the writer artifacts are not regenerated. The reviewer reads the current plan; the writer built against the old one. Result: low plan-adherence scores, review degradation loops.
@@ -11,7 +13,7 @@ Plan-version drift occurs when writer artifacts (skeleton, write, exercises) are
 
 ## Prevention mechanisms (shipped 2026-04-15, #1230)
 
-### 1. Plan-hash invalidation (`scripts/build/io_utils.py` + `v6_build.py`)
+### 1. Plan-hash invalidation (V6 build)
 Every write-phase completion now records `plan_hash` (SHA256 of plan YAML bytes) in `state.json`. Before review/publish/audit, the pipeline recomputes the hash and aborts if it mismatches:
 
 ```
@@ -29,20 +31,6 @@ Writer prompt now states: "If the skeleton, examples, or any earlier prompt text
 ### 4. `add_dialogue_situations.py` fix
 The script now rewrites `content_outline` dialogue bullets to match the injected `dialogue_situations`, not just appends the new field. Keeps plan internally consistent after injection.
 
-## Migration
-
-For existing modules built before the hash system:
-
-```bash
-# Dry run — see what would change
-.venv/bin/python scripts/migrate/migrate_v6_plan_hashes.py
-
-# Apply
-.venv/bin/python scripts/migrate/migrate_v6_plan_hashes.py --apply
-```
-
-Phase records without `plan_hash` are treated as unknown (conservative: may trigger staleness on next plan edit).
-
 ## Rule of thumb
 
-**Never edit a plan after the write phase without re-running from skeleton.** Use `v6_build.py {level} {num} --step skeleton` to force a clean rebuild. The hash system will catch violations automatically, but prevention is cheaper than recovery.
+**Never edit a plan after the write phase without re-running from skeleton.** Prevention is cheaper than recovery.
