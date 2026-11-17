@@ -20453,21 +20453,6 @@
       "message": "Item \"None\" of \"Any | None\" has no attribute \"get\""
     },
     {
-      "path": "scripts/review/snapshot.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bytes\""
-    },
-    {
-      "path": "scripts/review/snapshot.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/review/snapshot.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
       "path": "scripts/review/validate/validate.py",
       "code": "arg-type",
       "message": "Argument \"attempt_id\" to \"_check_finding_evidence\" has incompatible type \"Any | None | str\"; expected \"str\""
