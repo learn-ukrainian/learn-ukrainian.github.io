@@ -293,7 +293,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                     pytest.fail(f"release API did not become ready:\n{log_path.read_text(encoding='utf-8')}")
                 time.sleep(0.05)
 
-            curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status", timeout=10)
+            curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status/a1-v1", timeout=10)
             preparation_payload = _read_json(
                 f"http://127.0.0.1:{port}/api/state/preparation/a1/sounds-letters-and-hello",
                 timeout=10,
@@ -312,7 +312,8 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                 process.wait(timeout=5)
 
     key_paths = agent_payload["key_paths"]
-    assert curriculum_payload["tracks"]["a1-v1"]["total"] > 0
+    assert curriculum_payload["track"] == "a1-v1"
+    assert curriculum_payload["total"] > 0
     assert preparation_payload["track"] == "a1-v1"
     assert preparation_payload["publication"]["source"]["path"].startswith("site/src/content/docs/a1-v1/")
     assert "data_checkout" not in preparation_payload["authority"]

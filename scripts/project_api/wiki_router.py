@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import sqlite3
 import sys
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, cast
 
@@ -61,11 +60,6 @@ _TABLE_NAMES = [
     "puls_cefr",
     "style_guide",
 ]
-_WORD_COUNT_WORKERS = 4
-
-
-
-
 def _wiki_dir(ctx: MonitorContext | None = None) -> Path:
     """Return the wiki tree for the serving context.
 
@@ -227,35 +221,6 @@ def _read_article_word_count(path: Path, cache: dict[Path, int]) -> int:
     return word_count
 
 
-def _preload_article_word_counts(
-    candidates_by_slug: dict[str, list[dict[str, Any]]],
-    cache: dict[Path, int],
-    wiki_dir: Path | None = None,
-) -> None:
-    if wiki_dir is None:
-        wiki_dir = monitor_surface.wiki_dir()
-    paths: list[Path] = []
-    seen: set[Path] = set()
-    for candidates in candidates_by_slug.values():
-        for article in candidates:
-            if article.get("word_count") is not None or not article.get("from_progress"):
-                continue
-            article_path = _safe_join(wiki_dir, article["path"])
-            if not article_path or not article_path.exists() or article_path in seen:
-                continue
-            seen.add(article_path)
-            paths.append(article_path)
-
-    if len(paths) < 16:
-        for path in paths:
-            _read_article_word_count(path, cache)
-        return
-
-    with ThreadPoolExecutor(max_workers=_WORD_COUNT_WORKERS) as executor:
-        for path, word_count in executor.map(_count_article_words, paths):
-            cache[path] = word_count
-
-
 def _source_count(track: str, slug: str) -> int:
     try:
         data = monitor_surface.gather_discovery_sources_readonly(track, slug)
@@ -309,41 +274,6 @@ def _track_status_rows(
         })
 
     return rows
-
-
-@router.get("/status")
-def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track wiki compilation status."""
-    known_tracks = _known_tracks(ctx)
-    cache_key = f"wiki_status_{_wiki_dir(ctx)}_" + ",".join(known_tracks)
-    cached = cache_get(cache_key, ttl=60.0)
-    if cached is not None:
-        return cached
-
-    article_candidates = _list_article_candidates(ctx)
-    word_count_cache: dict[Path, int] = {}
-    _preload_article_word_counts(article_candidates, word_count_cache, _wiki_dir(ctx))
-    tracks = []
-
-    for track in known_tracks:
-        slugs = _track_slugs(track)
-        if not slugs:
-            continue
-        modules = _track_status_rows(track, article_candidates, word_count_cache, ctx=ctx)
-        total = len(modules)
-        compiled = sum(1 for module in modules if module["compiled"])
-        total_words = sum(module["word_count"] for module in modules)
-        tracks.append({
-            "track": track,
-            "total": total,
-            "compiled": compiled,
-            "pct": round(compiled / total * 100, 1) if total else 0,
-            "total_words": total_words,
-        })
-
-    result = {"tracks": tracks}
-    cache_set(cache_key, result)
-    return result
 
 
 @router.get("/status/{track}")
@@ -415,12 +345,6 @@ def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
         "source_count": article.get("source_count") or source_count,
         "compiled_at": article.get("compiled_at"),
     }
-
-
-@router.get("/quality-gate")
-def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
-    """Aggregate wiki quality gate issues for all tracks."""
-    return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
 
 
 @router.get("/quality-gate/{track}")

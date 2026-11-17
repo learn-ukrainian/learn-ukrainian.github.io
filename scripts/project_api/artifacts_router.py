@@ -4,7 +4,6 @@ Mounted at /api/artifacts in main.py.
 
 Endpoints:
     GET /api/artifacts/{track}/{slug}   Single-module gate snapshot
-    GET /api/artifacts/ship-ready       Aggregate artifact-gate list
 
 Why this exists (GH #1309): before this router, the only way to ask
 which modules pass the internal artifact gates was to scrape seven
@@ -37,7 +36,6 @@ from .curriculum_state import (
     find_content_file,
     get_audit_status,
     get_final_review_info,
-    get_plan_slugs,
     get_word_target_from_plan,
 )
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
@@ -261,48 +259,6 @@ def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx
 
 
 # ---------------------------------------------------------------------
-# Aggregate ship-ready list
-# ---------------------------------------------------------------------
-
-
-def _list_artifact_gates_green(track_filter: str | None, ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Walk every plan and return the modules whose every artifact gate is green.
-
-    ``track_filter`` narrows the scan to one level. Empty tracks or
-    missing plan dirs are silently skipped — the response reports what
-    was inspected. A green gate list is not merged and not published.
-    """
-    gates_green: list[dict[str, Any]] = []
-    inspected = 0
-    tracks_scanned: list[str] = []
-
-    for cfg in LEVELS:
-        if track_filter and cfg["id"] != track_filter:
-            continue
-        tracks_scanned.append(cfg["id"])
-        for _, slug in get_plan_slugs(cfg["id"]):
-            inspected += 1
-            snap = _compute_artifact_snapshot(cfg["id"], slug, ctx=ctx)
-            if snap.get("artifact_gates_green"):
-                gates_green.append(
-                    {
-                        "track": cfg["id"],
-                        "slug": slug,
-                        "review_score": snap.get("review", {}).get("score"),
-                        "word_count": snap.get("audit", {}).get("word_count"),
-                        "word_target": snap.get("audit", {}).get("word_target"),
-                    }
-                )
-
-    return {
-        "tracks_scanned": tracks_scanned,
-        "modules_inspected": inspected,
-        "artifact_gates_green_count": len(gates_green),
-        "artifact_gates_green": gates_green,
-    }
-
-
-# ---------------------------------------------------------------------
 # Force-preview — dry run for v6_build.py --force (#1313 / Codex-9)
 # ---------------------------------------------------------------------
 
@@ -463,34 +419,6 @@ def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx))
         "would_remove": targets,
         "preserved": preserved,
     }
-
-
-# ---------------------------------------------------------------------
-# ship-ready (aggregate)
-# ---------------------------------------------------------------------
-
-
-@router.get("/ship-ready")
-def ship_ready(
-    track: str | None = Query(
-        None,
-        description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
-    ),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Modules whose artifact gates are all green.
-
-    This is the internal artifact conjunction (content, frontmatter,
-    word target, audit, final review, plan freshness). It does not
-    mean the module is merged or published. Unknown ``track`` → 404
-    (consistent with ``/api/artifacts/{track}/{slug}``).
-    """
-    if track is not None and _level_cfg(track) is None:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"unknown track: {track}"},
-        )
-    return _list_artifact_gates_green(track, ctx=resolve_context(ctx))
 
 
 # ---------------------------------------------------------------------

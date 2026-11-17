@@ -6,11 +6,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from fastapi.testclient import TestClient
-from lu_machinery.api.main import app
-
 from scripts.audit.decision_lineage import build_lineage_response
-from scripts.project_api import decisions_router
 
 
 def _git(repo: Path, *args: str, date: str | None = None) -> None:
@@ -138,33 +134,3 @@ def test_decision_lineage_skips_non_decision_docs_and_uses_token_boundaries(tmp_
     subjects = {commit["subject"] for commit in record["commits"]}
     assert "Update index.html after indexing READMEs #505" not in subjects
     assert record["prs"] == []
-
-
-def test_monitor_api_lineage_endpoint(monkeypatch):
-    expected = {
-        "count": 1,
-        "decisions": [
-            {
-                "decision_id": "ADR-008",
-                "file_path": "docs/decisions/example.md",
-                "aliases": ["ADR-008"],
-                "commits": [],
-                "prs": [],
-                "first_cited_at": None,
-                "last_cited_at": None,
-            }
-        ],
-    }
-    seen: dict[str, str | None] = {}
-
-    def fake_load_lineage(decision_id: str | None = None, **_kw) -> dict:
-        seen["decision_id"] = decision_id
-        return expected
-
-    monkeypatch.setattr(decisions_router, "_load_lineage", fake_load_lineage)
-
-    response = TestClient(app).get("/api/decisions/lineage?decision_id=ADR-008")
-
-    assert response.status_code == 200
-    assert response.json() == expected
-    assert seen["decision_id"] == "ADR-008"

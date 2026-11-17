@@ -1,4 +1,4 @@
-"""Product half of the State API: curriculum pipeline state, coverage, scores and issues.
+"""Product half of the State API: curriculum pipeline state, coverage, scores and reviews.
 
 Mounted at /api/state/ by the product entry, next to the machinery
 ``lu_machinery.api.state_router`` (routing and GitHub budgets, manifest).
@@ -6,27 +6,20 @@ Mounted at /api/state/ by the product entry, next to the machinery
 Endpoints:
   GET /api/state/summary              Full project snapshot
   GET /api/state/pipeline/{track}     Per-module pipeline state for one track
-  GET /api/state/preparation          Active manifest bundle/publication roster
   GET /api/state/preparation/{track}/{slug} Canonical one-module preparation
-  GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
-  GET /api/state/build-status          All-tracks build progress summary
   GET /api/state/module-range/{track}  Deterministic committed-file status for a module range
   GET /api/state/module/{track}/{num}  Single module deep-dive with comms
   GET /api/state/final-reviews/{track} Phase F results aggregated per track
-  GET /api/state/failing              Modules with audit/phase failures
   GET /api/state/scores/{track}       Per-module status + LLM-QG aggregate + per-dim scores
   GET /api/state/scores/{track}/{slug} One module's status + per-dimension scores
-  GET /api/state/research-coverage    Per-track research completeness
   GET /api/state/research/{track}    Per-module research quality + dimensions + upgrade queue
   GET /api/state/review-coverage      Per-track review completeness + quality
-  GET /api/state/issues               Aggregated outstanding issues
 
 Performance notes:
   - Heavy endpoints are plain sync functions. FastAPI runs them on its threadpool,
     so a scan does not stall the event loop.
-  - Summary, pipeline-versions, weak-points and research-coverage stay async:
-    a warm ``cache_get_or_compute_async`` hit is served on the event loop.
+  - Summary stays async: a warm ``cache_get_or_compute_async`` hit is served on the event loop.
   - Results are cached in-memory with a TTL (60s for summary/pipeline, 300s for coverage).
 """
 
@@ -62,21 +55,14 @@ from lu_machinery.path_safety import safe_join
 from . import preparation_state
 from .config import LEVELS
 from .curriculum_state import (
-    detect_pipeline_version,
     get_audit_status,
     get_plan_slugs,
-    get_research_score,
-    get_word_target_from_plan,
     monitor_surface,
-    read_v2_state,
-    read_v3_state,
 )
 from .state_build import (
     compute_build_stats,
     compute_build_stats_all,
-    compute_build_status_all,
     compute_build_status_track,
-    compute_enrichment_status,
     compute_module_range_status,
     compute_track_health,
 )
@@ -85,29 +71,23 @@ from .state_compute import (
     compute_module_detail,
     compute_research_detail,
     read_llm_qg,
-    severity_key,
     summarize_llm_qg,
 )
 from .state_coverage import (
     compute_pipeline_track,
-    compute_research_coverage,
     compute_review_coverage,
     compute_summary,
 )
 from .state_issues import (
     compute_final_reviews,
-    compute_issues,
 )
 
 router = APIRouter(tags=["state"])
 
 STATE_SUMMARY_TTL_S = 60.0
 STATE_PIPELINE_TTL_S = 60.0
-STATE_RESEARCH_COVERAGE_TTL_S = 300.0
 STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
-STATE_PIPELINE_VERSIONS_TTL_S = 60.0
-STATE_WEAK_POINTS_TTL_S = 60.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 
@@ -120,156 +100,19 @@ def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _compute_pipeline_versions_payload(ctx: MonitorContext, track: str | None) -> dict[str, Any]:
-    """Walk orchestration dirs and group modules by pipeline version."""
-    counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-    by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
-    per_track: dict[str, dict] = {}
-
-    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-    for level_cfg in level_cfgs:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(
-            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-        )
-        if not plan_slugs:
-            continue
-
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-        track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-
-        for num, slug in plan_slugs:
-            orch_dir = safe_join(track_dir / "orchestration", slug)
-            version = detect_pipeline_version(orch_dir)
-            if version not in counts:
-                version = "unbuilt"
-            counts[version] += 1
-            track_counts[version] += 1
-            by_version[version].append({"track": track_id, "num": num, "slug": slug})
-
-        per_track[track_id] = track_counts
-
-    total = sum(counts.values())
-    current_builds = counts["v6"]
-    legacy_builds = counts["v5"] + counts["v3"]
-    unbuilt_modules = counts["unbuilt"]
-    rebuild_backlog = legacy_builds + unbuilt_modules
-    built = current_builds + counts["v5"]
-    return {
-        "total": total,
-        "counts": counts,
-        "pct_v6": round(counts["v6"] / total * 100) if total else 0,
-        "pct_v5": round(counts["v5"] / total * 100) if total else 0,
-        "pct_current": round(current_builds / total * 100) if total else 0,
-        "pct_built": round(built / total * 100) if total else 0,
-        "current_builds": current_builds,
-        "legacy_builds": legacy_builds,
-        "unbuilt_modules": unbuilt_modules,
-        "rebuild_backlog": rebuild_backlog,
-        "build_state": {
-            "current": current_builds,
-            "legacy": legacy_builds,
-            "unbuilt": unbuilt_modules,
-            "backlog": rebuild_backlog,
-        },
-        "needs_rebuild": rebuild_backlog,
-        "per_track": per_track,
-        "v6_modules": by_version["v6"],
-        "v5_modules": by_version["v5"],
-        "generated_at": datetime.now(UTC).isoformat(),
-    }
-
-
-def _compute_weak_points_payload(
-    ctx: MonitorContext,
-    track: str | None,
-    min_score: int,
-    limit: int,
-) -> dict[str, Any]:
-    """Scan modules for audit/research/word-count weakness."""
-    weak = []
-    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-    for level_cfg in level_cfgs:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(
-            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-        )
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-        for num, slug in plan_slugs:
-            issues = []
-            audit = get_audit_status(track_dir, slug)
-
-            if audit["status"] == "fail":
-                issues.append("audit_fail")
-
-            research_score = get_research_score(track_dir, slug, track_id)
-            if research_score is not None and research_score < min_score:
-                issues.append(f"research_score_{research_score}")
-
-            word_count = audit.get("word_count", 0)
-            word_target = audit.get("word_target", 0)
-            if word_target == 0 and word_count > 0:
-                word_target = get_word_target_from_plan(
-                    track_id, slug, plans_root=ctx.roots.plans_root, curriculum_root=ctx.roots.curriculum_root
-                )
-            if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
-                issues.append(f"low_words_{word_count}/{word_target}")
-
-            if issues:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                weak.append(
-                    {
-                        "track": track_id,
-                        "num": num,
-                        "slug": slug,
-                        "audit_status": audit["status"],
-                        "word_count": word_count,
-                        "word_target": word_target,
-                        "research_score": research_score,
-                        "pipeline_version": version,
-                        "issues": issues,
-                    }
-                )
-
-    weak.sort(key=severity_key)
-    return {"count": len(weak), "modules": weak[:limit]}
-
-
 def warm_state_scans(ctx: MonitorContext) -> None:
-    """Populate the default expensive curriculum state-scan caches after process start.
+    """Populate the state summary cache after process start.
 
     Runs in the machinery state-scan warmup thread, after the routing-budget
     warm (``lu_machinery.api.state_router.schedule_state_scan_warmup``).
     """
     try:
         cache_get_or_compute(
-            _ctx_cache_key(ctx, "pipeline_versions", "all"),
-            STATE_PIPELINE_VERSIONS_TTL_S,
-            lambda: _compute_pipeline_versions_payload(ctx, None),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
-            STATE_WEAK_POINTS_TTL_S,
-            lambda: _compute_weak_points_payload(ctx, None, 7, 20),
-        )
-        cache_get_or_compute(
             _ctx_cache_key(ctx, "summary"),
             STATE_SUMMARY_TTL_S,
             lambda: compute_summary(
                 curriculum_root=ctx.roots.curriculum_root,
                 project_root=ctx.roots.project_root,
-                plans_root=ctx.roots.plans_root,
-            ),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "research_coverage"),
-            STATE_RESEARCH_COVERAGE_TTL_S,
-            lambda: compute_research_coverage(
-                curriculum_root=ctx.roots.curriculum_root,
                 plans_root=ctx.roots.plans_root,
             ),
         )
@@ -400,73 +243,6 @@ def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContex
     )
 
 
-@router.get("/pipeline-versions")
-async def pipeline_versions(
-    track: str | None = Query(None), fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
-):
-    """All modules grouped by pipeline version."""
-    cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
-    was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
-        STATE_PIPELINE_VERSIONS_TTL_S,
-        lambda: _compute_pipeline_versions_payload(ctx, track),
-        force=fresh,
-    )
-    age_s = 0.0
-    aged = cache_get_with_age(cache_key, STATE_PIPELINE_VERSIONS_TTL_S)
-    if aged is not None:
-        age_s = aged[1]
-    return _with_state_meta(
-        result,
-        source="fs:orchestration",
-        stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=age_s,
-    )
-
-
-@router.get("/preparation")
-def preparation_roster(
-    request: Request,
-    track: str | None = Query(None, min_length=1, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]*$"),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Active-manifest learner bundle and publication state, without readiness sweeps."""
-    _validate_preparation_query(request, {"track"})
-
-    def _compute() -> dict[str, Any]:
-        data_root = preparation_data_root(
-            project_root=ctx.roots.project_root,
-            live_repo_root=ctx.roots.live_repo_root,
-        )
-        authority = build_repository_authority(
-            project_root=ctx.roots.project_root,
-            live_repo_root=data_root,
-        )
-        return preparation_state.build_roster(
-            repo_root=data_root,
-            authority=authority,
-            track=track,
-        )
-
-    try:
-        payload = _compute()
-    except preparation_state.InactiveTrackError as exc:
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "INACTIVE_TRACK", "manifest_authority": "fallback-diagnostic-only"},
-        ) from exc
-    except preparation_state.UnknownTrackError as exc:
-        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_TRACK"}) from exc
-    except (preparation_state.PreparationStateError, RepositoryAuthorityError) as exc:
-        raise HTTPException(
-            status_code=503,
-            detail={"code": "PREPARATION_AUTHORITY_UNAVAILABLE"},
-        ) from exc
-    return _preparation_response(request, payload)
-
-
 @router.get("/preparation/{track}/{slug}")
 def preparation_module(
     request: Request,
@@ -514,78 +290,6 @@ def preparation_module(
 
     status_code = 404 if payload["manifest_authority"] == "off-manifest" else 200
     return _preparation_response(request, payload, status_code=status_code)
-
-
-@router.get("/weak-points")
-async def weak_points(
-    track: str | None = Query(None),
-    min_score: int = Query(7, ge=0, le=10),
-    limit: int = Query(20, ge=1, le=500),
-    fresh: bool = Query(False),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Modules with quality issues: failing audit, thin research, or low word count."""
-    cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    return await cache_get_or_compute_async(
-        cache_key,
-        STATE_WEAK_POINTS_TTL_S,
-        lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
-        force=fresh,
-    )
-
-
-@router.get("/failing")
-def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """All modules with audit failures or phase failures."""
-
-    def _compute():
-        failing = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                audit = get_audit_status(track_dir, slug)
-
-                if version in ("v6", "v5"):
-                    phases = read_v2_state(orch_dir).get("phases", {})
-                    failed_phases = [
-                        k for k, v in phases.items() if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                elif version == "v3":
-                    v3 = read_v3_state(orch_dir)
-                    phases = v3.get("phases", {})
-                    failed_phases = [
-                        k.replace("v3-", "")
-                        for k, v in phases.items()
-                        if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                else:
-                    failed_phases = []
-
-                if audit["status"] == "fail" or failed_phases:
-                    failing.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "pipeline_version": version,
-                            "audit_status": audit["status"],
-                            "failed_phases": failed_phases,
-                            "blocking_issues": audit.get("blocking_issues", []),
-                        }
-                    )
-
-        return {"count": len(failing), "modules": failing}
-
-    return _compute()
 
 
 def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
@@ -700,32 +404,6 @@ def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_c
     return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
 
 
-@router.get("/research-coverage")
-async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track research completeness and quality."""
-    cache_key = _ctx_cache_key(ctx, "research_coverage")
-    if fresh:
-        cache_invalidate(cache_key)
-    was_warm = (not fresh) and cache_get(cache_key, STATE_RESEARCH_COVERAGE_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
-        STATE_RESEARCH_COVERAGE_TTL_S,
-        lambda: compute_research_coverage(
-            curriculum_root=ctx.roots.curriculum_root,
-            plans_root=ctx.roots.plans_root,
-        ),
-        force=fresh,
-    )
-    aged = cache_get_with_age(cache_key, STATE_RESEARCH_COVERAGE_TTL_S)
-    return _with_state_meta(
-        result,
-        source="fs:research+dossiers",
-        stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=0.0 if aged is None else aged[1],
-    )
-
-
 @router.get("/research/{track_id}")
 def research_detail(
     track_id: str, min_score: int = 9, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
@@ -810,21 +488,6 @@ def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     result = compute_build_status_track(
         track_id,
         level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/build-status")
-def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
-    """All-tracks build progress in one call."""
-    cache_key = _ctx_cache_key(ctx, "build_status_all")
-    cached = cache_get(cache_key, ttl=30.0)
-    if cached is not None:
-        return cached
-    result = compute_build_status_all(
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
@@ -1064,22 +727,6 @@ def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     return result
 
 
-@router.get("/enrichment-status")
-def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """Which plans are enriched per track."""
-    cache_key = _ctx_cache_key(ctx, "enrichment_status", track or "all")
-    cached = cache_get(cache_key, ttl=120.0)
-    if cached is not None:
-        return cached
-    result = compute_enrichment_status(
-        track,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
 @router.get("/track-health/{track_id}")
 def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-call track health summary."""
@@ -1101,21 +748,6 @@ def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     )
     cache_set(cache_key, result)
     return result
-
-
-@router.get("/issues")
-def outstanding_issues(
-    track: str | None = Query(None),
-    severity: str | None = Query(None),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Aggregated outstanding issues from review files + audit failures."""
-    return compute_issues(
-        track,
-        severity,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
 
 
 # ==================== RANGE STATUS (#1313 / Codex-4) ====================

@@ -270,12 +270,6 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert first_pipeline["modules"][0]["slug"] == "first-slug"
         assert second_pipeline["modules"][0]["slug"] == "second-slug"
 
-        first_enrichment = first_client.get("/api/state/enrichment-status?track=a1").json()
-        assert first_enrichment["tracks"]["a1"]["enriched"] == 1
-
-        second_enrichment = second_client.get("/api/state/enrichment-status?track=a1").json()
-        assert second_enrichment["tracks"]["a1"]["enriched"] == 0
-
         first_summary_hit = first_client.get("/api/state/summary").json()
         assert first_summary_hit.get("meta", {}).get("cache") == "hit"
         assert first_summary_hit["tracks"]["a1"]["total"] == 1
@@ -395,15 +389,10 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
 
     first_root = tmp_path / "first"
     second_root = tmp_path / "second"
+    first_root.mkdir()
+    second_root.mkdir()
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
-
-    first_dist = first_root / "site" / "dist"
-    second_dist = second_root / "site" / "dist"
-    first_dist.mkdir(parents=True)
-    second_dist.mkdir(parents=True)
-    (first_dist / "sitemap-index.xml").write_text("<first/>", encoding="utf-8")
-    (second_dist / "sitemap-index.xml").write_text("<second/>", encoding="utf-8")
 
     for root, ctx in ((first_root, first_ctx), (second_root, second_ctx)):
         product_roots(ctx).sources_db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -425,14 +414,6 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_site = first_client.get("/api/site/health").json()
-        second_site = second_client.get("/api/site/health").json()
-        assert first_site["last_astro_build"]["built"] is True
-        assert second_site["last_astro_build"]["built"] is True
-        assert first_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
-        assert second_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
-        assert first_site["sitemap"]["path"] == second_site["sitemap"]["path"]
-
         first_sources = first_client.get("/api/wiki/sources").json()
         second_sources = second_client.get("/api/wiki/sources").json()
         assert first_sources["total_entries"] == 1

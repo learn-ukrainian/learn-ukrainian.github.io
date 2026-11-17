@@ -73,19 +73,6 @@ def _repo(path: Path, *, remote: str) -> Path:
     return path
 
 
-def _clone_repo(source: Path, path: Path) -> Path:
-    subprocess.run(
-        ["git", "clone", "-q", "--no-hardlinks", str(source), str(path)],
-        check=True,
-        capture_output=True,
-        text=True,
-        env=_git_env(),
-        timeout=120,
-    )
-    _git(path, "remote", "set-url", "origin", "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
-    return path
-
-
 def _write_manifest(repo_root: Path, *, track: str = "a1", slug: str = "demo") -> None:
     path = repo_root / curriculum_readiness.MANIFEST_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -160,40 +147,6 @@ def _all_keys(value: Any) -> set[str]:
 
 
 @pytest.mark.needs_sparse_tree("site/src/content")
-def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() -> None:
-    Draft202012Validator.check_schema(SCHEMA)
-    response = CLIENT.get("/api/state/preparation")
-
-    assert response.status_code == 200
-    data = response.json()
-    VALIDATOR.validate(data)
-    assert data["totals"]["manifest_active_tracks"] == 21
-    assert data["totals"]["manifest_active_modules"] == 1932
-    tracks = {item["track"]: item for item in data["tracks"]}
-    assert set(tracks) == {
-        "a1", "a1-v1", "a2", "b1", "b2", "c1", "c2", "hist", "bio", "lit",
-        "istorio", "oes", "ruth", "lit-essay", "lit-hist-fic", "lit-fantastika",
-        "lit-war", "lit-humor", "lit-youth", "lit-drama", "folk",
-    }
-    assert tracks["a1"]["module_state_counts"] == {"unbuilt": 0, "partial": 0, "built": 0}
-    assert tracks["a1"]["publication_state_counts"]["published"] == 0
-    assert tracks["a1-v1"]["module_state_counts"] == {"unbuilt": 0, "partial": 0, "built": 55}
-    assert tracks["a1-v1"]["publication_state_counts"]["published"] == 55
-    assert tracks["a2"]["publication_state_counts"]["published"] == 69
-    assert tracks["b1"]["publication_state_counts"]["published"] == 94
-    assert tracks["b2"]["publication_state_counts"]["published"] == 93
-    assert tracks["folk"]["publication_state_counts"]["published"] == 40
-    assert tracks["c1"]["publication_state_counts"]["published"] == 0
-    assert tracks["c1"]["publication_state_counts"]["absent"] == 133
-    assert tracks["hist"]["publication_state_counts"]["published"] == 0
-    assert tracks["hist"]["publication_state_counts"]["absent"] == 140
-    diagnostics = {item["track"]: item for item in data["diagnostics"]["inactive_plan_tracks"]}
-    assert diagnostics["lit-doc"]["module_count"] == 13
-    assert diagnostics["lit-crimea"]["module_count"] == 12
-    assert all(item["manifest_authority"] == "fallback-diagnostic-only" for item in diagnostics.values())
-
-
-@pytest.mark.needs_sparse_tree("site/src/content")
 def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> None:
     response = CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello")
 
@@ -254,10 +207,15 @@ def test_strong_etag_returns_bodyless_304_for_unchanged_sources(tmp_path: Path, 
     )
     _write_manifest(repo, track="a1", slug="demo")
     monkeypatch.setattr(app.state, "ctx", app.state.ctx.with_roots(project_root=repo, live_repo_root=repo))
+    monkeypatch.setattr(
+        preparation_state.curriculum_readiness,
+        "evaluate_preparation",
+        lambda track, slug, **_kwargs: _canonical(repo, track, slug),
+    )
 
-    first = CLIENT.get("/api/state/preparation?track=a1")
+    first = CLIENT.get("/api/state/preparation/a1/demo")
     second = CLIENT.get(
-        "/api/state/preparation?track=a1",
+        "/api/state/preparation/a1/demo",
         headers={"If-None-Match": first.headers["etag"]},
     )
 
@@ -315,19 +273,6 @@ def test_recompute_identity_changes_on_bundle_and_publication_sources(tmp_path: 
     assert preparation_state.response_document(after)[1] != preparation_state.response_document(partial)[1]
 
 
-def test_count_disagreement_emits_finding(tmp_path: Path, monkeypatch) -> None:
-    repo_root = tmp_path / "repo"
-    _write_manifest(repo_root)
-    monkeypatch.setattr(preparation_state.curriculum_readiness, "module_bundle_state", lambda *_args: "invalid")
-
-    data = preparation_state.build_roster(repo_root=repo_root, authority=AUTHORITY)
-
-    assert {item["id"] for item in data["findings"]} == {
-        "BUNDLE_STATE_COUNT_MISMATCH",
-        "TRACK_COUNT_INVARIANT_FAILED",
-    }
-
-
 @pytest.mark.needs_sparse_tree("site/src/content")
 def test_off_manifest_inactive_unknown_and_unsafe_selectors_fail_closed() -> None:
     off_manifest = CLIENT.get("/api/state/preparation/a1/not-in-curriculum")
@@ -335,11 +280,6 @@ def test_off_manifest_inactive_unknown_and_unsafe_selectors_fail_closed() -> Non
     assert off_manifest.json()["manifest_authority"] == "off-manifest"
     assert off_manifest.json()["next_action"] == "stop"
 
-    assert CLIENT.get("/api/state/preparation?track=lit-doc").status_code == 422
-    assert CLIENT.get("/api/state/preparation?track=not-a-track").status_code == 404
-    assert CLIENT.get("/api/state/preparation?track=../a1").status_code == 422
-    assert CLIENT.get("/api/state/preparation?slug=demo").status_code == 422
-    assert CLIENT.get("/api/state/preparation?track=a1&track=a2").status_code == 422
     assert CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello?evidence=unknown").status_code == 422
     assert CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello?field=state").status_code == 422
 
@@ -428,40 +368,3 @@ def test_repository_authority_classifies_checkout_roles_by_structure(tmp_path: P
         assert authority["primary_checkout"]["role"] == expected_role
         assert authority["cwd_role"] == expected_cwd_role
     assert cwd_role(tmp_path / "other") == "other"
-
-
-def test_release_route_reads_from_the_reported_primary_checkout(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    primary = _clone_repo(ROOT, tmp_path / "repo")
-    dispatch = primary / ".worktrees" / "dispatch" / "codex" / "release-test"
-    _git(primary, "worktree", "add", "-q", "-b", "codex/release-test", str(dispatch))
-    release_sha = "e" * 40
-    release = tmp_path / ".runtime/api/releases" / release_sha
-    release.mkdir(parents=True)
-    (release / ".release-manifest.json").write_text(
-        json.dumps({"sha": release_sha, "file_count": 1, "tree_sha256": "f" * 64}),
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(
-        app.state,
-        "ctx",
-        app.state.ctx.with_roots(project_root=release, live_repo_root=dispatch),
-    )
-
-    response = CLIENT.get("/api/state/preparation?track=a1-v1")
-
-    assert response.status_code == 200
-    data = response.json()
-    VALIDATOR.validate(data)
-    assert "data_checkout" not in data["authority"]
-    assert data["authority"]["primary_checkout"]["role"] == "dispatch_worktree"
-    assert data["authority"]["primary_checkout"]["head_sha"] == _git(dispatch, "rev-parse", "HEAD")
-    assert data["authority"]["cwd_role"] == "other"
-    assert data["authority"]["service_code"] == {
-        "mode": "release",
-        "commit_sha": release_sha,
-        "tree_sha256": "f" * 64,
-    }
-    assert data["tracks"][0]["module_state_counts"]["built"] == 55

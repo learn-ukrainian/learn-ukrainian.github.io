@@ -5,7 +5,6 @@ Mounted at /api/decisions/ in main.py.
 
 Endpoints:
   GET  /api/decisions                  All decisions (optional ?status=active filter)
-  GET  /api/decisions/lineage          Decision files with git backlink lineage
   GET  /api/decisions/stale            Expired active decisions
   GET  /api/decisions/budget           Budget status (count, max, warning threshold)
   GET  /api/decisions/{dec_id}         Single decision by ID
@@ -23,8 +22,6 @@ import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 
-from .curriculum_state import monitor_surface
-
 router = APIRouter(tags=["decisions"])
 
 # ── Config ────────────────────────────────────────────────────────
@@ -36,7 +33,6 @@ _VALID_SCOPES = {"pipeline", "content", "architecture", "tooling", "pedagogy"}
 # ── TTL Cache ─────────────────────────────────────────────────────
 
 _cache: dict = {"data": None, "ts": 0.0, "path": None}
-_lineage_cache: dict = {"data": None, "ts": 0.0, "root": None}
 _CACHE_TTL = 60  # seconds
 
 
@@ -85,27 +81,6 @@ def _is_stale(dec: dict) -> bool:
         return False
 
 
-def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = None) -> dict:
-    """Load decision lineage with a short TTL because git history scans are heavier."""
-    now = time.monotonic()
-    resolved = resolve_context(ctx)
-    root_key = str(resolved.roots.live_repo_root)
-    if (
-        decision_id is None
-        and _lineage_cache["data"] is not None
-        and _lineage_cache.get("root") == root_key
-        and (now - _lineage_cache["ts"]) < _CACHE_TTL
-    ):
-        return cast("dict[Any, Any]", _lineage_cache["data"])
-
-    data: dict = monitor_surface.build_lineage_response(resolved.roots.live_repo_root, decision_id=decision_id)
-    if decision_id is None:
-        _lineage_cache["data"] = data
-        _lineage_cache["ts"] = now
-        _lineage_cache["root"] = root_key
-    return data
-
-
 # ── Endpoints ─────────────────────────────────────────────────────
 
 
@@ -152,16 +127,6 @@ def decision_budget(ctx: MonitorContext = Depends(get_ctx)):
             else "ok"
         ),
     }
-
-
-# Keep this route above /{dec_id}; otherwise "lineage" is parsed as a decision ID.
-@router.get("/lineage")
-def decision_lineage(
-    decision_id: str | None = Query(None, description="Optional decision ID or alias filter, e.g. ADR-008 or dec-007"),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Decision files with git commit and PR backlink lineage."""
-    return _load_lineage(decision_id=decision_id, ctx=ctx)
 
 
 @router.get("/scope/{scope}")
