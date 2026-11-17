@@ -183,7 +183,7 @@ Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 <p><strong>Discussion is not formal review.</strong> Design panels and same-family helpers do not
 seal PRs. Formal CF (shielded <code>review-pr</code> / <code>publish-review-verdict</code> removed in #8520):</p>
 <pre><code class="language-bash">printf '%s\n' &quot;Cross-family review of PR &lt;N&gt; at exact head &lt;SHA&gt;: VERDICT + findings.&quot; \
-  | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-&lt;lane&gt; - \
+  | .venv/bin/python -m lu_machinery.ai_agent_bridge ask-&lt;lane&gt; - \
       --task-id review-&lt;N&gt; --type review
 # Post the verdict on the PR; do not treat discussion or same-family helpers as the gate.
 </code></pre>
@@ -538,7 +538,7 @@ pings + PR descriptions below.</li>
 <li><strong>GitHub PRs carry deliverables.</strong> Track orchestrators open PRs with clear
 scope, validation, active dispatch ids, and blockers. The main orchestrator
 reads the PR instead of scraping private chat context.</li>
-<li><strong>Bridge messages are pings, not payloads.</strong> Use <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py p</code> / channel posts only
+<li><strong>Bridge messages are pings, not payloads.</strong> Use <code>.venv/bin/python -m lu_machinery.ai_agent_bridge p</code> / channel posts only
 to point to the PR, issue, or handoff section that changed.</li>
 <li><strong>Main only interrupts for repo-wide risk.</strong> Examples: generated artifacts in
 diff, <code>.python-version</code>/linter config changes, merge conflicts, failing
@@ -591,7 +591,7 @@ handoff. It keeps <code>Latest-Brief:</code> plus an <code>Agent-Handoff:</code>
 </table>
 <p>Thread rollover packets are generated locally under
 <code>.agent/&lt;agent&gt;-thread-handoff.md</code> by
-<code>scripts/orchestration/thread_handoff.py prepare</code>. They are for moving a
+<code>LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare</code>. They are for moving a
 saturated thread to a fresh thread; do not use them as the durable orchestrator
 state file.</p>
 <p>For compatibility, <code>docs/session-state/current.orchestrator.md</code> remains a thin
@@ -623,25 +623,25 @@ invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies
 <h3>Direct dispatch (ask-agy / ask-codex)</h3>
 <p>For requests needing immediate response. AGY reviews Ukrainian content only
 (<code>--review --review-profile ukrainian</code>). Code review uses <code>ask-codex</code>.</p>
-<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
+<pre><code class="language-bash">.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy \
   &quot;Перевір український текст у curriculum/l2-uk-en/a1/hello.md.&quot; \
   --task-id issue-559 \
   --review \
   --review-profile ukrainian
 
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex \
   &quot;Bug report posted on #560. Please read and respond.&quot; \
   --task-id issue-560
 </code></pre>
 <h3>Multi-turn conversations (converse)</h3>
 <p>For iterative co-design, planning, or prompt optimization:</p>
 <pre><code class="language-bash"># Start a conversation
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+.venv/bin/python -m lu_machinery.ai_agent_bridge converse \
   &quot;Let's plan the A1/1 build. Here's the plan: ...&quot; \
   --task-id &quot;a1-1-planning&quot;
 
 # Continue (Gemini sees full history)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+.venv/bin/python -m lu_machinery.ai_agent_bridge converse \
   &quot;Good points. What about the dialogue examples?&quot; \
   --task-id &quot;a1-1-planning&quot;
 </code></pre>
@@ -668,10 +668,10 @@ follows <code>model-assignment.md</code> Code review row.</p>
 )
 </code></pre>
 <hr />
-<h2>Multi-Agent Deliberation (<code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code>)</h2>
-<p><strong>This section was added 2026-05-02 after recognizing systematic underutilization</strong> of <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> for design/framing/architecture decisions. We were defaulting to single-shot AGY reviews and Claude-alone-reasoning where distributed deliberation would have caught more.</p>
-<h3>What <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> is — and isn't</h3>
-<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with <code>[AGREE]</code>. Transcript lands in the named channel with <code>parent_id</code> threading.</p>
+<h2>Multi-Agent Deliberation (<code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code>)</h2>
+<p><strong>This section was added 2026-05-02 after recognizing systematic underutilization</strong> of <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> for design/framing/architecture decisions. We were defaulting to single-shot AGY reviews and Claude-alone-reasoning where distributed deliberation would have caught more.</p>
+<h3>What <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> is — and isn't</h3>
+<p><code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with <code>[AGREE]</code>. Transcript lands in the named channel with <code>parent_id</code> threading.</p>
 <p><strong>It is NOT formal cross-family review.</strong> Discussion output is design input only.
 Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdict posted on the PR
 (shielded <code>review-pr</code> / <code>publish-review-verdict</code> removed in #8520 — see ownership matrix in
@@ -687,7 +687,7 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <table>
 <thead>
 <tr>
-<th>Use <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code></th>
+<th>Use <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code></th>
 <th>Use bridge <code>ask-agy</code> (single-shot)</th>
 <th>Don't use either</th>
 </tr>
@@ -722,16 +722,16 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 </table>
 <h3>Budget angle</h3>
 <ul>
-<li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with agy,codex</code> (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.</li>
-<li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with claude,agy,codex</code> burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).</li>
+<li><code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss ... --with agy,codex</code> (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.</li>
+<li><code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss ... --with claude,agy,codex</code> burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).</li>
 </ul>
 <h3>Concrete example — what we missed today (2026-05-02)</h3>
 <p>When proposing the POC anchor module, Claude reasoned alone and offered A1/M10 colors as a &quot;neutral steady-state baseline.&quot; User had to catch the Russian-imperial-propaganda angle on colors that invalidated &quot;neutral.&quot; If we had run:</p>
-<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss content &quot;POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1&quot; --with claude,agy,codex --max-rounds 2
+<pre><code class="language-bash">.venv/bin/python -m lu_machinery.ai_agent_bridge discuss content &quot;POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1&quot; --with claude,agy,codex --max-rounds 2
 </code></pre>
 <p>…Gemini or Codex might have surfaced the colors angle independently. The deliberation transcript would also exist as a referenceable record on the <code>content</code> channel, not buried in a Claude session that compaction would eventually destroy. <strong>Pattern: when picking among options that touch decolonization, framing, or pedagogy — discuss, don't decide alone.</strong></p>
-<h3>Decision Card pattern (when <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> surfaces a CHOICE)</h3>
-<p>Most <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> runs converge with <code>[AGREE]</code> — orchestrator just executes the consensus. But when discussion surfaces <strong>disagreement OR multi-option output</strong>, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.</p>
+<h3>Decision Card pattern (when <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> surfaces a CHOICE)</h3>
+<p>Most <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> runs converge with <code>[AGREE]</code> — orchestrator just executes the consensus. But when discussion surfaces <strong>disagreement OR multi-option output</strong>, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.</p>
 <p><strong>Template:</strong></p>
 <pre><code class="language-markdown">## DECISION REQUIRED — {one-line question}
 
@@ -763,14 +763,14 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <p>When all participating agents share the same underlying bias on a topic (e.g., Russian-imperial framing on Ukrainian topics, Western centrism on decolonization), an <code>[AGREE]</code> consensus is NOT a green light. It is exactly when the Decision Card mechanism is most needed and most likely to be bypassed.</p>
 <p>For high-risk tracks — <strong>FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH</strong> (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:</p>
 <ul>
-<li><strong>Mechanism A (Force-emit Decision Card on <code>[AGREE]</code>):</strong> If <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> runs on a topic touching any high-risk track and converges with <code>[AGREE]</code>, the orchestrator emits a Decision Card anyway. The question is framed as &quot;agents converged on X — but consensus on this track is suspect; user should sanity-check.&quot; The user can quickly approve or override.</li>
-<li><strong>Mechanism B (Inject domain-specific bias checklist):</strong> For high-risk tracks, the <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
+<li><strong>Mechanism A (Force-emit Decision Card on <code>[AGREE]</code>):</strong> If <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> runs on a topic touching any high-risk track and converges with <code>[AGREE]</code>, the orchestrator emits a Decision Card anyway. The question is framed as &quot;agents converged on X — but consensus on this track is suspect; user should sanity-check.&quot; The user can quickly approve or override.</li>
+<li><strong>Mechanism B (Inject domain-specific bias checklist):</strong> For high-risk tracks, the <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
 <ul>
 <li><em>Example for HIST:</em> &quot;Did you check the proposed framing against canonical decolonized sources? Bulgakov-as-Ukrainian, Gogol-as-Ukrainian, Akhmatova-as-Ukrainian, etc., are the 'Kyiv-born equals Ukrainian writer' trap — flag if you see it. Did you check whether the historical actor is being framed in Russian-imperial categories versus Ukrainian native categories?&quot;</li>
 </ul>
 </li>
 </ul>
-<p><strong>Recommendation:</strong> Prefer <strong>Mechanism B</strong> (proactive — catches bias during discussion) for any new <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> on high-risk tracks. Fall back to <strong>Mechanism A</strong> (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.</p>
+<p><strong>Recommendation:</strong> Prefer <strong>Mechanism B</strong> (proactive — catches bias during discussion) for any new <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> on high-risk tracks. Fall back to <strong>Mechanism A</strong> (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.</p>
 <p><strong>Pattern:</strong> Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.</p>
 <h3>Where Decision Cards land</h3>
 <p>Three locations depending on user availability:</p>
@@ -813,9 +813,9 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <h3>Citation provenance check (#1683, shipped 2026-05-05)</h3>
 <p>The bridge runs a citation-provenance check on every channel post and reply before commit. Verbatim attributions to authoritative sources (Антоненко-Давидович, Грінченко 1907, Правопис 2019, СУМ-11, ЕСУМ) are verified against <code>data/sources.db</code>. Unverified citations get an inline <code>&lt;!-- CITATION-UNVERIFIED ... --&gt;</code> marker; verified citations and citations to sources without an automated verifier (VESUM, Шевельов, Вихованець, Пономарів) pass through silently.</p>
 <p><strong>Annotate-mode, not block-mode.</strong> The check never refuses a post — it surfaces the doubt. This keeps the cost of a false-positive low (the channel still flows; reviewers see the marker and can dismiss it) and the cost of a true-positive a clear breadcrumb for downstream consumers (reviewer prompts, content modules, students never inherit a forged citation).</p>
-<p><strong>Why this exists.</strong> On 2026-05-05, two <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation (&quot;Антоненко-Давидович categorizes feminine собака as a calque/Russianism&quot;) in Gemini's reply. АД has no entry on собака per <code>mcp__sources__search_style_guide</code>; the model's prior was the bug, not the source. The deliberation-protocol fix (commit <code>872d8376b0</code>) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of <code>[AGREE]</code>, it would have shipped to curriculum. This check closes that gap.</p>
+<p><strong>Why this exists.</strong> On 2026-05-05, two <code>.venv/bin/python -m lu_machinery.ai_agent_bridge discuss</code> runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation (&quot;Антоненко-Давидович categorizes feminine собака as a calque/Russianism&quot;) in Gemini's reply. АД has no entry on собака per <code>mcp__sources__search_style_guide</code>; the model's prior was the bug, not the source. The deliberation-protocol fix (commit <code>872d8376b0</code>) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of <code>[AGREE]</code>, it would have shipped to curriculum. This check closes that gap.</p>
 <p><strong>Detection scope (v1):</strong> verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or &quot;іменник X&quot; / &quot;слово X&quot; patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.</p>
-<p><strong>Implementation:</strong> <code>scripts/ai_agent_bridge/_citation_check.py</code> (detection + verification + annotation). Hook lives in <code>_channels.py:post()</code> — controlled by <code>verify_citations: bool = True</code> keyword. System/audit kinds (anything other than <code>post</code>/<code>reply</code>) skip verification automatically.</p>
+<p><strong>Implementation:</strong> <code>lu_machinery/ai_agent_bridge/_citation_check.py</code> (detection + verification + annotation). Hook lives in <code>_channels.py:post()</code> — controlled by <code>verify_citations: bool = True</code> keyword. System/audit kinds (anything other than <code>post</code>/<code>reply</code>) skip verification automatically.</p>
 <p><strong>Graceful degradation:</strong> the verifier soft-skips if <code>data/sources.db</code> is missing (worktree without the data dir, fresh checkout, CI minimal env). Soft-skips never produce flags — they're recorded internally as &quot;verifier unavailable&quot; so a deployment problem cannot manufacture false positives.</p>
 <hr />
 <h2>Session Start Checklist</h2>
@@ -976,11 +976,11 @@ mcp__memory__search_nodes(query=&quot;next session todo&quot;)
 <h2>Skill-Based Dispatch</h2>
 <p>Use Gemini's skill files instead of verbose prompts. Each skill encodes the full protocol.</p>
 <pre><code class="language-bash"># Seminar track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy &quot;/full-rebuild-bio 5&quot; \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy &quot;/full-rebuild-bio 5&quot; \
   --task-id rebuild-bio-5
 
 # Core track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy &quot;/full-rebuild-core-a a1 3&quot; \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy &quot;/full-rebuild-core-a a1 3&quot; \
   --task-id rebuild-a1-3
 </code></pre>
 <p><strong>Always use skills for content work.</strong> Ad-hoc prompts miss critical protocol steps.</p>
@@ -1006,7 +1006,7 @@ research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;==
 <h3>AGY Model Names</h3>
 <p>Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
-<code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> or
+<code>.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy ...</code> or
 <code>scripts/dispatch.py dispatch --model &lt;catalog-model&gt; --agent agy ...</code>.</p>
 <p>Direct <code>agy --model</code> calls use display labels from <code>agy models</code>, such as
 <code>Gemini 3.8 Flash (High)</code>. The bridge and runtime

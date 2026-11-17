@@ -3,7 +3,7 @@
 # One entry per document FAMILY (a directory or glob sharing purpose, owner,
 # default lifecycle and retrieval method) or per logical DATA STORE under
 # data/. Never one hand-written entry per file. It extends the ADR-013
-# inventory (docs/knowledge/inventory/, scripts/docs/docs_inventory.py) and the
+# inventory (docs/knowledge/inventory/, lu_machinery/docs/docs_inventory.py) and the
 # lifecycle contract in docs/architecture/docs-authority-lifecycle.md; it does
 # not replace them and it is separate from the ADR-011 research registry.
 #

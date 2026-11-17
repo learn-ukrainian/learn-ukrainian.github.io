@@ -13,7 +13,7 @@ moving, generating, or citing repository knowledge. It does not replace
 | Class | Location | Lifecycle | Who may change | What it may override |
 | --- | --- | --- | --- | --- |
 | Behavioral truth | Code + tests | Continuous | PR + CI + CF review | Prose that contradicts observed behavior |
-| Config-as-policy | `lu_machinery/config.py`, `scripts/config/*.yaml` (typed policy values) | Continuous | PR + CI + CF | Stale curated docs that restate the same knobs |
+| Config-as-policy | `scripts/curriculum/pedagogy_config.py`, the installed `lu_machinery` config (`lu_machinery/config.py`, `lu_machinery/config/*.yaml`), `scripts/config/*.yaml` (typed policy values) | Continuous | PR + CI + CF | Stale curated docs that restate the same knobs |
 | Binding rules (source) | `agents_extensions/shared/rules/`, `contracts/` | Continuous; served at `/api/rules` | PR; deploy regenerates copies | Deployed copies; never OpenWiki paraphrases |
 | Deployed rule copies | `.claude/`, `.codex/`, `.agent/`, `.gemini/` | Generated consumers | Deploy command only | Nothing — consumers only; drift is a defect |
 | Curated docs | Tracked `docs/**` (see allowlist) | `draft` → `active` → `superseded` → `archive` | PR; owner in frontmatter when present | Nothing over code/config/rules; may guide humans |

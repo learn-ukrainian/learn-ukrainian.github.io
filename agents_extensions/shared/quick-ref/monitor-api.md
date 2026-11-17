@@ -29,7 +29,7 @@ curl -s http://localhost:8765/api/runtime/agents
 
 **Usage / limits view (project side; see also external CodexBar.app for 5h/weekly/monthly bars):**
 - `.../ai_agent_bridge/__main__.py codex-usage`
-- `.venv/bin/python scripts/telemetry/cost_report.py --all --markdown`
+- `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
 - Monitor: `/machinery` for workers and usage
 - API: /api/health (resilience), /api/runtime/recent
 
@@ -109,7 +109,7 @@ Retired in #7942 (#7945) and #7947; return HTTP 404 without deprecation headers:
 - `GET /api/cost/*` → removed with `/api/analytics/cost/*` below
 
 Removed in the 2026-11-12 product page trim (no replacement route; their data was empty):
-- `GET /api/analytics/cost/*` → use `.venv/bin/python scripts/telemetry/cost_report.py --all --markdown`
+- `GET /api/analytics/cost/*` → use `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
 - `/api/build/events/*`, `/api/consultation/*`, `/api/images/*`, `/api/admin/*` → removed; use `GET /api/health` for health
 
 Full reference: `docs/MONITOR-API.md`

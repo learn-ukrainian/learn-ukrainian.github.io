@@ -19,7 +19,7 @@ personal information.
 
 The runtime validates the configured login directory and the settings that
 could change its credential source, endpoint or provider. The two closed lists
-live in `scripts/agent_runtime/attempt_boundary.py`:
+live in `lu_machinery/agent_runtime/attempt_boundary.py`:
 
 - `CLAUDE_LABELLED_ENV_ALLOWLIST` admits environment names that control local
   behavior, such as terminal display, compaction, timeouts and output limits.

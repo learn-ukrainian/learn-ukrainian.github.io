@@ -23,7 +23,7 @@ Normal API commands launch uvicorn in dev-reload mode:
   --host 127.0.0.1 \
   --port 8765 \
   --reload \
-  --log-config scripts/api/logging.json
+  --log-config "$(.venv/bin/python -I -c 'import importlib.util as u; print(u.find_spec("lu_machinery").submodule_search_locations[0])')/api/logging.json"
 ```
 
 `npm run api` and `npm run api:bg` use this shape. `npm run api:reload`

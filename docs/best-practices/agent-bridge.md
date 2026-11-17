@@ -19,7 +19,7 @@ truncation — the token waste from re-explaining project setup on
 every delegation drops from ~15KB to ~6KB per post.
 
 > **Current tooling note.** Use `.venv/bin/python
-> scripts/ai_agent_bridge/__main__.py ...` for bridge commands. Do not use
+> -m lu_machinery.ai_agent_bridge ...` for bridge commands. Do not use
 > bare `ab ...` examples; `ab` resolves to ApacheBench on the user's machine.
 > Gemini CLI and Gemini Code Assist are unsupported. Use AGY for
 > Gemini-family work.
@@ -235,7 +235,7 @@ tied to it; it removes no worktree.
 
 Every worktree remover (the dispatcher's settlement removal,
 dispatch's superseded-review and stale-branch-holder release, task-family
-cleanup, ACP runtime cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
+cleanup, ACP runtime cleanup, `lu_machinery/wt.sh clean`, and the RB2 trail's cleanup step) goes through
 one chokepoint in `lu_machinery/orchestration/worktree_claims.py` (#8610). It takes
 the per-worktree lock in `<git common dir>/lu-worktree-locks/` that dispatch
 holds from attach until its task record is published, and under that lock it
@@ -401,7 +401,7 @@ where the worktree is, a nested repository, `core.worktree`, `GIT_DIR` or
 so only clearly read-only calls are let through. The shims and the decision
 (`npm_guard.py`) live only in the installed lu-machinery release, under
 `lu_machinery/agent_runtime/`. The product's `lu_machinery/agent_runtime/shims/npm`
-and `npx` (and `scripts/dispatcher/npm_shims/`, which run them) resolve the
+and `npx` (and `lu_machinery/dispatcher/npm_shims/`, which run them) resolve the
 project interpreter (`LEARN_UKRAINIAN_PYTHON`, else the main checkout's `.venv`
 found through the git common dir, so a linked worktree needs no `.venv` of its
 own), locate the installed release with it and exec the release's shim; when
@@ -619,7 +619,8 @@ Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
 >   <key>ProgramArguments</key>
 >   <array>
 >     <string>.venv/bin/python</string>
->     <string>scripts/ai_agent_bridge/__main__.py</string>
+>     <string>-m</string>
+>     <string>lu_machinery.ai_agent_bridge</string>
 >     <string>inbox</string>
 >     <string>run</string>
 >     <string>codex</string>

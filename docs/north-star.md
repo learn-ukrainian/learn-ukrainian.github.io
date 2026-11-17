@@ -15,13 +15,13 @@
 > idiom/expression explanation.
 >
 > **v3.1 — immersion is now ULP-derived, not flat-%.** The earlier model
-> read flat band percentages from `lu_machinery/config.py` `IMMERSION_POLICIES`.
+> read flat band percentages from `scripts/curriculum/pedagogy_config.py` `IMMERSION_POLICIES`.
 > That model has been superseded by **`compute_immersion_band(track,
 > module_num, learner_state)`** which derives immersion floors and
 > ceilings from the learner's cumulative vocabulary count + the module's
 > declared `plan.targets.new_vocabulary` + the lemma-frequency map. The
 > feature flag `USE_ULP_IMMERSION_DERIVATION` is set to `True` at
-> `scripts/config.py:145` (live default). The earlier "Known pipeline
+> `scripts/curriculum/pedagogy_config.py:150` (live default). The earlier "Known pipeline
 > drift" callout below (Phase 2 IMMERSION_POLICIES cleanup) has been
 > RESOLVED via the ULP card's Phase 4 calibration replay. The B1+ rule
 > ("100 % Ukrainian everywhere except Tab 2") is unchanged in intent —
@@ -156,8 +156,8 @@ immersion uses `compute_immersion_band(track, module_num,
 learner_state)` to derive each module's band from cumulative
 vocabulary + this module's declared new vocabulary + lemma-frequency
 map. The derivation is deterministic and tested; the calibration
-constants (`_ULP_VOCAB_KNEE_PER_BAND`, `_RECYCLE_CADENCE_DEFAULTS`,
-`_PATTERN_FREQ_MASTERY_THRESHOLD`) live in `lu_machinery/config.py`,
+constants (`_ULP_VOCAB_KNEE_PER_BAND`, `_RECYCLE_CADENCE_DEFAULTS`)
+live in `scripts/curriculum/pedagogy_config.py`,
 calibrated against Anna Ohoiko's ULP S1–S6 corpus.
 **B1 onwards is uniformly 100 % Ukrainian** in every tab except
 Tab 2 (Словник), where English translations and idiom/expression
@@ -172,7 +172,7 @@ curriculum.
 > at `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md`
 > shipped via PR1 (learner-state V7 wiring) + PR2 (ULP derivation +
 > Phase 4 calibration replay). The feature flag
-> `USE_ULP_IMMERSION_DERIVATION = True` at `scripts/config.py:145`
+> `USE_ULP_IMMERSION_DERIVATION = True` at `scripts/curriculum/pedagogy_config.py:150`
 > activates the derivation. The B1+ rule ("Full Ukrainian immersion.
 > No English in module body. Tab 2 (Словник) keeps L1 translations
 > and idiom explanations as the only English") is enforced today.
@@ -269,7 +269,7 @@ Voice changes by stage because the carrier language changes.
 **Seminar voice (full Ukrainian, scholarly register):**
 - The voice of the level (Decolonizer for HIST, Stylistic Critic for
   LIT, Paleographer for OES, Baroque Scholar for RUTH — per
-  `scripts/config.py:51-141` `TRACK_CONFIG`).
+  `scripts/curriculum/pedagogy_config.py:31-144` `TRACK_CONFIG`).
 - Decolonized framing throughout: not "Russian and Ukrainian
   literature both," but "the Ukrainian tradition that imperial
   power tried to erase and the chronology that survives in the
@@ -311,7 +311,7 @@ A module ships when ALL of these are true:
 6. **Python QG green.** All deterministic checks pass.
 7. **LLM QG ≥ floor.** Pedagogical, Naturalness, Decolonization,
    Engagement, Tone — each ≥ the per-level floor in
-   `scripts/common/thresholds.LEVEL_THRESHOLDS`. No weighted
+   `scripts/curriculum/quality/thresholds.LEVEL_THRESHOLDS`. No weighted
    average: one failing dim fails the module.
 8. **MDX renders.** All 4 tabs build clean in Starlight; every
    `INJECT_ACTIVITY` id resolves; every component prop is
@@ -428,7 +428,7 @@ transliterations like `Kyiv` rendered inline next to `Київ`. See
 `docs/lesson-contract.md` §5 for implementation detail. Source: panel
 consensus.
 
-**P7 — `lu_machinery/config.py` IMMERSION_POLICIES cleanup is a Phase 2
+**P7 — `scripts/curriculum/pedagogy_config.py` IMMERSION_POLICIES cleanup is a Phase 2
 sub-issue, not blocking Phase 4.** The Phase 4 exemplar is A1/20 and
 does not hit the stale B1 code paths. The cleanup (delete
 `b1-m01-05`, collapse `b1-core` to 100 %, rewrite rule string,
@@ -447,7 +447,7 @@ audit pipeline branches) is filed as a Phase 2 sub-issue under EPIC
 **Phase 0 closeout actions** (after this commit):
 1. Update `docs/session-state/archive/2026-04-25-evening-reboot-decision.md`
    line 82: `Зошит` → `Вправи` (lesson contract P1).
-2. File the Phase 2 `lu_machinery/config.py` IMMERSION_POLICIES B1
+2. File the Phase 2 `scripts/curriculum/pedagogy_config.py` IMMERSION_POLICIES B1
    cleanup issue per P7.
 3. Wire `{NORTH_STAR}` and `{LESSON_CONTRACT}` placeholders into
    `scripts/build/phases/v6-write.md` "Shared Contract" preamble

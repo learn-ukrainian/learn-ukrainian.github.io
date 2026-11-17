@@ -65,10 +65,10 @@ All qualifiers of a class must hold.
   dependency-patch guards, platform/environment isolation.
 - **K11** test manifests/registries that name test files or node ids
   (`tests/test_repo_wide_marker_invariant.py` `KNOWN_REPO_WIDE_*`,
-  `scripts/ci/history-tests.txt` + `scripts/ci/split_tests.py:201-203`,
+  `scripts/ci/history-tests.txt` + `lu_machinery/ci/split_tests.py:201-203`,
   `scripts/ci/components.json`, `lu_machinery/ci/pytest_shards.py` serial/perf lists and
   `SELECTION_DIGEST`, workflow path lists, `scripts/hygiene/store_access_baseline.json`,
-  `scripts/hygiene/lint_tmp_paths.py`): a deletion must update the manifest in the same PR
+  `lu_machinery/hygiene/lint_tmp_paths.py`): a deletion must update the manifest in the same PR
   or is refused.
 - **K12** repo-wide AST/source-tree invariant scanners (`repo_wide` / `repo_invariant`
   markers).

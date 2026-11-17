@@ -56,8 +56,8 @@ See [Phase 1 spec](../epics/curriculum-upgrade-phase1-spec.md) for gates and acc
 `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md` (ACCEPTED):
 
 - **Anna Ohoiko's ULP S1-S6 is the calibration corpus** (`data/references/private/ULP {1-6}-00`, gitignored)
-- `compute_immersion_band(track, module_num, learner_state)` at `scripts/config.py:718` derives band from **cumulative_vocabulary count + plan.targets.new_vocabulary + lemma-frequency map**, NOT flat-%
-- `USE_ULP_IMMERSION_DERIVATION = True` at `scripts/config.py:145` (live)
+- `compute_immersion_band(track, module_num, learner_state)` at `scripts/curriculum/pedagogy_config.py:777` derives band from **cumulative_vocabulary count + plan.targets.new_vocabulary + lemma-frequency map**, NOT flat-%
+- `USE_ULP_IMMERSION_DERIVATION = True` at `scripts/curriculum/pedagogy_config.py:150` (live)
 - **User direct directive 2026-05-14**: *"do not use flat-% immersion; use what we learned from ULP"*
 - **User direct directive 2026-05-23**: *"we will create the lessons student aware, we try to follow the pattern anna ohoiko used in ulp for immersion, don't set hard limits, just tell the writer this is a new student and he already learned the previous n-1 lessons and now he is learning the nth lesson. This way we want to build up ukrainian and converge for the end of A2 where we will prep them for full immersion from b1 onward"*
 

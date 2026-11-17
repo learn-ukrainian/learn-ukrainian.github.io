@@ -56,13 +56,13 @@ and publication is proven. Remote branches remain until `MERGED`.
 ## Safety contract
 
 Every Git-based worktree removal preserves ignored output at the sole raw
-`git worktree remove` boundary in `scripts/orchestration/worktree_claims.py`,
-using `scripts/fleet/ignored_task_output.py`. ACP execution teardown, data-tier
+`git worktree remove` boundary in `lu_machinery/orchestration/worktree_claims.py`,
+using `lu_machinery/fleet/ignored_task_output.py`. ACP execution teardown, data-tier
 cleanup, sibling Git maintenance, task-family cleanup, and the removal CLI all
 inherit this guard. Preservation runs once, after ownership/claim checks and
 before deletion. A preservation failure returns a typed skipped/refusal result
 and leaves the directory intact. The dispatcher's settlement
-(`scripts/dispatcher/git.py` `settle_worktree`) removes through the same
+(`lu_machinery/dispatcher/git.py` `settle_worktree`) removes through the same
 chokepoint: ignored output is inventoried, and untracked files are copied into
 `batch_state/preserved/<task>/` (receipt `branch_holder_archive`) before a forced
 removal; uncommitted tracked changes keep the tree. `branch_sweep` deletes branch refs only. The legacy temp leak
@@ -336,7 +336,7 @@ does not push or remove the tree; the next settlement decides. The run's private
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
 A finished data-tier run discards its own checkout output first (`discard_run_output` in
-`scripts/ci/data_tier.py`; the file and byte totals go in the run summary's `discarded_output`).
+`lu_machinery/ci/data_tier.py`; the file and byte totals go in the run summary's `discarded_output`).
 The checkout is a fresh `origin/main` worktree, so everything ignored in it is the run's own
 snapshot, provisioned copy or test output, and the test report, log and summary a failed run needs
 stay in `batch_state/data-tier/`. A finished run therefore leaves nothing to preserve (#12528).
@@ -359,7 +359,7 @@ attempt that reads from it. The task record claims the deepest registered linked
 
 Dispatch/review branch attachment may release a terminal, unambiguously bound
 holder with only untracked `*.orig`, `*.patch`, or `pytest_out.txt` scratch.
-The closed classifier lives in `scripts/fleet/regenerable_output.py`;
+The closed classifier lives in `lu_machinery/fleet/regenerable_output.py`;
 these patterns do not become auto-finalize exclusions. Each eligible file is
 regular, has one hard link, and is at most 256 MiB. An `.orig` stem must be a
 tracked path. A filesystem scan also rejects special files that Git omits.
@@ -565,7 +565,7 @@ an audit record proves the calling session created
 Every worktree removal goes through one guarded chokepoint (#8610): Python
 callers use `worktree_claims.remove_unclaimed_worktree`, and shell and YAML
 callers use `python -m scripts.orchestration.worktree_claims remove PATH`
-(`scripts/wt.sh clean`, the RB2 trail's `cleanup_failed_worktree`). Holding
+(`lu_machinery/wt.sh clean`, the RB2 trail's `cleanup_failed_worktree`). Holding
 the per-worktree lock dispatch holds from attach until its task record is
 published, it runs the caller's ownership proof, proves a forced target clean,
 refuses while another task's unfinished record names the checkout, and only
@@ -629,7 +629,7 @@ depth, the ask entry path converts SIGTERM into an orderly unwind
 
 ### Interrupted `git worktree add` (#8663)
 
-Dispatch v2 prepares worktrees through `scripts/dispatcher/git.py`. The legacy
+Dispatch v2 prepares worktrees through `lu_machinery/dispatcher/git.py`. The legacy
 adaptive `DELEGATE_WORKTREE_ADD_*` timeouts and their launcher recovery path
 are retired. Do not infer that an interrupted checkout is disposable: inspect
 its task record, Git registration, process liveness and custody first. Remove
@@ -762,7 +762,7 @@ present after `--apply` ran (residual branches are reported, never force-deleted
 past an exact-head-match proof). A kept worktree is a blocker for its owner to
 resolve, not permission to remove it with `--force`.
 
-The canonical PR lifecycle trail (`scripts/config/trails/rb3-pr-lifecycle.trail.yaml`)
+The canonical PR lifecycle trail (`lu_machinery/config/trails/rb3-pr-lifecycle.trail.yaml`)
 runs its own post-merge step: it deletes the merged remote branch when no open PR
 uses it, prunes origin, and removes no worktree; a worktree still on disk stops the
 trail at `STOP-hygiene-failed`. Other merge owners must invoke the exact command
@@ -1087,7 +1087,7 @@ registers, so every one of those comes from the primary checkout via
 
 ```bash
 export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k \
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.tools.task_scratch run --task-id atlas-8307-410k \
     --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \
     bash -euc '
       "$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas \
@@ -1138,10 +1138,10 @@ entirely; migrate each producer by pointing its output flags at
 
 ```bash
 # inventory: every lease with the guard that preserves it (mutation-free)
-"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.tools.task_scratch recover
 
 # reclaim proven orphans (what the scheduled runner does)
-"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover --apply
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.tools.task_scratch recover --apply
 ```
 
 `scheduled_worktree_cleanup.py` runs the same recovery after the `/tmp` leak sweep.

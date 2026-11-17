@@ -13,7 +13,7 @@ launcher, headless dispatch).
 **Product epic:** #6027 · **Stream:** #4707 (`infra-harness`).
 **Status:** documentation contract for the structured-ACP + KimiCC rollout.
 **Live routing data:** always re-read `GET /api/rules`,
-`scripts/config/model_catalog.yaml`, and
+`lu_machinery/config/model_catalog.yaml`, and
 `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code live
 plane mode, model pins, or formal-review eligibility from memory.
 
@@ -186,7 +186,7 @@ job/reservation state. Never infer provider health from route counts alone.
 
 ### Discuss is not formal review
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` produces design
+`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` produces design
 input and transcripts. It does **not** satisfy independent cross-family review.
 
 Formal CF uses one direct `ask-<lane> --type review` request to a qualified
@@ -236,7 +236,7 @@ worktree would otherwise be created under the primary while the brief still
 described the sibling (#6900).
 
 **Preferred (#672 P2.1):** pass an allowlisted `--repo` key from
-`scripts/config/fleet_repos.yaml` so delegate creates the layout-A worktree
+`lu_machinery/config/fleet_repos.yaml` so delegate creates the layout-A worktree
 under that sibling checkout:
 
 ```bash
@@ -272,7 +272,7 @@ P2 slices — not this v1.
 
 For bounded implementation or investigation, read the machine-readable
 `execution_routing.sol_advised_bounded` route in
-[`scripts/config/model_catalog.yaml`](../../scripts/config/model_catalog.yaml)
+`lu_machinery/config/model_catalog.yaml`
 before dispatching:
 
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
@@ -733,18 +733,18 @@ printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
   --task-id acp-task --correlation-id acp-task-v1 --idempotency-key acp-task-v1
 
 # Normal fleet-TUI surface: automatically ACP-backed for an enabled pair.
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge discuss <channel> "..." \
   --with claude,grok
 
 # More or fewer than two participants reject loudly before provider or
 # authority work; there is no bridge/provider-execution fallback.
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge discuss <channel> "..." \
   --with agy,codex,cursor
 
 # Direct toolful CF: choose a qualified lane outside the author family.
 # Request verdict + findings at the exact PR head, then post them on the PR.
 printf '%s\n' 'Review PR #<N> at head <SHA>: verdict + findings.' | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+  .venv/bin/python -m lu_machinery.ai_agent_bridge ask-<lane> - \
   --task-id review-<N> --type review
 
 # Execution
@@ -817,7 +817,7 @@ attempt worktree custody.
 Dead reviewer seats must fail with an actionable error — never mid-review
 with a bare "not found on PATH" (#6805). The `ask-*` compatibility shim runs
 a PATH-only preflight
-(`scripts/agent_runtime/adapters/acpx.py::probe_participant_reachability`)
+(`lu_machinery/agent_runtime/adapters/acpx.py::probe_participant_reachability`)
 only when a real provider invocation is about to occur — terminal-replay
 paths never reach it, so a missing provider CLI cannot fail the replay of an
 already-durable result. The adapter re-checks the full compatibility contract

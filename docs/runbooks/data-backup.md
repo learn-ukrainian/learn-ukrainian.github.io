@@ -560,8 +560,8 @@ No repository, snapshot or source data is deleted.
 After deployment is separately authorized, run from the primary checkout:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD"
-.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply
+LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.install_backup_timer --repo-root "$PWD"
+LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.install_backup_timer --repo-root "$PWD" --apply
 ```
 
 The legacy wrapper and `batch_state/backups/last-run.json` remain available for

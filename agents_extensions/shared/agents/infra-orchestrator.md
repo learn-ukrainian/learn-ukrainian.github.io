@@ -74,7 +74,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 - Yours: `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`, `scripts/orchestration/`,
   `scripts/lexicon/` + Atlas, `linear_pipeline.py` and the V7 pipeline, gates + `scripts/curriculum/pedagogy_config.py` /
   `scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the SessionStart and
-  PostCompact hooks, launchers, deploy (`scripts/deploy_prompts.sh`), the Monitor API, tests.
+  PostCompact hooks, launchers, deploy (`lu_machinery/deploy_prompts.sh`), the Monitor API, tests.
 - File path is not epic ownership. Product epics get carved out of shared infra directories and run
   their own driver under a different agent type; before treating any PR, issue, or branch as yours,
   check `scripts/config/area_assignments.yaml`, the branch or brief name for a carved-out epic slug,

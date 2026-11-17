@@ -31,7 +31,7 @@ To prevent dirty checkout drift:
 - `lu_machinery/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
 - Each delegator dynamically resolves the current worktree root (`git rev-parse --show-toplevel`) and delegates to `$root/.githooks/<name>` if executable.
 - The Entire CLI integration was removed (C-2928). A host may still carry its wrappers (marked `# Entire CLI hooks`) with the delegator moved to `<name>.pre-entire`. The installer replaces each such wrapper with the delegator, removes the Entire-only `prepare-commit-msg` and `post-rewrite` wrappers, and removes the `<name>.pre-entire` delegators it generated. The installer refuses, before changing anything, when the hooks directory or any hook path it would write is a symlink, dangling or not.
-- `scripts/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper remains (`RETIRED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`lu_machinery/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
+- `lu_machinery/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper remains (`RETIRED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`lu_machinery/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
 
 ## Keep / drop matrix
 
@@ -52,7 +52,7 @@ To prevent dirty checkout drift:
 ## Grok profile (enforced recommendation)
 
 ```toml
-# ~/.grok/config.toml  (apply with scripts/hooks/apply_grok_hook_profile.py --apply)
+# ~/.grok/config.toml  (apply with .venv/bin/python -m lu_machinery.hooks.apply_grok_hook_profile --apply)
 [compat.claude]
 hooks = false
 ```
