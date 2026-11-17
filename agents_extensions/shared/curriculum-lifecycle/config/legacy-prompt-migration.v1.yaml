@@ -43,49 +43,49 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 30c0f29b4568e8c2570013e1cfb3e606d8cf9681bb4bf3464ae3251e8049f493
+    content_sha256: d0591a355a180ac1d9543083b816a75ecb8336b14366c438e240276d91d016fd
   a1/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
     owners: [CODE, CONFIG, PROMPT, POLICY]
     rationale_id: canonical-reference
-    content_sha256: 44d84b7605ecaa81a20d42397c858701ea8fb196629c3d2a638827ec7c492082
+    content_sha256: 808e9f4daeb1771ee486652016a690c566c0a36e1c12b9ba0b0558723b7a8e90
   a2/quality-audit-orchestrator.md:
     operator_entry_point: false
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 0079d2bec2e0ebe0c24003f30d270b6bd940ffc8e5ef55193187b257d856ba7b
+    content_sha256: b687a81129e586888303dac58251937c0c3a0810cd18fe5710d0f62ac8dc31ec
   a2/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
     owners: [CODE, CONFIG, PROMPT, POLICY]
     rationale_id: canonical-reference
-    content_sha256: 1bbd53fd0b2c68bc23c6bdd8193ed5cbac0532d364c59fb5da308b3894504f4a
+    content_sha256: c77a52e84b5533020d9fc335e8e6d2169203402a6c8c74d4043909c7aff2745b
   b1/finale-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
     owners: [CODE, CONFIG, PROMPT]
     rationale_id: canonical-reference
-    content_sha256: bddb56fec574326490ba13efbe90b0fafb2e8d292841b0a125a73affafa8018a
+    content_sha256: 3ed34a017dbee8b7df04e835e0a08a5a71181c99e176ec782c266e0233cae352
   b1/quality-audit-orchestrator.md:
     operator_entry_point: false
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: bfde0468113d09c446d9d22478e254012cec09d1a905a9e545d637ba7350ca26
+    content_sha256: b796cad168f54a2f99e43d1d24701661829559c4148789fdcbcf6d36ab4e6627
   b1/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
     owners: [CODE, CONFIG, PROMPT, POLICY]
     rationale_id: canonical-reference
-    content_sha256: 5577d11b352404a45b269149e592e63d575b05530a00919c63965ef6a8deaabb
+    content_sha256: 3d179555728a632ffa4c48a3066ebdc9831847bd0415d88ad1c2a7f150fa6aae
   b2/preflight-readiness-audit-orchestrator.md:
     operator_entry_point: false
     disposition: retained-eval
     owners: [CODE, CONFIG, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: aff22a91328ba9f1150b63fd078b1ba7a27bf82009e9dee3c61dfd87357fdacb
+    content_sha256: 1057e5ff8c4c6d1fac978fcdd756bbce8810ee9fb6d55b90c84edba2a4993fcf
   b2/production-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
@@ -97,7 +97,7 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: a92e84ecb896f22c0a1f8edc5197f50b058adf7df725bd351143837e9c608cfa
+    content_sha256: 51d281cede7b9023ccae2ed5560a7967e695ac3e8beab5132ad2b412682ab577
   bio/suite-orchestrator.md:
     operator_entry_point: false
     disposition: retained-eval
@@ -211,7 +211,7 @@ entries:
     disposition: reference-only
     owners: [REFERENCE]
     rationale_id: migration-index
-    content_sha256: fe3c264ef302770afb21e49a19f03f3e641e6878c0354f02dae04a3a22ce3381
+    content_sha256: ea939db56801c87dc8866ebb810160a5dc4437537bf236e154ecdbf7d7cb5648
   ruth/suite-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only

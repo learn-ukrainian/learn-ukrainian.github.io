@@ -209,16 +209,11 @@ entries:
     kind: evidence
     paths:
       - docs/api-endpoint-consumer-map-2026-05-06.md
-      - docs/api-stability-audit-2026-05-06.md
-      - docs/monitor-api-ui-audit-2026-06-07.md
       - docs/corpus-gap-audit.md
-      - docs/personal-name-audit.md
-      - docs/phase-2-config-audit-report.md
-      - docs/phase-4-exemplar-report.md
       - docs/rag-gap-1026.md
       - docs/atlas-data-coverage-strategy.md
-    purpose: One-time audit evidence at the docs root - Monitor API consumer and stability audits, corpus and RAG gap audits, config and exemplar reports, personal-name and Atlas coverage audits.
-    keywords: [audit, API stability, endpoint consumers, corpus gap, RAG gap, exemplar report, Atlas coverage]
+    purpose: One-time audit evidence at the docs root - the Monitor API endpoint consumer map, corpus and RAG gap audits and the Atlas coverage audit.
+    keywords: [audit, endpoint consumers, corpus gap, RAG gap, Atlas coverage]
     lifecycle: archive
     owner: infra-harness
     query:
@@ -230,14 +225,11 @@ entries:
     paths:
       - docs/MASTER-PLAN.md
       - docs/cleanup-plan-2026-q2.md
-      - docs/orchestrator-frictions.md
       - docs/prompt-budgets.md
       - docs/salvage-manifest.md
-      - docs/session-state-2026-04-04.md
-      - docs/state-reconciliation.md
       - docs/v5-v3-to-v6-phase-mapping.md
       - docs/wiki-rebuild-plan.md
-    purpose: Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot kept for history.
+    purpose: Old plans, V6-era budgets and phase mapping, the reboot salvage manifest and the wiki rebuild plan, kept for history.
     keywords: [master plan, cleanup plan, salvage manifest, prompt budgets, V6, wiki rebuild plan]
     lifecycle: archive
     owner: infra-harness
@@ -574,7 +566,7 @@ entries:
   - id: token-usage-reports
     kind: generated
     paths: [docs/token-usage/**]
-    purpose: A generated April 2026 Claude token report and a hand-written token waste report; not current usage.
+    purpose: A generated April 2026 Claude token report and a hand-written token waste report; not current usage. The generator was removed, so the report is frozen.
     keywords: [token usage, token report, token waste]
     lifecycle: archive
     owner: infra-harness
@@ -586,7 +578,7 @@ entries:
   - id: dispatch-briefs
     kind: doc_family
     paths: [docs/dispatch-briefs/**]
-    purpose: One-shot worker dispatch briefs (April to September 2026) and two batch folders; each describes finished task scope.
+    purpose: The few finished one-shot worker dispatch briefs (May and June 2026) that live docs, scripts or the source permissions register still cite, plus one OpenCode brief kept by policy; each describes finished task scope.
     keywords: [dispatch brief, worker prompt, task brief, prompt file]
     lifecycle: archive
     owner: infra-harness
@@ -603,18 +595,6 @@ entries:
     owner: infra-harness
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/dispatch-briefs/luna-max-closeout-contract.md"}
-    content_searchable: true
-
-  - id: dispatch-briefs-upgrade-pilot
-    kind: doc_family
-    paths: [docs/dispatch-briefs/2026-09-12-cu-p0-pilot-*.md]
-    purpose: Writer, repair and review briefs for the abandoned --upgrade phase-0 pilot.
-    keywords: [upgrade pilot, cu-p0, things-have-gender]
-    lifecycle: superseded
-    superseded_by: docs/epics/fresh-build-build-program.md
-    owner: curriculum-upgrade
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/dispatch-briefs/2026-09-12-cu-p0-pilot-*'"}
     content_searchable: true
 
   - id: plans
@@ -890,8 +870,8 @@ entries:
   - id: archive
     kind: doc_family
     paths: [docs/archive/**]
-    purpose: Frozen archive of retired V5/V6-era guides, analyses, plans, root scratch files and old eval docs.
-    keywords: [archive, retired guide, V5, V6, damage report]
+    purpose: Frozen archive - the retired OES and RUTH curriculum plans, the old Claude-Gemini cooperation protocol, the RAG literary catalogue and contents, the root-scratch README and the old eval harness docs.
+    keywords: [archive, OES curriculum, RUTH curriculum, cooperation protocol, RAG literary catalogue]
     lifecycle: archive
     owner: docs-knowledge
     query:
@@ -899,17 +879,6 @@ entries:
     content_searchable: true
 
   # ================================================================ audits and reports
-  - id: audits-core
-    kind: evidence
-    paths: [docs/audits/*]
-    purpose: Dated June/July 2026 score ledgers, readiness and quality audits of the old core modules (A1, A2, B1, B2).
-    keywords: [LLM scores, B2 audit, preflight readiness, quality audit, score normalization]
-    lifecycle: archive
-    owner: core-quality
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/audits"}
-    content_searchable: true
-
   - id: audits-bio
     kind: evidence
     paths: [docs/audits/bio-*]
@@ -935,26 +904,15 @@ entries:
       - {surface: cli, how: ".venv/bin/python scripts/audit/bio_lit_cross_reference.py --help (regenerates the gaps file)"}
     content_searchable: true
 
-  - id: audits-folk
-    kind: evidence
-    paths: [docs/audits/folk-*]
-    purpose: June 2026 FOLK preflight readiness and reading coverage audits.
-    keywords: [folk readiness, reading coverage]
-    lifecycle: archive
-    owner: seminars-folk
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/audits/folk-*'"}
-    content_searchable: true
-
   - id: audits-tooling
     kind: evidence
-    paths: [docs/audits/codeql-*, docs/audits/prompt-audit-fable-5-1-2026-09-01.md, docs/audits/slovnyk-me-ingestion-feasibility.md]
-    purpose: CodeQL triage and its cleanup diff, a September prompt-size audit and the slovnyk.me ingestion feasibility study.
-    keywords: [CodeQL, prompt audit, slovnyk.me feasibility]
+    paths: [docs/audits/slovnyk-me-ingestion-feasibility.md]
+    purpose: The slovnyk.me ingestion feasibility study; scripts/ingest/slovnyk_me_ingest.py reads it as its default notes file.
+    keywords: [slovnyk.me feasibility, slovnyk.me ingestion]
     lifecycle: archive
     owner: infra-harness
     query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/audits/codeql-*' docs/audits/prompt-audit-fable-5-1-2026-09-01.md"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/audits/slovnyk-me-ingestion-feasibility.md"}
     content_searchable: true
 
   - id: audits-open-model-data
@@ -971,41 +929,19 @@ entries:
   - id: reports-analyses
     kind: evidence
     paths: [docs/reports/*]
-    purpose: Dated analysis reports - vocabulary audits, A1 macro review, April diagnoses, dashboard endpoint audit and the July model qualification benchmark.
-    keywords: [model qualification benchmark, dashboard endpoint audit, vocabulary audit, A1 macro review]
+    purpose: The April 2026 A1 colors diagnosis that the A1 colors plan cites.
+    keywords: [A1 colors diagnosis, colors plan]
     lifecycle: archive
     owner: infra-harness
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/reports"}
     content_searchable: true
 
-  - id: reports-oneshot-scripts-and-drafts
-    kind: generated
-    paths: [docs/reports/*.py, docs/reports/gh_comment_*.md, docs/reports/gh_issue_chunking.md]
-    purpose: April 2026 one-off migration scripts and drafted GitHub comments; not wired into any tool.
-    keywords: [one-off script, GitHub comment draft, plan migration]
-    lifecycle: archive
-    owner: curriculum-upgrade
-    query:
-      - {surface: git_grep, how: "git grep -n -F '<issue number>' -- docs/reports"}
-    content_searchable: true
-
-  - id: reports-a1-reviews
-    kind: evidence
-    paths: [docs/reports/a1_reviews/**]
-    purpose: January 2026 per-module AI review scorecards of the old A1 modules.
-    keywords: [A1 review, module scorecard, old A1]
-    lifecycle: archive
-    owner: core-quality
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<module title>' -- docs/reports/a1_reviews"}
-    content_searchable: true
-
   - id: issues-reports
     kind: evidence
     paths: [docs/issues/**]
-    purpose: January/February 2026 B1/B2/C1 rebuild audit reports, completion notes and OES/C1-BIO research artefacts; not GitHub issues.
-    keywords: [B1 audit, B2 audit, C1 audit, rebuild audit, OES research, Claude Code 2.1]
+    purpose: Early 2026 OES and RUTH research artefacts and the activity spec that the OES and RUTH plans cite; not GitHub issues.
+    keywords: [OES research, RUTH research, activity spec]
     lifecycle: archive
     owner: core-quality
     query:
@@ -1015,8 +951,8 @@ entries:
   - id: dev-notes
     kind: doc_family
     paths: [docs/dev/**]
-    purpose: January to March 2026 developer notes, migration contexts, vocabulary workflow notes and naturalness scans of the old modules.
-    keywords: [developer notes, migration context, vocabulary workflow, naturalness scan, narrative engine]
+    purpose: Developer notes that skills, rules, templates or the installed release still cite - content module enhancement, LIT migration strategy, the metadata YAML schema, public agent text and agent success metrics.
+    keywords: [developer notes, content module enhancement, LIT migration, metadata schema, agent public text, agent success metrics]
     lifecycle: archive
     owner: curriculum-upgrade
     query:
