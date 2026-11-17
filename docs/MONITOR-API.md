@@ -3124,7 +3124,7 @@ The following legacy endpoints and route aliases have been completely retired an
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
 | `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
 | `GET /api/cost/*` | none | 404 Not Found | Retired in #7947; its canonical `/api/analytics/cost/*` was removed in the 2026-11-12 product page trim |
-| `GET /api/analytics/cost/*` | `.venv/bin/python -m lu_machinery.telemetry.cost_report` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
+| `GET /api/analytics/cost/*` | `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
 | `/api/build/events/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; no dispatch metadata files exist to read |
 | `/api/consultation/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; queue and history were empty and nothing writes them |
 | `/api/images/*` | `GET /api/sources/browse_images` | 404 Not Found | Removed in the 2026-11-12 product page trim; no textbook image index exists |

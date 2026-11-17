@@ -154,7 +154,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Flow: UK wikis → UK A1/A2 
 
 Project-side:
 - `... ai_agent_bridge/__main__.py codex-usage`
-- `.venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
+- `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
 - Monitor: `/machinery` for workers, usage and Fleet Comms
 - Raw: `batch_state/api_usage/*.jsonl`
 - API: `/api/health` (shows resilience/slows), `/api/runtime/agents`, `/api/runtime/recent`

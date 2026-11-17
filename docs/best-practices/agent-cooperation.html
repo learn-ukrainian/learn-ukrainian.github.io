@@ -591,7 +591,7 @@ handoff. It keeps <code>Latest-Brief:</code> plus an <code>Agent-Handoff:</code>
 </table>
 <p>Thread rollover packets are generated locally under
 <code>.agent/&lt;agent&gt;-thread-handoff.md</code> by
-<code>.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare</code>. They are for moving a
+<code>LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare</code>. They are for moving a
 saturated thread to a fresh thread; do not use them as the durable orchestrator
 state file.</p>
 <p>For compatibility, <code>docs/session-state/current.orchestrator.md</code> remains a thin

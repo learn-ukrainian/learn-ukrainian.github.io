@@ -133,7 +133,7 @@ the review-loop ukrainian seats, with no Claude seat (no DeepSeek, and Grok is n
 
 Exact tables below must match `lu_machinery/config/model_catalog.yaml` → `orchestrator_seats` and
 `lu_machinery/config/fleet_communications.yaml` → `endpoints[*].formal_review_eligible`. Enforced by
-`.venv/bin/python -m lu_machinery.lint.lint_fleet_roster` (never rewrites prose).
+`LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.lint.lint_fleet_roster` (never rewrites prose).
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
