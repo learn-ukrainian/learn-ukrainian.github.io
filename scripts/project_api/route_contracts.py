@@ -12,8 +12,8 @@ from lu_machinery.api.route_contracts import PageContract, RouteContract
 # Freshness wording shared by the routes that serve ``snapshots.read_snapshot``.
 _SWR = (
     "served from a stale-while-revalidate snapshot with its true age in X-Snapshot-Age-S; one background "
-    "scan replaces it after the TTL, the startup warmup fills the default keys, a cold read waits at most "
-    "5s then answers 503 SNAPSHOT_WARMING with Retry-After, and a key whose last scan failed is rescanned "
+    "scan replaces it after the TTL, the startup warmup fills the default keys, a cold read waits until 1s before "
+    "the request timeout, then answers 503 SNAPSHOT_WARMING with Retry-After, and a key whose last scan failed is rescanned "
     "before it is served"
 )
 

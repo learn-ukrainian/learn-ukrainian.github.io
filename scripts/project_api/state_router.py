@@ -305,14 +305,14 @@ def warm_state_scans(ctx: MonitorContext) -> None:
     prime_snapshot(
         ctx,
         "pipeline_versions",
-        ("all",),
+        (None,),
         STATE_PIPELINE_VERSIONS_TTL_S,
         lambda: _compute_pipeline_versions_payload(ctx, None),
     )
     prime_snapshot(
         ctx,
         "weak_points",
-        ("all", 7, 20),
+        (None, 7, 20),
         STATE_WEAK_POINTS_TTL_S,
         lambda: _compute_weak_points_payload(ctx, None, 7, 20),
     )
@@ -335,7 +335,7 @@ def warm_state_scans(ctx: MonitorContext) -> None:
         STATE_RESEARCH_COVERAGE_TTL_S,
         lambda: compute_research_coverage(curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
     )
-    prime_snapshot(ctx, "failing", ("all",), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, None))
+    prime_snapshot(ctx, "failing", (None,), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, None))
     prime_snapshot(
         ctx,
         "build_status_all",
@@ -346,14 +346,14 @@ def warm_state_scans(ctx: MonitorContext) -> None:
     prime_snapshot(
         ctx,
         "enrichment_status",
-        ("all",),
+        (None,),
         STATE_ENRICHMENT_TTL_S,
         lambda: compute_enrichment_status(None, curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
     )
     prime_snapshot(
         ctx,
         "issues",
-        ("all", "all"),
+        (None, None),
         STATE_ISSUES_TTL_S,
         lambda: compute_issues(None, None, curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
     )
@@ -506,7 +506,7 @@ async def pipeline_versions(
     snapshot, state = await read_snapshot(
         ctx,
         "pipeline_versions",
-        (track or "all",),
+        (track,),
         STATE_PIPELINE_VERSIONS_TTL_S,
         lambda: _compute_pipeline_versions_payload(ctx, track),
         force=fresh,
@@ -618,7 +618,7 @@ async def weak_points(
     snapshot, _state = await read_snapshot(
         ctx,
         "weak_points",
-        (track or "all", min_score, limit),
+        (track, min_score, limit),
         STATE_WEAK_POINTS_TTL_S,
         lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
         force=fresh,
@@ -631,7 +631,7 @@ async def weak_points(
 async def failing_modules(response: Response, track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """All modules with audit failures or phase failures."""
     snapshot, _state = await read_snapshot(
-        ctx, "failing", (track or "all",), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, track)
+        ctx, "failing", (track,), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, track)
     )
     stamp_age(response, snapshot)
     return snapshot.value
@@ -1115,7 +1115,7 @@ async def enrichment_status(
     snapshot, _state = await read_snapshot(
         ctx,
         "enrichment_status",
-        (track or "all",),
+        (track,),
         STATE_ENRICHMENT_TTL_S,
         lambda: compute_enrichment_status(
             track,
@@ -1161,7 +1161,7 @@ async def outstanding_issues(
     snapshot, _state = await read_snapshot(
         ctx,
         "issues",
-        (track or "all", severity or "all"),
+        (track, severity),
         STATE_ISSUES_TTL_S,
         lambda: compute_issues(
             track,

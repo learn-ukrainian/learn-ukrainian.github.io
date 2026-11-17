@@ -830,8 +830,9 @@ the scan started reading, in the `X-Snapshot-Age-S` response header: `/api/state
 `/api/dashboard/research`; `/api/decisions/lineage`; `/api/site/health`;
 `/api/artifacts/html` and `/api/artifacts/ship-ready`. Once a result is older than
 its route TTL, one background scan replaces it. The startup warmup fills the default
-keys and logs `Product snapshot warmup finished` when done. A cold key waits at most
-5 s and then answers `503` with `detail.code = SNAPSHOT_WARMING` and `Retry-After`.
+keys and logs `Product snapshot warmup finished` when done. A cold key waits until
+1 s before the request timeout (9 s by default) and then answers `503` with
+`detail.code = SNAPSHOT_WARMING` and `Retry-After`.
 The scan keeps running and stores its result. If a key's last scan failed, its old
 result is not served again: the next request rescans and receives the error. The
 `/api/state/preparation` roster is not a snapshot; its contract requires a recompute
@@ -1023,7 +1024,7 @@ Pipeline generation counts and rebuild pressure. **The single-glance migration d
 
 **Caching:** a snapshot route (see the note at the top of this section) with a 60 s
 TTL; concurrent cold misses share one curriculum walk. Pass `?fresh=true` to force
-one coalesced recompute (still bounded by the 5 s cold wait). Response `meta.cache`
+one coalesced recompute (still bounded by the cold wait). Response `meta.cache`
 is `hit`, `stale` (served while a refresh runs) or `miss`, and `meta.age_s` and
 `meta.stale` repeat the snapshot age.
 

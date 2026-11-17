@@ -315,7 +315,8 @@ def _track_status_rows(
     return rows
 
 
-def _compute_wiki_status(ctx: MonitorContext, known_tracks: list[str]) -> dict[str, Any]:
+def _compute_wiki_status(ctx: MonitorContext) -> dict[str, Any]:
+    known_tracks = _known_tracks(ctx)
     article_candidates = _list_article_candidates(ctx)
     word_count_cache: dict[Path, int] = {}
     _preload_article_word_counts(article_candidates, word_count_cache, _wiki_dir(ctx))
@@ -340,28 +341,26 @@ def _compute_wiki_status(ctx: MonitorContext, known_tracks: list[str]) -> dict[s
     return {"tracks": tracks}
 
 
-def _wiki_status_params(ctx: MonitorContext) -> tuple[list[str], tuple[object, ...]]:
-    known_tracks = _known_tracks(ctx)
-    return known_tracks, (str(_wiki_dir(ctx)), ",".join(known_tracks))
-
-
 def _compute_quality_gate(ctx: MonitorContext) -> dict[str, Any]:
     return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
 
 
 def warm_wiki_snapshots(ctx: MonitorContext) -> None:
     """Fill the all-track wiki status and quality-gate snapshots after process start."""
-    known_tracks, params = _wiki_status_params(ctx)
-    prime_snapshot(ctx, "wiki_status", params, WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx, known_tracks))
+    prime_snapshot(ctx, "wiki_status", (), WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx))
     prime_snapshot(ctx, "wiki_quality_gate", (), WIKI_QUALITY_GATE_TTL_S, lambda: _compute_quality_gate(ctx))
 
 
 @router.get("/status")
 async def wiki_status(response: Response, ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track wiki compilation status."""
-    known_tracks, params = _wiki_status_params(ctx)
+    """Per-track wiki compilation status.
+
+    The tracks and the wiki tree are resolved inside the scan: their lookups take
+    the context's runtime lock, which the article index holds while it walks the
+    wiki, so they never run on the event loop.
+    """
     snapshot, _state = await read_snapshot(
-        ctx, "wiki_status", params, WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx, known_tracks)
+        ctx, "wiki_status", (), WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx)
     )
     stamp_age(response, snapshot)
     return snapshot.value

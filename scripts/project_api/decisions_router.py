@@ -96,7 +96,7 @@ def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = N
 
 
 def _lineage_params(ctx: MonitorContext, decision_id: str | None) -> tuple[object, ...]:
-    return (str(ctx.roots.live_repo_root), decision_id or "")
+    return (str(ctx.roots.live_repo_root), decision_id)
 
 
 def warm_lineage_snapshot(ctx: MonitorContext) -> None:

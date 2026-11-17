@@ -119,13 +119,7 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 def _html_artifact_params(
     class_: str | None, date_from: str | None, status: str | None, author: str | None, types: tuple[str, ...]
 ) -> tuple[object, ...]:
-    # One JSON part, so a colon inside a filter cannot collide with another filter.
-    return (
-        json.dumps(
-            [class_ or "", date_from or "", status or "", author or "", list(types)],
-            separators=(",", ":"),
-        ),
-    )
+    return (class_, date_from, status, author, list(types))
 
 
 def warm_artifact_snapshots(ctx: MonitorContext) -> None:
@@ -140,7 +134,7 @@ def warm_artifact_snapshots(ctx: MonitorContext) -> None:
             class_filter=None, date_from=None, status=None, author=None, types=types, ctx=ctx
         ),
     )
-    prime_snapshot(ctx, "ship_ready", ("all",), _SHIP_READY_TTL_S, lambda: _list_artifact_gates_green(None, ctx=ctx))
+    prime_snapshot(ctx, "ship_ready", (None,), _SHIP_READY_TTL_S, lambda: _list_artifact_gates_green(None, ctx=ctx))
 
 
 @router.get("/html")
@@ -520,7 +514,7 @@ async def ship_ready(
     snapshot, _state = await read_snapshot(
         resolved,
         "ship_ready",
-        (track or "all",),
+        (track,),
         _SHIP_READY_TTL_S,
         lambda: _list_artifact_gates_green(track, ctx=resolved),
     )

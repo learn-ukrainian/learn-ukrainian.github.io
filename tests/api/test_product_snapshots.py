@@ -120,7 +120,7 @@ def test_cold_snapshot_past_wait_answers_typed_503_and_keeps_scanning(
     scan.gate.clear()
     with _client(tmp_path, monkeypatch, scan) as client:
         # The scan cannot finish before the gate opens, so any wait bound gives the 503.
-        monkeypatch.setattr(snapshots, "COLD_WAIT_S", 0.05)
+        monkeypatch.setattr(snapshots, "cold_wait_s", lambda: 0.05)
 
         for _ in range(2):
             warming = client.get(_FAILING)
@@ -131,7 +131,7 @@ def test_cold_snapshot_past_wait_answers_typed_503_and_keeps_scanning(
         assert scan.entered.is_set()
         assert scan.calls == 1
 
-        monkeypatch.setattr(snapshots, "COLD_WAIT_S", _JOIN_S)
+        monkeypatch.setattr(snapshots, "cold_wait_s", lambda: _JOIN_S)
         scan.gate.set()
         ready = client.get(_FAILING)
         assert ready.status_code == 200

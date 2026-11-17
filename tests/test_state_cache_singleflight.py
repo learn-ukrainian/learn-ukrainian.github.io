@@ -230,7 +230,7 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     warm_thread.join(timeout=30)
     assert not warm_thread.is_alive(), "state scan warmup thread did not finish within 30s"
 
-    pipe_key = snapshots.snapshot_key(ctx, "pipeline_versions", "all")
-    weak_key = snapshots.snapshot_key(ctx, "weak_points", "all", 7, 20)
+    pipe_key = snapshots.snapshot_key(ctx, "pipeline_versions", None)
+    weak_key = snapshots.snapshot_key(ctx, "weak_points", None, 7, 20)
     assert state_helpers.cache_get(pipe_key, 60.0).value["track"] is None
     assert state_helpers.cache_get(weak_key, 60.0).value["limit"] == 20

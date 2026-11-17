@@ -10,18 +10,21 @@ warmup share one scan per key.
 
 A request waits for a scan only when nothing usable is stored: a cold key, a
 forced ``?fresh=true`` read, or a key whose last scan failed (a failing refresh
-never hides behind old data: the next reader gets the error). That wait is bounded by
-``COLD_WAIT_S``; past it the route answers a typed 503 with ``Retry-After``
-while the scan keeps running and stores its result. A scan that raises reaches
+never hides behind old data: the next reader gets the error). That wait ends
+``COLD_WAIT_MARGIN_S`` before the Monitor request timeout
+(``lu_machinery.api.resilience.request_timeout_s``); past it the route answers a
+typed 503 with ``Retry-After`` instead of the timeout's 504, while the scan keeps
+running and stores its result. A scan that raises reaches
 the route unchanged, so each route keeps its own error mapping.
 
 Example:
-  .venv/bin/python -c "from scripts.project_api import snapshots; print(snapshots.COLD_WAIT_S)"
+  .venv/bin/python -c "from scripts.project_api import snapshots; print(snapshots.cold_wait_s())"
 """
 
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import threading
 import time
@@ -32,6 +35,7 @@ from typing import Any, Literal
 
 from fastapi import HTTPException, Response
 from lu_machinery.api.monitor_context import MonitorContext
+from lu_machinery.api.resilience import request_timeout_s
 from lu_machinery.api.state_helpers import (
     cache_get_or_compute,
     cache_get_or_compute_async,
@@ -40,9 +44,9 @@ from lu_machinery.api.state_helpers import (
     schedule_cache_refresh,
 )
 
-# Below the Monitor's 10-second request timeout, so a cold read answers a typed
-# 503 instead of being cut off with a 504.
-COLD_WAIT_S = 5.0
+# A cold read stops waiting this long before the Monitor request timeout, so it
+# answers the typed 503 itself instead of being cut off with a 504.
+COLD_WAIT_MARGIN_S = 1.0
 AGE_HEADER = "X-Snapshot-Age-S"
 RETRY_AFTER_S = 5
 
@@ -92,9 +96,20 @@ def _last_scan_failed(key: str) -> bool:
         return key in _failed_keys
 
 
+def cold_wait_s() -> float:
+    """How long a request waits for a cold scan: until the margin before the request timeout."""
+    return max(0.1, request_timeout_s() - COLD_WAIT_MARGIN_S)
+
+
 def snapshot_key(ctx: MonitorContext, name: str, *params: object) -> str:
-    """The cache key of one route snapshot, scoped to the app context."""
-    return ctx_scoped_ttl_key(ctx, "snapshot", name, *params)
+    """The cache key of one route snapshot, scoped to the app context.
+
+    The parameters are JSON-encoded, so an omitted filter (``None``) never shares
+    a key with a literal value such as ``"all"`` or ``"None"``, and a value
+    containing the key separator cannot collide with another parameter. A
+    parameter that is not plain JSON data raises ``TypeError``.
+    """
+    return ctx_scoped_ttl_key(ctx, "snapshot", name, json.dumps(list(params), separators=(",", ":")))
 
 
 async def read_snapshot(
@@ -127,7 +142,7 @@ async def read_snapshot(
         force = True
     try:
         snapshot: Snapshot = await asyncio.wait_for(
-            cache_get_or_compute_async(key, ttl, stamped, force=force), timeout=COLD_WAIT_S
+            cache_get_or_compute_async(key, ttl, stamped, force=force), timeout=cold_wait_s()
         )
     except TimeoutError:
         raise HTTPException(
