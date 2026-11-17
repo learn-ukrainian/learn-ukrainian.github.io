@@ -50,6 +50,7 @@ WATCHED_PATHS = [
     "data/corpus_audit/nested/report.md",
     "data/embeddings/manifest.db",
     "data/embeddings/ukrainian_wiki/shard-000001.npy",
+    "data/telemetry/test.json",
 ]
 
 LIVE_RUNTIME_PATHS = [
@@ -59,7 +60,7 @@ LIVE_RUNTIME_PATHS = [
     ".claude/settings.local.json", ".codex/settings.local.json",
     ".claude/worktrees/test/state.json", ".codex/worktrees/test/state.json",
     ".claude/scheduled_tasks.lock", ".codex/retired-skills/test/SKILL.md",
-    "data/telemetry/test.json", "data/lexicon/cache/test.json",
+    "data/lexicon/cache/test.json",
     "data/x.db", "data/x.db-wal", "data/x.db-shm", "data/sub/cache.json",
     "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
     "data/corpus_audit-other/report.md",
@@ -525,6 +526,7 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         ".agents/skills/test/SKILL.md",
         ".gemini/agents/test.md",
         "data/corpus_audit/section_extraction_report.md",
+        "data/telemetry/test.json",
         "data/embeddings/manifest.db",
         "data/embeddings/ukrainian_wiki/shard-000001.npy",
         "data/tracked.txt",

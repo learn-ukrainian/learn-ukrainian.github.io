@@ -1687,6 +1687,47 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
+# One numbered directory per process. ``mktemp`` lists the base to pick the
+# next number, so a per-test call is quadratic over a long session (#8654).
+_LEGACY_BRIDGE_TELEMETRY_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _legacy_bridge_telemetry_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One base directory for every per-test legacy-bridge telemetry store."""
+    return tmp_path_factory.mktemp("legacy-bridge-telemetry")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_legacy_bridge_telemetry(
+    _legacy_bridge_telemetry_base: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> Path:
+    """Point legacy-bridge ask telemetry at a per-test file.
+
+    ``start_bridge_invocation_safely`` persists
+    ``state_root() / data/telemetry/legacy_comms_routes.db``. The installed
+    writer reads ``_shared_telemetry_db_path`` and has no store override:
+    ``LEARN_UKRAINIAN_STATE_ROOT`` must be the primary checkout, so it cannot
+    name a tmp path. A compat-ask test therefore mints the checkout store, and
+    the unregistered-SQLite census ejects the merge group. The directory comes
+    from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse mkdir
+    there breaks tests that require an empty tmp dir (see
+    ``_isolate_write_ownership_ledger``).
+    """
+    store = _legacy_bridge_telemetry_base / str(next(_LEGACY_BRIDGE_TELEMETRY_SEQ))
+    store.mkdir()
+    db_path = store / "legacy_comms_routes.db"
+
+    def _isolated_db_path(_source_repo_root: Path | None = None) -> Path:
+        return db_path
+
+    from lu_machinery.telemetry import legacy_bridge
+
+    monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
+    return db_path
+
+
 @pytest.fixture(autouse=True)
 def _isolate_overview_last_good(tmp_path, monkeypatch):
     """Keep overview last-good on a per-test tmp path (#7024).
