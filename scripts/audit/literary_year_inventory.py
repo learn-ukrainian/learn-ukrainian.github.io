@@ -15,8 +15,9 @@ import ast
 import hashlib
 import json
 import math
+import re
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +53,16 @@ CLASS_NAMES = (
 )
 _SHA256_HEX = frozenset("0123456789abcdefABCDEF")
 _WITNESS_KEYS = ("chunk_id", "source", "source_url")
+# Deepest accepted nesting of JSON arrays and objects, and of scraper syntax-tree
+# nodes. The check is explicit because interpreter recursion limits differ by
+# version: Python 3.14 encodes, decodes and parses far deeper input than 3.12.
+# The real inputs nest about 10 (manifest) and 19 (scraper) levels deep; 500
+# stays below the walker's Python recursion limit in every calling context.
+MAX_NESTING_DEPTH = 500
+# One JSON string literal, skipped whole, or one bracket. An unterminated string
+# runs to the end of the text, so every quote starts a match and the scan is a
+# single linear pass with no retries inside a string.
+_JSON_BRACKET_SCAN = re.compile(r'"(?:[^"\\]++|\\.)*+(?:"|\\?\Z)|[\[\]{}]', re.DOTALL)
 
 
 class InventoryError(Exception):
@@ -70,8 +81,43 @@ class _NonstandardJsonConstant(Exception):
     """Internal signal for NaN/Infinity/-Infinity. The token is not stored."""
 
 
+def _exceeds_nesting_depth(root: object, children: Callable[[Any], Iterable[Any] | None]) -> bool:
+    """Return True when a chain of branch nodes from root is deeper than MAX_NESTING_DEPTH.
+
+    ``children`` returns a branch node's children, or None for a leaf. Iterative,
+    so the answer never depends on the interpreter's recursion limits.
+    """
+    iterators: list[Iterator[Any]] = [iter((root,))]
+    while iterators:
+        for node in iterators[-1]:
+            branch = children(node)
+            if branch is None:
+                continue
+            if len(iterators) > MAX_NESTING_DEPTH:
+                return True
+            iterators.append(iter(branch))
+            break
+        else:
+            iterators.pop()
+    return False
+
+
+def _json_children(value: object) -> Iterable[Any] | None:
+    if isinstance(value, dict):
+        return value.values()
+    if isinstance(value, (list, tuple)):
+        return value
+    return None
+
+
+def _ast_children(node: ast.AST) -> Iterable[ast.AST]:
+    return ast.iter_child_nodes(node)
+
+
 def canonical_json(value: object) -> str:
     """Return compact strict JSON with sorted object keys."""
+    if _exceeds_nesting_depth(value, _json_children):
+        raise InventoryError("json_nesting_limit")
     try:
         return json.dumps(
             value,
@@ -84,8 +130,6 @@ def canonical_json(value: object) -> str:
         if "Out of range float" not in str(exc):
             raise
         raise InventoryError("witness_nonfinite_number") from None
-    except RecursionError:
-        raise InventoryError("json_nesting_limit") from None
 
 
 def _utf8_bytes(payload: str) -> bytes:
@@ -137,8 +181,33 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return obj
 
 
-def _parse_manifest(raw: bytes) -> Any:
-    text = _decode_utf8(raw, "manifest")
+def _json_depth_breach(text: str) -> int | None:
+    """Return the offset of the first bracket opening a level deeper than MAX_NESTING_DEPTH.
+
+    The scan is lexical and linear: string literals are skipped whole, so
+    brackets inside them never count, and an unterminated string ends the scan.
+    An unterminated string or a stray closing bracket is a decode error that the
+    caller reports from the decoder itself.
+    """
+    depth = 0
+    for match in _JSON_BRACKET_SCAN.finditer(text):
+        token = match.group()
+        if token == "[" or token == "{":
+            depth += 1
+            if depth > MAX_NESTING_DEPTH:
+                return match.start()
+        elif token == "]" or token == "}":
+            depth = max(depth - 1, 0)
+    return None
+
+
+def _decode_manifest_json(text: str, *, truncated_at: int | None = None) -> Any:
+    """Decode strict JSON and map each decoder refusal to its fixed code.
+
+    With ``truncated_at``, ``text`` is the prefix that ends just before the
+    first over-deep bracket, so a decode error at or after that offset is at
+    the bracket or the cut, and it means the nesting limit.
+    """
     try:
         return json.loads(
             text,
@@ -149,7 +218,9 @@ def _parse_manifest(raw: bytes) -> Any:
         raise InventoryError("duplicate_json_key") from None
     except _NonstandardJsonConstant:
         raise InventoryError("json_nonstandard_constant") from None
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as exc:
+        if truncated_at is not None and exc.pos >= truncated_at:
+            raise InventoryError("json_nesting_limit") from None
         raise InventoryError("json_parse_failed") from None
     except ValueError as exc:
         if "integer string conversion" not in str(exc):
@@ -157,6 +228,24 @@ def _parse_manifest(raw: bytes) -> Any:
         raise InventoryError("json_integer_limit") from None
     except RecursionError:
         raise InventoryError("json_nesting_limit") from None
+
+
+def _parse_manifest(raw: bytes) -> Any:
+    text = _decode_utf8(raw, "manifest")
+    try:
+        manifest = _decode_manifest_json(text)
+    except InventoryError:
+        # How deep the decoder gets before it stops depends on the interpreter.
+        # Refuse in document order instead: a decode error before the first
+        # over-deep bracket keeps its code; otherwise the nesting limit applies.
+        breach = _json_depth_breach(text)
+        if breach is None:
+            raise
+        _decode_manifest_json(text[:breach], truncated_at=breach)
+        raise InventoryError("json_nesting_limit") from None
+    if _exceeds_nesting_depth(manifest, _json_children):
+        raise InventoryError("json_nesting_limit")
+    return manifest
 
 
 def _split_label(label: str) -> tuple[str, str | None]:
@@ -182,6 +271,8 @@ def _parse_scraper_authors(raw: bytes) -> tuple[dict[str, str], int, int]:
         tree = ast.parse(text)
     except (SyntaxError, MemoryError, RecursionError):
         raise InventoryError("scraper_parse_failed") from None
+    if _exceeds_nesting_depth(tree, _ast_children):
+        raise InventoryError("scraper_parse_failed")
     years_by_name: dict[str, str] = {}
     record_count = 0
     collision_count = 0
@@ -395,10 +486,8 @@ def build_inventory(manifest_raw: bytes, scraper_raw: bytes) -> dict[str, Any]:
         "labels_with_year": 0,
     }
     excluded = {"list_valued": 0, "other_non_dict": 0, "other_source": 0}
-    try:
-        _walk(manifest, [], years_by_name, rows, probe, excluded)
-    except RecursionError:
-        raise InventoryError("json_nesting_limit") from None
+    # _parse_manifest bounded the depth, so this recursion stays under the interpreter limit.
+    _walk(manifest, [], years_by_name, rows, probe, excluded)
     probe["ukrlib_authors_parsed"] = len(years_by_name)
     membership = hashlib.sha256(_utf8_bytes(canonical_json(rows))).hexdigest()
     return {
@@ -466,8 +555,9 @@ def build_parser() -> argparse.ArgumentParser:
             "  and -Infinity tokens are refused. A finite JSON number that overflows the\n"
             "  interpreter float range is refused when it is a chunk_id or source_url value.\n"
             "  Unpaired UTF-16 surrogates are refused when a label, emitted witness or coordinate\n"
-            "  key must be encoded as UTF-8. Inputs that exceed the interpreter integer-digit or\n"
-            "  nesting limits are refused; those limits are left unchanged.\n"
+            "  key must be encoded as UTF-8. Inputs over the interpreter integer-digit limit,\n"
+            "  JSON nested more than 500 arrays and objects deep, and scraper syntax trees more\n"
+            "  than 500 nodes deep are refused; interpreter limits are left unchanged.\n"
             "\n"
             "Exit codes:\n"
             "  0  inventory JSON on stdout\n"

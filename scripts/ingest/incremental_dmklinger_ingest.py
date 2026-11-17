@@ -6,8 +6,10 @@ command grants no canonical activation authority. Dry-run opens SQLite read-only
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 import tempfile
@@ -98,15 +100,21 @@ def _changes(before: list[tuple], expected: list[tuple]) -> tuple[list[tuple], i
 def _resolve_prework_identity(path: Path, failure: str) -> Path:
     """Resolve one identity before any read, database open, or receipt write.
 
-    On Python 3.12, ``Path.resolve`` raises ``RuntimeError`` for a symlink loop.
-    That invalid input becomes ``IngestError`` with the runtime error chained.
-    Later code must use the returned path. A runtime error after this returns
-    is not a refusal.
+    This is the Python 3.12 ``Path.resolve`` algorithm, spelled out so that a
+    symlink loop is refused on every version (since 3.13 ``Path.resolve``
+    returns a looping path instead of raising): resolve without strictness,
+    then stat the result. ``ELOOP`` becomes ``IngestError`` with the ``OSError``
+    chained; any other stat error, such as a missing file, is not a refusal
+    here. Later code must use the returned path. A runtime error after this
+    returns is not a refusal.
     """
+    resolved = Path(os.path.realpath(path))
     try:
-        return path.resolve()
-    except RuntimeError as exc:
-        raise IngestError(failure) from exc
+        resolved.stat()
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise IngestError(failure) from exc
+    return resolved
 
 
 def ingest(
