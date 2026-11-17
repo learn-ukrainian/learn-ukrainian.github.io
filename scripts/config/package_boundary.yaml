@@ -298,9 +298,6 @@ modules:
   sync_landing_pages.py:
     reason: Shim for scripts/sync, which is product.
     role: product
-  token_usage.py:
-    reason: Agent token-usage analyzer.
-    role: machinery
   validate_activities.py:
     reason: Shim for scripts/validate, which is product.
     role: product

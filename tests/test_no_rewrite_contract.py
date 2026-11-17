@@ -121,32 +121,3 @@ def test_rewrite_prompt_string_absent_from_phases(forbidden: str) -> None:
         f"ADR-007 forbidden prompt string `{forbidden}` reappeared in phases:\n"
         + "\n".join(violations)
     )
-
-
-def test_convergence_loop_has_two_strategies_only() -> None:
-    """ADR-007 Validation §2: select_strategy returns only "patch" or "plan_revision_request".
-
-    Grep-based sanity check. Behavioural coverage lives in
-    tests/test_convergence_loop.py.
-    """
-    conv_loop_path = REPO_ROOT / "scripts" / "build" / "convergence_loop.py"
-    text = conv_loop_path.read_text(encoding="utf-8")
-    forbidden_strategies = ("section_rewrite", "full_rewrite", "writer_swap")
-    violations: list[str] = []
-    for strategy in forbidden_strategies:
-        idx = 0
-        while True:
-            pos = text.find(strategy, idx)
-            if pos < 0:
-                break
-            window = text[max(0, pos - 80) : pos + 80]
-            if not _ADR_REF_RE.search(window):
-                violations.append(strategy)
-                break
-            idx = pos + len(strategy)
-
-    assert not violations, (
-        "convergence_loop.py references forbidden strategies: "
-        + ", ".join(violations)
-        + "\nSee docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md."
-    )

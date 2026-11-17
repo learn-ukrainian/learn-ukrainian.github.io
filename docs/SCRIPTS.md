@@ -434,25 +434,6 @@ Use `subscription` as the default for normal bridge work. Use `api-key` only for
 
 ---
 
-## Token Usage Analytics
-
-Analyze Claude Code token consumption across learn-ukrainian and kubedojo projects.
-
-```bash
-# All time
-.venv/bin/python scripts/token_usage.py
-
-# Last 7 days
-SINCE_DAYS=7 .venv/bin/python scripts/token_usage.py
-
-# Since specific date
-SINCE_DATE=2026-04-03 .venv/bin/python scripts/token_usage.py
-```
-
-Parses `~/.claude/projects/` JSONL session files and writes `docs/token-usage/token_report.md` with totals, daily breakdown, costliest sessions, model mix, and subagent analysis.
-
----
-
 ## Deterministic Track Audit
 
 Run a reusable, non-LLM audit across a built track. The audit checks inventory,
@@ -1169,10 +1150,9 @@ Generates human-readable status reports from cached per-module audit results.
 
 Use this before content generation to verify plan files still match `scripts/audit/config.py` constraints.
 
-### Migrations and readable plan output
+### Readable plan output
 
 ```bash
-.venv/bin/python scripts/migrate/migrate_to_v2.py b1
 .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
 ```
 

@@ -579,7 +579,7 @@ entries:
     lifecycle: archive
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python scripts/token_usage.py --help (regenerates the report; writes files)"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/token-usage"}
     content_searchable: true
 
   # ================================================================ dispatch briefs, plans, epics
