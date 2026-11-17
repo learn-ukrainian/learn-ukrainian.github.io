@@ -13,13 +13,33 @@ markdown-it-py>=4.2.0
 # API server
 fastapi>=0.139.0
 uvicorn>=0.48.0
+# uvicorn's WebSocket protocol implementation: without it uvicorn refuses the
+# Monitor API's /ws/batch upgrade (scripts/project_api/batch_router.py).
+websockets>=16.0
 httpx>=0.28
 prometheus-client>=0.26.0
 
-# RAG / embeddings
+# RAG / vector store
 qdrant-client>=1.14
-sentence-transformers>=5.6.1
+
+# ----------------------------------------------------------------------
+# ml set: model runtimes and their closure. Default CI skips part of it
+# today (the torch|torchvision|open_clip_torch|stanza filter in
+# .github/actions/python-ci-env); the uv switch makes this block one
+# dependency group. Every entry below has a direct use.
+# ukrainian-word-stress (NLP section) also requires stanza.
+# ----------------------------------------------------------------------
 torch>=2.13.0
+sentence-transformers>=5.6.1
+open-clip-torch>=3.3.0   # scripts/rag/embed.py (image embeddings; brings torchvision, timm, ftfy)
+FlagEmbedding>=1.4.0     # scripts/rag/embed.py, scripts/wiki/dense_rerank.py, scripts/rag/benchmark_embeddings.py
+datasets>=5.0.1          # scripts/dataset/train_gemma_huggingface.py (Gemma training)
+peft>=0.20.0             # scripts/projects/open_model_data/{train_and_eval_real_model,gemma_hardware_probe}.py, scripts/dataset/train_gemma_huggingface.py
+stanza>=1.15.0           # scripts/pipeline/stress_annotator.py, scripts/vocab/rebuild_vocab_simple.py
+einops>=0.8.2            # jinaai/jina-embeddings-v3 remote code (scripts/rag/benchmark_embeddings.py, trust_remote_code)
+faster-whisper>=1.2.1    # scripts/navsi200_asr_bakeoff.py (ASR bakeoff)
+av>=18.1.0               # scripts/navsi200_asr_bakeoff.py (audio decoding)
+# ---------------------------- end ml set ------------------------------
 
 # NLP / Ukrainian
 pyahocorasick>=2.3.1
@@ -66,13 +86,23 @@ lxml>=6.1         # scripts/ingest/esum_abbyy_parser.py
 pypdf>=6.21.4       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py; 6.21.4 clears CVE-2026-119203 to -119209
 PyMuPDF>=2.0     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
 ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
+python-docx>=1.2.0  # scripts/ingest/owned_books_ingest.py
+pillow>=13.0.0      # scripts/rag/embed.py (image input), tests/test_scrape_diasporiana.py
+
+# Rendered-page validation in a real browser
+playwright>=1.64.1  # scripts/validate/{validate_html,browser_launcher}.py
+
+# IPA transcription (not on PyPI; pinned commit)
+ipa-uk @ git+https://github.com/lang-uk/ipa-uk.git@e7fc944faca090ca985d5ca09a24c59154d9dea1  # scripts/generate_mdx/generate_ipa.py
 
 # MCP protocol (sources + trails MCP servers ported to 2.0 API); >=2.2 clears CVE-2026-59951
 mcp>=2.2,<3
 
-# Web scraping (for resource discovery)
-beautifulsoup4>=4.15.0
-requests>=2.34.2
+# Web scraping (for resource discovery). The chardet extras keep chardet, the
+# encoding detector both libraries use when it is installed, for pages served
+# without a charset; without it they fall back to charset-normalizer.
+beautifulsoup4[chardet]>=4.15.0
+requests[use-chardet-on-py3]>=2.34.2
 
 # YouTube ingestion
 yt-dlp>=2026.7.4
@@ -85,44 +115,17 @@ graphql-core==3.3.1  # scripts/common/github_client.py (imported only when a doc
 
 
 # Security floors (transitive deps held above their vulnerable range)
-# zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm
+# zeroconf came via mcp-memory-service, which the lock no longer carries; no
+# locked package requires it now. CVE-2026-48045 / GHSA-9663-mqmp-p9mm
 # (unbounded TC-deferred queue → LAN-local memory exhaustion) is fixed in 0.149.12.
 zeroconf>=0.151.3
-# joserfc comes via Authlib (Authlib 1.9.1 requires joserfc>=1.6.8).
-# CVE-2026-119283 is fixed in 1.7.5; CVE-2026-119284 is fixed in 1.7.6.
+# joserfc came via Authlib, which left the lock with no remaining use; no
+# locked package requires it now. CVE-2026-119283 is fixed in 1.7.5;
+# CVE-2026-119284 is fixed in 1.7.6.
 joserfc>=1.7.6
 # soupsieve comes via beautifulsoup4 (beautifulsoup4==4.15.0 requires soupsieve>=1.6.1).
 # CVE-2026-126192 is fixed in 2.10; CVE-2026-126190 is fixed in 4.0.
 soupsieve>=4.0
-
-# ----------------------------------------------------------------------
-# Known-harmless `pip check` warnings (DO NOT CHASE)
-# ----------------------------------------------------------------------
-# After a clean install of requirements-lock.txt (`pip install --no-deps
-# -r requirements-lock.txt`, the pattern CI uses), `pip check` will flag
-# three over-strict UPSTREAM pins. All three are runtime-verified safe:
-#
-#   1. marker-pdf 1.10.2 → anthropic<0.47.0,>=0.46.0 (we have 0.97.0+)
-#      We use marker-pdf only via `extract_markdown_ocr` in
-#      scripts/rag/extract_text.py with default OCR mode. The anthropic
-#      import in marker-pdf is gated by `use_llm=True` which we never
-#      pass. The constraint is dead-letter for our import path.
-#
-#   2. marker-pdf 1.10.2 → regex<2025.0.0,>=2024.4.28 (we have 2026+)
-#      regex API is stable across these versions for marker-pdf's
-#      tokenization usage. Verified at runtime: marker imports clean.
-#
-#   3. pycookiecheat 0.8.0 → cryptography==43.* (we have 47.x)
-#      Used only at scripts/wiki/fetch_external_sources.py:500 for
-#      browser cookie extraction. Verified runtime import works at
-#      cryptography 47. pycookiecheat 0.8.0 IS the latest release —
-#      no upstream fix exists yet.
-#
-# All three packages have NOT released a version that relaxes the pin.
-# The lockfile carries the newer versions because: (a) upstream pins are
-# provably over-strict for our usage; (b) downgrading to satisfy them
-# would revert security/feature bumps in cryptography/anthropic/regex
-# that ARE used elsewhere. Hence `--no-deps` install in CI/local.
 
 # Repository runtime dependency; install requirements from the repository root.
 ./packages/v4-runtime

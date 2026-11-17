@@ -16,6 +16,20 @@ pre-commit>=4.6.0
 # Static type checking (gradual — see [tool.mypy] in pyproject.toml)
 mypy>=2.1.0
 
+# Linters run from the project environment
+yamllint>=1.38.0   # .venv/bin/yamllint: .github/workflows/validate-yaml.yml, package.json lint:yaml (.yamllint)
+vulture>=2.16      # .venv/bin/vulture: scripts/audit/find_dead_code.py
+
+# Installer and build backend inside the project environment. CI creates
+# .venv --without-pip and installs pip from the lock; scripts/audit/
+# check_ci_dependencies.py runs python -m pip check, and lu_machinery
+# release_cut runs pip download with the project interpreter.
+# ./packages/v4-runtime is built with --no-build-isolation, so its
+# build-system requirements (setuptools, wheel) must be installed.
+pip>=26.2.1
+setuptools>=75
+wheel>=0.48.0
+
 # Test utilities
 pytest-xdist>=3.6         # parallel test execution (-n auto)
 requests-mock>=1.12.1     # requests transport fixture
