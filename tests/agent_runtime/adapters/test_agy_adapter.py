@@ -620,7 +620,7 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
 def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         _build(tmp_path, model="gemini-9.9-pro-preview")
-    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in str(error.value)
+    assert "Gemini Pro is retired; use `--model gemini-4-hydrogen-medium`." in str(error.value)
 
 
 @pytest.mark.parametrize(
@@ -772,7 +772,7 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
         )
     message = str(error.value)
     if "pro" in model.casefold():
-        assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in message
+        assert "Gemini Pro is retired; use `--model gemini-4-hydrogen-medium`." in message
         assert "gemini-3.1-pro-high" not in message
 
 
@@ -1343,7 +1343,9 @@ def _parse_resumed_run(
                     "conversation_id": _FINISHED_CONVERSATION_ID,
                     "status": "SUCCESS",
                     "response": stdout,
-                }
+                },
+                # The default AGY model is a Gemini 4 model, which must attest its identity at init.
+                model=plan.cmd[plan.cmd.index("--model") + 1],
             ),
             stderr="",
             returncode=0,
@@ -1829,10 +1831,13 @@ def test_a_command_task_that_ends_without_finishing_is_rejected(tmp_path: Path, 
     _assert_canceled(_judge(tmp_path, [_prompt(), _start(_TASK_2), ended, _reply("PROBE_DONE_7731")]))
 
 
-def _stream_stdout(result: dict[str, object]) -> str:
+def _stream_stdout(result: dict[str, object], *, model: str | None = None) -> str:
+    init: dict[str, object] = {"event": "init", "conversation_id": result.get("conversation_id")}
+    if model is not None:
+        init["init"] = {"model": model}
     return "\n".join(
         [
-            json.dumps({"event": "init", "conversation_id": result.get("conversation_id")}),
+            json.dumps(init),
             json.dumps({"event": "step_update", "step_update": {"state": "DONE"}}),
             json.dumps({"event": "result", "result": result}),
         ]

@@ -187,6 +187,9 @@ def parse_terminal(adapter, plan, route: str, wire: str, *, returncode=0):
         plan.output_file.write_text(wire, encoding="utf-8")
     if route == "agy":
         plan = bind_agy_transcript(plan)
+        # The default AGY model is a Gemini 4 model, which must attest its identity at init.
+        model = plan.cmd[plan.cmd.index("--model") + 1]
+        wire = json.dumps({"event": "init", "init": {"model": model}}) + "\n" + wire
     return adapter.parse_response(
         # Codex reports completion in its --json event stream; the answer is -o.
         stdout=wire if route != "codex" else completed_stream(),
