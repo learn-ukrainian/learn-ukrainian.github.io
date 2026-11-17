@@ -99,7 +99,7 @@ Payload contracts protect clients from silent shape breaks. Examples:
 | Marker | Where |
 | --- | --- |
 | `schema_version: "work-projection.v1"` | Work projection (ADR-019) |
-| `response_schema_version: "authority.v2"` | `/api/state/preparation` |
+| `response_schema_version: "authority.v2"` | `/api/state/preparation/{track}/{slug}` |
 | `response_schema_version: "orient.v2"` | `/api/orient` |
 | `response_schema_version: "comms.v2"` | `/api/comms` |
 | `response_schema_version: "session-streams.v2"` | `/api/session-streams` |
@@ -1258,8 +1258,8 @@ curl -s http://localhost:8765/api/batch/dispatcher
 
 ### Audit & quality (existing dashboard router)
 ```bash
-# All tracks pass/fail overview
-curl -s http://localhost:8765/api/state/build-status
+# One track's build progress
+curl -s http://localhost:8765/api/state/build-status/a1
 
 # Per-module detail for a track
 curl -s http://localhost:8765/api/dashboard/track/hist
