@@ -266,10 +266,6 @@
         "sha256": "35d3564cc7e75c26d20ecfcd18699410183292ca58ff61d9cdd8663311fa82cb"
       },
       {
-        "path": "scripts/lexicon/measure_manifest_coverage.py",
-        "sha256": "b76c9ff8e5db5929aa051f111fb50cb27cb0a304dc6d260f0f650ffc3f2bcf24"
-      },
-      {
         "path": "scripts/lexicon/merge_translation_delta.py",
         "sha256": "f8ede84be0231383c1d47701856e805b92518aa6e2ae9d6f1132cbcc97bec9f4"
       },

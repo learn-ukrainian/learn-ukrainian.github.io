@@ -63,7 +63,6 @@ from dagger import dag, function, object_type
 _IGNORED_TESTS: tuple[str, ...] = (
     "tests/test_rag.py",
     "tests/test_channels_registry.py",
-    "tests/test_convergence_loop.py",
     "tests/test_morphological_validator.py",
     "tests/test_plan_hash.py",
     "tests/test_scrape_diasporiana.py",
