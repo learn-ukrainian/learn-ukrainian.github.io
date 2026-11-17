@@ -23,13 +23,15 @@ Endpoints:
   GET /api/state/issues               Aggregated outstanding issues
 
 Performance notes:
-  - Heavy endpoints run their sync I/O in asyncio.to_thread().
+  - Heavy endpoints are plain sync functions. FastAPI runs them on its threadpool,
+    so a scan does not stall the event loop.
+  - Summary, pipeline-versions, weak-points and research-coverage stay async:
+    a warm ``cache_get_or_compute_async`` hit is served on the event loop.
   - Results are cached in-memory with a TTL (60s for summary/pipeline, 300s for coverage).
 """
 
 from __future__ import annotations
 
-import asyncio
 import json
 import logging
 import re
@@ -334,7 +336,6 @@ def _with_state_meta(
     return payload
 
 
-
 @router.get("/summary")
 async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Full project snapshot. One call replaces 5 bash scripts at session start."""
@@ -363,7 +364,7 @@ async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depend
 
 
 @router.get("/pipeline/{track_id}")
-async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
+def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-module pipeline state for one track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -382,8 +383,7 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: Monitor
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(
-        compute_pipeline_track,
+    result = compute_pipeline_track(
         track_id,
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
@@ -427,7 +427,7 @@ async def pipeline_versions(
 
 
 @router.get("/preparation")
-async def preparation_roster(
+def preparation_roster(
     request: Request,
     track: str | None = Query(None, min_length=1, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]*$"),
     ctx: MonitorContext = Depends(get_ctx),
@@ -451,7 +451,7 @@ async def preparation_roster(
         )
 
     try:
-        payload = await asyncio.to_thread(_compute)
+        payload = _compute()
     except preparation_state.InactiveTrackError as exc:
         raise HTTPException(
             status_code=422,
@@ -468,7 +468,7 @@ async def preparation_roster(
 
 
 @router.get("/preparation/{track}/{slug}")
-async def preparation_module(
+def preparation_module(
     request: Request,
     track: str,
     slug: str,
@@ -498,7 +498,7 @@ async def preparation_module(
         )
 
     try:
-        payload = await asyncio.to_thread(_compute)
+        payload = _compute()
     except preparation_state.InactiveTrackError as exc:
         raise HTTPException(
             status_code=422,
@@ -535,7 +535,7 @@ async def weak_points(
 
 
 @router.get("/failing")
-async def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
+def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """All modules with audit failures or phase failures."""
 
     def _compute():
@@ -585,7 +585,7 @@ async def failing_modules(track: str | None = Query(None), ctx: MonitorContext =
 
         return {"count": len(failing), "modules": failing}
 
-    return await asyncio.to_thread(_compute)
+    return _compute()
 
 
 def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
@@ -650,7 +650,7 @@ def _module_score_record(track_id: str, track_dir: Path, num: int, slug: str) ->
 
 
 @router.get("/scores/{track}")
-async def module_scores(track: str, ctx: MonitorContext = Depends(get_ctx)):
+def module_scores(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module status + LLM-QG aggregate + per-dimension scores for a track.
 
     The view the user watches the seminar quality-gate prototype converge with
@@ -670,14 +670,14 @@ async def module_scores(track: str, ctx: MonitorContext = Depends(get_ctx)):
         scored = sum(1 for m in modules if m["scored"])
         return {"track": track, "count": len(modules), "scored": scored, "modules": modules}
 
-    result = await asyncio.to_thread(_compute)
+    result = _compute()
     if result is None:
         return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
     return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
 
 
 @router.get("/scores/{track}/{slug}")
-async def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """One module's status + LLM-QG aggregate + per-dimension scores."""
 
     def _compute() -> dict[str, Any] | None:
@@ -692,7 +692,7 @@ async def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends
         num, resolved_slug = match
         return _module_score_record(track, track_dir, num, resolved_slug)
 
-    result = await asyncio.to_thread(_compute)
+    result = _compute()
     if result is None:
         return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
     if result.get("__not_found__"):
@@ -727,7 +727,7 @@ async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = De
 
 
 @router.get("/research/{track_id}")
-async def research_detail(
+def research_detail(
     track_id: str, min_score: int = 9, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
 ):
     """Per-module research quality with dimension scores, gaps, and upgrade queue."""
@@ -749,8 +749,7 @@ async def research_detail(
             age_s=age_s,
         )
 
-    result = await asyncio.to_thread(
-        compute_research_detail,
+    result = compute_research_detail(
         track_id,
         level_cfg,
         min_score,
@@ -768,7 +767,7 @@ async def research_detail(
 
 
 @router.get("/review-coverage")
-async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
+def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track review and final-review coverage + quality signal."""
     cache_key = _ctx_cache_key(ctx, "review_coverage")
     if fresh:
@@ -783,8 +782,7 @@ async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depe
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(
-        compute_review_coverage,
+    result = compute_review_coverage(
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
@@ -799,7 +797,7 @@ async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depe
 
 
 @router.get("/build-status/{track_id}")
-async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Compact build progress for a track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -809,8 +807,7 @@ async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     cached = cache_get(cache_key, ttl=15.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_build_status_track,
+    result = compute_build_status_track(
         track_id,
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
@@ -821,14 +818,13 @@ async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/build-status")
-async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
+def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
     """All-tracks build progress in one call."""
     cache_key = _ctx_cache_key(ctx, "build_status_all")
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_build_status_all,
+    result = compute_build_status_all(
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
@@ -837,7 +833,7 @@ async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/module-range/{track_id}")
-async def module_range_status(
+def module_range_status(
     track_id: str,
     start: int = Query(..., ge=1),
     end: int = Query(..., ge=1),
@@ -856,8 +852,7 @@ async def module_range_status(
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_module_range_status,
+    result = compute_module_range_status(
         track_id,
         level_cfg,
         start=start,
@@ -871,7 +866,7 @@ async def module_range_status(
 
 
 @router.get("/llm-qg/{track_id}")
-async def llm_qg_track(
+def llm_qg_track(
     track_id: str,
     verbose: bool = Query(
         False,
@@ -884,8 +879,7 @@ async def llm_qg_track(
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    return await asyncio.to_thread(
-        compute_llm_qg_track,
+    return compute_llm_qg_track(
         track_id,
         level_cfg,
         verbose=verbose,
@@ -895,26 +889,25 @@ async def llm_qg_track(
 
 
 @router.get("/build-stats")
-async def build_stats_all(ctx: MonitorContext = Depends(get_ctx)):
+def build_stats_all(ctx: MonitorContext = Depends(get_ctx)):
     """V6 build stats aggregated across all tracks."""
-    return await asyncio.to_thread(compute_build_stats_all, curriculum_root=ctx.roots.curriculum_root)
+    return compute_build_stats_all(curriculum_root=ctx.roots.curriculum_root)
 
 
 @router.get("/build-stats/{track_id}")
-async def build_stats(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def build_stats(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """V6 build-stats.jsonl parsed: attempts, success rate, recent entries."""
-    return await asyncio.to_thread(compute_build_stats, track_id, curriculum_root=ctx.roots.curriculum_root)
+    return compute_build_stats(track_id, curriculum_root=ctx.roots.curriculum_root)
 
 
 @router.get("/module/{track_id}/{num}")
-async def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(get_ctx)):
+def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(get_ctx)):
     """Single module deep-dive: pipeline state, audit, research, review, comms."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    result = await asyncio.to_thread(
-        compute_module_detail,
+    result = compute_module_detail(
         track_id,
         num,
         level_cfg,
@@ -928,7 +921,7 @@ async def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(g
 
 
 @router.get("/module/{track_id}/slug/{slug}")
-async def module_detail_by_slug(
+def module_detail_by_slug(
     track_id: str,
     slug: str,
     verbose: bool = Query(
@@ -977,8 +970,7 @@ async def module_detail_by_slug(
         )
     num, _ = match
 
-    full = await asyncio.to_thread(
-        compute_module_detail,
+    full = compute_module_detail(
         track_id,
         num,
         level_cfg,
@@ -1020,7 +1012,7 @@ async def module_detail_by_slug(
     review = full.get("review") or {}
     final_review = full.get("final_review")
     track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-    llm_qg = await asyncio.to_thread(read_llm_qg, track_dir, slug)
+    llm_qg = read_llm_qg(track_dir, slug)
 
     return {
         "track": track_id,
@@ -1052,7 +1044,7 @@ async def module_detail_by_slug(
 
 
 @router.get("/final-reviews/{track_id}")
-async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -1062,8 +1054,7 @@ async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_c
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_final_reviews,
+    result = compute_final_reviews(
         track_id,
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
@@ -1074,14 +1065,13 @@ async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_c
 
 
 @router.get("/enrichment-status")
-async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
+def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """Which plans are enriched per track."""
     cache_key = _ctx_cache_key(ctx, "enrichment_status", track or "all")
     cached = cache_get(cache_key, ttl=120.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_enrichment_status,
+    result = compute_enrichment_status(
         track,
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
@@ -1091,7 +1081,7 @@ async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext
 
 
 @router.get("/track-health/{track_id}")
-async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-call track health summary."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -1101,8 +1091,7 @@ async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(
-        compute_track_health,
+    result = compute_track_health(
         track_id,
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
@@ -1115,14 +1104,13 @@ async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/issues")
-async def outstanding_issues(
+def outstanding_issues(
     track: str | None = Query(None),
     severity: str | None = Query(None),
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Aggregated outstanding issues from review files + audit failures."""
-    return await asyncio.to_thread(
-        compute_issues,
+    return compute_issues(
         track,
         severity,
         curriculum_root=ctx.roots.curriculum_root,
@@ -1134,7 +1122,7 @@ async def outstanding_issues(
 
 
 @router.get("/range/{track_id}")
-async def range_status(
+def range_status(
     track_id: str,
     start: int = Query(1, ge=1, description="First module number (inclusive)."),
     end: int | None = Query(
@@ -1257,4 +1245,4 @@ async def range_status(
             "modules": compact,
         }
 
-    return await asyncio.to_thread(_compute)
+    return _compute()

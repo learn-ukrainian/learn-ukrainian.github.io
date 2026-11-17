@@ -303,9 +303,9 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/batch-progress/{track}")
-async def batch_progress_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
+def batch_progress_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Detailed progress for one track."""
-    tp = await asyncio.to_thread(_scan_track_progress, ctx, track)
+    tp = _scan_track_progress(ctx, track)
 
     # Get research file timeline (last 20 files)
     try:

@@ -136,5 +136,5 @@ def collect_governance_summary(ctx: MonitorContext) -> dict[str, int]:
 
 
 @router.get("")
-async def governance_state(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
+def governance_state(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     return collect_governance_state(ctx)

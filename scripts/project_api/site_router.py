@@ -20,7 +20,6 @@ agent can still make a decision from the populated fields.
 
 from __future__ import annotations
 
-import asyncio
 import json
 import os
 import subprocess
@@ -254,9 +253,9 @@ def _compute_site_health(ctx: MonitorContext | None = None) -> dict[str, Any]:
 
 
 @router.get("/health")
-async def site_health(ctx: MonitorContext = Depends(get_ctx)):
+def site_health(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate public-site health — reachability, freshness, canaries."""
-    return await asyncio.to_thread(_compute_site_health, ctx)
+    return _compute_site_health(ctx)
 
 
 # ---------------------------------------------------------------------
@@ -296,9 +295,9 @@ def _recent_deployments(limit: int, ctx: MonitorContext | None = None) -> dict[s
 
 
 @router.get("/deployments")
-async def site_deployments(
+def site_deployments(
     limit: int = Query(5, ge=1, le=20, description="Max runs to return."),
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Recent GH Pages build+deploy workflow runs."""
-    return await asyncio.to_thread(_recent_deployments, limit, ctx)
+    return _recent_deployments(limit, ctx)

@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.get("/api/config")
-async def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
+def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     # Pipeline phase config from product data (scripts/curriculum/phase_labels.v1.json)
     try:
         phases, phase_labels = load_phase_labels()
@@ -48,7 +48,7 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
 
 
 @router.get("/images/{path:path}")
-async def serve_image(path: str, ctx: MonitorContext = Depends(get_ctx)):
+def serve_image(path: str, ctx: MonitorContext = Depends(get_ctx)):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
     image_dir = product_roots(ctx).images_dir
     file_path = _safe_join(image_dir, path)

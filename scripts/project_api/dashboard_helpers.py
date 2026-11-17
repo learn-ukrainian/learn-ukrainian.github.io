@@ -6,6 +6,7 @@ track stats, finding active builds, and classifying pipeline queues.
 
 import contextlib
 import json
+import os
 import sys
 import time
 from datetime import UTC, datetime
@@ -35,6 +36,9 @@ read_status: Any = monitor_surface.read_status
 _track_cache: dict[str, tuple[float, dict]] = {}
 _TRACK_CACHE_TTL = 30.0  # seconds
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+# Queue classification reused while the manifest, track dirs, status JSON and
+# review dir keep the same mtimes. Invalidated by those mtimes, not by a TTL.
+_pipeline_queue_cache: dict[str, tuple[tuple, tuple[list, list, list]]] = {}
 
 
 def _track_cache_key(track_id: str, ctx: MonitorContext) -> str:
@@ -584,35 +588,260 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
     return None
 
 
-def scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
-    """Scan all tracks to build otaman, hetman, and final_review queues."""
+def clear_pipeline_queue_cache() -> None:
+    """Drop the mtime-keyed pipeline queue snapshot. Tests use this between cases."""
+    _pipeline_queue_cache.clear()
+
+
+def _mtime_ns(path: Path) -> int | None:
+    try:
+        return path.stat().st_mtime_ns
+    except OSError:
+        return None
+
+
+def _lstat_mtime_ns(path: Path) -> int | None:
+    try:
+        return path.lstat().st_mtime_ns
+    except OSError:
+        return None
+
+
+def _plain_filename(name: str) -> bool:
+    """True when ``name`` is a single path segment ``safe_join`` would accept."""
+    if not name or name in {".", ".."}:
+        return False
+    return not any(char in name for char in "/\\\x00:")
+
+
+def _json_snapshot(directory: Path) -> tuple[int | None, tuple[tuple[str, int | None, bool], ...]]:
+    """Return the directory mtime and one row per ``*.json`` child.
+
+    Each row is ``(name, mtime_ns, is_symlink)``. A missing directory is
+    ``(None, ())`` and costs one stat, not one stat per module.
+    """
+    dir_mtime = _mtime_ns(directory)
+    if dir_mtime is None:
+        return None, ()
+    rows: list[tuple[str, int | None, bool]] = []
+    try:
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                if not entry.name.endswith(".json"):
+                    continue
+                try:
+                    is_link = entry.is_symlink()
+                except OSError:
+                    continue
+                mtime: int | None
+                try:
+                    # A link's own mtime stays put when the target is edited.
+                    # Classification reads the target, so the fingerprint must too.
+                    # A dangling link still keeps its name: dropping it would
+                    # skip the containment check and treat the status as missing.
+                    mtime = entry.stat(follow_symlinks=is_link).st_mtime_ns
+                except OSError:
+                    if not is_link:
+                        continue
+                    mtime = _lstat_mtime_ns(Path(entry.path))
+                try:
+                    is_node = is_link or entry.is_file(follow_symlinks=False) or entry.is_dir(follow_symlinks=False)
+                except OSError:
+                    continue
+                if is_node:
+                    rows.append((entry.name, mtime, is_link))
+    except OSError:
+        return dir_mtime, ()
+    rows.sort()
+    return dir_mtime, tuple(rows)
+
+
+def _root_names(track_dir: Path) -> tuple[frozenset[str], frozenset[str]]:
+    """File names and symlink names in ``track_dir`` itself, one listing."""
+    files: set[str] = set()
+    links: set[str] = set()
+    try:
+        with os.scandir(track_dir) as entries:
+            for entry in entries:
+                try:
+                    if entry.is_symlink():
+                        links.add(entry.name)
+                    elif entry.is_file(follow_symlinks=False):
+                        files.add(entry.name)
+                except OSError:
+                    continue
+    except OSError:
+        return frozenset(), frozenset()
+    return frozenset(files), frozenset(links)
+
+
+def _markdown_present(
+    track_dir: Path,
+    slug: str,
+    idx: int,
+    files: frozenset[str],
+    links: frozenset[str],
+) -> bool:
+    """Match ``classify_module_queue`` when the status file is absent.
+
+    A regular file is a name check. A symlink still goes through ``safe_join``
+    so a link that leaves the track does not count as a lesson.
+    """
+    names = (f"{slug}.md", f"{idx + 1:02d}-{slug}.md", f"{idx + 1}-{slug}.md")
+    for name in names:
+        if name in files:
+            return True
+        if name in links:
+            candidate = _safe_join(track_dir, name)
+            if candidate is not None and candidate.exists():
+                return True
+    return False
+
+
+def _symlink_targets(directory: Path) -> tuple[tuple[str, int | None], ...]:
+    """Target mtimes for symlinks in ``directory`` itself.
+
+    ``None`` means the target is missing. Deleting a nested target does not
+    change this directory's mtime, and classification calls ``exists()`` on
+    the target, so the fingerprint has to see it.
+    """
+    rows: list[tuple[str, int | None]] = []
+    try:
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                try:
+                    if not entry.is_symlink():
+                        continue
+                    try:
+                        mtime = entry.stat(follow_symlinks=True).st_mtime_ns
+                    except OSError:
+                        mtime = None
+                    rows.append((entry.name, mtime))
+                except OSError:
+                    continue
+    except OSError:
+        return ()
+    rows.sort()
+    return tuple(rows)
+
+
+def _queue_fingerprint(ctx: MonitorContext) -> tuple:
+    """Mtimes that define the queue classification, without reading file bodies."""
+    curriculum_root = ctx.roots.curriculum_root
+    tracks: list[tuple] = []
+    for level_cfg in LEVELS:
+        track_id = level_cfg["id"]
+        track_dir = _safe_join(curriculum_root, level_cfg["path"])
+        if track_dir is None:
+            tracks.append((track_id, None))
+            continue
+        status_dir = _safe_join(track_dir, "status")
+        if status_dir is None:
+            tracks.append((track_id, _mtime_ns(track_dir), "status-rejected", _lstat_mtime_ns(track_dir / "status")))
+            continue
+        status_mtime, status_rows = _json_snapshot(status_dir)
+        tracks.append(
+            (
+                track_id,
+                _mtime_ns(track_dir),
+                status_mtime,
+                _mtime_ns(track_dir / "review"),
+                status_rows,
+                _symlink_targets(track_dir),
+                _symlink_targets(track_dir / "review"),
+            )
+        )
+    return (_mtime_ns(curriculum_root / "curriculum.yaml"), tuple(tracks))
+
+
+def _pipeline_cache_key(ctx: MonitorContext) -> str:
+    return f"{ctx_cache_scope(ctx)}:{ctx.roots.curriculum_root}"
+
+
+def _classify_scanned_module(
+    track_id: str,
+    track_dir: Path,
+    slug: str,
+    idx: int,
+    status_dir: Path,
+    regular_status: dict[str, Path],
+    status_links: set[str],
+    root_files: frozenset[str],
+    root_links: frozenset[str],
+) -> str | None:
+    status_name = f"{slug}.json"
+    if not _plain_filename(slug) or status_name in status_links:
+        return classify_module_queue(track_id, track_dir, slug, idx, _safe_join(status_dir, status_name))
+    status_file = regular_status.get(status_name)
+    if status_file is None:
+        if _markdown_present(track_dir, slug, idx, root_files, root_links):
+            return None
+        return "otaman"
+    return classify_module_queue(track_id, track_dir, slug, idx, status_file)
+
+
+def _scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
+    """Classify every manifest module from one directory snapshot per track."""
     curriculum_root = ctx.roots.curriculum_root
     manifest = load_manifest(ctx)
     otaman_queue: list[dict] = []
     hetman_queue: list[dict] = []
     final_review_queue: list[dict] = []
-
     queue_map = {"otaman": otaman_queue, "hetman": hetman_queue, "final_review": final_review_queue}
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
         track_dir = _safe_join(curriculum_root, level_cfg["path"])
-        status_dir = _safe_join(track_dir, "status") if track_dir else None
-        if not status_dir:
+        if track_dir is None:
             continue
-        track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
-
-        for idx, m_entry in enumerate(track_modules):
-            slug = parse_slug(m_entry)
-            status_file = _safe_join(status_dir, f"{slug}.json")
-            classification = classify_module_queue(
+        status_dir = _safe_join(track_dir, "status")
+        if status_dir is None:
+            continue
+        _status_mtime, status_rows = _json_snapshot(status_dir)
+        regular_status = {name: status_dir / name for name, _mtime, is_link in status_rows if not is_link}
+        status_links = {name for name, _mtime, is_link in status_rows if is_link}
+        root_files, root_links = _root_names(track_dir)
+        modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
+        for idx, entry in enumerate(modules):
+            slug = parse_slug(entry)
+            classification = _classify_scanned_module(
                 track_id,
                 track_dir,
                 slug,
                 idx,
-                status_file,
+                status_dir,
+                regular_status,
+                status_links,
+                root_files,
+                root_links,
             )
             if classification:
                 queue_map[classification].append({"track": track_id, "slug": slug, "num": idx + 1})
 
     return otaman_queue, hetman_queue, final_review_queue
+
+
+def _copy_queues(result: tuple[list, list, list]) -> tuple[list, list, list]:
+    """Hand the caller its own lists so a later append cannot change the cache."""
+    return (list(result[0]), list(result[1]), list(result[2]))
+
+
+def scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
+    """Scan all tracks to build otaman, hetman, and final_review queues.
+
+    The manifest bounds the modules. Each track contributes one directory
+    snapshot, and a repeat call reuses that classification while the snapshot's
+    mtimes are unchanged. A status JSON edit, a lesson file add/remove, a
+    final-review add/remove, or a lesson or review symlink whose target
+    appears or disappears changes one of those mtimes and recomputes. A
+    status directory that leaves the track is skipped, as before.
+    """
+    key = _pipeline_cache_key(ctx)
+    fingerprint = _queue_fingerprint(ctx)
+    cached = _pipeline_queue_cache.get(key)
+    if cached is not None and cached[0] == fingerprint:
+        return _copy_queues(cached[1])
+    result = _scan_pipeline_queues(ctx)
+    if _queue_fingerprint(ctx) == fingerprint:
+        _pipeline_queue_cache[key] = (fingerprint, result)
+    return _copy_queues(result)

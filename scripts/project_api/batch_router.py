@@ -46,16 +46,19 @@ def _with_load_errors(payload: dict[str, Any], errors: list[str]) -> dict[str, A
 
 
 def _run_dispatcher_scan(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return cast("subprocess.CompletedProcess[str]", subprocess.run(
-        cmd,  # lock-lint: ok the dispatcher scan runs the project interpreter via asyncio.to_thread
-        cwd=cwd,
-        timeout=DISPATCHER_SCAN_TIMEOUT_S,
-        check=False,
-    ))
+    return cast(
+        "subprocess.CompletedProcess[str]",
+        subprocess.run(
+            cmd,  # lock-lint: ok sync route runs on the FastAPI threadpool; subprocess has a timeout
+            cwd=cwd,
+            timeout=DISPATCHER_SCAN_TIMEOUT_S,
+            check=False,
+        ),
+    )
 
 
 @router.get("/api/batch/dispatcher")
-async def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
+def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
     state_file = ctx.roots.batch_state_dir / "dispatcher_state.json"
     if not state_file.exists():
         return {"tracks": {}}
@@ -64,7 +67,7 @@ async def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/active")
-async def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
+def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
     active: list[dict[str, Any]] = []
     if not ctx.roots.curriculum_root.exists():
         return active
@@ -93,7 +96,7 @@ async def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/failures")
-async def get_failure_queue(ctx: MonitorContext = Depends(get_ctx)):
+def get_failure_queue(ctx: MonitorContext = Depends(get_ctx)):
     f_file = ctx.roots.batch_state_dir / "failure_queue.json"
     if not f_file.exists():
         return []
@@ -102,7 +105,7 @@ async def get_failure_queue(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/usage")
-async def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
+def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
     usage_dir = ctx.roots.batch_state_dir / "api_usage"
     if not usage_dir.exists():
         return {}
@@ -119,7 +122,7 @@ async def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/checkpoints")
-async def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
+def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
     results: dict[str, Any] = {}
     if not ctx.roots.batch_state_dir.exists():
         return results
@@ -135,21 +138,21 @@ async def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/dispatcher/running")
-async def dispatcher_running():
+def dispatcher_running():
     return {"running": False}
 
 
 @router.post("/api/batch/dispatcher/scan")
-async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
+def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
     cmd = [
         str(project_interpreter(ctx.roots.live_repo_root)),
         str(ctx.roots.live_repo_root / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
-    # Use asyncio.to_thread to avoid blocking the event loop. The timeout lives
-    # on subprocess.run (see _run_dispatcher_scan), not on the thread call.
+    # Sync route: FastAPI runs this on its threadpool. The timeout lives
+    # on subprocess.run (see _run_dispatcher_scan).
     try:
-        result = await asyncio.to_thread(_run_dispatcher_scan, cmd, ctx.roots.live_repo_root)
+        result = _run_dispatcher_scan(cmd, ctx.roots.live_repo_root)
     except subprocess.TimeoutExpired:
         logger.warning("dispatcher scan timed out after %ss", DISPATCHER_SCAN_TIMEOUT_S)
         return {"status": "degraded", "errors": ["dispatcher scan timed out"]}
@@ -159,7 +162,7 @@ async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/api/batch/dispatcher/logs")
-async def get_dispatcher_logs(lines: int = 50, ctx: MonitorContext = Depends(get_ctx)):
+def get_dispatcher_logs(lines: int = 50, ctx: MonitorContext = Depends(get_ctx)):
     log_file = ctx.roots.project_root / "logs" / "dispatcher.log"
     if not log_file.exists():
         return {"lines": []}

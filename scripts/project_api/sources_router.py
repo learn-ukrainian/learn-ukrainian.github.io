@@ -23,7 +23,7 @@ def _image_dir(ctx: MonitorContext) -> Path:
 
 
 @router.get("/search_text")
-async def search_text(
+def search_text(
     q: str = Query(..., description="Search query in Ukrainian"),
     grade: int | None = Query(None, description="Filter by grade (1-11)"),
     subject: str | None = Query(None, description="Filter by subject"),
@@ -37,7 +37,7 @@ async def search_text(
 
 
 @router.get("/search_literary")
-async def search_literary(
+def search_literary(
     q: str = Query(..., description="Search query"),
     work: str | None = Query(None, description="Filter by work"),
     genre: str | None = Query(None, description="Filter by genre"),
@@ -51,12 +51,12 @@ async def search_literary(
 
 
 @router.get("/stats")
-async def collection_stats(ctx: MonitorContext = Depends(get_ctx)):
+def collection_stats(ctx: MonitorContext = Depends(get_ctx)):
     return monitor_surface.sources_collection_stats(sources_db(ctx))
 
 
 @router.get("/browse_images")
-async def browse_images(
+def browse_images(
     grade: str | None = Query(None, description="Grade directory name, e.g. grade-03"),
     sort: str = Query("size", description="Sort by: size, name, grade"),
     page: int = Query(0, ge=0),

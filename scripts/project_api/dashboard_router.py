@@ -499,7 +499,7 @@ def _run_overview_refresh(ctx: MonitorContext | None = None) -> None:
 
 
 @router.get("/overview")
-async def overview(ctx: MonitorContext = Depends(get_ctx)):
+def overview(ctx: MonitorContext = Depends(get_ctx)):
     """All tracks with module counts and pass/prose/fail stats.
 
     The request path never walks the curriculum tree. A warm TTL cache or
@@ -562,7 +562,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/research")
-async def research_overview(ctx: MonitorContext = Depends(get_ctx)):
+def research_overview(ctx: MonitorContext = Depends(get_ctx)):
     """Research coverage across all tracks with rubric-based quality scoring."""
     manifest = load_manifest(ctx)
     levels = manifest.get("levels", {})
@@ -620,7 +620,7 @@ async def research_overview(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/track/{track_id}/summary")
-async def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Lightweight per-module summary: slug, status, pipeline version, review badges only."""
     manifest = load_manifest(ctx)
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
@@ -639,7 +639,7 @@ async def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/track/{track_id}")
-async def track_detail(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def track_detail(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module detail for one track."""
     manifest = load_manifest(ctx)
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
@@ -658,7 +658,7 @@ async def track_detail(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/module/{track_id}/{slug}")
-async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Deep inspection of a single module: plan, meta, gates, orchestration."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -753,7 +753,7 @@ async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(
 
 
 @router.get("/pipeline")
-async def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
+def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
     """Two-stage pipeline status: otaman queue, hetman queue, active builds."""
     active_builds = find_active_builds(ctx)
     otaman_queue, hetman_queue, final_review_queue = scan_pipeline_queues(ctx)
@@ -775,7 +775,7 @@ async def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/activity-config")
-async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
+def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
     """Activity type reference: types, min items per level, forbidden types."""
     types = []
     for act_type in monitor_surface.VALID_ACTIVITY_TYPES:
@@ -818,7 +818,7 @@ async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/comms")
-async def comms_status(ctx: MonitorContext = Depends(get_ctx)):
+def comms_status(ctx: MonitorContext = Depends(get_ctx)):
     """Communications monitoring: watcher health, message stats, delivery metrics."""
     result = {
         "watcher": is_watcher_running(ctx),
@@ -928,7 +928,7 @@ async def comms_status(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/comms/message/{message_id}")
-async def comms_message_detail(message_id: int, ctx: MonitorContext = Depends(get_ctx)):
+def comms_message_detail(message_id: int, ctx: MonitorContext = Depends(get_ctx)):
     """Full content of a single message."""
     conn = get_broker_db(ctx)
     if not conn:
@@ -960,7 +960,7 @@ async def comms_message_detail(message_id: int, ctx: MonitorContext = Depends(ge
 
 
 @router.get("/comms/conversation/{task_id}")
-async def comms_conversation(task_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def comms_conversation(task_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Full conversation thread for a task, chronological order."""
     conn = get_broker_db(ctx)
     if not conn:
@@ -992,7 +992,7 @@ async def comms_conversation(task_id: str, ctx: MonitorContext = Depends(get_ctx
 
 
 @router.get("/comms/messages")
-async def comms_messages(
+def comms_messages(
     limit: int = 50,
     offset: int = 0,
     from_llm: str | None = None,
