@@ -99,7 +99,7 @@ pins `claude-opus-5-5[1m]` with `--effort high` by default; pass
 1-2 short scheduled sessions/day, dispatch-heavy, never a resident polling loop
 (see model-assignment.md § Orchestration operating pattern). Both Anthropic wrappers
 resolve to the same `claude-<lane>` handoff slot, so the stream lease still allows only one
-Anthropic driver per lane. The legacy `scripts/start-bio-driver.sh` runs Claude + the
+Anthropic driver per lane. The legacy `lu_machinery/start-bio-driver.sh` runs Claude + the
 `curriculum-track-orchestrator` agent-def if you specifically want that agent.
 
 Both Claude launchers apply the weekly usage guard. Every Claude launch is
@@ -131,9 +131,9 @@ the review-loop ukrainian seats, with no Claude seat (no DeepSeek, and Grok is n
 
 ### Machine-authority projection (lint #5642)
 
-Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestrator_seats` and
-`scripts/config/fleet_communications.yaml` → `endpoints[*].formal_review_eligible`. Enforced by
-`.venv/bin/python scripts/lint/lint_fleet_roster.py` (never rewrites prose).
+Exact tables below must match `lu_machinery/config/model_catalog.yaml` → `orchestrator_seats` and
+`lu_machinery/config/fleet_communications.yaml` → `endpoints[*].formal_review_eligible`. Enforced by
+`.venv/bin/python -m lu_machinery.lint.lint_fleet_roster` (never rewrites prose).
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |

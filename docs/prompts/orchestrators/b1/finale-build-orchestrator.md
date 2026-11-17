@@ -36,7 +36,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/validation-checklist.md`
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
 - `curriculum/l2-uk-en/curriculum.yaml`, B1 M83-M94
-- `lu_machinery/config.py`, `scripts/audit/config.py`
+- `scripts/curriculum/pedagogy_config.py`, `scripts/audit/config.py`
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - target finale plans:
   - `curriculum/l2-uk-en/plans/b1/comprehensive-b1-review.yaml`

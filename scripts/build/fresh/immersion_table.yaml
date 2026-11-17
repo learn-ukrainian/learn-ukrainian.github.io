@@ -1,6 +1,6 @@
 # Permitted languages per field role for lesson immersion (#8431 r3 §6/§7).
 # Authoritative table derived from writer contract #8431 r3 and config immersion policy.
-# Keys are immersion band keys from lu_machinery.config.IMMERSION_POLICIES.
+# Keys are immersion band keys from scripts.curriculum.pedagogy_config.IMMERSION_POLICIES.
 
 a1-m01-03:
   contract_citation: "scripts/curriculum/pedagogy_config.py IMMERSION_POLICIES (A1 English scaffolding; taught Ukrainian exemplars)"

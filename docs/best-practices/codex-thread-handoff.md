@@ -257,7 +257,7 @@ thread to read its Fleet Comms authority deliveries. `--recipient` and
 ```
 
 Delegate task state is still summarized by
-`scripts/orchestration/orchestrator_control.py inbox`, including result
+`.venv/bin/python -m lu_machinery.orchestration.orchestrator_control inbox`, including result
 excerpts, so the new thread does not have to rediscover raw files under
 `batch_state/tasks/`. In authority mode that command prints this notice
 first, then the delegate summary:
@@ -661,7 +661,7 @@ binding.
 
 ## Worker Run Inbox
 
-Use `scripts/orchestration/orchestrator_control.py` when worker dispatch state
+Use `lu_machinery/orchestration/orchestrator_control.py` when worker dispatch state
 must survive a thread rollover. It keeps a gitignored run ledger under
 `batch_state/orchestrator-runs/` and reads delegate state from
 `batch_state/tasks/`.
@@ -669,7 +669,7 @@ must survive a thread rollover. It keeps a gitignored run ledger under
 Create a run:
 
 ```bash
-.venv/bin/python scripts/orchestration/orchestrator_control.py start-run \
+.venv/bin/python -m lu_machinery.orchestration.orchestrator_control start-run \
   --run-id a1-gate-policy \
   --description "A1 gate policy repair"
 ```
@@ -677,7 +677,7 @@ Create a run:
 Dispatch a worker and record it in that run:
 
 ```bash
-.venv/bin/python scripts/orchestration/orchestrator_control.py dispatch \
+.venv/bin/python -m lu_machinery.orchestration.orchestrator_control dispatch \
   --run-id a1-gate-policy \
   --task-id a1-gate-policy-worker \
   --agent codex \
@@ -691,7 +691,7 @@ Dispatch a worker and record it in that run:
 Attach an already-started delegate task:
 
 ```bash
-.venv/bin/python scripts/orchestration/orchestrator_control.py add-task \
+.venv/bin/python -m lu_machinery.orchestration.orchestrator_control add-task \
   --run-id a1-gate-policy \
   --task-id a1-existing-worker
 ```
@@ -710,7 +710,7 @@ mode the markdown form prints the same legacy-inbox notice first (the
 slot and queued count, or `unknown`), then the delegate summary:
 
 ```bash
-.venv/bin/python scripts/orchestration/orchestrator_control.py inbox \
+.venv/bin/python -m lu_machinery.orchestration.orchestrator_control inbox \
   --run-id a1-gate-policy \
   --include-results
 ```

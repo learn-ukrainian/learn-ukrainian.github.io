@@ -178,13 +178,13 @@ Expected later consumers:
 
 Known behavior surfaces to revisit later:
 
-- `scripts/common/thresholds.py` exposes `LevelThresholds.target_words` and
+- `scripts/curriculum/quality/thresholds.py` exposes `LevelThresholds.target_words` and
   documents the value as the minimum total words per module;
 - `scripts/audit/config.py` mirrors target-word values for audit-side gates and
   variant overrides;
 - `scripts/audit/gates.py` treats word count as a floor with warning bands and
   soft caps;
-- `lu_machinery/config.py` encodes the B1+ `OVERSHOOT_FACTOR` / `get_overshoot_factor()`
+- `scripts/curriculum/pedagogy_config.py` encodes the B1+ `OVERSHOOT_FACTOR` / `get_overshoot_factor()`
   multiplier;
 - `scripts/pipeline/core.py` injects `WORD_CEILING = word_target * 1.5` and B1+
   overshoot rules into prompt placeholders;

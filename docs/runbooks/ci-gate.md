@@ -324,7 +324,7 @@ files; those are imported only with `import type`, which the compiler erases.
 
 ## pytest shards
 
-- `scripts/ci/split_tests.py split` assigns the tracked `tests/**/test_*.py`
+- `.venv/bin/python -m lu_machinery.ci.split_tests split` assigns the tracked `tests/**/test_*.py`
   files to N shards, longest first onto the least-loaded shard, using
   `scripts/ci/pytest-file-durations.json`. A file with no recorded time gets
   the median. Every shard computes the same assignment; the shard number and
@@ -385,7 +385,7 @@ history or fetches from GitHub therefore fails on a shallow shard; add its file
 to the list.
 
 To change the shard count, edit the static `matrix.shard` list (it must stay
-`1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts
+`1..N`). `.venv/bin/python -m lu_machinery.ci.slot_inventory --check` (actionlint workflow) counts
 every PR-path job against the slot ceiling set in that script, which keeps a
 margin for incident response. It counts each workflow's jobs once, as if one
 run of each were in flight. It does not model overlapping runs, such as
@@ -423,7 +423,7 @@ scan in place; see
 ## Shard setup
 
 Per shard: checkout (shallow; full history on the history shard), Python
-3.12.15, then `scripts/ci/test_env.sh start` runs `npm ci` and
+3.12.15, then `lu_machinery/ci/test_env.sh start` runs `npm ci` and
 `lu_machinery/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if

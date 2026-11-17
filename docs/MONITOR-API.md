@@ -716,7 +716,7 @@ Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | j
 - optional occupancy markers (`MONITOR_OCCUPANCY_MARKERS` file or directory, else `.agent/occupancy/markers` on the live checkout). Foundry / evidence-compiler agents feed the `foundry` source; other marker services feed `service`. Both publish `{kind, agent, task_id, epic, host_id}` with an `expires_at`. `idle_or_empty` stays false while those occupants are active.
 - observer heartbeats (`POST /api/observer/presence`) feed the `observer` source (working/blocked = active; idle-only = clear).
 
-Observer heartbeats appear under their explicit opaque `host_id` (or legacy `cloud-observer`; no CPU/RAM metrics, no SSH identity). Legacy `cloud-observer` probe status/age come from the newest live heartbeat against `PRESENCE_FRESHNESS_SECONDS` (not a hardcoded fresh/0.0). Notebook session rows carry an `instance_id` and may carry `ctx_tokens`/`window_tokens`; GUI rows use `instance_id: "gui"` and remain idle. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown). The load freshness and stale bounds are the existing `HOST_LOAD_FRESH_S` and `HOST_LOAD_MAX_STALE_S` constants in `scripts/api/atlas_jobs_router.py`; this route does not redeclare them.
+Observer heartbeats appear under their explicit opaque `host_id` (or legacy `cloud-observer`; no CPU/RAM metrics, no SSH identity). Legacy `cloud-observer` probe status/age come from the newest live heartbeat against `PRESENCE_FRESHNESS_SECONDS` (not a hardcoded fresh/0.0). Notebook session rows carry an `instance_id` and may carry `ctx_tokens`/`window_tokens`; GUI rows use `instance_id: "gui"` and remain idle. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown). The load freshness and stale bounds are the existing `HOST_LOAD_FRESH_S` and `HOST_LOAD_MAX_STALE_S` constants in `scripts/project_api/atlas_jobs_router.py`; this route does not redeclare them.
 
 Top-level `attention` may include empty-host alarms when a mapped host stays `idle_or_empty` for at least **15 minutes** (`EMPTY_HOST_IDLE_THRESHOLD_S`):
 
@@ -2420,7 +2420,7 @@ task state.
 
 One query that says where a document, data store or resource lives and whether it is
 current. It is the HTTP mirror of `.venv/bin/python -m lu_machinery.docs.find` (the entry point
-named in `docs/README.md`); both call `scripts/docs/find.py`. It shares only the
+named in `docs/README.md`); both call `lu_machinery/docs/find.py`. It shares only the
 `/api/knowledge` prefix with the research registry below: **it is never behind the
 `research_registry` kill switch** and does not use the registry schema.
 
@@ -2585,7 +2585,7 @@ raw owned paths, digest/source/prompt text, role, or task family).
 
 ### Consumption telemetry (privacy contract)
 
-Two distinct central-emitter events (`scripts/telemetry/emit.py`; no new store):
+Two distinct central-emitter events (`lu_machinery/telemetry/emit.py`; no new store):
 `research_pointer_surfaced` (a pointer was shown) and `research_record_consumed`
 (a body was actually fetched under a validated active task). Surfaced ≠ consumed.
 Payload allowlist is exactly `{task_id, research_id, surface, status}` on top of the
@@ -2955,7 +2955,7 @@ hashes against its local cache and only refetches what changed.
 Binding core for agent cold-start. By default, this endpoint serves
 `agents_extensions/shared/rules/core.md`, identically to `scope=core`.
 `scope=full` explicitly selects the complete reference archive from the
-checked-in paths in `scripts/api/rules_router.RULE_SOURCES` (not the
+checked-in paths in `lu_machinery/api/rules_router.RULE_SOURCES` (not the
 deployed `.claude/rules/` copies), so a fresh clone or worktree that
 hasn't run `npm run agents:deploy` still gets correct content.
 
@@ -3124,7 +3124,7 @@ The following legacy endpoints and route aliases have been completely retired an
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
 | `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
 | `GET /api/cost/*` | none | 404 Not Found | Retired in #7947; its canonical `/api/analytics/cost/*` was removed in the 2026-11-12 product page trim |
-| `GET /api/analytics/cost/*` | `.venv/bin/python scripts/telemetry/cost_report.py` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
+| `GET /api/analytics/cost/*` | `.venv/bin/python -m lu_machinery.telemetry.cost_report` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
 | `/api/build/events/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; no dispatch metadata files exist to read |
 | `/api/consultation/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; queue and history were empty and nothing writes them |
 | `/api/images/*` | `GET /api/sources/browse_images` | 404 Not Found | Removed in the 2026-11-12 product page trim; no textbook image index exists |
@@ -3700,7 +3700,7 @@ Returns git status, distinguishing source-code changes from generated artifact c
 To prevent runtime crashes and version skew caused by git mutations (e.g., switching branches or pulling changes on the primary checkout while the API server is running), the Monitor API enforces **startup import pinning**.
 
 ### Pinning Guarantee & Scope
-- **Post-Successful-Startup Guarantee:** Upon startup, the FastAPI lifespan (`preload_all()`) eagerly imports the entire static import closure of the API, along with all dynamic adapter modules (walked from `scripts/agent_runtime/adapters/`) and dynamic migration scripts. This ensures that all required Python modules are resident in `sys.modules` from the start.
+- **Post-Successful-Startup Guarantee:** Upon startup, the FastAPI lifespan (`preload_all()`) eagerly imports the entire static import closure of the API, along with all dynamic adapter modules (walked from `lu_machinery/agent_runtime/adapters/`) and dynamic migration scripts. This ensures that all required Python modules are resident in `sys.modules` from the start.
 - **Parent Process Only:** The import pinning guarantee is strictly scoped to the parent API process.
 - **Subprocess Design Intent:** Subprocess children spawned by the API (such as git, gh, or agent dispatches) execute code from the current working tree by design, using standard loose text/JSON contracts.
 - **Guard Rails:** The guarantee is continuously verified via an AST-walking guard test (`tests/api/test_import_pinning.py`). The test asserts that all nested imports inside `scripts/api/` are registered in the preload lists (`PRELOAD_MODULES` or `OPTIONAL_MODULES`) or marked with an explicit inline comment: `# lazy-ok: <reason>`. Any unregistered dynamic imports or unregistered dynamic loaders will cause the test suite to fail.

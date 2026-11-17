@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - the B1 audit report being remediated
 - `curriculum/l2-uk-en/curriculum.yaml`
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- `lu_machinery/config.py`, especially B1 immersion policy
+- `scripts/curriculum/pedagogy_config.py`, especially B1 immersion policy
 - `scripts/audit/config.py`
 - for each target slug:
   - `curriculum/l2-uk-en/plans/b1/<slug>.yaml`

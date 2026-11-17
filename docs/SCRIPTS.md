@@ -243,7 +243,7 @@ worktrees without broadening their checkout. The Entire CLI integration was remo
 (C-2928): the installer replaces any Entire wrapper still in the hooks directory with
 the delegator, removes the Entire-only wrappers and the delegators it once placed at
 `<name>.pre-entire`. It refuses, without changing anything, when a hook path is a
-symlink. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook stage
+symlink. `lu_machinery/install_git_hooks.sh --check` (read-only) fails when a hook stage
 declared in `.pre-commit-config.yaml` has no reachable delegator, an Entire wrapper
 remains (`RETIRED`), or a hook path is a symlink.
 
@@ -1220,7 +1220,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `lu_machinery/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python -m lu_machinery.ci.ci_timings --event merge_group --since 2026-08-22` |
 | `lu_machinery/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343). With `--baseline-data` it names the baseline tests covering each lost line/arc lists every deleted test covering a loss in non-dead production files (`candidate_tests`), picks a small `restore_set` from them with greedy set cover (within ln(n) + 1 of the minimum), and reports losses no deleted test covered as `unrestorable_identities` | `.venv/bin/python -m lu_machinery.ci.coverage_diff baseline/coverage.json candidate/coverage.json --baseline-data baseline/.coverage --git-range <base>..<head>` |
 | `lu_machinery/ci/coverage_ref.py` | Record selected, completed, failed and crashed test IDs; combine valid branch data even after failures. `manifest.json` separates measurement `complete` from `tests_passed` and lists non-Python measured paths as non-reportable. Set `COVERAGE_REF_CONTEXTS=true` to retain pytest-cov per-test contexts | `.venv/bin/python -m lu_machinery.ci.coverage_ref combine --input ci-artifacts/shards --output ci-artifacts/combined --sha <40-hex> --matrix-result success` |
-| `lu_machinery/ci/coverage_ref_environment.py` | Install coverage storage isolation in the disposable coverage-ref runner venv only. Source write guards remain active; never install in a shared interpreter | `.venv/bin/python scripts/ci/coverage_ref_environment.py` |
+| `lu_machinery/ci/coverage_ref_environment.py` | Install coverage storage isolation in the disposable coverage-ref runner venv only. Source write guards remain active; never install in a shared interpreter | `.venv/bin/python -m lu_machinery.ci.coverage_ref_environment` |
 | `lu_machinery.publish workflow-run` | Dispatch `coverage-ref.yml` with a required 40-hex `sha` and optional typed boolean `contexts`; other admitted workflows accept no inputs | `.venv/bin/python -m lu_machinery.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>","contexts":true}'` |
 | `lu_machinery/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m lu_machinery.ci.split_tests split --shard 1 --of 16` |
 | `lu_machinery/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m lu_machinery.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
@@ -1951,7 +1951,7 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ```bash
 .venv/bin/python scripts/tools/signal_claude.py "Your message here"
-.venv/bin/python scripts/tools/message_viewer.py   # archive viewer on http://localhost:5055
+.venv/bin/python -m lu_machinery.tools.message_viewer   # archive viewer on http://localhost:5055
 ```
 
 ---
@@ -2001,7 +2001,7 @@ training readiness or RB-1 delivery. No network calls or database writes are per
   --strict --json` checks DoR, canonical stable-ID DoD structure and live
   repository-qualified ancestry. `--body` and `--body-file` leave membership
   unchecked. Unchecked ACs pass structure validation; closeout proof is separate.
-- `scripts/ci/comment_issue_task_quality.py`: issue-event entry point. Refetches
+- `lu_machinery/ci/comment_issue_task_quality.py`: issue-event entry point. Refetches
   current data, reconciles the existing bot marker, and records observation time.
 - `lu_machinery/orchestration/issue_quality_report.py`: prepares a daily counts-only
   fleet report. `--publish --sender devops` publishes persisted bytes to the
@@ -2009,7 +2009,7 @@ training readiness or RB-1 delivery. No network calls or database writes are per
   ignored `batch_state/reports/`. Unknown or truncated sources stay incomplete;
   private issue data never enters the report. `lu_machinery.publish read issue-count
   --repo OWNER/REPO` is the fixed independent open-count reader.
-- `scripts/orchestration/install_issue_quality_report_timer.py`: `--check`
+- `lu_machinery/orchestration/install_issue_quality_report_timer.py`: `--check`
   compares daily user units; `--apply` installs safely and reloads systemd;
   `--apply --enable` also starts the timer. Run installation from the primary
   checkout after approval, not from a dispatch worktree.

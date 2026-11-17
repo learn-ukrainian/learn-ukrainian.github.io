@@ -23,7 +23,7 @@ tripwire only, not protection: it is bypassable (for example,
 
 ## Untracked Git hook delegators (`.githooks/` vs `$GIT_COMMON_DIR/hooks`)
 
-To prevent hook-installing tools from dirtying the working tree, `core.hooksPath` must remain unset rather than pointing at the tracked `.githooks` directory. `lu_machinery/install_git_hooks.sh` installs untracked delegators into `$GIT_COMMON_DIR/hooks/` that dispatch to the current worktree's tracked `.githooks/` files, keeping tracked repository files pristine across all linked worktrees. It also replaces any wrapper left by the removed Entire CLI (C-2928). `scripts/install_git_hooks.sh --check` fails when a hook stage declared in `.pre-commit-config.yaml` has no reachable delegator.
+To prevent hook-installing tools from dirtying the working tree, `core.hooksPath` must remain unset rather than pointing at the tracked `.githooks` directory. `lu_machinery/install_git_hooks.sh` installs untracked delegators into `$GIT_COMMON_DIR/hooks/` that dispatch to the current worktree's tracked `.githooks/` files, keeping tracked repository files pristine across all linked worktrees. It also replaces any wrapper left by the removed Entire CLI (C-2928). `lu_machinery/install_git_hooks.sh --check` fails when a hook stage declared in `.pre-commit-config.yaml` has no reachable delegator.
 
 ## Why this is a rule, not a suggestion
 

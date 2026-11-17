@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
 - `curriculum/l2-uk-en/curriculum.yaml`, B2 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- `lu_machinery/config.py`
+- `scripts/curriculum/pedagogy_config.py`
 - `scripts/audit/config.py`
 - target B2 production PR notes or build report if available
 - for each built target slug:

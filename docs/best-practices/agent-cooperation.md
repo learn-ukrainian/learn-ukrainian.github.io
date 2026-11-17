@@ -402,7 +402,7 @@ Durable role handoffs and thread rollover packets are separate:
 
 Thread rollover packets are generated locally under
 `.agent/<agent>-thread-handoff.md` by
-`scripts/orchestration/thread_handoff.py prepare`. They are for moving a
+`.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare`. They are for moving a
 saturated thread to a fresh thread; do not use them as the durable orchestrator
 state file.
 

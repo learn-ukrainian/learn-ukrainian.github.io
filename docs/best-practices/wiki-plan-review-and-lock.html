@@ -329,7 +329,7 @@ review_notes: &gt;-
 </tbody>
 </table>
 <pre><code class="language-bash"># Code review — non-Gemini seat
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex - \
   --task-id &lt;N&gt;-review --type review &lt;&lt;'EOF'
 Adversarial review of #&lt;N&gt; review-and-lock for &lt;slug&gt; wiki + plan.
 Read the diff. Look for:
@@ -340,7 +340,7 @@ Read the diff. Look for:
 EOF
 
 # VESUM / vocabulary — AGY, Ukrainian profile required
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy - \
   --task-id &lt;N&gt;-vesum --review --review-profile ukrainian \
   --to-model gemini-3.8-flash-high &lt;&lt;'EOF'
 Check hallucinated vocab in the &lt;slug&gt; wiki + plan diff.
