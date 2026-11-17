@@ -126,6 +126,9 @@
 
   <main>
     <h1>Review-and-Lock: Wiki + Plan</h1>
+<blockquote><p><strong>Roots for <code>lu_machinery</code> commands.</strong> Commands on this page that run <code>lu_machinery.*</code> modules use the installed lu-machinery release. It reads the product checkout from <code>LU_PRODUCT_ROOT</code> and the shared-state anchor from <code>LEARN_UKRAINIAN_PRIMARY_REPO_ROOT</code>; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:</p>
+<pre><code class="language-bash">export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+</code></pre></blockquote>
 <blockquote>
 <p><strong>Purpose.</strong> Bring a <code>(wiki, plan)</code> pair to a known-clean, reproducible state that the build pipeline (A.8 canary, A.9 scale batch, module build) can trust as input. &quot;Locked&quot; means: the two artifacts have passed a structured review, every cited dictionary fact is traceable, the plan directs the writer toward the wiki's content (not away from it), and the pair is clearly marked so future agents know not to re-litigate it without cause.</p>
 <p><strong>Scope.</strong> L2-UK-EN A1 and A2 tracks. 54 slugs in A1, ~54 in A2. This document is the template the remaining 106 (wiki, plan) pairs follow.</p>
