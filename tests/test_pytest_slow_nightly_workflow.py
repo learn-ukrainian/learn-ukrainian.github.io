@@ -194,18 +194,11 @@ fi
 exec '{real}' -S "$@"
 """,
     )
-    # Offline stand-in for the lu-machinery wheel download: write the -o target, fetch nothing.
-    _write_executable(
-        bin_dir / "curl",
-        """#!/usr/bin/env bash
-while (( $# )); do
-  if [[ "$1" == "-o" ]]; then : > "$2"; shift; fi
-  shift
-done
-""",
-    )
     runner_temp = root / "runner-temp"
     runner_temp.mkdir()
+    # The python-ci-env fetch step is not run here; its wheelhouse output is an empty directory.
+    wheelhouse = runner_temp / "lu-machinery-wheelhouse"
+    wheelhouse.mkdir()
     home = root / "home"
     home.mkdir()
     env = {
@@ -213,6 +206,7 @@ done
         "HOME": str(home),
         "XDG_CACHE_HOME": str(home / ".cache"),
         "RUNNER_TEMP": str(runner_temp),
+        "MACHINERY_WHEELHOUSE": str(wheelhouse),
         "LU_LEXICON_MANIFEST_CACHE": str(cache_dir),
         "LU_GITHUB_CACHE_DIR": str(home / "github-cache"),
         "OFFLINE_DOWNLOAD_LOG": str(root / "offline-downloads.log"),
@@ -410,7 +404,8 @@ def test_slow_selection_and_failure_reporting_are_preserved() -> None:
     assert workflow["concurrency"] == {"group": "pytest-slow-nightly", "cancel-in-progress": False}
     for step in steps:
         if "uses" in step:
-            assert re.fullmatch(r"[\w./-]+@[0-9a-f]{40}", step["uses"]), step["uses"]
+            # Remote actions are SHA-pinned; the one local action is this checkout's own.
+            assert re.fullmatch(r"[\w./-]+@[0-9a-f]{40}|\./\.github/actions/python-ci-env", step["uses"]), step["uses"]
 
     slow = next(step for step in steps if step.get("id") == "pytest-slow")
     assert "-m 'slow and not atlas_release'" in slow["run"]
