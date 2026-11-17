@@ -12,24 +12,20 @@ from the fixture context or the fixture root.
 
 from __future__ import annotations
 
-import os
 import sqlite3
 import subprocess
-import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import psutil
-from lu_machinery.api import agent_monitor_router, project_state_router
+from lu_machinery.api import project_state_router
 from lu_machinery.session_streams.model import LeaseHolder
 
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import batch_router
 
-AGENT_MONITOR_TOKEN = "opsec-agent-monitor-token"
 ATLAS_JOB_ID = "opsec-atlas-job"
 ATLAS_CLOSE_JOB_ID = "opsec-atlas-close"
 LOOPBACK_CLIENT = ("127.0.0.1", 50000)
@@ -79,47 +75,6 @@ class MutationRecipe:
 
 
 # ── Shared seeding helpers ───────────────────────────────────────
-
-
-def _agent_monitor_auth(env: MutationEnv) -> None:
-    env.monkeypatch.setenv("AGENT_MONITOR_TOKEN", AGENT_MONITOR_TOKEN)
-
-
-def _agent_monitor_db(env: MutationEnv) -> Path:
-    return env.ctx.roots.batch_state_dir / "agent_monitor.sqlite3"
-
-
-def _seed_agent_lease(env: MutationEnv, lease_token: str) -> None:
-    now = time.time()
-    connection = agent_monitor_router._get_db(_agent_monitor_db(env))
-    try:
-        connection.execute(
-            "INSERT INTO agent_leases VALUES (?, ?, ?, ?, ?, ?, 'APPROVED', ?, ?)",
-            (
-                lease_token,
-                "codex/opsec-sweep",
-                "opsec_probe",
-                os.getpid(),
-                psutil.Process().create_time(),
-                64,
-                now,
-                now,
-            ),
-        )
-        connection.commit()
-    finally:
-        connection.close()
-
-
-def _agent_lease_status(env: MutationEnv, lease_token: str) -> str | None:
-    connection = agent_monitor_router._get_db(_agent_monitor_db(env))
-    try:
-        row = connection.execute(
-            "SELECT status FROM agent_leases WHERE lease_token = ?", (lease_token,)
-        ).fetchone()
-    finally:
-        connection.close()
-    return None if row is None else str(row[0])
 
 
 def _atlas_plan(job_id: str) -> dict[str, Any]:
@@ -193,41 +148,6 @@ def _claim_epic(env: MutationEnv, stream_id: str, suffix: str) -> dict[str, Any]
 
 def _epic_lease_state(env: MutationEnv, stream_id: str) -> str:
     return str(env.ctx.stores.epics_store.remote_stream_projection(stream_id)["lease"]["state"])
-
-
-# ── Agent monitor ────────────────────────────────────────────────
-
-
-def _register_body() -> dict[str, Any]:
-    return {
-        "agent_id": "codex/opsec-sweep",
-        "task_name": "opsec_register",
-        "pid": os.getpid(),
-        "process_create_time": psutil.Process().create_time(),
-        "reserved_ram_mb": 64,
-    }
-
-
-def _verify_register(env: MutationEnv, response: Any) -> None:
-    payload = response.json()
-    if payload["verdict"] == "APPROVED":
-        assert _agent_lease_status(env, payload["lease_token"]) == "APPROVED"
-
-
-def _setup_heartbeat(env: MutationEnv) -> Prepared:
-    _agent_monitor_auth(env)
-    _seed_agent_lease(env, "lease_opsecbeat")
-    return Prepared(body={"lease_token": "lease_opsecbeat", "pid": os.getpid()})
-
-
-def _setup_release(env: MutationEnv) -> None:
-    _agent_monitor_auth(env)
-    _seed_agent_lease(env, "lease_opsecfree")
-
-
-def _verify_release(env: MutationEnv, response: Any) -> None:
-    del response
-    assert _agent_lease_status(env, "lease_opsecfree") == "RELEASED"
 
 
 # ── Atlas jobs ───────────────────────────────────────────────────
@@ -444,41 +364,6 @@ def _verify_module_build(env: MutationEnv, response: Any) -> None:
 _RETIRED = "retired legacy write; the 410 tombstone is the route's only response"
 
 RECIPES: dict[str, MutationRecipe] = {
-    "POST /api/agent-monitor/heartbeat": MutationRecipe(
-        store="fixture batch_state/agent_monitor.sqlite3",
-        expected_statuses=(200,),
-        reason="renews a planted lease owned by the test process",
-        headers={"X-Agent-Monitor-Token": AGENT_MONITOR_TOKEN},
-        setup=_setup_heartbeat,
-    ),
-    "POST /api/agent-monitor/preflight": MutationRecipe(
-        store="fixture batch_state/agent_monitor.sqlite3",
-        expected_statuses=(200,),
-        reason="capacity preflight reads the fixture lease table",
-        body_factory=lambda: {
-            "agent_id": "codex/opsec-sweep",
-            "task_name": "opsec_probe",
-            "required_ram_mb": 64,
-        },
-    ),
-    "POST /api/agent-monitor/register": MutationRecipe(
-        store="fixture batch_state/agent_monitor.sqlite3",
-        expected_statuses=(200,),
-        reason="registers the test process; host RAM decides APPROVED or REJECTED",
-        headers={"X-Agent-Monitor-Token": AGENT_MONITOR_TOKEN},
-        body_factory=_register_body,
-        setup=_agent_monitor_auth,
-        verify=_verify_register,
-    ),
-    "POST /api/agent-monitor/release": MutationRecipe(
-        store="fixture batch_state/agent_monitor.sqlite3",
-        expected_statuses=(200,),
-        reason="releases a planted lease",
-        headers={"X-Agent-Monitor-Token": AGENT_MONITOR_TOKEN},
-        query={"lease_token": "lease_opsecfree"},
-        setup=_setup_release,
-        verify=_verify_release,
-    ),
     "POST /api/atlas-jobs/submit": MutationRecipe(
         store="fixture batch_state/atlas-jobs registry (ATLAS_JOB_REGISTRY)",
         expected_statuses=(409,),

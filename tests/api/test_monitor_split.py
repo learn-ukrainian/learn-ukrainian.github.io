@@ -91,8 +91,9 @@ def test_every_route_resolves_to_its_own_endpoint_and_matches_the_frozen_route_s
     operations = _operations(app)
     http = [registry.Operation(method, path) for method, path in operations if method != "WEBSOCKET"]
     websockets = [registry.Operation(method, path) for method, path in operations if method == "WEBSOCKET"]
-    assert len(http) == registry.FROZEN_HTTP_OPERATION_COUNT
-    assert registry.denominator_digest(http, websockets) == registry.FROZEN_DENOMINATOR_SHA256
+    matched = registry.accepted_denominator(http, websockets)
+    assert len(http) == matched.http_count
+    assert registry.denominator_digest(http, websockets) == matched.sha256
 
     declared = _declared(app)
     shadowed = [
@@ -178,15 +179,21 @@ def test_contract_registry_composes_machinery_then_product_declarations(tmp_path
     from scripts.project_api import route_contracts as product_contracts
 
     app = _app(tmp_path)
-    with TestClient(app) as client:
-        body = client.get("/api/contracts/routes").json()
-    patterns = [row["pattern"] for row in body["route_contracts"]]
     expected = [c.pattern for c in (*route_contracts.ROUTE_CONTRACTS, *product_contracts.ROUTE_CONTRACTS)]
-    assert patterns == expected
-    pages = {row["file"] for row in body["page_contracts"]}
+    assert [contract.pattern for contract in route_contracts.all_route_contracts()] == expected
     html_pages = {page for page, _ in _pages() if page.endswith(".html")}
-    assert html_pages <= pages
-    assert route_contracts.contract_for_route("/api/state/preparation").pattern == "/api/state/preparation"
+    if ("GET", "/api/contracts/routes") in _operations(app):
+        with TestClient(app) as client:
+            body = client.get("/api/contracts/routes").json()
+        assert [row["pattern"] for row in body["route_contracts"]] == expected
+        pages = {row["file"] for row in body["page_contracts"]}
+        assert html_pages <= pages
+    else:
+        pages = {page.file for page in route_contracts.all_page_contracts()}
+        assert html_pages <= pages
+    preparation = route_contracts.contract_for_route("/api/state/preparation")
+    assert preparation is not None
+    assert preparation.pattern == "/api/state/preparation"
 
 
 def test_no_machinery_api_module_imports_product_code() -> None:

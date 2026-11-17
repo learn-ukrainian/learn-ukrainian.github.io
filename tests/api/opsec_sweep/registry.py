@@ -1,8 +1,11 @@
 """Explicit exercise records for the Monitor API OPSEC sweep.
 
-The live FastAPI tree is the denominator.  ``FROZEN_DENOMINATOR_SHA256`` is
-the reviewed snapshot guard: adding an HTTP or WebSocket route changes the
-fingerprint and fails the sweep until a record is deliberately reviewed.
+The live FastAPI tree is the denominator. ``ACCEPTED_DENOMINATORS`` holds the
+reviewed snapshots of that tree. Two snapshots are accepted: the installed
+machinery release, and the tree after the unused routes leave (machinery
+#752, which deletes ``agent_monitor_router``). A tree that matches neither
+fails. Adding an HTTP or WebSocket route changes the fingerprint and fails
+the sweep until a record is deliberately reviewed.
 A schema-hidden APIRoute is part of that HTTP inventory, so the sweep
 exercises every method it serves, unless ``FRAMEWORK_EXEMPT_OPERATIONS``
 lists that method and path. A mount prefix stays on the path before
@@ -35,11 +38,32 @@ MUTATION_METHODS = frozenset({"DELETE", "PATCH", "POST", "PUT"})
 RouteClass = Literal["read", "read-side-effect", "mutation", "stream"]
 FixtureKind = Literal["isolated", "skip"]
 
-# Filled from the current exact route tree after the implementation is
-# assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 219
-FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "0ebc5863fcbee9b4717e45f5de739ec99b15854d366818859c71350a5f5b2fd8"
+
+@dataclass(frozen=True)
+class FrozenDenominator:
+    """One reviewed method/template snapshot of the mounted Monitor tree."""
+
+    http_count: int
+    websocket_count: int
+    sha256: str
+
+
+# Measured from the live app. The count and the digest are one snapshot:
+# a tree matches only when all three fields match. The first is the installed
+# release (the agent-monitor routes are still mounted). The second is
+# machinery #752 (those routes, and the other unused routes, are gone).
+ACCEPTED_DENOMINATORS = (
+    FrozenDenominator(
+        http_count=219,
+        websocket_count=1,
+        sha256="0ebc5863fcbee9b4717e45f5de739ec99b15854d366818859c71350a5f5b2fd8",
+    ),
+    FrozenDenominator(
+        http_count=174,
+        websocket_count=1,
+        sha256="34ba120c723bea40b54989694ad986dfb34e64ade14873199c9675bef40350e4",
+    ),
+)
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -452,6 +476,32 @@ def denominator_diff(app: Any) -> dict[str, list[str]]:
     }
 
 
+def accepted_denominator(
+    http_operations: Iterable[Operation],
+    websocket_routes: Iterable[Operation],
+    *,
+    differences: Mapping[str, list[str]] | None = None,
+) -> FrozenDenominator:
+    """Return the reviewed snapshot this live tree matches, or fail closed."""
+    http = tuple(http_operations)
+    websockets = tuple(websocket_routes)
+    digest = denominator_digest(http, websockets)
+    for snapshot in ACCEPTED_DENOMINATORS:
+        if (
+            len(http) == snapshot.http_count
+            and len(websockets) == snapshot.websocket_count
+            and digest == snapshot.sha256
+        ):
+            return snapshot
+    accepted = [(item.http_count, item.websocket_count, item.sha256) for item in ACCEPTED_DENOMINATORS]
+    detail = f" diff={differences}" if differences is not None else ""
+    raise AssertionError(
+        "Monitor API route denominator is not a reviewed snapshot: "
+        f"route_tree={len(http)} websockets={len(websockets)} sha256={digest} "
+        f"accepted={accepted}{detail}"
+    )
+
+
 def assert_frozen_denominator(app: Any) -> None:
     """Fail closed when a new route has not received a reviewed record."""
     http_operations = enumerate_http_operations(app)
@@ -464,29 +514,15 @@ def assert_frozen_denominator(app: Any) -> None:
         + "; accept it in the frozen HTTP inventory so the sweep exercises it, "
         + "or list it in FRAMEWORK_EXEMPT_OPERATIONS with a reason"
     )
+    accepted_denominator(http_operations, websockets, differences=differences)
     swept_hidden = len(differences["schema_hidden_swept"])
-    assert len(http_operations) == FROZEN_HTTP_OPERATION_COUNT, (
-        "Monitor API HTTP denominator changed: "
-        f"route_tree={len(http_operations)} openapi={len(openapi)} "
-        f"schema_hidden_swept={swept_hidden} "
-        f"expected={FROZEN_HTTP_OPERATION_COUNT} diff={differences}"
-    )
-    assert len(openapi) == FROZEN_HTTP_OPERATION_COUNT - swept_hidden, (
+    assert len(openapi) == len(http_operations) - swept_hidden, (
         "OpenAPI operation count does not match the schema-visible route tree: "
-        f"openapi={len(openapi)} schema_visible={FROZEN_HTTP_OPERATION_COUNT - swept_hidden} "
+        f"openapi={len(openapi)} schema_visible={len(http_operations) - swept_hidden} "
         f"diff={differences}"
-    )
-    assert len(websockets) == FROZEN_WEBSOCKET_ROUTE_COUNT, (
-        f"Monitor API WebSocket denominator changed: got {len(websockets)}, "
-        f"expected {FROZEN_WEBSOCKET_ROUTE_COUNT}; routes={differences['websockets']}"
     )
     assert not differences["missing_from_openapi"] and not differences["missing_from_route_tree"], (
         f"route tree/OpenAPI operation diff: {differences}"
-    )
-    digest = denominator_digest(http_operations, websockets)
-    assert digest == FROZEN_DENOMINATOR_SHA256, (
-        "Monitor API route denominator changed without a registry review: "
-        f"sha256={digest} expected={FROZEN_DENOMINATOR_SHA256}"
     )
     exemptions = enumerate_framework_exemptions(app)
     expected_exemptions = tuple(sorted(FRAMEWORK_EXEMPT_OPERATIONS))
@@ -594,6 +630,70 @@ def _query_for(path_template: str) -> dict[str, Any]:
     return {}
 
 
+def _agent_monitor_preflight_body() -> dict[str, Any]:
+    return {
+        "agent_id": "codex/opsec-sweep",
+        "task_name": "opsec_probe",
+        "required_ram_mb": 64,
+    }
+
+
+def _agent_monitor_register_body() -> dict[str, Any]:
+    return {
+        "agent_id": "codex/opsec-sweep",
+        "task_name": "opsec_register",
+        "pid": 1,
+        "process_create_time": 0.0,
+        "reserved_ram_mb": 64,
+    }
+
+
+def _agent_monitor_heartbeat_body() -> dict[str, Any]:
+    return {"lease_token": "lease_opsecbeat", "pid": 1}
+
+
+def _agent_monitor_probe(operation: Operation, path_values: Mapping[str, str]) -> ExerciseRecord:
+    """Probe a still-mounted agent-monitor mutation without importing its router.
+
+    Machinery #752 deletes the module. While an older release still mounts the
+    routes, the sweep reads them from the live route table. Preflight has no
+    auth and answers from its own fixture lease table. The other three refuse
+    an unauthenticated request before that table is opened.
+    """
+    if operation.path_template == "/api/agent-monitor/preflight":
+        return ExerciseRecord(
+            method=operation.method,
+            path_template=operation.path_template,
+            classification="mutation",
+            fixture="isolated",
+            path_values=path_values,
+            body_factory=_agent_monitor_preflight_body,
+            reason="preflight has no auth; the fixture store is the route's own lease table",
+            expected_statuses=(200,),
+            store="fixture batch_state/agent_monitor.sqlite3",
+        )
+    query: dict[str, Any] = {}
+    body_factory = None
+    if operation.path_template == "/api/agent-monitor/release":
+        query = {"lease_token": "lease_opsecfree"}
+    elif operation.path_template == "/api/agent-monitor/heartbeat":
+        body_factory = _agent_monitor_heartbeat_body
+    elif operation.path_template == "/api/agent-monitor/register":
+        body_factory = _agent_monitor_register_body
+    return ExerciseRecord(
+        method=operation.method,
+        path_template=operation.path_template,
+        classification="mutation",
+        fixture="isolated",
+        path_values=path_values,
+        query=query,
+        body_factory=body_factory,
+        reason="unauthenticated probe; the route refuses before the lease store",
+        expected_statuses=(401,),
+        store="none (refused before the lease store)",
+    )
+
+
 def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> ExerciseRecord:
     if operation.method == "WEBSOCKET":
         return ExerciseRecord(
@@ -664,6 +764,9 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             reason="fixture-local corpus is absent, so the documented empty envelope is expected",
             expected_statuses=(200,),
         )
+
+    if operation.path_template.startswith("/api/agent-monitor/") and operation.method in MUTATION_METHODS:
+        return _agent_monitor_probe(operation, path_values)
 
     if operation.method in MUTATION_METHODS:
         return _mutation_record(operation, path_values, statuses)
