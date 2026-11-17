@@ -204,7 +204,8 @@ def test_one_pr_omitting_attribution_fails_while_its_neighbour_passes(
 
     assert code == 1
     assert f"MISSING_ATTRIBUTION pr=#22 commit={second[:12]}" in out
-    assert first[:12] not in out
+    # Observe-mode X-Verified lines may name every commit; no attribution finding names the attributed one.
+    assert not [line for line in out.splitlines() if "MISSING_ATTRIBUTION" in line and first[:12] in line]
     assert out.count("::error title=agent-attribution::") == 1
 
 
@@ -424,7 +425,8 @@ def test_pr_mode_fails_on_one_unattributed_commit(queue: Queue, capsys: pytest.C
 
     assert code == 1
     assert f"MISSING_ATTRIBUTION commit={shas[1][:12]}" in out
-    assert shas[0][:12] not in out
+    # Observe-mode X-Verified lines may name every commit; no attribution finding names the attributed one.
+    assert not [line for line in out.splitlines() if "MISSING_ATTRIBUTION" in line and shas[0][:12] in line]
 
 
 def test_pr_mode_skips_merge_commits_and_fails_an_empty_range(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:

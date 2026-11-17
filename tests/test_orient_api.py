@@ -193,11 +193,12 @@ def test_orient_swallows_failing_subquery(monkeypatch):
 
 
 def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
-    """A hung ASYNC collector caps at the per-section hard timeout.
+    """A hung ASYNC collector never blocks the orient response.
 
     This covers the live-reproduced BLOCKER from the first baseline
     run: the async pipeline collector could block the whole response.
-    ``asyncio.wait_for`` properly cancels pure-async awaitables.
+    Product sections run detached since lu-machinery 0.1.28, so the hung
+    pipeline section reports ``refreshing`` instead of a section timeout.
 
     Both sections use async collectors here so failure isolation does
     not depend on sync executor scheduling within the 0.1 s budget.
@@ -229,7 +230,8 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     assert response.status_code == 200
     assert_under_budget(elapsed, 1.0, f"orient should short-circuit, took {elapsed}s")
     data = response.json()
-    assert "section_timeout" in data["pipeline"]["error"]
+    # A product section that outlives its inline wait is detached and reported as refreshing.
+    assert data["pipeline"]["error"] == "refreshing"
     # The independent async section must still populate.
     assert data["runtime"]["agents"] == ["codex"]
 
