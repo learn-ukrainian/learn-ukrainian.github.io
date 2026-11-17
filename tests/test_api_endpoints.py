@@ -5,10 +5,9 @@ Validates:
   1. GET /api/health — returns 200 with status/version/uptime
   2. GET /api/config — returns levels and pipeline info
   3. GET /api/state/summary — returns 200 with track data
-  4. GET /api/state/pipeline-versions — returns 200 with counts
-  5. GET /api/dashboard/overview — returns 200 with tracks
-  6. All routers are mounted (check app.routes)
-  7. Extracted helpers: _read_yaml_file, _extract_word_count_from_status,
+  4. GET /api/dashboard/overview — returns 200 with tracks
+  5. All routers are mounted (check app.routes)
+  6. Extracted helpers: _read_yaml_file, _extract_word_count_from_status,
      _compute_track_stats, _extract_review_info, _get_orchestration_info,
      _classify_module_queue, _fetch_broker_messages, _default_research_info
 """
@@ -125,16 +124,7 @@ class TestStateSummaryEndpoint:
 
 
 class TestBuildStatusEndpoint:
-    """GET /api/state/build-status agrees with per-track build status."""
-
-    def test_all_tracks_matches_per_track_build_counts(self):
-        all_tracks = client.get("/api/state/build-status").json()["tracks"]
-
-        for track in ["a1", "bio", "folk"]:
-            per_track = client.get(f"/api/state/build-status/{track}").json()
-            assert all_tracks[track]["building"] == per_track["building"]
-            assert all_tracks[track]["queued"] == per_track["queued"]
-            assert all_tracks[track]["failed"] == per_track["failed"]
+    """GET /api/state/build-status/{track} build counts."""
 
     def test_per_track_counts_failed_audit_before_running_phase(self, tmp_path, monkeypatch):
         from scripts.project_api import state_build

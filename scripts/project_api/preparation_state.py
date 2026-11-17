@@ -11,8 +11,6 @@ from typing import Any
 from lu_machinery.orchestration import curriculum_readiness
 
 CONTRACT_VERSION = "agent-preparation-state.v1"
-BUNDLE_STATES = ("unbuilt", "partial", "built")
-PUBLICATION_STATES = ("absent", "generated", "published")
 PUBLICATION_SURFACES = {
     "absent": "none",
     "generated": "legacy_md",
@@ -82,7 +80,7 @@ def _publication_paths(repo_root: Path, track: str, slug: str) -> tuple[Path, Pa
 
 
 def publication_state(repo_root: Path, track: str, slug: str) -> str:
-    """Classify publication with existence checks only (the roster hot path)."""
+    """Classify publication with existence checks only."""
     mdx_path, legacy_path = _publication_paths(repo_root, track, slug)
     if mdx_path.is_file():
         return "published"
@@ -138,121 +136,6 @@ def _inactive_plan_tracks(repo_root: Path, active_tracks: set[str]) -> list[dict
                 }
             )
     return diagnostics
-
-
-def build_roster(
-    *,
-    repo_root: Path,
-    authority: Mapping[str, Any],
-    track: str | None = None,
-) -> dict[str, Any]:
-    """Build active-manifest bundle/publication counts without readiness sweeps."""
-    try:
-        manifest = curriculum_readiness.load_active_manifest(repo_root)
-    except (curriculum_readiness.ReadinessError, OSError) as exc:
-        raise PreparationStateError(str(exc)) from exc
-    all_tracks = manifest["tracks"]
-    if track is not None and track not in all_tracks:
-        inactive = {item["track"] for item in _inactive_plan_tracks(repo_root, set(all_tracks))}
-        if track in inactive:
-            raise InactiveTrackError(f"inactive plans-fallback track: {track}")
-        raise UnknownTrackError(f"unknown track: {track}")
-
-    selected_tracks = [track] if track is not None else list(all_tracks)
-    tracks: list[dict[str, Any]] = []
-    findings: list[dict[str, str]] = []
-    total_bundle = {state: 0 for state in BUNDLE_STATES}
-    total_publication = {state: 0 for state in PUBLICATION_STATES}
-    total_modules = 0
-
-    for track_id in selected_tracks:
-        record = all_tracks[track_id]
-        modules = record["modules"]
-        bundle_counts = {state: 0 for state in BUNDLE_STATES}
-        publication_counts = {state: 0 for state in PUBLICATION_STATES}
-        for slug in modules:
-            bundle_state = curriculum_readiness.module_bundle_state(repo_root, track_id, slug)
-            if bundle_state in bundle_counts:
-                bundle_counts[bundle_state] += 1
-            else:
-                findings.append(
-                    {
-                        "id": "BUNDLE_STATE_COUNT_MISMATCH",
-                        "track": track_id,
-                        "detail": f"unexpected bundle state for {slug}: {bundle_state}",
-                    }
-                )
-            published_state = publication_state(repo_root, track_id, slug)
-            if published_state in publication_counts:
-                publication_counts[published_state] += 1
-            else:
-                findings.append(
-                    {
-                        "id": "PUBLICATION_STATE_COUNT_MISMATCH",
-                        "track": track_id,
-                        "detail": f"unexpected publication state for {slug}: {published_state}",
-                    }
-                )
-
-        module_count = len(modules)
-        if sum(bundle_counts.values()) != module_count or sum(publication_counts.values()) != module_count:
-            findings.append(
-                {
-                    "id": "TRACK_COUNT_INVARIANT_FAILED",
-                    "track": track_id,
-                    "detail": "component state counts do not equal the active manifest module count",
-                }
-            )
-        tracks.append(
-            {
-                "track": track_id,
-                "type": record["type"],
-                "manifest_authority": "active",
-                "module_count": module_count,
-                "module_state_counts": bundle_counts,
-                "publication_state_counts": publication_counts,
-            }
-        )
-        total_modules += module_count
-        for state in BUNDLE_STATES:
-            total_bundle[state] += bundle_counts[state]
-        for state in PUBLICATION_STATES:
-            total_publication[state] += publication_counts[state]
-
-    manifest_path = Path(manifest["path"])
-    payload = {
-        "contract_version": CONTRACT_VERSION,
-        "kind": "roster",
-        "authority_kind": "active-manifest-roster",
-        "authority": {
-            **dict(authority),
-            "manifest": {
-                "path": _relative(manifest_path, repo_root),
-                "sha256": manifest["sha256"],
-            },
-        },
-        "field_authority": {
-            "tracks": "curriculum-manifest",
-            "module_state_counts": "canonical-learner-bundle-files",
-            "publication_state_counts": "learner-publication-files",
-            "diagnostics": "informational-only",
-        },
-        "tracks": tracks,
-        "totals": {
-            "manifest_active_tracks": len(all_tracks),
-            "manifest_active_modules": sum(len(record["modules"]) for record in all_tracks.values()),
-            "returned_tracks": len(selected_tracks),
-            "returned_modules": total_modules,
-            "module_state_counts": total_bundle,
-            "publication_state_counts": total_publication,
-        },
-        "diagnostics": {
-            "authority": "diagnostic-only",
-            "inactive_plan_tracks": _inactive_plan_tracks(repo_root, set(all_tracks)),
-        },
-        "findings": findings,
-    }
-    return _with_freshness(payload)
 
 
 def build_module_state(

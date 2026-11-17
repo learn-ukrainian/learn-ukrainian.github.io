@@ -39,30 +39,16 @@ Bridge for comms/discuss: `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-
 ## Before Building
 
 ```bash
-# Curriculum preparation readiness
-curl -s "http://localhost:8765/api/state/preparation?track=hist" | python3 -m json.tool
+# Canonical preparation decision for one module
+curl -s http://localhost:8765/api/state/preparation/hist/<slug> | python3 -m json.tool
 
 # Phase-level state for a track
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
 ```
 
-## After Batch / QA
-
-```bash
-# Failing or weak modules
-curl -s "http://localhost:8765/api/state/failing?track=hist" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool
-
-# Outstanding critical issues
-curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
-```
-
 ## Coverage Checks
 
 ```bash
-# Research quality per track
-curl -s http://localhost:8765/api/state/research-coverage | python3 -m json.tool
-
 # Review scores per track
 curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 ```
@@ -73,29 +59,15 @@ curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 |----------|-------------|
 | `/api/state/summary` | Session start — total snapshot |
 | `/api/state/pipeline/{track}` | Inspect one track's v3/v4 phase progress (auto-detects per module) |
-| `/api/state/preparation` | Before `build_module --all` (curriculum readiness) |
-| `/api/state/weak-points` | After batch — find what needs fixing |
-| `/api/state/failing` | After batch — find hard failures (includes `pipeline_version`) |
-| `/api/state/research-coverage` | Research quality health check |
+| `/api/state/preparation/{track}/{slug}` | Before building a module (canonical readiness decision) |
 | `/api/state/review-coverage` | Review coverage health check |
-| `/api/state/issues` | Outstanding issues from reviews + audit |
 
 **Pipeline version**: All module-level responses include `pipeline_version` (`"v4"`, `"v3"`, `"unbuilt"`) and `needs_rebuild` (`true`/`false`). V4 modules return named phases (`research`..`mdx`); v3 modules return letter-coded phases (`A`..`D`).
-
-## V4 Migration Progress
-
-```bash
-# How many modules are v4 vs v3?
-curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
-
-# For one track
-curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -m json.tool
-```
 
 ## Other Useful Endpoints
 
 ```bash
-curl -s http://localhost:8765/api/state/build-status       # Pass/fail all tracks
+curl -s http://localhost:8765/api/state/build-status/a1    # Build progress for one track
 curl -s http://localhost:8765/api/dashboard/comms         # Broker messages + watcher
 curl -s http://localhost:8765/api/gold/inspect/{t}/{slug} # Deep module inspection
 ```
@@ -103,9 +75,9 @@ curl -s http://localhost:8765/api/gold/inspect/{t}/{slug} # Deep module inspecti
 ## Retired Endpoints (HTTP 404)
 
 Retired in #7942 (#7945) and #7947; return HTTP 404 without deprecation headers:
-- `GET /api/blue/live-status` → use `GET /api/state/build-status`
+- `GET /api/blue/live-status` → use `GET /api/state/build-status/{track}`
 - `GET /api/rag/*` → use canonical `GET /api/sources/*`
-- `GET /api/state/ready-to-build` → use canonical `GET /api/state/preparation`
+- `GET /api/state/ready-to-build` → use canonical `GET /api/state/preparation/{track}/{slug}`
 - `GET /api/cost/*` → removed with `/api/analytics/cost/*` below
 
 Removed in the 2026-11-12 product page trim (no replacement route; their data was empty):

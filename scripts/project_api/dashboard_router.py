@@ -561,64 +561,6 @@ def overview(ctx: MonitorContext = Depends(get_ctx)):
     return payload
 
 
-@router.get("/research")
-def research_overview(ctx: MonitorContext = Depends(get_ctx)):
-    """Research coverage across all tracks with rubric-based quality scoring."""
-    manifest = load_manifest(ctx)
-    levels = manifest.get("levels", {})
-
-    tracks = []
-    for level_cfg in LEVELS:
-        track_id = level_cfg["id"]
-        track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug
-            for _num, slug in get_plan_slugs(
-                track_id,
-                curriculum_root=ctx.roots.curriculum_root,
-                plans_root=ctx.roots.plans_root,
-            )
-        ]
-        if not track_modules:
-            continue
-
-        track_data = scan_track_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
-        rs = track_data["stats"].get("research", {})
-
-        mod_research = []
-        for m in track_data["modules"]:
-            r = m.get("research", {})
-            entry = {
-                "num": m["num"],
-                "slug": m["slug"],
-                "exists": r.get("exists", False),
-                "words": r.get("words", 0),
-                "quality": r.get("quality"),
-                "score": r.get("score"),
-                "profile": r.get("profile"),
-                "dimensions": r.get("dimensions"),
-                "gaps": r.get("gaps"),
-                "has_content": m["files"].get("lesson", False),
-            }
-            if "content_alignment" in r:
-                entry["content_alignment"] = r["content_alignment"]
-            mod_research.append(entry)
-
-        tracks.append(
-            {
-                "id": track_id,
-                "name": level_cfg["name"],
-                "module_count": track_data["module_count"],
-                "research_stats": rs,
-                "modules": mod_research,
-            }
-        )
-
-    return {
-        "tracks": tracks,
-        "timestamp": datetime.now(UTC).isoformat(),
-    }
-
-
 @router.get("/track/{track_id}/summary")
 def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Lightweight per-module summary: slug, status, pipeline version, review badges only."""

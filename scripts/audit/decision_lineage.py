@@ -393,7 +393,6 @@ Exit codes:
 Related:
   docs/decisions/INDEX.md
   scripts/audit/check_decisions.py
-  Monitor API: GET /api/decisions/lineage
   Issue: #1785
 """,
     )

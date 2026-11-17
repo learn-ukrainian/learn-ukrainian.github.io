@@ -201,24 +201,9 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     from lu_machinery.api.monitor_context import fixture_context
 
     ctx = fixture_context(tmp_path)
-    pipe_payload = {"total": 0, "counts": {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}}
-    weak_payload = {"count": 0, "modules": []}
+    summary_payload = {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}, "totals": {}}
 
-    monkeypatch.setattr(
-        product_state_router,
-        "_compute_pipeline_versions_payload",
-        lambda _ctx, track: {**pipe_payload, "track": track},
-    )
-    monkeypatch.setattr(
-        product_state_router,
-        "_compute_weak_points_payload",
-        lambda _ctx, track, min_score, limit: {
-            **weak_payload,
-            "track": track,
-            "min_score": min_score,
-            "limit": limit,
-        },
-    )
+    monkeypatch.setattr(product_state_router, "compute_summary", lambda **_kwargs: summary_payload)
 
     # Isolate from any warmup thread started by another test or app startup in
     # this xdist worker (#8570): the module-global guard would otherwise make
@@ -229,7 +214,5 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     warm_thread.join(timeout=30)
     assert not warm_thread.is_alive(), "state scan warmup thread did not finish within 30s"
 
-    pipe_key = state_router._ctx_cache_key(ctx, "pipeline_versions", "all")
-    weak_key = state_router._ctx_cache_key(ctx, "weak_points", "all", 7, 20)
-    assert state_helpers.cache_get(pipe_key, 60.0)["track"] is None
-    assert state_helpers.cache_get(weak_key, 60.0)["limit"] == 20
+    summary_key = state_router._ctx_cache_key(ctx, "summary")
+    assert state_helpers.cache_get(summary_key, 60.0) == summary_payload

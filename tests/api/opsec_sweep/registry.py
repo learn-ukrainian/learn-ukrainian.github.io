@@ -37,9 +37,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 233
+FROZEN_HTTP_OPERATION_COUNT = 219
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "b8ac88f3f95f1c1cb0535841a5fd0cd42c87b0bf128e3cc1051b98e1b50c9ef0"
+FROZEN_DENOMINATOR_SHA256 = "0ebc5863fcbee9b4717e45f5de739ec99b15854d366818859c71350a5f5b2fd8"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -84,7 +84,6 @@ EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
     "GET /api/rules": "isolated fixture has no deployed rule files",
-    "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
     "GET /api/state/preparation/{track}/{slug}": "sparse isolated fixture omits the curriculum tree",
     "GET /api/work/v1/next": "isolated fixture has no warm work projection",
 }

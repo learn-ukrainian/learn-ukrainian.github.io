@@ -37,7 +37,7 @@ from .curriculum_state import V6_PHASE_ORDER as V6_PHASES
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.research.research_quality import assess_research_compat, find_research_path
+from lu_machinery.research.research_quality import find_research_path
 
 from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
 
@@ -306,61 +306,6 @@ def _research_source(research_path: Path | None) -> str | None:
     if "docs" in parts and "research" in parts:
         return "docs/research"
     return "curriculum/research"
-
-
-def compute_research_coverage(
-    *,
-    curriculum_root: Path | None = None,
-    plans_root: Path | None = None,
-) -> dict:
-    """Sync research coverage computation."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
-    tracks_out = {}
-
-    for level_cfg in LEVELS:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
-        if not plan_slugs:
-            continue
-
-        track_dir = curriculum_root / level_cfg["path"]
-        total = len(plan_slugs)
-        has_research = 0
-        quality_counts = {"exemplary": 0, "solid": 0, "adequate": 0, "thin": 0, "stub": 0}
-        scores = []
-        needs_upgrade = 0
-
-        for _num, slug in plan_slugs:
-            rp = find_research_path(track_dir, slug)
-            if not rp:
-                continue
-            result = assess_research_compat(rp, track_id, None)
-            if not result or not result.get("exists"):
-                continue
-            has_research += 1
-            quality = result.get("quality")
-            if quality in quality_counts:
-                quality_counts[quality] += 1
-            score = result.get("score")
-            if score is not None:
-                scores.append(score)
-            if score is not None and score < 7:
-                needs_upgrade += 1
-
-        pct_coverage = round(has_research / total * 100) if total > 0 else 0
-        avg_score = round(sum(scores) / len(scores), 1) if scores else None
-
-        tracks_out[track_id] = {
-            "total_modules": total,
-            "has_research": has_research,
-            "pct_coverage": pct_coverage,
-            "quality": quality_counts,
-            "avg_score": avg_score,
-            "needs_upgrade": needs_upgrade,
-        }
-
-    return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks_out}
 
 
 def compute_review_coverage(

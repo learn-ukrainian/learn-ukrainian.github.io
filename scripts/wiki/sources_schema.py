@@ -33,6 +33,10 @@ SOURCE_TYPES = {
     "wiki",
     "wikipedia",
 }
+# libyaml's safe loader parses the same documents to the same values about ten
+# times faster; the Monitor quality gate reads every article's registry. The pure
+# Python safe loader is the same parser for builds without libyaml.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _ID_RE = re.compile(r"^S([1-9]\d*)$")
 _SHORT_CITATION_BODY_RE = re.compile(r"\[([^\[\]]+)\]")
 _SHORT_CITATION_ID_RE = re.compile(r"\bS([1-9]\d*)\b")
@@ -123,7 +127,7 @@ def load_sources_registry(path: Path) -> WikiSourcesRegistry:
     if not path.exists():
         return WikiSourcesRegistry(sources=[])
 
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or {}
     raw_sources = data.get("sources") or []
     sources = [
         WikiSourceEntry(

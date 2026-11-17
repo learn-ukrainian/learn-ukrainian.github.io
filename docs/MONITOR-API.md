@@ -344,7 +344,6 @@ curl -s "http://localhost:8765/api/worktrees"
 curl -s "http://localhost:8765/api/comms/inbox?agent=claude-infra"
 
 # 4. Pull authoritative curriculum state only when selecting a module.
-curl -s "http://localhost:8765/api/state/preparation?track=c1"
 curl -s "http://localhost:8765/api/state/preparation/c1/<slug>"
 
 # 5. Do NOT fetch the full rules payload at cold start. Fetch it on demand before
@@ -822,39 +821,6 @@ curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
 
 These are the primary endpoints for understanding pipeline state. All are read-only GETs.
 
-### `GET /api/state/preparation[?track=x]`
-
-Versioned, agent-facing active curriculum authority. This route is distinct
-from legacy pipeline telemetry: it derives its roster only from
-`curriculum.yaml`, classifies the canonical four-file learner bundle, and
-observes learner publication files. It never evaluates preparation across a
-whole track.
-
-```bash
-# All 20 active manifest tracks (inactive plan-only tracks are diagnostics).
-curl -s http://localhost:8765/api/state/preparation | .venv/bin/python -m json.tool
-
-# One-track response, kept below the 5 KB agent budget.
-curl -s "http://localhost:8765/api/state/preparation?track=a1" | .venv/bin/python -m json.tool
-```
-
-The response contract is `agent-preparation-state.v1` (schema:
-`schemas/agent-preparation-state.v1.schema.json`). Component states remain
-orthogonal:
-
-- `module_state_counts`: `unbuilt`, `partial`, `built`, based only on
-  `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml`.
-- `publication_state_counts`: `absent`, `generated`, `published`, where
-  `published` means learner MDX under `site/src/content/docs/` and `generated`
-  means only the legacy direct curriculum Markdown exists.
-- `diagnostics.inactive_plan_tracks`: plans-fallback inventory with
-  `authority: diagnostic-only`; it never contributes to active totals.
-
-Every request recomputes from local files (`cache: none`) and returns a strong
-ETag over the exact stable JSON bytes. `If-None-Match` returns a bodyless `304`.
-Unknown query parameters, duplicate filters, unsafe identifiers, inactive
-fallback tracks, and unknown tracks are rejected rather than silently ignored.
-
 ### `GET /api/state/preparation/{track}/{slug}[?evidence=summary|expanded]`
 
 One canonical, fail-closed module preparation decision. The route calls
@@ -880,7 +846,7 @@ development servers identify a dispatch or other linked worktree explicitly.
 ### `GET /api/state/summary`
 
 Legacy pipeline and artifact telemetry snapshot. Use
-`/api/state/preparation`—not this route—for active curriculum membership or a
+`/api/state/preparation/{track}/{slug}`—not this route—for active curriculum membership or a
 generation decision.
 
 ```bash
@@ -1002,39 +968,6 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ---
 
-### `GET /api/state/pipeline-versions[?track=x][&fresh=true]`
-
-Pipeline generation counts and rebuild pressure. **The single-glance migration dashboard.**
-
-**Caching (#7973):** process-local TTL (~60s) with **singleflight** — concurrent cold
-misses share one curriculum walk. API lifespan **schedules** a detached warm of the
-default all-tracks key (best-effort; does not block readiness). An early request
-right after process start may still initiate or join the scan and wait for it.
-Pass `?fresh=true` to force one coalesced recompute (still singleflight). Response
-`meta.cache` is `hit` / `miss` when present.
-
-```bash
-curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/pipeline-versions?fresh=true" | python3 -m json.tool
-```
-
-Returns:
-```json
-{
-  "total": 64,
-  "counts": {"...": "per-generation counts"},
-  "pct_built": 66,
-  "needs_rebuild": 22,
-  "per_track": {"a1": {"...": "per-generation counts"}},
-  "generated_at": "2026-04-11T00:15:00Z"
-}
-```
-
-`needs_rebuild` is the number of modules still on older generations or unbuilt.
-
----
-
 ### `GET /api/state/build-status/{track}`
 
 Compact live build progress for one track. **One call tells you: what's building, how many done, recent completions.**
@@ -1057,18 +990,6 @@ Returns:
 ```
 
 Cache TTL: 15 seconds (designed for live monitoring).
-
----
-
-### `GET /api/state/build-status`
-
-All-tracks build progress in one call. Shows done/total/building/failed per track.
-
-```bash
-curl -s http://localhost:8765/api/state/build-status | python3 -m json.tool
-```
-
-Returns only tracks that have activity. Use during overnight builds for a single-glance overview.
 
 ---
 
@@ -1245,62 +1166,11 @@ ETA is calculated from the rate of recent content-phase completions. Cache TTL: 
 
 ---
 
-### `GET /api/state/enrichment-status[?track=x]`
-
-Which plans are enriched per track. Checks for a non-empty `plan_fixes` list in the plan YAML; tracked `.yaml.bak` files are legacy artifacts and no longer count.
-
-```bash
-curl -s http://localhost:8765/api/state/enrichment-status | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/enrichment-status?track=a1" | python3 -m json.tool
-```
-
-Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 10 slugs).
-
----
-
 ### Retired Legacy Endpoint — `GET /api/state/ready-to-build` (HTTP 404)
 
 `GET /api/state/ready-to-build` previously returned legacy research-complete candidates.
 It was retired in #7947. Requests do not operate with deprecation headers and return HTTP `404 Not Found`.
-Callers must use canonical `/api/state/preparation` (or `/api/state/preparation/{track}/{slug}`).
-
----
-
-### `GET /api/state/weak-points[?track=x&min_score=7&limit=20][&fresh=true]`
-
-Modules with quality issues — **the fire list** for content work.
-
-Criteria:
-- `audit_status == "fail"`
-- research score < `min_score` (default 7)
-- word count < 80% of `word_target`
-
-**Caching (#7973):** process-local TTL (~60s) with **singleflight** per
-`(track, min_score, limit)` key. API lifespan **schedules** a detached warm of the
-default glance key (`all`, `min_score=7`, `limit=20`) — best-effort; early callers
-after start may still wait on the first compute. Pass `?fresh=true` to force one
-coalesced recompute. Response schema is unchanged.
-
-```bash
-curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/weak-points?min_score=8&limit=50" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/weak-points?fresh=true" | python3 -m json.tool
-```
-
-Results sorted worst-first (audit fails > thin research > low words).
-
----
-
-### `GET /api/state/failing[?track=x]`
-
-All modules with `audit status == "fail"` OR any phase status `== "failed"`.
-
-```bash
-curl -s http://localhost:8765/api/state/failing | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/failing?track=a1" | python3 -m json.tool
-```
-
-Each entry includes `pipeline_version`, `failed_phases`, and `blocking_issues`.
+Callers must use canonical `/api/state/preparation/{track}/{slug}`.
 
 ---
 
@@ -1342,34 +1212,6 @@ Track response: `{track, count, scored, modules[], meta}`. Each module:
 
 ---
 
-### `GET /api/state/research-coverage`
-
-Per-track research completeness and quality distribution.
-
-```bash
-curl -s http://localhost:8765/api/state/research-coverage | python3 -m json.tool
-```
-
-Returns:
-```json
-{
-  "tracks": {
-    "bio": {
-      "total_modules": 172,
-      "has_research": 104,
-      "pct_coverage": 60,
-      "quality": {"exemplary": 40, "solid": 30, "adequate": 20, "thin": 10, "stub": 4},
-      "avg_score": 7.8,
-      "needs_upgrade": 14
-    }
-  }
-}
-```
-
-`needs_upgrade` = modules with score < 7.
-
----
-
 ### `GET /api/state/review-coverage`
 
 Per-track review and final-review coverage + quality signal.
@@ -1403,21 +1245,6 @@ Attribution: a row is `ok` only on positive proof that it measured the bound acc
 
 ---
 
-### `GET /api/state/issues[?track=x&severity=critical]`
-
-Aggregated outstanding issues from review files + audit failures.
-
-```bash
-curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/issues?track=hist" | python3 -m json.tool
-```
-
-Two sources:
-1. **Review files** — `### Issue N` blocks from `*-review.md` files. Severity set by keywords (factual error, grammar error → critical; style → warning).
-2. **Audit failures** — modules with `overall.status == "fail"` and their failing gates.
-
----
-
 ## Existing Useful Endpoints
 
 ### Build state
@@ -1439,9 +1266,6 @@ curl -s http://localhost:8765/api/dashboard/track/hist
 
 # Deep module inspection (plan + meta + gates + orchestration)
 curl -s http://localhost:8765/api/dashboard/module/a1/my-world-objects
-
-# Research coverage (detailed per-module scores)
-curl -s http://localhost:8765/api/dashboard/research
 ```
 
 ### Communications (old)
@@ -1630,17 +1454,8 @@ near-zero bytes for these payloads.
 ### Deep-dive queries (run as needed, not on every boot)
 
 ```bash
-# Ship-ready modules across every track.
-curl -s http://localhost:8765/api/artifacts/ship-ready | python3 -m json.tool
-
-# Public site reachability + freshness.
-curl -s http://localhost:8765/api/site/health | python3 -m json.tool
-
 # Canonical preparation for an exact active module.
 curl -s http://localhost:8765/api/state/preparation/c1/<slug>
-
-# Critical issues to fix
-curl -s "http://localhost:8765/api/state/issues?severity=critical"
 ```
 
 ---
@@ -1707,25 +1522,6 @@ curl -s http://localhost:8765/api/decisions/dec-001 | python3 -m json.tool
 
 Read-only observability for compiled wiki articles, quality gate results, build logs, and source inventory.
 
-### `GET /api/wiki/status`
-
-Per-track compiled vs total wiki coverage, with progress percentage and total compiled words.
-
-Response:
-```json
-{
-  "tracks": [
-    {
-      "track": "hist",
-      "total": 42,
-      "compiled": 18,
-      "pct": 42.9,
-      "total_words": 31240
-    }
-  ]
-}
-```
-
 ### `GET /api/wiki/status/{track}`
 
 Per-module wiki status for one track: compile flag, words, timestamp, and source count.
@@ -1758,22 +1554,6 @@ Response:
   "preview": "# Kyivan Rus\\n\\nKyivan Rus was ...",
   "source_count": 7,
   "compiled_at": "2026-04-10T18:45:00+00:00"
-}
-```
-
-### `GET /api/wiki/quality-gate`
-
-Runs the wiki quality gate for all tracks and returns issues grouped by track.
-
-Response:
-```json
-{
-  "hist": {
-    "periods/kyivan-rus.md": [
-      "SHORT (900w < 1500)"
-    ]
-  },
-  "folk": {}
 }
 ```
 
@@ -3106,7 +2886,7 @@ future cleanup.
 
 | Deprecated | Replacement |
 |---|---|
-| `GET /api/comms/live-activity` | `GET /api/state/build-status` (the deprecation header still also names the removed `/api/build/events`) |
+| `GET /api/comms/live-activity` | `GET /api/state/build-status/{track}` (the deprecation header still also names the removed `/api/build/events`) |
 
 The deprecated routes still work for existing dashboards and scripts
 that haven't been updated — the contract is "log a warning and
@@ -3118,11 +2898,11 @@ The following legacy endpoints and route aliases have been completely retired an
 
 | Retired Route | Canonical Replacement | Status | Notes |
 |---|---|---|---|
-| `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
+| `GET /api/blue/live-status` | `GET /api/state/build-status/{track}` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
 | `GET /api/blue/*` | `GET /api/state/*`, `GET /api/artifacts/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
 | `GET /api/gold/*` | `GET /api/dashboard/module/{track}/{slug}`, `GET /api/state/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
-| `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
+| `GET /api/state/ready-to-build` | `GET /api/state/preparation/{track}/{slug}` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
 | `GET /api/cost/*` | none | 404 Not Found | Retired in #7947; its canonical `/api/analytics/cost/*` was removed in the 2026-11-12 product page trim |
 | `GET /api/analytics/cost/*` | `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
 | `/api/build/events/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; no dispatch metadata files exist to read |
@@ -3172,46 +2952,6 @@ or published.
   "final_review": {"exists": true, "verdict": "PASS", ...}
 }
 ```
-
-### `GET /api/artifacts/ship-ready[?track=a1]`
-
-Aggregate list — walks every plan and returns the modules whose
-every artifact gate is green. Narrow to one track with `?track=`.
-The path is unchanged. The body field is `artifact_gates_green`.
-It is not a merged count and not a published count.
-
-```json
-{
-  "tracks_scanned": ["a1", "a2", "b1"],
-  "modules_inspected": 155,
-  "artifact_gates_green_count": 27,
-  "artifact_gates_green": [
-    {"track": "a1", "slug": "hello-who-are-you", "review_score": 9.4,
-     "word_count": 1230, "word_target": 1200}
-  ]
-}
-```
-
-### `GET /api/site/health`
-
-Public-site reachability + freshness. Every field degrades gracefully
-— if the network is down or `gh` isn't available, the response still
-returns 200 with per-field `error` strings rather than failing the
-whole check.
-
-```json
-{
-  "public_url": "https://learn-ukrainian.github.io/",
-  "reachable": true,
-  "canaries": [{"url": ".../", "status": 200, "elapsed_ms": 42}],
-  "last_astro_build": {"built": true, "last_build_at": "...", "age_seconds": 3600},
-  "last_deploy_commit": {"sha": "abc123", "committed_at": "..."},
-  "sitemap": {"exists": true, "age_seconds": 3650}
-}
-```
-
-Override the target URL with `LEARN_UK_SITE_URL=<url>` for preview
-deployments.
 
 ### `GET /api/site/deployments[?limit=5]`
 

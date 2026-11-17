@@ -1090,8 +1090,7 @@ live explorer `http://127.0.0.1:8765/docs`, contracts
 `http://127.0.0.1:8765/api/contracts/routes`):
 ```bash
 curl -s http://localhost:8765/api/state/track-health/a1   # Full track health
-curl -s http://localhost:8765/api/state/failing?track=a2   # Failing modules
-curl -s http://localhost:8765/api/state/build-status        # All tracks build progress
+curl -s http://localhost:8765/api/state/build-status/a1     # One track's build progress
 ```
 
 ### Validation flow for existing modules
@@ -1671,8 +1670,6 @@ or declared decision ID.
 .venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008
 ```
 
-The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
-
 ---
 
 ## Dashboards
@@ -1873,7 +1870,6 @@ State queries (all agents):
 
 ```bash
 curl -s http://localhost:8765/api/state/track-health/a1
-curl -s http://localhost:8765/api/state/failing?track=a2
 curl -s http://localhost:8765/api/state/build-status/a1
 curl -s http://localhost:8765/api/delegate/active
 ```

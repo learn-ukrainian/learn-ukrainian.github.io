@@ -48,19 +48,6 @@ from .curriculum_state import (
 )
 
 
-def severity_key(m: dict) -> int:
-    """Sort key for weak-points severity ranking."""
-    score = 0
-    for issue in m["issues"]:
-        if "audit_fail" in issue:
-            score += 100
-        elif "research_score" in issue:
-            score += 50
-        elif "low_words" in issue:
-            score += 10
-    return -score
-
-
 def compute_research_detail(
     track_id: str,
     level_cfg: dict,

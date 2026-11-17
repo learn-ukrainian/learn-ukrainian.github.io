@@ -130,47 +130,6 @@ def scan_module_phases(orch_dir, version):
     return furthest, running_phase, latest_ts, audit_status
 
 
-def compute_build_status_all(
-    *,
-    curriculum_root: Path,
-    plans_root: Path | None = None,
-) -> dict:
-    """Compute build progress across all tracks."""
-    tracks = {}
-    for level_cfg in LEVELS:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
-        if not plan_slugs:
-            continue
-        track_dir = curriculum_root / level_cfg["path"]
-        total = len(plan_slugs)
-        done = building = queued = failed = 0
-
-        for _num, slug in plan_slugs:
-            orch_dir = safe_join(track_dir / "orchestration", slug)
-            version = detect_pipeline_version(orch_dir)
-            furthest, running_phase, _latest_ts, audit_status = scan_module_phases(orch_dir, version)
-            if audit_status == "complete":
-                done += 1
-            elif audit_status == "failed":
-                failed += 1
-            elif running_phase or furthest:
-                building += 1
-            else:
-                queued += 1
-
-        tracks[track_id] = {
-            "total": total,
-            "done": done,
-            "building": building,
-            "queued": queued,
-            "failed": failed,
-            "progress": f"{done}/{total} ({round(done / total * 100) if total else 0}%)",
-        }
-
-    return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
-
-
 def _score_docs_text(track_id: str, *, project_root: Path) -> str:
     """Return concatenated durable score docs text for a track."""
     docs_dir = safe_join(project_root, "docs", "audits")
@@ -546,39 +505,6 @@ def compute_eta(completion_times: list, remaining: int) -> int | None:
     except Exception:
         pass
     return None
-
-
-def compute_enrichment_status(
-    track: str | None = None,
-    *,
-    curriculum_root: Path,
-    plans_root: Path | None = None,
-) -> dict:
-    """Compute enrichment status across tracks."""
-    if plans_root is None:
-        plans_root = curriculum_root / "plans"
-    tracks = {}
-    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-    for level_cfg in level_cfgs:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
-        if not plan_slugs:
-            continue
-        plan_dir = plans_root / track_id
-        revision_logs = [(slug, plan_has_revision_log(plan_dir / f"{slug}.yaml")) for _, slug in plan_slugs]
-        enriched = sum(1 for _slug, has_revision_log in revision_logs if has_revision_log)
-        not_enriched = [slug for slug, has_revision_log in revision_logs if not has_revision_log]
-        total = len(plan_slugs)
-        tracks[track_id] = {
-            "total": total,
-            "enriched": enriched,
-            "pending": total - enriched,
-            "pct": round(enriched / total * 100) if total else 0,
-            "not_enriched": not_enriched[:10]
-            if len(not_enriched) <= 10
-            else [*not_enriched[:5], f"...+{len(not_enriched) - 5}"],
-        }
-    return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
 
 def compute_build_stats(track: str, *, curriculum_root: Path) -> dict:

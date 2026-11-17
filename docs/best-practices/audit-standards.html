@@ -340,7 +340,7 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{track}/{file}.md
 }
 </code></pre>
 <p>Check status without re-auditing:</p>
-<pre><code class="language-bash">curl -s http://localhost:8765/api/state/build-status   # all tracks
+<pre><code class="language-bash">curl -s http://localhost:8765/api/state/build-status/{track}   # one track
 curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}  # specific module
 </code></pre>
 <hr />

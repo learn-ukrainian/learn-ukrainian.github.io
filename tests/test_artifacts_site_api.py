@@ -2,8 +2,6 @@
 
 Covered:
     /api/artifacts/{track}/{slug}   per-module gate snapshot
-    /api/artifacts/ship-ready       aggregate ship-ready list
-    /api/site/health                public-site reachability + freshness
     /api/site/deployments           recent GH Pages deploys
 """
 
@@ -189,50 +187,6 @@ def test_module_artifact_fails_when_final_review_missing(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------------
-# /api/artifacts/ship-ready
-# ---------------------------------------------------------------------
-
-
-def test_ship_ready_aggregates(monkeypatch):
-    """ship-ready walks all plans and filters on ALL gates green."""
-    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
-    monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-
-    monkeypatch.setattr(
-        artifacts_router,
-        "get_plan_slugs",
-        lambda _track: [(1, "ready"), (2, "stale-plan")],
-    )
-
-    def fake_snapshot(track, slug, *args, **kwargs):
-        if slug == "ready":
-            return {
-                "artifact_gates_green": True,
-                "track": track,
-                "slug": slug,
-                "review": {"score": 9.5},
-                "audit": {"word_count": 1300, "word_target": 1200},
-            }
-        return {"artifact_gates_green": False, "track": track, "slug": slug, "review": {"score": 9.0}, "audit": {}}
-
-    monkeypatch.setattr(artifacts_router, "_compute_artifact_snapshot", fake_snapshot)
-
-    resp = client.get("/api/artifacts/ship-ready?track=a1")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["modules_inspected"] == 2
-    assert body["artifact_gates_green_count"] == 1
-    assert "ship_ready" not in body
-    assert body["artifact_gates_green"][0]["slug"] == "ready"
-    assert body["artifact_gates_green"][0]["review_score"] == 9.5
-
-
-# ---------------------------------------------------------------------
-# /api/site/health
-# ---------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------
 # /api/site/deployments
 # ---------------------------------------------------------------------
 
@@ -324,15 +278,3 @@ def test_module_artifact_404_on_unknown_slug(tmp_path, monkeypatch):
     resp = client.get("/api/artifacts/a1/does-not-exist")
     assert resp.status_code == 404
     assert "unknown module" in resp.json()["error"]
-
-
-def test_ship_ready_404_on_unknown_track(monkeypatch):
-    """Unknown track on ship-ready must 404, mirroring /{track}/{slug}.
-
-    Reviewer CONCERN Codex-2 / #1309: previously silently returned
-    an empty scan.
-    """
-    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
-    monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    resp = client.get("/api/artifacts/ship-ready?track=does-not-exist")
-    assert resp.status_code == 404

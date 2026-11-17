@@ -63,7 +63,6 @@ __all__ = [
     "ActivityParser",
     "activity_validation_violations",
     "apply_template_patch",
-    "build_lineage_response",
     "collect_adr_governance",
     "collect_adr_governance_summary",
     "current_payload_for_module",
@@ -248,13 +247,6 @@ def collect_adr_governance_summary() -> dict[str, int]:
         "adrs_warnings": len(result.warnings),
         "adrs_errors": len(result.errors),
     }
-
-
-def build_lineage_response(project_root: Path, decision_id: str | None = None) -> dict[str, Any]:
-    """Decision lineage for the Monitor's selected repository."""
-    from scripts.audit.decision_lineage import build_lineage_response as build
-
-    return build(project_root, decision_id=decision_id)
 
 
 def hramatka_dimension_order() -> tuple[str, ...]:

@@ -476,66 +476,6 @@ class TestCheckFinalReviewHealth:
         assert att is not None
 
 
-# ==================== state_issues ====================
-
-
-class TestParseSingleIssueBlock:
-    """_parse_single_issue_block extracts issue details."""
-
-    def test_full_block(self):
-        from scripts.project_api.state_issues import _parse_single_issue_block
-
-        block = (
-            "### Issue #1: Grammar error in section 3\n"
-            "**Location** Section 3, paragraph 2\n"
-            "**Fix** Change verb form to perfective\n\n"
-        )
-        result = _parse_single_issue_block(block, "test-review.md", "a1", "test", 1)
-        assert result["title"] == "Grammar error in section 3"
-        assert result["location"] == "Section 3, paragraph 2"
-        assert "perfective" in result["fix"]
-        assert result["severity"] == "critical"  # "grammar error" is critical
-        assert result["source"] == "review"
-
-
-class TestParseReviewBlocks:
-    """parse_review_blocks splits text into issues."""
-
-    def test_multiple_issues(self):
-        from scripts.project_api.state_issues import parse_review_blocks
-
-        text = (
-            "# Review\n"
-            "## Issue #1: First problem\nDetails\n"
-            "## Issue #2: Second problem\nDetails\n"
-        )
-        issues = []
-        parse_review_blocks(text, "test-review.md", "a1", "test", 1, issues)
-        assert len(issues) == 2
-
-
-class TestCollectAuditIssues:
-    """collect_audit_issues adds audit failures."""
-
-    def test_fail_adds_issues(self, tmp_path):
-        from scripts.project_api.state_issues import collect_audit_issues
-
-        (tmp_path / "status").mkdir()
-        data = {
-            "overall": {"status": "fail"},
-            "gates": {
-                "lesson": {"status": "fail", "message": "800 / 1200 words"},
-                "activities": {"status": "pass", "message": "ok"},
-            },
-        }
-        (tmp_path / "status" / "test.json").write_text(json.dumps(data))
-        issues = []
-        collect_audit_issues(tmp_path, "a1", "test", 1, issues)
-        assert len(issues) == 1
-        assert issues[0]["severity"] == "critical"
-        assert "lesson" in issues[0]["title"]
-
-
 # ==================== dashboard_helpers ====================
 
 
@@ -607,63 +547,6 @@ class TestCheckBuildPhaseV5:
         built, ts = _check_build_phase(tmp_path)
         assert built == 1
         assert ts == "2026-03-01"
-
-
-class TestComputeBuildStatusAllV5:
-    """compute_build_status_all counts v5 modules."""
-
-    def test_v5_module_counted_as_done(self, tmp_path):
-        from scripts.project_api.state_build import compute_build_status_all
-
-        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
-        orch_dir = track_dir / "orchestration" / "test-slug"
-        orch_dir.mkdir(parents=True)
-        (orch_dir / "state.json").write_text(json.dumps({
-            "mode": "v5",
-            "phases": {
-                "research": {"status": "complete"},
-                "content": {"status": "complete"},
-                "validate": {"status": "complete", "ts": "t1"},
-            },
-        }))
-
-        plan_slugs = [(1, "test-slug")]
-        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
-
-        with (
-            patch("scripts.project_api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.project_api.state_build.get_plan_slugs", return_value=plan_slugs),
-        ):
-            result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
-
-        assert result["tracks"]["a1"]["done"] == 1
-        assert result["tracks"]["a1"]["building"] == 0
-
-    def test_v5_running_module_counted_as_building(self, tmp_path):
-        from scripts.project_api.state_build import compute_build_status_all
-
-        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
-        orch_dir = track_dir / "orchestration" / "test-slug"
-        orch_dir.mkdir(parents=True)
-        (orch_dir / "state.json").write_text(json.dumps({
-            "mode": "v5",
-            "phases": {
-                "research": {"status": "complete"},
-                "content": {"status": "running"},
-            },
-        }))
-
-        plan_slugs = [(1, "test-slug")]
-        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
-
-        with (
-            patch("scripts.project_api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.project_api.state_build.get_plan_slugs", return_value=plan_slugs),
-        ):
-            result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
-
-        assert result["tracks"]["a1"]["done"] == 0
-        assert result["tracks"]["a1"]["building"] == 1
 
 
 class TestComputeFinalReviewsV5:

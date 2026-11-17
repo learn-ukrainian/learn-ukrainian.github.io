@@ -269,7 +269,7 @@ Each module has `curriculum/l2-uk-en/{track}/status/{slug}.json`:
 
 Check status without re-auditing:
 ```bash
-curl -s http://localhost:8765/api/state/build-status   # all tracks
+curl -s http://localhost:8765/api/state/build-status/{track}   # one track
 curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}  # specific module
 ```
 

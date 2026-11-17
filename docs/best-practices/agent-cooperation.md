@@ -686,8 +686,6 @@ filesystem spelunking:
 | Main + style review + empty-findings flag | `GET /api/artifacts/{track}/{slug}/review-snapshot` |
 | state.json vs reality cross-check | `GET /api/artifacts/{track}/{slug}/drift` |
 | Ship-ready snapshot for one module | `GET /api/artifacts/{track}/{slug}` |
-| Aggregate ship-ready list | `GET /api/artifacts/ship-ready[?track=...]` |
-| Public site reachability + freshness | `GET /api/site/health` |
 | Recent GH Pages deployments | `GET /api/site/deployments` |
 | Active worktrees | `GET /api/worktrees` |
 | Open issues grouped + supersede metadata | `GET /api/issues/map` |

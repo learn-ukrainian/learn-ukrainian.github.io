@@ -182,15 +182,9 @@ class TestApiEndpoints:
         "/api/comms/stats",
         "/api/comms/zombies",
         "/api/dashboard/overview",
-        "/api/state/build-status",
-        "/api/state/enrichment-status",
-        "/api/state/issues",
-        "/api/state/pipeline-versions",
-        "/api/state/research-coverage",
         "/api/state/review-coverage",
         "/api/state/routing-budget",
         "/api/state/summary",
-        "/api/state/weak-points",
     }
 
     @pytest.mark.repo_wide
