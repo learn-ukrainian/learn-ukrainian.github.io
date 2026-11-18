@@ -28,7 +28,7 @@ dependencies = [
     "uvicorn>=0.48.0",
     # uvicorn's WebSocket protocol implementation: without it uvicorn refuses the
     # Monitor API's /ws/batch upgrade (scripts/project_api/batch_router.py).
-    "websockets>=16.0",
+    "websockets>=17.4",
     "httpx>=0.28",
     "prometheus-client>=0.26.0",
 
@@ -69,7 +69,7 @@ dependencies = [
     # production scripts/, so pytest collection needs them).
     "lxml>=6.1",  # scripts/ingest/esum_abbyy_parser.py
     "pypdf>=6.21.4",  # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py; 6.21.4 clears CVE-2026-119203 to -119209
-    "PyMuPDF>=2.0",  # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
+    "PyMuPDF>=2.1",  # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
     "ruamel.yaml>=0.19",  # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
     "python-docx>=1.2.0",  # scripts/ingest/owned_books_ingest.py
     "pillow>=13.0.0",  # scripts/rag/embed.py (image input), tests/test_scrape_diasporiana.py
@@ -131,12 +131,12 @@ dev = [
     "vulture>=2.16",  # .venv/bin/vulture: scripts/audit/find_dead_code.py
     # Installer and build tools inside the project environment: lu_machinery
     # release_cut runs pip download with the project interpreter.
-    "pip>=26.2.1",
+    "pip>=26.3",
     "setuptools>=75",
     "wheel>=0.48.0",
     "pytest-xdist>=3.6",  # parallel test execution (-n auto)
     "requests-mock>=1.12.1",  # requests transport fixture
-    "pytest-mock>=3.16.0",  # fixture-based mocker
+    "pytest-mock>=3.17.0",  # fixture-based mocker
     "coverage[toml]>=7.17.0",
     "ipython>=9.18.1",
     "ipdb>=0.13.13",
