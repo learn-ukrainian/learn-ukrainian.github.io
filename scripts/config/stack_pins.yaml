@@ -40,13 +40,13 @@ pins:
     review_by: "2026-11-16"
     note: The GitHub CLI is installed on the host. The repo does not pin a version.
   - name: uv
-    pinned: "0.12.9"
+    pinned: "0.13.1"
     source: .github/actions/python-ci-env/action.yml
     owner: DevOps
     review_by: "2026-11-16"
     note: version input of astral-sh/setup-uv. The action SHA is Dependabot's.
   - name: python
-    pinned: "3.12.15"
+    pinned: "3.14.8"
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"

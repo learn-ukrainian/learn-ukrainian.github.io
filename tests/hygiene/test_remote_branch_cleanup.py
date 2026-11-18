@@ -1048,7 +1048,7 @@ def test_workflow_default_source_shared_entrypoint_and_permissions():
     # The locked release wheel alone, hash-checked, before the shared entry point runs.
     install = invocations[0]["run"]
     assert "--no-index --no-deps --require-hashes" in install
-    assert "requirements-machinery.lock" in install
+    assert '-r "${MACHINERY_REQUIREMENT}"' in install
     assert invocations[1]["run"].splitlines() == [
         'git remote set-url origin "https://github.com/$REPO.git"',
         'git remote set-url --push origin "https://github.com/$REPO.git"',

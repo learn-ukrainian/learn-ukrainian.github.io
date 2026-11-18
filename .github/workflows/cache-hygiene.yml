@@ -32,8 +32,7 @@ on:
     paths:
       - .github/workflows/cache-hygiene.yml
       - '.github/actions/python-ci-env/**'
-      - requirements-lock.txt
-      - requirements-machinery.lock
+      - uv.lock
       - '.python-version'
 
 permissions: {}
@@ -61,8 +60,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            requirements-lock.txt
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -78,19 +76,19 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Delete dead cache entries
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
-        run: python3 -m lu_machinery.ci.cache_hygiene --repo "${REPO}" --lock-file requirements-lock.txt --lock-file requirements-machinery.lock --apply
+        run: python3 -m lu_machinery.ci.cache_hygiene --repo "${REPO}" --lock-file uv.lock --apply
 
   import-check:
     name: Import cache hygiene
@@ -105,8 +103,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            requirements-lock.txt
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -122,11 +119,11 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Import cache hygiene without running it
         run: python3 -I -c "import lu_machinery.ci.cache_hygiene"

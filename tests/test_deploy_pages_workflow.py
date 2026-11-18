@@ -17,7 +17,6 @@ pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
-REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
 
 
 def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:

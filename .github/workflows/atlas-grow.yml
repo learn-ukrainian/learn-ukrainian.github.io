@@ -68,20 +68,25 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          # The next step installs with uv sync.
+          with-uv: 'true'
 
       - name: Create local venv
         if: steps.dictionary_data.outputs.available == 'true'
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          # The hash-pinned lu-machinery release first, as .github/actions/python-ci-env installs it
-          # (machinery docs/release.md, Consumers); the lock's hashes decide which bytes install.
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --require-hashes --no-deps --find-links "$wheelhouse" -r requirements-machinery.lock
-          .venv/bin/python -m pip install PyYAML requests ukrainian-word-stress regex==2026.5.9 jsonschema==4.26.0
+          # The locked lu-machinery closure plus the lexicon scripts' imports (group atlas).
+          # The hash-pinned lu-machinery release comes from the wheelhouse, as
+          # .github/actions/python-ci-env installs it (machinery docs/release.md,
+          # Consumers); uv.lock's hashes decide which bytes install.
+          uv sync --locked --python "$(cat .python-version)" --only-group atlas --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
       - name: Configure GitHub auth
         if: steps.dictionary_data.outputs.available == 'true'

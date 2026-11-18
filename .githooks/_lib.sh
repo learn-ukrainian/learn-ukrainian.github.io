@@ -50,7 +50,7 @@ run_pre_commit() {
 
 # A dispatched write task learns at commit or push time that it changed a path outside its
 # owned paths; settlement still refuses such a delivery (#12113). Work outside a task skips
-# it. Inside a task the checker is the installed lu-machinery release (requirements-machinery.lock);
+# it. Inside a task the checker is the installed lu-machinery release (pinned in uv.lock);
 # -P keeps a stray in-tree package from shadowing it. A checker that cannot be imported refuses
 # the commit or push: a missing checker must not skip enforcement.
 check_owned_paths() {

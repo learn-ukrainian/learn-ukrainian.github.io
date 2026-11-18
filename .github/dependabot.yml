@@ -70,8 +70,8 @@ updates:
           - "@astrojs/*"
     open-pull-requests-limit: 5
 
-  # pip (Python scripts)
-  - package-ecosystem: "pip"
+  # uv (Python: pyproject.toml and uv.lock)
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -84,25 +84,19 @@ updates:
       - "dependencies"
     open-pull-requests-limit: 5
     # psycopg and psycopg-binary must stay at the same version: the C
-    # implementation is loaded by the Python package, and a `--no-deps` install
-    # ignores the [binary] extra. Bump them in one PR (#12476).
+    # implementation is loaded by the Python package. Bump them in one PR (#12476).
     groups:
       psycopg:
         patterns:
           - "psycopg"
           - "psycopg-binary"
-    # Block constrained transitive bumps that requirements-lock.txt (a flat,
-    # fully-pinned lock) lets Dependabot propose past their parent's pin,
-    # producing structurally un-mergeable PRs. See issue #2716.
     ignore:
-      # Every package requirements-machinery.lock also pins. That lock is resolved
-      # with requirements-lock.txt as constraints (machinery docs/release.md,
-      # "Dependency lock"), so a bump here alone makes installing both locks
-      # unsatisfiable (#13086, #13087, #13088). These move only through a
-      # machinery release. Canonical names, sorted, no version filters: the
-      # "Check shared pins with the machinery lock" step of ci.yml fails when one
-      # is missing. pydantic and pydantic-core (#2540) and starlette (#2710) are
-      # in this list.
+      # Packages the lu-machinery release closure pins: machinery CI tests each
+      # release with them. They move with a machinery release adoption (which
+      # re-locks lu-machinery in uv.lock), never through a product Dependabot
+      # bump (#13086, #13087, #13088). Canonical names, sorted, no version
+      # filters. pydantic and pydantic-core (#2540) and starlette (#2710) are in
+      # this list.
       - dependency-name: "annotated-doc"
       - dependency-name: "annotated-types"
       - dependency-name: "anyio"
