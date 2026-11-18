@@ -132,7 +132,7 @@ PyJWT==2.15.1
 pymorphy3==2.0.6
 pymorphy3-dicts-ru==2.4.417150.4580142
 pymorphy3-dicts-uk==2.4.1.1.1663094765
-PyMuPDF==2.0
+PyMuPDF==2.1
 pymupdf-layout==2.0
 pymupdf4llm==2.0
 pypdf==6.21.4
