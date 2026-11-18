@@ -188,7 +188,9 @@ agent, and human attention.
 
 ## Monitor API surface
 
-`GET /api/git/hygiene` (planned, GH #TBD) returns a structured view:
+A `GET /api/git/hygiene` route served a structured view until lu-machinery
+0.1.31 removed it (machinery #756). Use `GET /api/git/cleanup` for the live
+cleanup census. The documented shape was:
 
 ```json
 {
@@ -207,8 +209,7 @@ agent, and human attention.
 }
 ```
 
-Consumed by the Operator dashboard to show a red/green hygiene badge
-per workstation. Planned, not shipped.
+The Operator dashboard hygiene badge it was planned for never shipped.
 
 ## Rule of thumb
 

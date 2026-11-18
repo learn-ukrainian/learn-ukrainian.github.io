@@ -22,7 +22,6 @@ curl -s http://localhost:8765/api/state/summary   # tracks overview (published_m
 ```bash
 curl -s http://localhost:8765/api/delegate/active
 curl -s http://localhost:8765/api/runtime/agents
-# Read-only fleet rollover audit: GET /api/rollovers
 ```
 
 **Start server:** `npm run api` (or `npm run api:bg`). Serves http://localhost:8765 + all dashboards.
@@ -31,7 +30,7 @@ curl -s http://localhost:8765/api/runtime/agents
 - `.../ai_agent_bridge/__main__.py codex-usage`
 - `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
 - Monitor: `/machinery` for workers and usage
-- API: /api/health (resilience), /api/runtime/recent
+- API: /api/health (resilience), /api/runtime/agents
 
 ## Fleet note (for context)
 Bridge for comms/discuss: `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-*` / `discuss`. Delegate for work: `scripts/dispatch.py dispatch --model <catalog-model> --agent ... --worktree`. See shared/memory/MEMORY.md for full details. (Capacity: `.venv/bin/python -m lu_machinery.fleet.capacity_pick` and `.venv/bin/python -m lu_machinery.fleet.usage show`; `codexbar usage` is retired.)

@@ -157,7 +157,7 @@ Project-side:
 - `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.telemetry.cost_report --all --markdown`
 - Monitor: `/machinery` for workers, usage and Fleet Comms
 - Raw: `batch_state/api_usage/*.jsonl`
-- API: `/api/health` (shows resilience/slows), `/api/runtime/agents`, `/api/runtime/recent`
+- API: `/api/health` (shows resilience/slows), `/api/runtime/agents`
 
 **Local Monitor API (cold-start + full project status) http://localhost:8765**
 - Start (if down): `npm run api` (fg) or `npm run api:bg`; logs `npm run api:logs`. Also serves dashboards.
