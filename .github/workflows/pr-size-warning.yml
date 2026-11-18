@@ -16,7 +16,7 @@ concurrency:
 jobs:
   size-warning:
     name: Small-batch size warning (advisory)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     continue-on-error: true
     steps:
