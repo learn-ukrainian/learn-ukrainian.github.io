@@ -28,7 +28,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from lu_machinery.api.state_helpers import swr_route
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -43,8 +43,8 @@ from .state_compute import _get_review_score
 
 router = APIRouter(tags=["artifacts"])
 
-# Dashboard polls share one tree walk. Direct collector calls stay uncached so
-# a caller that just wrote a file still sees it.
+# Dashboard polls share one tree walk and are served warm while it refreshes. Direct
+# collector calls stay uncached so a caller that just wrote a file still sees it.
 _ARTIFACT_LIST_TTL_S = 15.0
 
 
@@ -113,7 +113,8 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 
 
 @router.get("/html")
-async def html_artifacts(
+@swr_route("artifacts-html", _ARTIFACT_LIST_TTL_S, vary=("type_",))
+def html_artifacts(
     class_: str | None = Query(None, alias="class"),
     date_from: str | None = Query(None),
     status: str | None = Query(None),
@@ -122,6 +123,9 @@ async def html_artifacts(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """List authored artifacts (HTML + MD) with parsed report metadata.
+
+    The default list (optionally one ``type``) is a stale-while-revalidate snapshot served with
+    its true age (``X-Snapshot-Age-S``); any other filter runs the collector for that request.
 
     Query params:
         type: Filter to 'html' or 'md'. Omit for both.
@@ -138,27 +142,13 @@ async def html_artifacts(
     else:
         types = ("html", "md")
 
-    resolved = resolve_context(ctx)
-    # One JSON part, so a colon inside a filter cannot collide with another filter.
-    cache_key = ctx_scoped_ttl_key(
-        resolved,
-        "artifacts-html",
-        json.dumps(
-            [class_ or "", date_from or "", status or "", author or "", list(types)],
-            separators=(",", ":"),
-        ),
-    )
-    return await cache_get_or_compute_async(
-        cache_key,
-        _ARTIFACT_LIST_TTL_S,
-        lambda: collect_html_artifacts(
-            class_filter=class_,
-            date_from=date_from,
-            status=status,
-            author=author,
-            types=types,
-            ctx=resolved,
-        ),
+    return collect_html_artifacts(
+        class_filter=class_,
+        date_from=date_from,
+        status=status,
+        author=author,
+        types=types,
+        ctx=resolve_context(ctx),
     )
 
 

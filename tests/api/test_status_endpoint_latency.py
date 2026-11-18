@@ -32,10 +32,11 @@ _BURST = 20
 # when the condition is true, and a loaded runner only makes each yield slower.
 _ATTEMPTS = 10_000
 # Modules whose cold misses go through ``cache_get_or_compute_async``. Since
-# lu-machinery 0.1.31 (machinery #743) GET /api/delegate/tasks is a
-# stale-while-revalidate route: ``state_helpers.cache_read_swr`` makes that
-# call, so state_helpers' own binding is the one to gate.
-_COLD_ROUTERS = (state_helpers, state_router, product_state_router, artifacts_router, epics_router)
+# lu-machinery 0.1.31 (machinery #743) GET /api/delegate/tasks and
+# GET /api/artifacts/html are stale-while-revalidate routes:
+# ``state_helpers.cache_read_swr`` makes that call, so state_helpers' own
+# binding is the one to gate.
+_COLD_ROUTERS = (state_helpers, state_router, product_state_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
