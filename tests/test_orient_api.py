@@ -79,7 +79,6 @@ def _patch_orient_sources(monkeypatch) -> None:
             "primary_recommendation": "codex",
         },
     )
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda ctx=None: {})
     monkeypatch.setattr(
         api_main,
         "_collect_rollovers_orient_data",

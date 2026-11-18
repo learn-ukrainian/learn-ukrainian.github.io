@@ -73,7 +73,6 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
 
     monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
     monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda *a, **k: {})
     monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
         product_orient,
