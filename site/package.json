@@ -44,6 +44,7 @@
     "@types/react-dom": "^19.3.0",
     "astro": "^7.4.7",
     "better-sqlite3": "^13.0.3",
+    "picomatch": "file:vendor/picomatch/learn-ukrainian-picomatch-4.0.7-lu.1.tgz",
     "playwright": "^1.64.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.1",
@@ -76,7 +77,8 @@
     "markdown-it": ">=14.2.0",
     "postcss": "8.5.23",
     "http-cache-semantics": ">=4.3.0",
-    "katex": "0.18.2"
+    "katex": "0.18.2",
+    "picomatch": "$picomatch"
   },
   "allowScripts": {
     "esbuild@0.28.1": true,
