@@ -20,7 +20,7 @@ def test_issue_workflow_hardening():
         "cancel-in-progress": False,
     }
     job = workflow["jobs"]["comment"]
-    assert job["runs-on"] == "ubuntu-latest"
+    assert job["runs-on"] == "ubuntu-24.04"
     assert job["permissions"] == {"contents": "read", "issues": "write"}
     steps = job["steps"]
     assert steps[0]["with"]["persist-credentials"] is False
