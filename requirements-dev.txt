@@ -26,14 +26,14 @@ vulture>=2.16      # .venv/bin/vulture: scripts/audit/find_dead_code.py
 # release_cut runs pip download with the project interpreter.
 # ./packages/v4-runtime is built with --no-build-isolation, so its
 # build-system requirements (setuptools, wheel) must be installed.
-pip>=26.2.1
+pip>=26.3
 setuptools>=75
 wheel>=0.48.0
 
 # Test utilities
 pytest-xdist>=3.6         # parallel test execution (-n auto)
 requests-mock>=1.12.1     # requests transport fixture
-pytest-mock>=3.16.0          # fixture-based mocker
+pytest-mock>=3.17.0          # fixture-based mocker
 
 # Coverage reporting
 coverage[toml]>=7.17.0
