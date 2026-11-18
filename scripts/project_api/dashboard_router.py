@@ -2,7 +2,7 @@
 
 Mounted at /api/dashboard/ in main.py.
 Endpoints: overview, track detail, module deep-dive, pipeline status, activity config,
-comms monitoring.
+and retired comms views.
 """
 
 import contextlib
