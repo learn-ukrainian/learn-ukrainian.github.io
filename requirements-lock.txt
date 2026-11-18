@@ -122,7 +122,7 @@ psycopg-binary==3.3.6
 ptyprocess==0.7.0
 pure-eval==0.2.3
 pyahocorasick==2.3.1
-pyarrow==26.0.0
+pyarrow==26.0.1
 pycparser==3.12
 pydantic==2.14.2
 pydantic_core==2.50.2
