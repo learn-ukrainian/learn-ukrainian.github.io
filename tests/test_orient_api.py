@@ -79,7 +79,6 @@ def _patch_orient_sources(monkeypatch) -> None:
             "primary_recommendation": "codex",
         },
     )
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda ctx=None: {})
     monkeypatch.setattr(
         api_main,
         "_collect_rollovers_orient_data",
@@ -499,7 +498,6 @@ def test_lean_orient_hung_delegate_and_rollovers_do_not_stall(monkeypatch):
             assert data["capacity"]["lanes"]["codex"]["status"] == "cool"
         assert data["health"]["api"] is True
         assert data["session_hints"][0]["file"] == "docs/session-state/example.md"
-        assert "bridge_pending" in data
         assert "governance" in data
         assert data["delegate"]["active_count"] == 0
         assert data["rollovers"]["actionable"] == []

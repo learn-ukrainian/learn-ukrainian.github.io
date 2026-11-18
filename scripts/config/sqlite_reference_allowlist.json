@@ -995,16 +995,6 @@
     ]
   },
   {
-    "path": "tests/test_readonly_harness_readers.py",
-    "reference_count": 2,
-    "kind": "fixture_factory",
-    "target_db": null,
-    "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",
-    "calls": [
-      "sqlite3.connect(db)"
-    ]
-  },
-  {
     "path": "tests/test_readonly_special_path_9662.py",
     "reference_count": 8,
     "kind": "fixture_factory",

@@ -399,11 +399,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # stores outside ``lu_machinery.api``. Repoint those module-level paths before
     # installing the global guard, so missing fixture state is handled by each
     # route's documented empty/read-only envelope instead of as a 500.
-    # ``lu_machinery.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
-    # comms routes now hand the bridge the MonitorContext's broker DB
-    # explicitly, so the bridge's import-time default DB_PATH globals are no
-    # longer seams this sweep must repoint.
-    importlib.import_module("lu_machinery.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
         if module is None or not module_name.startswith(("lu_machinery.telemetry", "wiki")):

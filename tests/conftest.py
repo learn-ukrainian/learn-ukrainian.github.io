@@ -76,6 +76,7 @@ import contextlib
 import functools
 import importlib
 import importlib.machinery
+import importlib.util
 import ipaddress
 import itertools
 import linecache
@@ -104,7 +105,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importing repo_root installs the env formatter before any test runs.
 # lu_machinery.common is on the rules-workflow allowlist; scripts.lib is not.
-from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from lu_machinery.common.repo_root import main_checkout_root
 
@@ -1177,22 +1177,6 @@ def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return fake_bin
 
 
-def _bridge_db_paths() -> tuple[Path, Path]:
-    """Return the primary bridge DB and any configured path before tests begin."""
-    primary_repo_root = main_checkout_root(Path(__file__).resolve().parents[1])
-    return (
-        default_bridge_db_path(primary_repo_root).resolve(),
-        configured_bridge_db_path(primary_repo_root).resolve(),
-    )
-
-
-_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
-_API_BRIDGE_DB_PATH = default_bridge_db_path(_REPO_ROOT).resolve()
-_UNISOLATED_BRIDGE_DB_PATHS = frozenset({_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH})
-_BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
-_BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
-
-
 def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
     """Return a SQLite path and whether a URI explicitly opens it read-only.
 
@@ -1208,73 +1192,6 @@ def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
         query = parse_qs(parsed.query)
         return Path(unquote(parsed.path)).resolve(), query.get("mode") == ["ro"]
     return Path(raw_path).resolve(), False
-
-
-def _rebind_bridge_db_roots(context: Any, isolated_path: Path) -> Any:
-    """Return ``context`` with every root that still names a bridge DB bound to ``isolated_path``.
-
-    Matches by value, so it does nothing for a Monitor release whose roots no
-    longer carry a bridge database.
-    """
-    stale = {
-        name: isolated_path
-        for name, value in vars(context.roots).items()
-        if isinstance(value, Path) and value.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE
-    }
-    return context.with_roots(**stale) if stale else context
-
-
-@pytest.fixture(autouse=True)
-def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """Redirect imported and future bridge users to one per-test database."""
-    isolated_path = tmp_path / "messages.db"
-    monkeypatch.setenv("AB_DB_PATH", str(isolated_path))
-    # A module first imported during a prior test may retain that test's path.
-    # Carry those paths forward so each test gets its own DB under xdist too.
-    _BRIDGE_DB_BINDINGS_TO_REPLACE.add(isolated_path.resolve())
-    for name, module in tuple(sys.modules.items()):
-        if module is None or not name.startswith(("scripts.", 'lu_machinery.ai_agent_bridge', "agent_runtime.")):
-            continue
-        for attribute, value in tuple(vars(module).items()):
-            if not isinstance(value, (str, os.PathLike)) or not os.fspath(value).endswith(_BRIDGE_DB_SUFFIXES):
-                continue
-            if Path(value).resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
-                monkeypatch.setattr(module, attribute, isolated_path)
-
-    # The production API app has a context created at import; rebind it to the isolated path.
-    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
-        api_main = _loaded_module(package, 'api', "main")
-        if api_main is None:
-            continue
-        app = vars(api_main).get("app")
-        context = getattr(getattr(app, "state", None), "ctx", None)
-        if context is not None and (rebound := _rebind_bridge_db_roots(context, isolated_path)) is not context:
-            monkeypatch.setattr(app.state, "ctx", rebound)
-    return isolated_path
-
-
-@pytest.fixture
-def rebind_bridge_db(isolated_bridge_db: Path) -> Callable[[Any], Any]:
-    """Rebind a Monitor context built from ``production_context()`` to the per-test bridge DB."""
-    return lambda context: _rebind_bridge_db_roots(context, isolated_bridge_db)
-
-
-@pytest.fixture(autouse=True)
-def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
-    """Fail the test that tries to open the live bridge DB with write access."""
-    original_connect = sqlite3.connect
-
-    def guarded_connect(database, *args, **kwargs):
-        path, read_only = _sqlite_database_path(database)
-        if path in _UNISOLATED_BRIDGE_DB_PATHS and not read_only:
-            pytest.fail(
-                f"{request.node.nodeid} attempted a writable connection to the real bridge DB "
-                f"at {path}; isolate it with AB_DB_PATH or a DB_PATH fixture",
-                pytrace=False,
-            )
-        return original_connect(database, *args, **kwargs)
-
-    monkeypatch.setattr(sqlite3, "connect", guarded_connect)
 
 
 def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:
@@ -1722,7 +1639,7 @@ def _isolate_legacy_bridge_telemetry(
     _legacy_bridge_telemetry_base: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> Path:
-    """Point legacy-bridge ask telemetry at a per-test file.
+    """Point legacy-bridge ask telemetry and the legacy broker DB at per-test files.
 
     ``start_bridge_invocation_safely`` persists
     ``state_root() / data/telemetry/legacy_comms_routes.db``. The installed
@@ -1765,9 +1682,14 @@ def _isolate_legacy_bridge_telemetry(
         check_venv_integrity,
         check_worktree_cleanup_integrity,
     )
-    from lu_machinery.telemetry import legacy_bridge
+    # TRANSITIONAL (machinery #515): PR 819 removes the legacy broker and its telemetry writer; isolate both
+    # only while the installed release still ships them. Remove this block once the product pins such a release.
+    # The broker reads AB_DB_PATH on every call (the orient bridge_pending collector opens it writable).
+    monkeypatch.setenv("AB_DB_PATH", str(store / "messages.db"))
+    if importlib.util.find_spec("lu_machinery.telemetry.legacy_bridge") is not None:
+        from lu_machinery.telemetry import legacy_bridge
 
-    monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
+        monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
     for module, fn_name, bucket in (
         (check_primary_integrity, "check_primary_integrity", "primary-integrity"),
         (check_node_modules_integrity, "check_node_modules_integrity", "node-modules-integrity"),

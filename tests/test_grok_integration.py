@@ -13,14 +13,6 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_ab_channels_cli_marks_grok_cli_available():
-    """``ab discuss`` requires the agent to be CLI-spawnable."""
-    from lu_machinery.ai_agent_bridge import _channels_cli
-
-    assert _channels_cli._cli_available_agent("grok") is True
-    assert _channels_cli._cli_available_agent("grok-build") is True
-
-
 def test_lint_agent_trailer_accepts_grok_and_alias():
     """Native seat and permanent alias trailers must both validate."""
     scripts_dir = str(_REPO_ROOT / "scripts")

@@ -1,10 +1,8 @@
-"""Tests for API routers: comms batch progress and live activity, and sources.
+"""Tests for product API routers: comms batch progress and sources.
 
 Targets ~150+ tests for coverage improvement.
 """
 
-import json
-from datetime import UTC, datetime
 from unittest.mock import patch
 
 import pytest
@@ -64,14 +62,12 @@ def _comms_ctx(project_root):
 
 @pytest.fixture()
 def comms_client(_patch_config, mock_project_root):
-    """TestClient for the comms router and the product batch-progress routes under its prefix."""
-    from lu_machinery.api.comms_router import router
-
+    """TestClient for the product batch-progress routes under the comms prefix."""
     from scripts.project_api.batch_progress import router as batch_progress_router
+
     app = FastAPI()
     app.state.ctx = _comms_ctx(mock_project_root)
     app.include_router(batch_progress_router, prefix="/api/comms")
-    app.include_router(router, prefix="/api/comms")
     return TestClient(app)
 
 
@@ -105,50 +101,6 @@ class TestCommsBatchProgress:
         data = r.json()
         assert "hist" in data["tracks"]
         assert data["tracks"]["hist"]["health"] == "complete"
-
-
-class TestCommsLiveActivity:
-    """Tests for /api/comms/live-activity endpoint."""
-
-    def test_live_activity_with_state_file(self, comms_client, mock_project_root):
-        # Create a recently-modified state-v3.json
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "test-module"
-        orch_dir.mkdir(parents=True)
-        state = {
-            "slug": "test-module",
-            "phases": {
-                "v3-content": {
-                    "status": "running",
-                    "ts": datetime.now(UTC).isoformat(),
-                    "task_id": "task-1",
-                    "mode": "build",
-                },
-            },
-        }
-        (orch_dir / "state-v3.json").write_text(json.dumps(state))
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        data = r.json()
-        assert len(data["in_progress"]) >= 1
-
-    def test_live_activity_with_v6_state_file(self, comms_client, mock_project_root):
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "v6-module"
-        orch_dir.mkdir(parents=True)
-        state = {
-            "mode": "v6",
-            "slug": "v6-module",
-            "phases": {
-                "write": {
-                    "status": "running",
-                    "ts": datetime.now(UTC).isoformat(),
-                    "task_id": "task-v6",
-                    "mode": "build",
-                },
-            },
-        }
-        (orch_dir / "state.json").write_text(json.dumps(state))
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        data = r.json()
-        assert any(item["slug"] == "v6-module" and item["phase"] == "write" for item in data["in_progress"])
 
 
 # ===========================================================================

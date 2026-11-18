@@ -55,7 +55,6 @@ BUDGETS = {
     # git, GH, RAG/textbook indexes, or cold in-memory caches. GH #1826 relaxes
     # these network/IO-bound smoke budgets to 1.5s while keeping health tight.
     "/api/comms/batch-progress": 1.5,
-    "/api/comms/live-activity?minutes=30": 1.5,
     "/api/config": 1.5,
     "/api/dashboard/module/a1/hello": 1.5,
     "/api/dashboard/overview": 1.5,
@@ -103,11 +102,11 @@ def three_run_perf_probe() -> Callable[[Callable[[], object]], tuple[list[object
 
 
 @pytest.mark.slow
-def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe, rebind_bridge_db):
+def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     base_ctx = production_context()
     image_root = tmp_path / "textbook_images"
     image_root.mkdir()
-    test_ctx = rebind_bridge_db(with_product_roots(base_ctx, images_dir=image_root))
+    test_ctx = with_product_roots(base_ctx, images_dir=image_root)
     monkeypatch.setattr(app.state, "ctx", test_ctx)
 
     client = TestClient(app, raise_server_exceptions=False)

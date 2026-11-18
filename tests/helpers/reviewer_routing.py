@@ -32,7 +32,6 @@ def reviewer_headroom_snapshot():
 # their reader. Guard the HTTP boundary too, including either delegate import.
 _REVIEW_ROUTING_TEST_MODULES = frozenset({
     "test_adjudicate.py",
-    "test_agy_review_profile.py",
     "test_bench_health.py",
     "test_model_catalog_roles.py",
     "test_repo_wide_marker_invariant.py",
