@@ -2,7 +2,7 @@
 
 **Status (2026-11-17):** done. The prefix swap landed and `scripts/api/main.py` was deleted (PR #13134). Step 4 then ran on a CTO order: `scripts/api/fleet_board`, `tests/api/test_fleet_board_prs.py` and the fleet-board cases in `tests/test_red_team_consumer_trace.py` were removed, and `scripts/api` no longer exists. The text below is the plan as written.
 
-**Plan only.** Rewriting these imports, or deleting `scripts/api`, needs designated approval (rules core P6: the operator, or `claude-opus-5-5` and `gpt-6.1-sol` agreeing). This file is not that approval. Until it exists, `scripts/api` stays. Issue #12979 AC-02.
+**Plan only.** Rewriting these imports, or deleting `scripts/api`, needs designated approval (rules core P6: the operator, or `claude-opus-5-5` and `gpt-6.2-sol` agreeing). This file is not that approval. Until it exists, `scripts/api` stays. Issue #12979 AC-02.
 
 Measured `2026-11-13T10:06:01Z` on `dad8aac858056b50f5776dc0e318a40b039cb245`, against `lu-machinery==0.1.11` (`requirements-machinery.lock`).
 

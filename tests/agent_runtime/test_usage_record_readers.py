@@ -13,7 +13,7 @@ from lu_machinery.telemetry import cost_report
 
 from scripts.audit import qg_bakeoff
 
-MODEL = "gpt-6.1-sol"
+MODEL = "gpt-6.2-sol"
 READERS = ("codex-report", "pilot", "cost")
 CORRUPT_LINES = (
     b'\xff\n',

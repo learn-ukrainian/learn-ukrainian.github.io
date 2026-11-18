@@ -314,7 +314,9 @@ def test_orient_issues_errors_are_not_cached(monkeypatch):
     # First call: error surfaced both top-level and in meta; payload is fallback.
     assert first["issues"] == []
     assert first["issues_error"] == "gh rate limited"
-    assert first["meta"]["issues"]["error"].startswith("RuntimeError:")
+    # lu-machinery 0.1.31 (machinery #743) collects issues in a detached
+    # worker, whose meta error is the exception text.
+    assert first["meta"]["issues"]["error"] == "gh rate limited"
 
     # Second call: collector retried, fresh payload, no leftover error.
     assert second["issues"] == [{"number": 1309}]
@@ -487,7 +489,14 @@ def test_lean_orient_hung_delegate_and_rollovers_do_not_stall(monkeypatch):
         data = response.json()
         assert data["git"]["branch"] == "main"
         assert data["runtime"]["agents"] == ["codex"]
-        assert data["capacity"]["lanes"]["codex"]["status"] == "cool"
+        # Machinery #743: detached collectors share two collect slots. When
+        # the hung delegate and rollover collectors win both, capacity and
+        # health serve their fallbacks with an honest "refreshing" error
+        # instead of waiting for a slot; otherwise they carry their value.
+        if data["meta"]["capacity"].get("error") == "refreshing":
+            assert data["capacity"]["lanes"] == {}
+        else:
+            assert data["capacity"]["lanes"]["codex"]["status"] == "cool"
         assert data["health"]["api"] is True
         assert data["session_hints"][0]["file"] == "docs/session-state/example.md"
         assert "bridge_pending" in data

@@ -308,7 +308,7 @@ Codex harness remains native; use the Claude-Code harness only when its
 interface is required.
 
 ```bash
-./start-codex.sh --harness claude-code --model gpt-6.1-sol
+./start-codex.sh --harness claude-code --model gpt-6.2-sol
 ./start-codex-driver.sh --governor AUTO
 ```
 
@@ -716,7 +716,7 @@ drift and orphan servers.
 | Service | Port | What it is |
 | --- | --- | --- |
 | `sources` | 8766 | MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia). Legacy alias: `rag`. |
-| `api` | 8765 | **Ops API** (FastAPI) — `/docs`, `/api/contracts/routes`, `/api/orient`, state, fleet, work. Narrative: `docs/MONITOR-API.md`. |
+| `api` | 8765 | **Ops API** (FastAPI) — `/docs`, `/openapi.json`, `/api/orient`, state, fleet, work. Narrative: `docs/MONITOR-API.md`. |
 | `astro` | **4321** | **Astro Course UI dev server** — the local site. Alias: `starlight`. |
 
 ```bash
@@ -943,7 +943,7 @@ model, a complete brief, and a dispatch worktree:
 
 ```bash
 .venv/bin/python scripts/dispatch.py dispatch \
-  --agent codex --model gpt-6.1-sol --effort high \
+  --agent codex --model gpt-6.2-sol --effort high \
   --task-id example-task --prompt-file brief.md \
   --worktree --mode workspace-write --owned-path scripts/example.py
 .venv/bin/python scripts/dispatch.py status example-task --run-nonce <nonce>
@@ -1086,8 +1086,8 @@ Monitor(
 ```
 
 For state queries without builds, use the **Ops API** (`docs/MONITOR-API.md`;
-live explorer `http://127.0.0.1:8765/docs`, contracts
-`http://127.0.0.1:8765/api/contracts/routes`):
+live explorer `http://127.0.0.1:8765/docs`, schema
+`http://127.0.0.1:8765/openapi.json`):
 ```bash
 curl -s http://localhost:8765/api/state/track-health/a1   # Full track health
 curl -s http://localhost:8765/api/state/build-status/a1     # One track's build progress

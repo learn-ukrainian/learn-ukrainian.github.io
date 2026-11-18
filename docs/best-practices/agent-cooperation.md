@@ -858,7 +858,7 @@ Post on the relevant GH issue explaining what was stuck and why.
 
 **Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
 The worker runs its brief's chain (`full-send`, or `full-stop` when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete
-GPT-6.1 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
+GPT-6.2 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
 see `agents_extensions/shared/rules/fleet-driver-routing.md` §2.
 
 ### Briefing Luna

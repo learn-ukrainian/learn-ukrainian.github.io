@@ -7,7 +7,7 @@ effort: xhigh
 
 # Plan Review (Seminar): $ARGUMENTS
 
-For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+For GPT-6.2 Sol (`gpt-6.2-sol`), use `high`, including advisory and
 escalation turns. This overrides the shared effort above for Sol only;
 other providers retain their effort rules and explicit overrides.
 

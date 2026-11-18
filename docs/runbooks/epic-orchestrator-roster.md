@@ -26,8 +26,8 @@ listed driver fallback.
 
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
-| **harness / infra** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
-| **devops** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
+| **harness / infra** | Codex / gpt-6.2-sol @ high | `./start-codex-driver.sh --epic infra` |
+| **devops** | Codex / gpt-6.2-sol @ high | `./start-codex-driver.sh --epic devops` |
 | **ops-api** (Operator API + UI; stream key `monitor`) | Cursor | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
 | **ops-api** (named alternate) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic ops-api` |
 | **corpus** (acquisition & ingestion) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic corpus` |
@@ -120,7 +120,7 @@ the review-loop ukrainian seats, with no Claude seat (no DeepSeek, and Grok is n
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5.1** — parked: not routed by default, explicit pin only (`--model claude-fable-5-1`); reintroduction or a successor model is an operator decision. **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
   (`claude-opus-5-5`). Designated approval is given by the operator, or when
-  `claude-opus-5-5` and `gpt-6.1-sol` agree; when one of them authored the proposal, the
+  `claude-opus-5-5` and `gpt-6.2-sol` agree; when one of them authored the proposal, the
   other's approval completes it; a proposal by any other agent needs both; if they
   disagree, the operator decides.
 - **Kimi** — retired (OO-58, #11327). Do not dispatch K2.7, `k3-256k` or K3. **Codex** was
@@ -139,8 +139,8 @@ Exact tables below must match `lu_machinery/config/model_catalog.yaml` → `orch
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
-| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
+| claude | claude-opus-5-5 | high | gpt-6.2-sol | high |
+| codex | gpt-6.2-sol | high | gpt-6.2-sol | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 <!-- fleet-roster-projection:begin formal_review_eligible -->
@@ -178,7 +178,7 @@ Every strong long-context model is load-bearing somewhere, so every orchestrator
 "bites a hand." This routing bites the **least** — it keeps the scarce authority +
 language + review lanes free and puts the loop on the most replaceable capacity:
 
-- **Codex / Sol 6.1** → infra and devops only: drives those streams as the named alternate (Opus 5.5 is the other
+- **Codex / Sol 6.2** → infra and devops only: drives those streams as the named alternate (Opus 5.5 is the other
   driver and advisor seat, and drives corpus and every other stream outside infra/devops). **Gemini (AGY, Flash) is not a planning, design or driver seat**
   (operator decision 2026-10-03, #9584): it takes bounded, fully specified work and Ukrainian
   content review, never a stream.
@@ -243,7 +243,7 @@ teaches the message-plane and cross-family review loop.
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Opus 5.5 @ high, Sol 6.1 @ high**; designated approval needs them to
+safety interruption of another lane. Advisors for those calls: **Opus 5.5 @ high, Sol 6.2 @ high**; designated approval needs them to
 agree; when one of them authored the proposal, the other's approval completes it; any other author needs both; the operator decides if they disagree.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.

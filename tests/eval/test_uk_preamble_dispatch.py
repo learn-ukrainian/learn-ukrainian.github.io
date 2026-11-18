@@ -43,6 +43,13 @@ from scripts.eval.uk_preamble.runner import (
 from tests.dispatcher.conftest import install_claude_doctor_stub
 
 CALLER = "harness"
+# lu-machinery 0.1.31 retires gpt-6.1-sol; the dispatcher refuses it before launch. The
+# frozen seat table keeps it (the uk-behaviour freeze pins common.py), so the tests
+# that run the real dispatch CLI use the live Sol 6.2 seat in its place.
+LIVE_SEATS = {
+    key: replace(seat, seat_id="gpt-6.2-sol", model="gpt-6.2-sol") if key == "gpt-6.1-sol" else seat
+    for key, seat in SEATS.items()
+}
 
 
 FAKE_DELEGATE = textwrap.dedent(
@@ -493,7 +500,7 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
 
     monkeypatch.setattr(worker, "start", finish)
     dispatcher = SimulatedDelegate(linked_worktree)
-    task = TaskSpec("retry-seat", SEATS["gpt-6.1-sol"], "review", "none", 1, ("W1",), PROMPT)
+    task = TaskSpec("retry-seat", LIVE_SEATS["gpt-6.1-sol"], "review", "none", 1, ("W1",), PROMPT)
     results = ResultsDir(outside_dir / "results")
     executor = Executor(
         dispatcher, results, worker_cwd=linked_worktree, workspace=workspace_probe(linked_worktree), spawn_interval=0
@@ -586,7 +593,7 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
     dispatcher = SimulatedDelegate(linked_worktree)
     tasks = [
         TaskSpec(f"uk9623-t-{seat.agent}-{label}-r1-writing-00", seat, "writing", label, 1, ("W1",), prompt)
-        for seat in SEATS.values()
+        for seat in LIVE_SEATS.values()
         for label, prompt in (
             ("none", PROMPT),
             ("adapted-v2", render("Преамбула.\n\n" + PROMPT[len(rules_block()) + 2 :], rules_block())),

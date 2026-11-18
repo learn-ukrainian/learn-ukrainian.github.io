@@ -64,7 +64,7 @@ def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
         pytest.fail("unapproved Codex model reached subprocess")
     monkeypatch.setattr(matrix, "run_subprocess", forbidden)
     cell = matrix.Cell("openai", "gpt-5.5", "native_cli", "medium", "with_mcp")
-    with pytest.raises(ValueError, match=r"only gpt-6\.1-sol"):
+    with pytest.raises(ValueError, match=r"only gpt-6\.2-sol"):
         matrix.run_native_cli(cell, "prompt")
 
 
@@ -92,7 +92,7 @@ def test_native_claude_runs_without_background_work(monkeypatch):
 def test_native_codex_gets_no_claude_background_controls(monkeypatch):
     calls = []
     monkeypatch.setattr(matrix, "run_subprocess", lambda cmd, **kwargs: calls.append((cmd, kwargs)) or "result")
-    matrix.run_native_cli(matrix.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "no_mcp"), "prompt")
+    matrix.run_native_cli(matrix.Cell("openai", "gpt-6.2-sol", "native_cli", "medium", "no_mcp"), "prompt")
     ((cmd, kwargs),) = calls
     assert "--disallowedTools" not in cmd
     assert kwargs["headless_claude"] is False

@@ -136,7 +136,7 @@ WRITER_CHOICES = (
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
-    "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
+    "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.7", "effort": "medium"},
     "cursor-tools": {"model": "grok-4.7-high", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
@@ -180,7 +180,7 @@ REVIEWER_CHOICES = (
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
-    "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
+    "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},

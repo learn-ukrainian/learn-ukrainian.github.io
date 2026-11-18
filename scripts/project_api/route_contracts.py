@@ -1,7 +1,7 @@
 """Route and page contracts for the product half of the Monitor API (Monitor split, C-4687).
 
 The machinery registry in ``lu_machinery.api.route_contracts`` owns the contract
-types and ``/api/contracts/routes``. These declarations cover the product
+types (OpenAPI serves the merged route table). These declarations cover the product
 routes and pages and join that registry through the product contribution.
 """
 
@@ -278,7 +278,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "/",
         "Learn Ukrainian home: curriculum totals and one card per product page.",
         "/api/dashboard/overview.",
-        "One cache-first fetch with a 20s abort budget. OpenAPI and `/api/contracts/routes` remain the agent onboarding SSOT, not this HTML page.",
+        "One cache-first fetch with a 20s abort budget. OpenAPI (`/openapi.json`) remains the agent onboarding SSOT, not this HTML page.",
         ("humans",),
         "Links to every learn-ukrainian product page; machinery pages live under /machinery.",
         "low",

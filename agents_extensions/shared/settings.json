@@ -717,7 +717,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-setup.sh",
             "timeout": 10
           },
           {
@@ -734,7 +734,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/enforce-venv.sh",
             "timeout": 10,
             "onFailure": "block"
           },
@@ -803,12 +803,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/tool-timing.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/tool-timing.sh",
             "timeout": 1
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-monitor.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/context-monitor.sh",
             "timeout": 5
           }
         ]
@@ -818,7 +818,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stamp-pytest.sh",
             "timeout": 3
           },
           {
@@ -834,7 +834,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/tool-timing.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/tool-timing.sh",
             "timeout": 1
           }
         ]
@@ -844,7 +844,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stamp-pytest.sh",
             "timeout": 3
           },
           {
@@ -860,12 +860,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-agent-inbox.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-agent-inbox.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-rollover-guard.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/context-rollover-guard.sh",
             "timeout": 5
           },
           {
@@ -882,7 +882,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/precompact-handoff-guard.sh",
             "timeout": 5
           }
         ]
@@ -893,7 +893,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-compact.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact.sh",
             "timeout": 10
           }
         ]
@@ -906,7 +906,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-audit.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-audit.sh",
             "timeout": 30
           }
         ]
@@ -916,7 +916,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-deploy-agent-extensions.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-deploy-agent-extensions.sh",
             "timeout": 30
           }
         ]
@@ -927,7 +927,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/goal-driver-stop.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/goal-driver-stop.sh",
             "timeout": 5
           },
           {
@@ -954,7 +954,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/release-thread-lease.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/release-thread-lease.sh",
             "timeout": 5
           }
         ]

@@ -64,7 +64,7 @@ def test_gateway_token_counter_wins_when_available(
     )
     tokens, method = cold_start.count_payload_tokens(
         "українська".encode(),
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         token_count_url=token_count_url,
     )
 
@@ -81,7 +81,7 @@ def test_compact_and_full_budgets_are_enforced(
     compact = cold_start.measure(
         "compact",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
     )
     full = cold_start.measure(
         "full",
@@ -105,13 +105,13 @@ def test_delegated_model_cannot_change_lead_startup_contract(
     terra = cold_start.measure(
         "terra",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
-        delegated_model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
+        delegated_model_id="gpt-6.2-sol",
     )
     luna = cold_start.measure(
         "luna",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         delegated_model_id="gpt-6-luna",
     )
 
@@ -163,7 +163,7 @@ def test_observed_first_turn_is_gate_when_larger_and_excludes_output(
     measurement = cold_start.measure(
         "observed",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         transcript=transcript,
     )
 
@@ -187,7 +187,7 @@ def test_failed_source_makes_measurement_incomplete(
     measurement = cold_start.measure(
         "incomplete",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
     )
 
     assert measurement.complete is False
@@ -258,7 +258,7 @@ def test_advisor_incident_reports_last_message_iteration(
     measurement = cold_start.measure(
         "incident",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         transcript=transcript,
     )
 
@@ -379,7 +379,7 @@ def test_later_row_never_replaces_positive_first_row(
     measurement = cold_start.measure(
         "first-wins",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         transcript=transcript,
     )
     assert measurement.observed_first_turn_tokens == 589_549
@@ -396,7 +396,7 @@ def test_estimate_stays_the_gate_when_larger_than_corrected_observation(
     measurement = cold_start.measure(
         "estimate-wins",
         profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
+        model_id="gpt-6.2-sol",
         transcript=transcript,
     )
 

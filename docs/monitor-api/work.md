@@ -299,7 +299,8 @@ typed omission):
 4. Class-4 summaries only:
    - `GET /api/delegate/active`
    - `GET /api/delegate/tasks?status=all&limit<=500`
-   - `GET /api/fleet/reviews`
+   - the Fleet reviews projection (`fleet_reviews()`, read in process; its
+     `/api/fleet/reviews` route was removed in lu-machinery 0.1.31)
 
    Never delegate task detail bodies or sealed review blobs.
 

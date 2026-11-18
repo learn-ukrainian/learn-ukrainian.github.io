@@ -1,10 +1,9 @@
-"""Tests for API routers: comms, batch progress, sources and route contracts.
+"""Tests for API routers: comms batch progress and live activity, and sources.
 
 Targets ~150+ tests for coverage improvement.
 """
 
 import json
-import os
 import sqlite3
 from datetime import UTC, datetime
 from unittest.mock import patch
@@ -57,28 +56,6 @@ def broker_db(mock_project_root):
     conn.commit()
     conn.close()
     return db_path
-
-
-def _insert_messages(db_path, messages):
-    """Helper to insert test messages into broker DB."""
-    conn = sqlite3.connect(str(db_path))
-    for msg in messages:
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (
-                msg.get("task_id", "test-task"),
-                msg.get("from_llm", "claude"),
-                msg.get("to_llm", "gemini"),
-                msg.get("message_type", "message"),
-                msg.get("content", "test content"),
-                msg.get("data", ""),
-                msg.get("timestamp", datetime.now(UTC).isoformat()),
-                msg.get("acknowledged", 0),
-            ),
-        )
-    conn.commit()
-    conn.close()
 
 
 @pytest.fixture()
@@ -142,177 +119,9 @@ def rag_client(mock_project_root):
     yield TestClient(app)
 
 
-@pytest.fixture()
-def contracts_client(mock_project_root):
-    """TestClient for contracts router."""
-    from lu_machinery.api.monitor_context import fixture_context
-    from lu_machinery.api.route_contracts import router
-
-    app = FastAPI()
-    app.state.ctx = fixture_context(mock_project_root)
-    app.include_router(router, prefix="/api/contracts")
-    yield TestClient(app)
-
-
 # ===========================================================================
 # COMMS ROUTER TESTS
 # ===========================================================================
-
-
-class TestCommsMessages:
-    """Tests for /api/comms/messages endpoint."""
-
-    def test_messages_no_db(self, comms_client, mock_project_root):
-        """When DB doesn't exist, return empty with error."""
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/messages")
-        assert r.status_code == 200
-        assert r.json()["error"] == "Broker DB not found"
-
-    def test_messages_with_data(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"content": "hello", "from_llm": "claude", "to_llm": "gemini"},
-            {"content": "world", "from_llm": "gemini", "to_llm": "claude"},
-        ])
-        r = comms_client.get("/api/comms/messages")
-        assert r.json()["total"] == 2
-
-    def test_messages_unacked_only(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"acknowledged": 0},
-            {"acknowledged": 1},
-        ])
-        r = comms_client.get("/api/comms/messages", params={"unacked_only": True})
-        assert r.json()["total"] == 1
-
-
-class TestCommsConversations:
-    """Tests for /api/comms/conversations endpoint."""
-
-    def test_conversations_grouped(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "task-A", "from_llm": "claude"},
-            {"task_id": "task-A", "from_llm": "gemini"},
-            {"task_id": "task-B", "from_llm": "claude"},
-        ])
-        r = comms_client.get("/api/comms/conversations")
-        convos = r.json()["conversations"]
-        assert len(convos) == 2
-
-
-class TestCommsConversationDetail:
-    """Tests for /api/comms/conversation/{task_id} endpoint."""
-
-    def test_conversation_detail(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "task-X", "content": "msg1"},
-            {"task_id": "task-X", "content": "msg2"},
-            {"task_id": "task-Y", "content": "msg3"},
-        ])
-        r = comms_client.get("/api/comms/conversation/task-X")
-        data = r.json()
-        assert data["task_id"] == "task-X"
-        assert data["count"] == 2
-
-    def test_conversation_detail_limited_with_cursor(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "task-X", "content": f"msg{i}"}
-            for i in range(5)
-        ])
-        r = comms_client.get("/api/comms/conversation/task-X", params={"limit": 2})
-        data = r.json()
-        assert data["count"] == 2
-        assert data["total"] == 5
-        assert data["next_cursor"] == 4
-
-        r2 = comms_client.get(
-            "/api/comms/conversation/task-X",
-            params={"limit": 2, "cursor": data["next_cursor"]},
-        )
-        assert [m["id"] for m in r2.json()["messages"]] == [2, 3]
-
-
-class TestCommsActiveProcesses:
-    """Tests for /api/comms/active-processes endpoint."""
-
-    def test_with_pid_files(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        pid_data = {
-            "pid": os.getpid(),  # current process, should be alive
-            "agent": "claude",
-            "task_id": "t1",
-            "model": "gpt-4",
-            "mode": "review",
-            "started": datetime.now(UTC).isoformat(),
-        }
-        (pid_dir / "proc1.json").write_text(json.dumps(pid_data))
-        r = comms_client.get("/api/comms/active-processes")
-        data = r.json()
-        assert data["count"] == 1
-        assert data["alive"] == 1
-        assert data["processes"][0]["alive"] is True
-
-    def test_with_dead_pid(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "dead.json").write_text(json.dumps({
-            "pid": 99999999,  # almost certainly not running
-            "started": datetime.now(UTC).isoformat(),
-        }))
-        r = comms_client.get("/api/comms/active-processes")
-        data = r.json()
-        assert data["count"] == 1
-        assert data["alive"] == 0
-
-    def test_corrupt_pid_file(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "corrupt.json").write_text("not json!")
-        r = comms_client.get("/api/comms/active-processes")
-        data = r.json()
-        assert data["count"] == 1
-        assert data["processes"][0]["error"] == "corrupt"
-
-
-class TestCommsZombies:
-    """Tests for /api/comms/zombies endpoint."""
-
-    def test_stale_messages(self, comms_client, broker_db):
-        old_ts = "2020-01-01T00:00:00+00:00"
-        _insert_messages(broker_db, [
-            {"timestamp": old_ts, "acknowledged": 0, "task_id": "stale-task"},
-        ])
-        r = comms_client.get("/api/comms/zombies", params={"stale_hours": 0.001})
-        zombies = r.json()["zombies"]
-        stale = [z for z in zombies if z["type"] == "stale_message"]
-        assert len(stale) >= 1
-
-    def test_stale_message_severity_critical(self, comms_client, broker_db):
-        old_ts = "2020-01-01T00:00:00+00:00"
-        _insert_messages(broker_db, [
-            {"timestamp": old_ts, "acknowledged": 0},
-        ])
-        r = comms_client.get("/api/comms/zombies", params={"stale_hours": 0.001})
-        stale = [z for z in r.json()["zombies"] if z["type"] == "stale_message"]
-        # Old enough to be critical (> 2x stale_hours)
-        assert stale[0]["severity"] == "critical"
-
-    def test_error_loops(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "err-task", "message_type": "error"},
-            {"task_id": "err-task", "message_type": "error"},
-            {"task_id": "err-task", "message_type": "error"},
-        ])
-        r = comms_client.get("/api/comms/zombies")
-        error_loops = [z for z in r.json()["zombies"] if z["type"] == "error_loop"]
-        assert len(error_loops) == 1
-        assert error_loops[0]["error_count"] == 3
-
-    def test_orphan_pid(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "orphan.json").write_text(json.dumps({"pid": 99999999, "task_id": "orphan-task"}))
-        r = comms_client.get("/api/comms/zombies")
-        orphans = [z for z in r.json()["zombies"] if z["type"] == "orphan_pid"]
-        assert len(orphans) == 1
 
 
 class TestCommsBatchProgress:
@@ -452,17 +261,3 @@ class TestCommsPreseedLogParsing:
         (log_dir / "random.log").write_text("no timestamp\n")
         result = _scan_preseed_logs(_comms_ctx(mock_project_root))
         assert result == []
-
-
-class TestContractsRoutes:
-    """Tests for /api/contracts routes (#7329)."""
-
-    def test_get_routes_returns_200(self, contracts_client):
-        r = contracts_client.get("/api/contracts/routes")
-        assert r.status_code == 200
-        data = r.json()
-        assert "generated_at" in data
-        assert "route_contracts" in data
-        assert "page_contracts" in data
-        assert len(data["route_contracts"]) > 0
-        assert len(data["page_contracts"]) > 0

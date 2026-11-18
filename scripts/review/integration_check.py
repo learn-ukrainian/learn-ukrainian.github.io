@@ -226,7 +226,7 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
     validate_fixture_draft(draft)
     state = scratch / "state"
     state.mkdir(parents=True)
-    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
+    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.2-sol\n", encoding="utf-8")
     (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
 
     def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each
@@ -302,7 +302,7 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
                         }
                         for i, text in enumerate(option_texts)
                     ],
-                    "writer": {"seat": "codex@gpt-6.1-sol", "family": "openai"},
+                    "writer": {"seat": "codex@gpt-6.2-sol", "family": "openai"},
                     "reviewer": {"seat": "claude@opus-5-5", "family": "anthropic", "lane": "language"},
                 }
             ],

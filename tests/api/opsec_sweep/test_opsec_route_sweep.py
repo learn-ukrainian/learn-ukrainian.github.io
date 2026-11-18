@@ -30,7 +30,6 @@ from fastapi.testclient import TestClient
 from lu_machinery.api import (
     delegate_router,
     epics_router,
-    fleet_router,
     fleet_workers_router,
     git_hygiene_router,
     issues_router,
@@ -38,7 +37,6 @@ from lu_machinery.api import (
     opsec_scan,
     route_contracts,
     state_helpers,
-    state_router,
 )
 from lu_machinery.api import main as api_main
 from lu_machinery.api.monitor_context import fixture_context
@@ -281,51 +279,6 @@ def _fixture_catalogue_git(repo: Path, *args: str) -> NoReturn:
     raise subprocess.CalledProcessError(128, ["git", "-C", str(repo), *args])
 
 
-REAL_BOARD_PROBE_KEYS = frozenset(
-    {
-        "capsule_session_env",
-        "plane_status",
-        "backlog_and_dead_letters",
-        "bottleneck_slice",
-        "orient_lean",
-        "issues_streams_membership",
-        "session_streams_and_handoff",
-        "inbox_check",
-        "gh_pr_list",
-        "needle_search",
-    }
-)
-
-
-def _assert_real_cold_start_board_producer() -> None:
-    from lu_machinery.fleet_comms.cold_start_board import build_cold_start_board as real_build
-
-    assert fleet_router.build_cold_start_board is real_build
-
-
-def _assert_board_payload_is_real_shape(payload: dict[str, Any]) -> None:
-    probes = payload.get("probes") or {}
-    assert REAL_BOARD_PROBE_KEYS.issubset(probes.keys())
-    assert "db_path" not in json.dumps(payload)
-
-
-def _fixture_cold_start_board(
-    *,
-    stream_id: str | None = None,
-    agent: str | None = None,
-    needle: str | None = None,
-    **_kwargs: Any,
-) -> dict[str, Any]:
-    return {
-        "timestamp": "2026-01-01T00:00:00Z",
-        "board_status": "ok",
-        "stream_id": stream_id,
-        "agent": agent,
-        "needle": needle,
-        "probes": {},
-    }
-
-
 @pytest.fixture
 def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> IsolatedFixture:
     """Redirect existing API seams into a canary-planted disposable tree."""
@@ -393,23 +346,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
     )
-    # GET /api/state/github-budget is the only caller. Machinery #752 removes
-    # that route and this binding; older releases still need the seam stubbed.
-    if hasattr(state_router, "probe_graphql_budget"):
-        monkeypatch.setattr(
-            state_router,
-            "probe_graphql_budget",
-            lambda: {
-                "source": "graphql.rateLimit",
-                "limit": None,
-                "remaining": None,
-                "used": None,
-                "reset_at": None,
-                "exhausted": None,
-                "error": "fixture gh unavailable",
-                "checked_at": "2026-01-01T00:00:00Z",
-            },
-        )
     # GET /api/ops/v1/alerts reads the host's loopback Alertmanager. The sweep
     # never opens a socket, so the seam returns the route's own unreachable
     # reading and the route still shapes and caches it normally.
@@ -863,24 +799,13 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
     for key in registry.FIXTURE_EMPTY_ROUTE_KEYS:
         assert by_key[key].fixture == "isolated"
         assert by_key[key].expected_statuses == (200,)
-    assert by_key["GET /api/session-streams/v1/drift"].query["dry_run"] == "true"
-    send = by_key.get("POST /api/comms/send")
-    if send is not None:
-        assert send.expected_statuses == (410,)
-        assert send.body() is not None
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].classification == "mutation"
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].body() is not None
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].expected_statuses == (403,)
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
     find_record = by_key["GET /api/knowledge/find"]
     assert find_record.expected_statuses == (503,)
     assert find_record.expected_detail == {"code": "CalledProcessError", "message": "request rejected"}
     assert find_record.reason
     assert (
         route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version
-        == "session-streams.v2"
+        == "session-streams.v3"
     )
     assert route_contracts.contract_for_route("/api/state/preparation").response_schema_version == "authority.v2"
     assert route_contracts.contract_for_route("/api/orient").response_schema_version == "orient.v2"
@@ -894,10 +819,7 @@ def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
     mutations = {record.key: record for record in records if record.classification == "mutation"}
     skipped = {key for key, record in mutations.items() if record.fixture == "skip"}
     assert skipped == set(registry.MUTATION_SKIPS)
-    agent_monitor = {key for key in mutations if key.startswith("POST /api/agent-monitor/")}
-    assert set(mutation_recipes.RECIPES) | {"POST /api/epics/v1/{stream_id}/bundles"} | agent_monitor | skipped == set(
-        mutations
-    )
+    assert set(mutation_recipes.RECIPES) | skipped == set(mutations)
     for key, recipe in mutation_recipes.RECIPES.items():
         record = mutations[key]
         assert record.fixture == "isolated" and record.store == recipe.store
@@ -1068,21 +990,12 @@ def test_find_exact_outcome_code_matches_real_git_in_a_non_repository(tmp_path: 
     assert outcome.status == 503
 
 
-def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
+def test_family_one_fixture_reaches_orient_git_happy_path(
     isolated_fixture: IsolatedFixture,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(api_main, "_run_command", _fixture_run_command)
     client = TestClient(api_main.app, raise_server_exceptions=False)
-
-    dual = client.get("/api/session-streams/v1/dual-write-status")
-    assert dual.status_code == 200
-    dual_payload = dual.json()
-    assert dual_payload["total"] >= 0
-    assert "candidates" in dual_payload
-    assert all("path" not in candidate for candidate in dual_payload["candidates"])
-    assert "repo_root" not in json.dumps(dual_payload)
-    assert "db_path" not in json.dumps(dual_payload)
 
     orient = client.get("/api/orient", params={"sections": "git"})
     assert orient.status_code == 200
@@ -1227,40 +1140,6 @@ def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_
     }
     remaining = _validate_approved_exemptions([row], [known, second_loopback])
     assert remaining == [second_loopback]
-
-
-def _route_mounted(method: str, template: str) -> bool:
-    return any(
-        operation.method == method and operation.path_template == template
-        for operation in registry.enumerate_http_operations(api_main.app)
-    )
-
-
-def test_sweep_seam_honesty_requires_real_cold_start_board_producer(
-    isolated_fixture: IsolatedFixture,
-) -> None:
-    del isolated_fixture
-    if not _route_mounted("GET", "/api/fleet/facade/board"):
-        assert not hasattr(fleet_router, "build_cold_start_board")
-        return
-    _assert_real_cold_start_board_producer()
-    client = TestClient(api_main.app, raise_server_exceptions=False)
-    response = client.get("/api/fleet/facade/board")
-    assert response.status_code == 200
-    _assert_board_payload_is_real_shape(response.json())
-
-
-def test_sweep_cold_start_board_stub_restoration_fails_seam_honesty(
-    isolated_fixture: IsolatedFixture,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    del isolated_fixture
-    if not hasattr(fleet_router, "build_cold_start_board"):
-        assert not _route_mounted("GET", "/api/fleet/facade/board")
-        return
-    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
-    with pytest.raises(AssertionError):
-        _assert_real_cold_start_board_producer()
 
 
 def test_isolated_fixture_denies_network_and_subprocess(isolated_fixture: IsolatedFixture) -> None:

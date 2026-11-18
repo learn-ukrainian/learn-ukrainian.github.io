@@ -2108,7 +2108,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: api, how: "GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes"}
+      - {surface: api, how: "GET /api/telemetry/tool-timings"}
     content_searchable: false
 
   - id: data-movaua-db

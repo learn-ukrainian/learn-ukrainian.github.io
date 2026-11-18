@@ -49,7 +49,7 @@ runs the worktree's code and records it as `dispatcher_code` in the task record.
 PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python"
 HEAD_SHA="$(git rev-parse HEAD)"
 # One line per required route: agent and a formal model on it.
-for route_model in agy:gemini-3.8-flash-high claude:claude-sonnet-5-5 codex:gpt-6.1-sol \
+for route_model in agy:gemini-3.8-flash-high claude:claude-sonnet-5-5 codex:gpt-6.2-sol \
     cursor:grok-4.7-high; do
   route="${route_model%%:*}"; model="${route_model#*:}"
   "$PY" -c "import sys; from lu_machinery.dispatcher import cli; sys.exit(cli.main(sys.argv[1:]))" dispatch \

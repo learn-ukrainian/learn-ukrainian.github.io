@@ -440,7 +440,7 @@ def dispatch_agent(
             from batch_gemini_config import PRO_MODEL
             model = PRO_MODEL
         elif is_codex:
-            model = "gpt-6.1-sol"
+            model = "gpt-6.2-sol"
         else:
             from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
             model = CLAUDE_MODEL_CORE_CONTENT

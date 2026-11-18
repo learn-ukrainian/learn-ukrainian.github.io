@@ -133,14 +133,14 @@ def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
         pytest.fail("unapproved Codex model reached subprocess")
     monkeypatch.setattr(bench, "run_subprocess", forbidden)
     cell = bench.Cell("openai", "gpt-5.5", "native_cli", "medium", "with_mcp")
-    with pytest.raises(ValueError, match=r"only gpt-6\.1-sol"):
+    with pytest.raises(ValueError, match=r"only gpt-6\.2-sol"):
         bench.run_native_cli(cell, "prompt")
 
 
 def test_native_codex_accepts_approved_model():
-    cell = bench.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "with_mcp")
+    cell = bench.Cell("openai", "gpt-6.2-sol", "native_cli", "medium", "with_mcp")
     command = bench.build_native_command(cell, "prompt")
-    assert command[command.index("--model") + 1] == "gpt-6.1-sol"
+    assert command[command.index("--model") + 1] == "gpt-6.2-sol"
 
 
 def test_native_claude_runs_without_background_work(monkeypatch):
@@ -167,7 +167,7 @@ def test_native_claude_runs_without_background_work(monkeypatch):
 def test_native_codex_gets_no_claude_background_controls(monkeypatch):
     calls = []
     monkeypatch.setattr(bench, "run_subprocess", lambda cmd, **kwargs: calls.append((cmd, kwargs)) or "result")
-    bench.run_native_cli(bench.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "no_mcp"), "prompt")
+    bench.run_native_cli(bench.Cell("openai", "gpt-6.2-sol", "native_cli", "medium", "no_mcp"), "prompt")
     ((cmd, kwargs),) = calls
     assert "--disallowedTools" not in cmd
     assert kwargs["headless_claude"] is False

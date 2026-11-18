@@ -270,7 +270,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-ubertext-freq` | `data/ubertext-freq/` | current | sqlite: read-only SQL on data/ubertext-freq/frequency.db when present |
 | `data-youtube-discovery` | `data/youtube_discovery/` | current | sqlite: read the JSONL file directly |
 | `data-native-reviewer-lessons` | `data/native-reviewer-lessons/` | current | sqlite: no search tool; private files |
-| `data-telemetry` | `data/telemetry/` | current | api: GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes |
+| `data-telemetry` | `data/telemetry/` | current | api: GET /api/telemetry/tool-timings |
 | `data-movaua-db` | `data/movaua.db` | current | sqlite: read-only SQL on data/movaua.db |
 | `data-movne-pytannya-db` | `data/movne_pytannya.db` | current | sqlite: read-only SQL on data/movne_pytannya.db |
 
