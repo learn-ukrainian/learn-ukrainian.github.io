@@ -1639,7 +1639,7 @@ def _isolate_legacy_bridge_telemetry(
     _legacy_bridge_telemetry_base: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> Path:
-    """Point legacy-bridge ask telemetry at a per-test file.
+    """Point legacy-bridge ask telemetry and the legacy broker DB at per-test files.
 
     ``start_bridge_invocation_safely`` persists
     ``state_root() / data/telemetry/legacy_comms_routes.db``. The installed
@@ -1682,8 +1682,10 @@ def _isolate_legacy_bridge_telemetry(
         check_venv_integrity,
         check_worktree_cleanup_integrity,
     )
-    # TRANSITIONAL (machinery #515): PR 819 removes the legacy-bridge telemetry writer; isolate it only while the
-    # installed release still ships it. Remove this block once the product pins such a release.
+    # TRANSITIONAL (machinery #515): PR 819 removes the legacy broker and its telemetry writer; isolate both
+    # only while the installed release still ships them. Remove this block once the product pins such a release.
+    # The broker reads AB_DB_PATH on every call (the orient bridge_pending collector opens it writable).
+    monkeypatch.setenv("AB_DB_PATH", str(store / "messages.db"))
     if importlib.util.find_spec("lu_machinery.telemetry.legacy_bridge") is not None:
         from lu_machinery.telemetry import legacy_bridge
 
