@@ -278,41 +278,6 @@ def test_native_benchmark_timeout_and_other_providers_are_retained(
     assert argv[0] == "codex" and "--disallowedTools" not in argv
 
 
-@pytest.mark.usefixtures("ambient_switch_off")
-def test_openai_proxy_claude_child_keeps_the_parent_env_exclusions(spawned: list[dict[str, Any]]) -> None:
-    from lu_machinery.ai_agent_bridge import openai_proxy as proxy
-
-    response = proxy._claude_backend("claude-opus-5-5", [proxy.Message(role="user", content="hello")])
-
-    assert response.content == "out"
-    (call,) = spawned
-    _assert_child_controlled(call["argv"], call["env"])
-    expected = {
-        "TERM": "xterm-256color",
-        "COLORTERM": "truecolor",
-        **proxy._config._PARENT_ENV,
-        SWITCH: "1",
-        ADVISOR_SWITCH: "1",
-    }
-    assert call["env"] == expected, "the child gets _config._PARENT_ENV, never the ambient env"
-    assert "LU_AMBIENT_PROBE" not in call["env"]
-    assert "hello" in call["input"]
-    assert call["timeout"] == proxy._backend_timeout_s()
-
-
-def test_openai_proxy_claude_failure_is_still_translated(monkeypatch: pytest.MonkeyPatch) -> None:
-    from lu_machinery.ai_agent_bridge import openai_proxy as proxy
-
-    monkeypatch.setattr(
-        claude_adapter.subprocess,
-        "run",
-        lambda argv, **kwargs: subprocess.CompletedProcess(argv, 3, stdout="", stderr="quota"),
-    )
-    with pytest.raises(subprocess.CalledProcessError) as raised:
-        proxy._claude_backend("claude-opus-5-5", [proxy.Message(role="user", content="hello")])
-    assert (raised.value.returncode, raised.value.stderr) == (3, "quota")
-
-
 _ZNO_CONFIG = {
     "schema": "zno-nmt.config.v1",
     "adapter": "claude",

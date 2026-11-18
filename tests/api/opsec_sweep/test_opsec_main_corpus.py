@@ -63,7 +63,6 @@ _CORPUS_PATHS = [
         "docs/best-practices/lesson-schema.md",
         "docs/best-practices/local-api-server.md",
         "docs/best-practices/module-content-quality.md",
-        "docs/best-practices/openai-compat-proxy.md",
         "docs/best-practices/plan-references.md",
         "docs/best-practices/plan-version-drift.md",
         "docs/best-practices/politically-charged-bios.md",

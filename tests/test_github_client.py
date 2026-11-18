@@ -1803,8 +1803,7 @@ def test_empty_cached_lists_keep_stale_metadata(tmp_path, monkeypatch, kind):
     store.request("GET", endpoint)
     store.clock = lambda: 1043
     store.allow_stale = True
-    monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
-    cache = rest.GitHubRestCache(identity="fixture")
+    cache = rest.GitHubRestCache(store)
     page = getattr(rest, "list_open_" + kind)(repo, limit=10, timeout=2, cache=cache)
     assert page == [] and page.stale and page.age_seconds == 43
     assert len(calls) == 1
@@ -1814,14 +1813,16 @@ def test_empty_cached_lists_keep_stale_metadata(tmp_path, monkeypatch, kind):
         assert section.status == "stale" and section.age_s == 43 and section.count == 0
 
 
-def test_cached_empty_review_list_is_incomplete(monkeypatch):
+def test_cached_empty_review_list_is_incomplete(tmp_path):
     import time
 
     from lu_machinery import github_rest_cache as rest
 
-    cache = rest.GitHubRestCache(
-        identity="fixture", transport=lambda *a: (200, {"x-github-stale": "true", "x-github-age": "43"}, b"[]")
-    )
+    store, _ = client(tmp_path, [response([], remaining=0)])
+    store.request("GET", "repos/o/r/pulls/1/reviews")
+    store.clock = lambda: 1043
+    store.allow_stale = True
+    cache = rest.GitHubRestCache(store)
     rows, complete = rest._list_body(cache, "repos/o/r/pulls/1/reviews", deadline=time.monotonic() + 2, timeout=2)
     assert rows == [] and rows.stale and not complete
 
