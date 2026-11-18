@@ -48,7 +48,7 @@ class FrozenDenominator:
 
 # Measured from the live app. The count and the digest are one snapshot:
 # a tree matches only when all three fields match. This is the installed
-# release, lu-machinery 0.1.32: machinery #756 (0.1.31) removed 47 unused
+# release, lu-machinery 0.1.33 (unchanged since 0.1.32): machinery #756 (0.1.31) removed 47 unused
 # operations (the agent-monitor, comms legacy, fleet facade/observer, runtime,
 # rollovers, git hygiene, route-contract and session-streams drift/dual-write
 # routes) and machinery #768 (0.1.32) removed the four epic rollover-bundle routes.
@@ -418,7 +418,10 @@ def _schema_excluded_operations(node: Any, prefix: str = "") -> Iterable[Operati
 def _middleware_metric_operations(app: Any) -> Iterable[Operation]:
     """Yield ``GET`` paths served by middleware that publishes ``METRICS_PATH``."""
     for middleware in getattr(app, "user_middleware", ()):
-        path = getattr(getattr(middleware, "cls", None), "METRICS_PATH", None)
+        # The metrics middleware registers its bound ``wrap`` hook (lu-machinery 0.1.33), so the
+        # class that publishes ``METRICS_PATH`` is the hook's instance; a plain class is its own owner.
+        entry = getattr(middleware, "cls", None)
+        path = getattr(getattr(entry, "__self__", entry), "METRICS_PATH", None)
         if isinstance(path, str) and path.startswith("/"):
             yield Operation("GET", normalize_path_template(path))
 

@@ -111,6 +111,7 @@ updates:
       - dependency-name: "cffi"
       - dependency-name: "cfgv"
       - dependency-name: "click"
+      - dependency-name: "colorama"
       - dependency-name: "coverage"
       - dependency-name: "cryptography"
       - dependency-name: "distlib"

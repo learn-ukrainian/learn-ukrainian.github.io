@@ -21,7 +21,10 @@ from batch_gemini_config import PRO_MODEL
 
 
 @pytest.fixture
-def bridge_db(tmp_path):
+def bridge_db(tmp_path, monkeypatch):
+    # The release defaults the message plane to authority, which retires legacy bridge writes;
+    # these tests exercise the legacy path itself, so the plane mode is pinned to off here.
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
     db_path = tmp_path / "messages.db"
     # The release's _db reads _config.DB_PATH at each call.
     with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_path):

@@ -188,6 +188,8 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
         "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
+    # Membership now walks the native parent chain before deciding it does not apply.
+    monkeypatch.setattr("lu_machinery.ci.check_issue_task_quality.read_parent", lambda *_args: None)
     assert (
         main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 0
     )
@@ -709,7 +711,7 @@ def test_writer_and_reader_share_primary_cache_from_linked_worktree(monkeypatch,
     assert checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY, root=checkout)
     assert (primary / "batch_state/issue_stream_audit.json").is_file()
     assert not (checkout / "batch_state").exists()
-    assert checker.cached_membership({}, REPO, 123, REGISTRY, {123: None}) == {
+    assert checker.cached_membership({}, REPO, 123, REGISTRY, {123: None}, epic_repository=REPO) == {
         "status": "PASS", "errors": [], "pending_native_link": True,
     }
 

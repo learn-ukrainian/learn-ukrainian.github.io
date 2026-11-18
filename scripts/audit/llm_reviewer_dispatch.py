@@ -454,16 +454,21 @@ def assert_mcp_required_for_policy(*, policy_family: str, route: ReviewerRoute) 
 
 
 def assert_route_allowed(route: ReviewerRoute) -> None:
-    """Refuse retired models and DeepSeek automated reviewer routes."""
+    """Refuse DeepSeek automated reviewer routes and any model the catalog gives no review role.
+
+    A reviewer route is admitted by the model catalog's role for a review activity, never by
+    lifecycle alone: a live model whose roles exclude review (Gemma, hramatka only) is refused
+    like a retired one.
+    """
 
     haystack = " ".join(
         [route.route_name, route.reviewer_model_id, route.reviewer_family, *route.bridge_command]
     )
     if normalize_family(haystack) == "deepseek":
         raise ReviewerRouteError("DeepSeek reviewer routes are forbidden")
-    from lu_machinery.review.model_catalog import retired_model_refusal
+    from lu_machinery.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
 
-    if refusal := retired_model_refusal(route.reviewer_model_id):
+    if refusal := activity_role_refusal(route.reviewer_model_id, REVIEW_ACTIVITY):
         raise ReviewerRouteError(refusal)
 
 

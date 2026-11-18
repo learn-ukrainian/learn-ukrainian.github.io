@@ -2250,7 +2250,16 @@ def test_resolve_membership_registered_but_different_native_parent_ignores_chain
     ids=["no-parent", "unregistered-parent", "matching-parent", "registered-different-parent"],
 )
 def test_membership_needs_audit(native_parent_epic: int | None, registered_epics: list[int], expected: bool) -> None:
-    assert task_lifecycle.membership_needs_audit(native_parent_epic, registered_epics) is expected
+    assert (
+        task_lifecycle.membership_needs_audit(
+            native_parent_epic,
+            registered_epics,
+            repository="org/repo",
+            epic_repository="org/repo",
+            native_parent_repository="org/repo",
+        )
+        is expected
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -2464,7 +2473,7 @@ def test_actual_closeout_init_accepts_equivalent_checkbox_forms(tmp_path, monkey
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", lambda self, repo, number: {
         "body": line, "parent_epic": 10, "parent_repository": "org/repo",
     })
-    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: ("org/repo", [10]))
     monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent",
                         lambda self, repo, number: {"number": 10, "repository": repo})
     args = task_closeout.build_parser().parse_args([
@@ -3046,7 +3055,7 @@ def test_closeout_observation_keeps_comment_trust_fields(tmp_path: Path, monkeyp
             "parent_repository": "org/repo",
         },
     )
-    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository=None: [10])
+    monkeypatch.setattr(adapter, "registered_stream_epics", lambda repository=None: ("org/repo", [10]))
     monkeypatch.setattr(
         adapter,
         "_read_pr",

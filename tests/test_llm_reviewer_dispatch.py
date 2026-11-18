@@ -187,7 +187,7 @@ def test_routing_refuses_retired_defaults_and_preserves_explicit_claude_escalati
         {"policy_family": "b1_plus"}, {"policy_family": "seminar"},
         {"policy_family": "b1_plus", "factual_sensitive": True},
     ):
-        with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="retired in the model catalog"):
+        with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="holds no review, critique or approval role in the model catalog"):
             llm_reviewer_dispatch.route_for_review(**arguments)
     assert llm_reviewer_dispatch.route_for_review(policy_family="b1_plus", escalation=True) is llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_ROUTE
 
@@ -211,7 +211,7 @@ def test_deepseek_routes_are_excluded() -> None:
         output_usd_per_mtok=0.0,
     )
 
-    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="retired in the model catalog"):
+    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="holds no review, critique or approval role in the model catalog"):
         llm_reviewer_dispatch.assert_route_allowed(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE)
 
     with pytest.raises(
