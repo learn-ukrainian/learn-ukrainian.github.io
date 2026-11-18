@@ -32,7 +32,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
+from lu_machinery.api.state_helpers import cache_get_or_compute_async, cache_invalidate, cache_retain
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -53,9 +53,18 @@ router = APIRouter(tags=["artifacts"])
 # uncached so a caller that just wrote a file still sees it.
 _ARTIFACT_LIST_MAX_AGE_S = 3600.0
 # One stat walk serves every request in this window, so warm polls neither walk
-# the tree nor wait for a worker thread. One entry per context root.
+# the tree nor wait for a worker thread.
 _ARTIFACT_FINGERPRINT_TTL_S = 2.0
+# Distinct filter sets kept warm; the oldest is evicted. Bounds client-chosen keys.
+_ARTIFACT_MAX_FILTER_SETS = 16
+# A scan that overlaps a tree change is retried this many times, then served uncached.
+_ARTIFACT_SCAN_ATTEMPTS = 3
+# Context id -> (monotonic time the walk started, digest); newest walk wins.
 _artifact_fingerprints: dict[str, tuple[float, str]] = {}
+# Context id -> the walk in flight, shared by concurrent requests.
+_artifact_walks: dict[str, asyncio.Task[str]] = {}
+# Filter-set prefixes, oldest first.
+_artifact_filter_sets: dict[str, None] = {}
 _ARTIFACT_DISCOVERY_DIRS = ("docs", "audit")
 
 
@@ -123,8 +132,12 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 # ---------------------------------------------------------------------
 
 
+class _TreeChangedDuringScan(Exception):
+    """The artifact tree changed while the collector was reading it."""
+
+
 def _artifact_tree_fingerprint(project_root: Path) -> str:
-    """Digest of every ``.md``/``.html`` file's path, mtime and size under the discovery roots.
+    """Digest of every ``.md``/``.html`` file's path, mtime, size and resolved target under the discovery roots.
 
     The collector's output is a function of those files plus the context's
     roots, so an unchanged digest means a cached list is still exact. A stat
@@ -140,24 +153,53 @@ def _artifact_tree_fingerprint(project_root: Path) -> str:
                 path = os.path.join(dirpath, filename)
                 try:
                     stat = os.stat(path)
-                    link = os.readlink(path) if os.path.islink(path) else ""
+                    # Containment is checked on the fully resolved path, so a retargeted link must change the digest.
+                    resolved = os.path.realpath(path) if os.path.islink(path) else ""
                 except OSError:
                     continue
-                entries.append(f"{path}\0{stat.st_mtime_ns}\0{stat.st_size}\0{link}")
+                entries.append(f"{path}\0{stat.st_mtime_ns}\0{stat.st_size}\0{resolved}")
     entries.sort()
     return hashlib.blake2b("\n".join(entries).encode("utf-8", "surrogateescape"), digest_size=16).hexdigest()
 
 
-def _matches_filters(
-    item: dict[str, Any], *, class_: str | None, date_from: str | None, status: str | None, author: str | None
-) -> bool:
-    """Same predicate the collector applies, evaluated on its own output fields."""
-    return not (
-        (class_ and item["class"] != class_)
-        or (status and item["status"] != status)
-        or (author and item["author"] != author)
-        or (date_from and item["date"] < date_from)
+def _artifact_context_id(ctx: MonitorContext) -> str:
+    """Fixed-length id of the roots the collector reads, so no two contexts share or overlap cache keys."""
+    roots = ctx.roots
+    payload = json.dumps(
+        [str(roots.project_root.resolve()), sorted((key, str(path)) for key, path in roots.effective_roots.items())]
     )
+    return hashlib.blake2b(payload.encode("utf-8", "surrogateescape"), digest_size=8).hexdigest()
+
+
+async def _walk_tree(context_id: str, project_root: Path, started: float) -> str:
+    digest = await asyncio.to_thread(_artifact_tree_fingerprint, project_root)
+    latest = _artifact_fingerprints.get(context_id)
+    if latest is not None and latest[0] >= started:
+        return latest[1]  # a newer walk already landed; never replace it with this older one
+    _artifact_fingerprints[context_id] = (started, digest)
+    return digest
+
+
+async def _current_tree_fingerprint(context_id: str, project_root: Path) -> str:
+    """Tree digest. One walk serves every request for ``_ARTIFACT_FINGERPRINT_TTL_S``, and concurrent misses share it."""
+    seen = _artifact_fingerprints.get(context_id)
+    if seen is not None and time.monotonic() - seen[0] < _ARTIFACT_FINGERPRINT_TTL_S:
+        return seen[1]
+    loop = asyncio.get_running_loop()
+    walk = _artifact_walks.get(context_id)
+    if walk is None or walk.done() or walk.get_loop() is not loop:
+        walk = loop.create_task(_walk_tree(context_id, project_root, time.monotonic()))
+        _artifact_walks[context_id] = walk
+    return await asyncio.shield(walk)
+
+
+def _remember_filter_set(prefix: str) -> None:
+    _artifact_filter_sets.pop(prefix, None)
+    _artifact_filter_sets[prefix] = None
+    while len(_artifact_filter_sets) > _ARTIFACT_MAX_FILTER_SETS:
+        oldest = next(iter(_artifact_filter_sets))
+        del _artifact_filter_sets[oldest]
+        cache_invalidate(oldest)
 
 
 @router.get("/html")
@@ -178,31 +220,47 @@ async def html_artifacts(
         status: Filter by status.
         author: Filter by author.
     """
-    resolved = resolve_context(ctx)
-    # One unfiltered list per context and tree state, so request filters cannot
-    # grow the cache; each request filters the shared list.
-    prefix = ctx_scoped_ttl_key(resolved, "artifacts-html") + ":"
-    seen = _artifact_fingerprints.get(prefix)
-    if seen is not None and time.monotonic() - seen[0] < _ARTIFACT_FINGERPRINT_TTL_S:
-        fingerprint = seen[1]
+    types: tuple[str, ...]
+    if type_ == "html":
+        types = ("html",)
+    elif type_ == "md":
+        types = ("md",)
     else:
-        fingerprint = await asyncio.to_thread(_artifact_tree_fingerprint, resolved.roots.project_root)
-        _artifact_fingerprints[prefix] = (time.monotonic(), fingerprint)
-    cache_key = prefix + fingerprint
-    cache_retain(prefix, cache_key)
-    full = await cache_get_or_compute_async(
-        cache_key,
-        _ARTIFACT_LIST_MAX_AGE_S,
-        lambda: collect_html_artifacts(types=("html", "md"), ctx=resolved),
+        types = ("html", "md")
+
+    resolved = resolve_context(ctx)
+    project_root = resolved.roots.project_root
+    context_id = _artifact_context_id(resolved)
+    # One JSON part, so a colon inside a filter cannot collide with another filter.
+    filters = json.dumps(
+        [class_ or "", date_from or "", status or "", author or "", list(types)], separators=(",", ":")
     )
-    suffix = f".{type_}" if type_ else None
-    artifacts = [
-        item
-        for item in full["artifacts"]
-        if (suffix is None or item["path"].lower().endswith(suffix))
-        and _matches_filters(item, class_=class_, date_from=date_from, status=status, author=author)
-    ]
-    return JSONResponse({"generated_at": full["generated_at"], "total": len(artifacts), "artifacts": artifacts})
+    prefix = f"artifacts-html:{context_id}:{hashlib.blake2b(filters.encode(), digest_size=8).hexdigest()}:"
+    _remember_filter_set(prefix)
+
+    def collect() -> dict:
+        return collect_html_artifacts(
+            class_filter=class_, date_from=date_from, status=status, author=author, types=types, ctx=resolved
+        )
+
+    for _ in range(_ARTIFACT_SCAN_ATTEMPTS):
+        fingerprint = await _current_tree_fingerprint(context_id, project_root)
+        cache_key = prefix + fingerprint
+        # Replace the previous tree state's list for this filter set.
+        cache_retain(prefix, cache_key)
+
+        def collect_unchanged(expected: str = fingerprint) -> dict:
+            result = collect()
+            # A list that overlapped a change must not be cached under the digest taken before the scan.
+            if _artifact_tree_fingerprint(project_root) != expected:
+                raise _TreeChangedDuringScan
+            return result
+
+        try:
+            return await cache_get_or_compute_async(cache_key, _ARTIFACT_LIST_MAX_AGE_S, collect_unchanged)
+        except _TreeChangedDuringScan:
+            _artifact_fingerprints.pop(context_id, None)
+    return await asyncio.to_thread(collect)
 
 
 def _level_cfg(track: str) -> dict | None:
