@@ -1685,7 +1685,8 @@ def _isolate_legacy_bridge_telemetry(
     # TRANSITIONAL (machinery #515): PR 819 removes the legacy-bridge telemetry writer; isolate it only while the
     # installed release still ships it. Remove this block once the product pins such a release.
     if importlib.util.find_spec("lu_machinery.telemetry.legacy_bridge") is not None:
-        legacy_bridge = importlib.import_module("lu_machinery.telemetry.legacy_bridge")
+        from lu_machinery.telemetry import legacy_bridge
+
         monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
     for module, fn_name, bucket in (
         (check_primary_integrity, "check_primary_integrity", "primary-integrity"),
