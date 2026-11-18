@@ -30,7 +30,7 @@ jobs:
     # Reads title, body, branch and commit messages from the event and the
     # current PR metadata; a queue run reads every member's current metadata.
     name: Scan PR publication fields
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -51,12 +51,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Scan publication fields
         env:
           GH_TOKEN: ${{ github.token }}

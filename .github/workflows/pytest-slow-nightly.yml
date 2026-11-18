@@ -20,7 +20,7 @@ permissions:
 jobs:
   pytest-slow:
     name: Pytest slow (nightly)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
       # Same native services as the PR pytest job (nightly runs the groups moved off PRs).
@@ -54,36 +54,32 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
-      - name: Restore pip wheel cache
-        id: pip-wheel-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
-
       - name: Fetch the locked lu-machinery wheel
         id: machinery-wheel
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          # Install dependencies runs uv sync.
+          with-uv: 'true'
 
       - name: Install dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          # The hash-pinned lu-machinery release first, as .github/actions/python-ci-env installs it
-          # (machinery docs/release.md, Consumers); the lock's hashes decide which bytes install.
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --require-hashes --no-deps --find-links "$wheelhouse" -r requirements-machinery.lock
-          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.13.0
-          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+          # Every locked package, the ml group's CPU torch build included (pyproject.toml
+          # [tool.uv.sources]), except torchvision and open-clip-torch, which the slow
+          # selection never needed. The hash-pinned lu-machinery release comes from the
+          # wheelhouse, as .github/actions/python-ci-env installs it (machinery
+          # docs/release.md, Consumers); uv.lock's hashes decide which bytes install.
+          uv sync --locked --python "$(cat .python-version)" \
+            --no-install-package torchvision --no-install-package open-clip-torch \
+            --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
       # The loader imports locked project dependencies (jsonschema), so it runs
       # in the project venv after Install dependencies, never the setup interpreter.
@@ -108,7 +104,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.STANZA_RESOURCES_DIR }}
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('uv.lock') }}
 
       - name: Provision and verify Stanza Ukrainian model
         run: |
@@ -143,7 +139,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.STANZA_RESOURCES_DIR }}
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('uv.lock') }}
 
       - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
         timeout-minutes: 5

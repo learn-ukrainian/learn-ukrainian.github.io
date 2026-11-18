@@ -13,18 +13,14 @@ rights-classified prepared data is tracked under
 
 ## Install without an API
 
-Use Python 3.12.15 and the repository's pinned dependency file:
+Use the Python in `.python-version` and the repository's lock, `uv.lock`
+([CONTRIBUTING.md, Installation, step 2](../../../CONTRIBUTING.md#installation)):
 
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-pyenv local 3.12.15
-pyenv exec python -m venv .venv
-.venv/bin/python -m pip install -r requirements-lock.txt
+uv sync --locked
 ```
-
-Before the last command, install the pinned lu-machinery release, which is not on
-PyPI: [CONTRIBUTING.md, Installation, step 2](../../../CONTRIBUTING.md#installation).
 
 No provider credential is read. The commands below operate on local JSON or
 JSONL only. Teams that already have the repository environment can start with

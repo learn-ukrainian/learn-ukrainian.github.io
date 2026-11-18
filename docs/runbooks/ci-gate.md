@@ -116,27 +116,6 @@ Other slow tests retain `pytest-slow-nightly.yml`.
 
 Operator approval under the gate freeze, 2026-10-23.
 
-The advisory Hygiene workflow keeps a separate slim environment. Its focused
-agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
-`requirements.txt`, with direct and transitive dependencies constrained by all
-named `==` pins in `requirements-lock.txt` (local path requirements cannot be
-constraints).
-The shared conftest's Claude adapter pre-import needs jsonschema; its process
-guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
-Before executing the focused tests, a `--setup-only` guard collects the same
-test set and runs its fixtures: `--collect-only` alone cannot detect missing
-dependencies imported during autouse setup. The guard propagates import errors;
-`tests/test_hygiene_workflow.py`, run by required CI Gate, also restricts fixture
-setup imports to the standard library, repository-local modules and Hygiene's
-installed dependency closure resolved through `importlib.metadata`. Other
-third-party imports fail even when installed in CI Gate's larger environment.
-Negative controls cover unavailable jsonschema and a fixture-time `requests`
-import in a scratch copy of the shared conftest. The scratch `tests` package
-includes the original package path so newly registered repository plugins remain visible.
-Repository imports are classified by their resolved paths (including namespace
-packages), with installed site-packages and symlinks outside the checkout excluded.
-Direct regression tests cover arbitrary module names and resolved-path boundaries.
-
 | Job | What it does |
 | --- | --- |
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
@@ -422,8 +401,8 @@ scan in place; see
 
 ## Shard setup
 
-Per shard: checkout (shallow; full history on the history shard), Python
-3.12.15, then `lu_machinery/ci/test_env.sh start` runs `npm ci` and
+Per shard: checkout (shallow; full history on the history shard), the Python
+in `.python-version`, then `lu_machinery/ci/test_env.sh start` runs `npm ci` and
 `lu_machinery/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if

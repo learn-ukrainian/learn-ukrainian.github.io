@@ -3,9 +3,182 @@ name = "learn-ukrainian"
 version = "1.0.0"
 description = "Ukrainian language learning curriculum generator"
 requires-python = ">=3.12"
+# The runtime closure. uv.lock pins every version with hashes; change a
+# requirement here, then run `uv lock` (never edit uv.lock by hand). CI installs
+# with `uv sync --locked`, which refuses a lock that no longer matches.
+# Production code in scripts/ must run with these and the ml group alone.
 dependencies = [
+    # The pinned lu-machinery release, its runtime extras and its tested closure
+    # (machinery docs/release.md, Consumers). [tool.uv.sources] names the release
+    # wheel; uv.lock carries its SHA-256. A machinery release adoption updates both.
+    "lu-machinery[api,mcp,postgres,pytest]==0.1.33",
+    # Repository runtime package (packages/v4-runtime).
+    "learn-ukrainian-v4-runtime",
+
+    # YAML/JSON
+    "pyyaml>=6.0",
+    "jsonschema>=4.20",
+    "ijson==3.6.0",  # scripts/atlas/export_runtime_shards.py streamed --verify (yajl2_c backend; #8672)
+
+    # CommonMark parsing for deterministic documentation inventory
+    "markdown-it-py>=4.2.0",
+
+    # API server
+    "fastapi>=0.139.0",
+    "uvicorn>=0.48.0",
+    # uvicorn's WebSocket protocol implementation: without it uvicorn refuses the
+    # Monitor API's /ws/batch upgrade (scripts/project_api/batch_router.py).
+    "websockets>=17.4",
+    "httpx>=0.28",
     "prometheus-client>=0.26.0",
+
+    # RAG / vector store
+    "qdrant-client>=1.14",
+
+    # NLP / Ukrainian. tokenize-uk is vendored at scripts/linguistics/tokenize_uk.py
+    # (#1318), intentionally not a dependency: local ABBRS extensions require it.
+    "pyahocorasick>=2.3.1",
+    "pymorphy3>=2.0",
+    "pymorphy3-dicts-ru",
+    "pymorphy3-dicts-uk",
+    "regex>=2026.5.9",  # scripts/build/activity_renderer.py (Unicode-property patterns)
+
+    # Testing
+    "pytest>=9.1.1",
+    "pytest-cov>=7.0",
+    "pytest-timeout>=2.4.0",
+    "pytest-rerunfailures>=16.7",  # #9067: quarantined node ids only
+
+    # Linting
+    "ruff>=0.17.4",
+
+    # Database
+    "aiosqlite>=0.22",
+    # psycopg and its C implementation psycopg-binary are exact-pinned together and
+    # must always match (#12476). Dependabot bumps the pair as one group.
+    "psycopg==3.3.6",  # control-plane storage seam pg authority (Phase 0b #603)
+    "psycopg-binary==3.3.6",
+
+    # Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix:
+    # installed transitively until a from-scratch venv rebuild lost them).
+    "psutil>=7.2",  # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
+    "filelock>=3.32.2",  # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
+    "rapidfuzz>=3.14.6",  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
+
+    # Document parsing (#6830 import-scan sweep: imported unconditionally by
+    # production scripts/, so pytest collection needs them).
+    "lxml>=6.1",  # scripts/ingest/esum_abbyy_parser.py
+    "pypdf>=6.21.4",  # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py; 6.21.4 clears CVE-2026-119203 to -119209
+    "PyMuPDF>=2.1",  # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
+    "ruamel.yaml>=0.19",  # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
+    "python-docx>=1.2.0",  # scripts/ingest/owned_books_ingest.py
+    "pillow>=13.0.0",  # scripts/rag/embed.py (image input), tests/test_scrape_diasporiana.py
+
+    # Rendered-page validation in a real browser
+    "playwright>=1.64.1",  # scripts/validate/{validate_html,browser_launcher}.py
+
+    # IPA transcription (not on PyPI; [tool.uv.sources] pins the commit)
+    "ipa-uk",  # scripts/generate_mdx/generate_ipa.py
+
+    # MCP protocol (sources + trails MCP servers ported to 2.0 API); >=2.2 clears CVE-2026-59951
+    "mcp>=2.2,<3",
+
+    # Web scraping (for resource discovery). The chardet extras keep chardet, the
+    # encoding detector both libraries use when it is installed, for pages served
+    # without a charset; without it they fall back to charset-normalizer.
+    "beautifulsoup4[chardet]>=4.15.0",
+    "requests[use-chardet-on-py3]>=2.34.2",
+
+    # YouTube ingestion. The secretstorage extra decrypts Chrome cookies on Linux
+    # for --cookies-from-browser chrome (scripts/wiki/fetch_external_sources.py).
+    "yt-dlp[secretstorage]>=2026.7.4",
+
+    # Build utilities
+    "jinja2>=3.1",
+
+    # GraphQL documents: which operation a GitHub request executes (#10730)
+    "graphql-core==3.3.1",  # scripts/common/github_client.py (imported only when a document can write)
+
+    # Security floors (transitive dependencies held above their vulnerable range).
+    # soupsieve comes via beautifulsoup4. CVE-2026-126192 is fixed in 2.10;
+    # CVE-2026-126190 is fixed in 4.0.
+    "soupsieve>=4.1",
 ]
+
+[dependency-groups]
+# Model runtimes and their closure. Every entry has a direct use. Default CI
+# installs this group without torch, torchvision, open-clip-torch and stanza
+# (.github/actions/python-ci-env); pytest-slow-nightly.yml installs all of it.
+ml = [
+    "torch>=2.13.0",  # CPU build ([tool.uv.sources])
+    "torchvision>=0.28.0",  # via open-clip-torch; listed so it takes the same CPU build
+    "sentence-transformers>=5.6.1",
+    "open-clip-torch>=3.3.0",  # scripts/rag/embed.py (image embeddings; brings torchvision, timm, ftfy)
+    "FlagEmbedding>=1.4.0",  # scripts/rag/embed.py, scripts/wiki/dense_rerank.py, scripts/rag/benchmark_embeddings.py
+    "datasets>=5.0.1",  # scripts/dataset/train_gemma_huggingface.py (Gemma training)
+    "peft>=0.20.0",  # scripts/projects/open_model_data/{train_and_eval_real_model,gemma_hardware_probe}.py, scripts/dataset/train_gemma_huggingface.py
+    "stanza>=1.15.0",  # scripts/pipeline/stress_annotator.py, scripts/vocab/rebuild_vocab_simple.py
+    "ukrainian-word-stress>=2,<3",  # requires stanza
+    "einops>=0.8.2",  # jinaai/jina-embeddings-v3 remote code (scripts/rag/benchmark_embeddings.py, trust_remote_code)
+    "faster-whisper>=1.2.1",  # scripts/navsi200_asr_bakeoff.py (ASR bakeoff)
+    "av>=18.1.0",  # scripts/navsi200_asr_bakeoff.py (audio decoding)
+]
+# Contributor tools: type checking, linters, hooks, test and debug utilities.
+dev = [
+    "pre-commit>=4.6.0",  # mirrors CI checks locally
+    "mypy>=2.1.0",  # gradual; see [tool.mypy]
+    "yamllint>=1.38.0",  # .venv/bin/yamllint: .github/workflows/validate-yaml.yml, package.json lint:yaml (.yamllint)
+    "vulture>=2.16",  # .venv/bin/vulture: scripts/audit/find_dead_code.py
+    # Installer and build tools inside the project environment: lu_machinery
+    # release_cut runs pip download with the project interpreter.
+    "pip>=26.3",
+    "setuptools>=75",
+    "wheel>=0.48.0",
+    "pytest-xdist>=3.6",  # parallel test execution (-n auto)
+    "requests-mock>=1.12.1",  # requests transport fixture
+    "pytest-mock>=3.17.0",  # fixture-based mocker
+    "coverage[toml]>=7.17.0",
+    "ipython>=9.18.1",
+    "ipdb>=0.13.13",
+    # Secret scanners are standalone binaries, not Python packages: gitleaks
+    # (pre-commit and CI) and TruffleHog through scripts/audit/secret_scan_local.py
+    # (docs/runbooks/secret-scanning.md).
+]
+# Narrow workflow environments (uv sync --only-group), so a job installs only what
+# it runs. Each is a subset of the project's own requirements above.
+# The lu-machinery release and its closure: jobs that run only its entry points.
+machinery = ["lu-machinery[api,mcp,postgres,pytest]==0.1.33"]
+# deploy-pages.yml: the release plus the build scripts' YAML, schema and regex imports.
+pages = [{ include-group = "machinery" }, "pyyaml>=6.0", "jsonschema>=4.20", "regex>=2026.5.9"]
+# atlas-grow.yml: the release plus the lexicon scripts' imports.
+atlas = [
+    { include-group = "machinery" },
+    "pyyaml>=6.0",
+    "jsonschema>=4.20",
+    "regex>=2026.5.9",
+    "requests[use-chardet-on-py3]>=2.34.2",
+    "ukrainian-word-stress>=2,<3",
+]
+
+[tool.uv]
+# One uv release writes and reads uv.lock: the one machinery pins
+# (machinery .github/workflows/pins.txt UV_VERSION) and python-ci-env installs.
+required-version = "==0.13.1"
+# `uv sync` builds the whole environment; CI excludes packages by name.
+default-groups = ["ml", "dev"]
+
+[tool.uv.sources]
+lu-machinery = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.33/lu_machinery-0.1.33-py3-none-any.whl" }
+learn-ukrainian-v4-runtime = { path = "packages/v4-runtime" }
+ipa-uk = { git = "https://github.com/lang-uk/ipa-uk.git", rev = "e7fc944faca090ca985d5ca09a24c59154d9dea1" }
+# The CPU builds the host and nightly CI run: no CUDA dependency closure.
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

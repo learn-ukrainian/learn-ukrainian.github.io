@@ -50,42 +50,24 @@ these examples in a dispatch worktree to repair the primary installation.
   git switch main
   git pull --ff-only
 
-  PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.15
-  pyenv local 3.12.15
-  uv venv --python 3.12.15 .venv
-  .venv/bin/python -m pip install --upgrade pip
-  # The pinned lu-machinery release first (not on PyPI; CONTRIBUTING.md, Installation, step 2).
-  version="$(sed -nE 's/^lu-machinery==([0-9.]+) \\$/\1/p' requirements-machinery.lock)"
-  mkdir -p .venv/lu-machinery-wheelhouse
-  curl -fsSL -o ".venv/lu-machinery-wheelhouse/lu_machinery-${version}-py3-none-any.whl" \
-    "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
-  awk '/^lu-machinery==/{f=1;print;next} f&&/^[[:space:]]/{print;next} f{exit}' \
-    requirements-machinery.lock > .venv/lu-machinery.req
-  uv pip install --python .venv/bin/python --require-hashes --no-deps \
-    --find-links .venv/lu-machinery-wheelhouse -r .venv/lu-machinery.req
-  uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
+  # The CPython in .python-version and every package uv.lock pins, each
+  # checked against its locked SHA-256 (CONTRIBUTING.md, Installation, step 2).
+  uv sync --locked
 )
 ```
 
-If `pyenv install` reports that 3.12.15 already exists, retain that interpreter;
-do not substitute another Python version.
+Do not substitute another Python version for the one in `.python-version`.
 
 **`pip install -e .` does NOT work on this tree — do not use it.** `pyproject.toml`
-declares no `[build-system]`/`[tool.setuptools]` table, so an editable install
-falls back to setuptools flat-layout auto-discovery, which refuses to guess a
-single top-level package when the repo root holds multiple top-level
-directories (`scripts/`, `wiki/`, `docs/`, …) — the install fails outright.
-`uv pip install -r requirements.txt` (a plain dependency install, not a
-project install) is the working replacement — but it was NOT sufficient on
-its own until #6830 closed a manifest-debt gap: `psutil`, `filelock`,
-`rapidfuzz`, `lxml`, `pypdf`, `PyMuPDF`, and `ruamel.yaml` were previously
-only pulled in transitively, so a from-scratch `requirements.txt`-only
-install left `pytest --collect-only` unable to collect 17 test modules (see
-`requirements.txt`).
+declares no `[build-system]`, so the repository is not an installable package: uv
+treats it as a virtual project and installs only its dependencies. `uv sync --locked`
+is the install. Every module production `scripts/` imports unconditionally is a
+declared dependency (#6830 closed the gap that left `pytest --collect-only` unable to
+collect 17 test modules after a from-scratch install).
 
 ### The `.pth` story
 
-Neither `requirements.txt` nor an editable install puts this repo's own code
+Neither `uv sync` nor an editable install puts this repo's own code
 on `sys.path` — there is no `scripts` distribution to install. Two internal
 import spellings are both live in the tree: `scripts.audit.foo` (repo root on
 `sys.path`, what `tests/conftest.py` sets up for pytest) and bare `audit.foo`

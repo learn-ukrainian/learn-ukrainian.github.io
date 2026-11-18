@@ -48,7 +48,7 @@ jobs:
     # and committer only (an empty-diff commit carrying that metadata).
     name: Queue commit metadata scan
     if: github.event_name == 'merge_group'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     # The installed release has no implicit product or state anchor: name this checkout for both,
     # as scripts/__init__.py does for the in-tree copy.
@@ -64,7 +64,7 @@ jobs:
           fetch-depth: 0  # verify the original group base is an ancestor of the candidate
           filter: blob:none
           sparse-checkout: |
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -81,12 +81,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Record original queue candidate
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -125,7 +125,7 @@ jobs:
       actions: read
     name: Secret scan
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
     # The installed release has no implicit product or state anchor: name this checkout for both,
@@ -155,12 +155,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Scan publication fields
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         env:
@@ -254,7 +254,7 @@ jobs:
   # CI Gate requires this job's success in every tier.
   hydrate-release-assets:
     name: Hydrate release assets
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -348,7 +348,7 @@ jobs:
       contents: read
       actions: read
       issues: read
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -378,8 +378,7 @@ jobs:
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
       - name: Report lu-machinery
-        # Isolated mode: the installed release from requirements-machinery.lock,
-        # never a checkout path. Every job installs through the same action;
+        # Isolated mode: the installed release uv.lock pins, never a checkout path. Every job installs through the same action;
         # this import fails CI Gate when the lock was missing or not installed.
         run: .venv/bin/python -I -c "import lu_machinery, importlib.metadata as m; print('lu-machinery', m.version('lu-machinery'), 'from', lu_machinery.__file__)"
       # mypy ratchet (#12642). One cache key, saved on main only: a pull_request
@@ -390,7 +389,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'uv.lock', 'pyproject.toml') }}
       - name: Mypy ratchet
         env:
           LU_PRODUCT_ROOT: ${{ github.workspace }}
@@ -401,7 +400,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'uv.lock', 'pyproject.toml') }}
       - name: Package boundary ratchet
         env:
           LU_PRODUCT_ROOT: ${{ github.workspace }}
@@ -435,7 +434,7 @@ jobs:
     name: Frontend
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -523,7 +522,7 @@ jobs:
   pr-scope:
     name: PR pytest scope
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       full-suite: ${{ steps.scope.outputs.full-suite }}
@@ -535,7 +534,7 @@ jobs:
           fetch-depth: 2
           sparse-checkout: |
             scripts/
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -551,12 +550,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Decide the PR pytest scope
         id: scope
         env:
@@ -571,7 +570,7 @@ jobs:
     name: Refresh pytest durations
     needs: [pr-scope]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -582,7 +581,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             scripts/ci/
             scripts/__init__.py
@@ -608,12 +607,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Refresh pytest duration snapshot
         env:
           GH_TOKEN: ${{ github.token }}
@@ -644,7 +643,7 @@ jobs:
     name: pytest (${{ matrix.shard }})
     needs: [pr-scope, refresh-pytest-durations, hydrate-release-assets]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
     # token scope, so the job holds only contents:read.
@@ -796,7 +795,7 @@ jobs:
     name: pytest report
     needs: [pytest]
     if: ${{ !cancelled() && needs.pytest.result == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -806,7 +805,7 @@ jobs:
             tests/
             scripts/
             registry/artifacts/needs-artifact-expected.txt
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -823,12 +822,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: pytest-junit-shard-*
@@ -858,7 +857,7 @@ jobs:
     name: PR changed tests and guards
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # PR #11922 measured supported selection at 402s/567s and a 660s superset
     # with two workers. Invariants run independently in pr-invariants.
     timeout-minutes: 40
@@ -925,7 +924,7 @@ jobs:
     name: PR repository invariants
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # The 1,500s invariant subprocess ceiling and setup fit this job budget.
     timeout-minutes: 40
     steps:
@@ -987,7 +986,7 @@ jobs:
     # Runs the full audit only when the diff touches a dependency input
     # (scripts/ci/dependency_change_denominator.json) or the base is unknown;
     # otherwise the scope step cheap-exits and the job still ends success (#9871).
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # The installed release has no implicit product or state anchor: name this checkout for both,
     # as scripts/__init__.py does for the in-tree copy.
@@ -1003,120 +1002,24 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
-      # Runs on every event, before the scope cheap-exit. The machinery lock is resolved with
-      # requirements-lock.txt as constraints (machinery docs/release.md, "Dependency lock"), and
-      # an install of both files is unsatisfiable when a shared package is pinned twice
-      # differently. CI's own install (python-ci-env) installs them one after the other, so the
-      # second silently wins there. Shared packages move only through a machinery release, so
-      # every one must also be fully ignored by each pip update in .github/dependabot.yml.
-      - name: Check shared pins with the machinery lock
-        run: |
-          set -euo pipefail
-          # PyYAML at the product lock's pin, in any spelling of the name, with or without a
-          # hash continuation; the script below validates the full line grammar.
-          mapfile -t yaml_pins < <(sed -nE 's/^[Pp][Yy][Yy][Aa][Mm][Ll]==([0-9][0-9A-Za-z.+!]*)( \\)?$/\1/p' requirements-lock.txt)
-          if (( ${#yaml_pins[@]} != 1 )); then
-            echo '::error::requirements-lock.txt must pin PyYAML exactly once'
-            exit 1
-          fi
-          python3 -m pip install --disable-pip-version-check --quiet "PyYAML==${yaml_pins[0]}"
-          python3 -I - requirements-lock.txt requirements-machinery.lock .github/dependabot.yml <<'PY'
-          import re
-          import sys
-
-          import yaml
-
-          NAME = r"([A-Za-z0-9][A-Za-z0-9._-]*)"
-          # One exact PEP 440 version: no wildcard, range or compound specifier.
-          VERSION = (
-              r"((?:[0-9]+!)?[0-9]+(?:\.[0-9]+)*(?:(?:a|b|rc)[0-9]+)?"
-              r"(?:\.post[0-9]+)?(?:\.dev[0-9]+)?(?:\+[a-z0-9]+(?:\.[a-z0-9]+)*)?)"
-          )
-          # An optional PEP 508 environment marker after " ; ": the pin applies where it holds.
-          MARKER = r"(?: ; ([^\s\\][^\\]*?))?"
-          PIN = re.compile(NAME + "==" + VERSION + MARKER + r"( \\)?")
-          DIRECT = re.compile(NAME + r" @ ([^\s;#]+)")
-          LOCAL = re.compile(r"\./[A-Za-z0-9._/-]+")  # a local path names no index package; no extras or options
-          HASH = re.compile(r" +--hash=sha256:[0-9a-f]{64}( \\)?")
-
-
-          def canon(name):
-              return re.sub(r"[-_.]+", "-", name).lower()
-
-
-          def read_pins(path, errors):
-              pins = {}
-              with open(path, encoding="utf-8") as handle:
-                  for number, raw in enumerate(handle, 1):
-                      line = raw.rstrip("\n")
-                      if not line.strip() or line.lstrip().startswith("#") or HASH.fullmatch(line):
-                          continue
-                      if LOCAL.fullmatch(line):
-                          continue
-                      match = PIN.fullmatch(line) or DIRECT.fullmatch(line)
-                      if match is None:
-                          errors.append(f"{path}:{number}: unrecognized requirement line: {line}")
-                          continue
-                      name = canon(match.group(1))
-                      token = match.group(2) if match.re is PIN else "@ " + match.group(2)
-                      if pins.setdefault(name, token) != token:
-                          errors.append(f"{path}:{number}: {name} pinned twice ({pins[name]}, {token})")
-              return pins
-
-
-          product_lock, machinery_lock, dependabot = sys.argv[1:4]
-          errors = []
-          product = read_pins(product_lock, errors)
-          machinery = read_pins(machinery_lock, errors)
-          shared = sorted(set(product) & set(machinery))
-          for name in shared:
-              if product[name] != machinery[name]:
-                  errors.append(
-                      f"{name}: {product_lock} pins {product[name]}, {machinery_lock} pins {machinery[name]}"
-                  )
-
-          with open(dependabot, encoding="utf-8") as handle:
-              updates = (yaml.safe_load(handle) or {}).get("updates") or []
-          for update in updates:
-              if update.get("package-ecosystem") != "pip":
-                  continue
-              where = update.get("directory") or update.get("directories")
-              # Only a bare entry blocks every update, and only the canonical spelling is
-              # matched here, so the check never depends on Dependabot's name folding.
-              ignored = {
-                  entry["dependency-name"]
-                  for entry in update.get("ignore") or []
-                  if isinstance(entry, dict) and set(entry) == {"dependency-name"}
-              }
-              for name in shared:
-                  if name not in ignored:
-                      errors.append(
-                          f'{dependabot}: pip update for {where} must ignore "{name}" '
-                          f"(pinned by {machinery_lock}; it moves only through a machinery release)"
-                      )
-
-          for error in errors:
-              print(f"::error::{error}")
-          if errors:
-              sys.exit(1)
-          print(f"{len(shared)} shared pins agree and every pip update in {dependabot} ignores them")
-          PY
       - name: Fetch the locked lu-machinery wheel
         id: machinery-wheel
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          # The audit exports uv.lock with uv (lu_machinery.ci.audit_dependencies).
+          with-uv: 'true'
       # The locked lu-machinery wheel alone (no dependencies): the release entry points this
       # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -1141,7 +1044,7 @@ jobs:
     if: always()
     # Every dependency must finish with the result required by its event tier.
     needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, pr-invariants, pr-scope, refresh-pytest-durations, pytest, pytest-report]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read  # checkout, PR head and branch-tip fetches
@@ -1159,7 +1062,7 @@ jobs:
           fetch-depth: 0
           sparse-checkout: |
             scripts/
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -1177,13 +1080,13 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Check large files guard
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         env:
@@ -1247,7 +1150,7 @@ jobs:
             echo "::error::Missing base or head SHA for agent attribution in $EVENT_NAME"
             exit 1
           fi
-          # The parser pins from requirements-lock.txt; this job has no project environment.
+          # The parser pins from uv.lock; this job has no project environment.
           "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-deps --only-binary=:all: \
             markdown-it-py==4.2.0 mdurl==0.1.2
           mode=--pr

@@ -17,7 +17,6 @@ pytestmark = pytest.mark.repo_invariant
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
-_LOCK = _REPO_ROOT / "requirements-lock.txt"
 _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
 
 

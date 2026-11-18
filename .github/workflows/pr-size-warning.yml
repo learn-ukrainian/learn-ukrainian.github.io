@@ -16,7 +16,7 @@ concurrency:
 jobs:
   size-warning:
     name: Small-batch size warning (advisory)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     continue-on-error: true
     steps:
@@ -42,13 +42,13 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
           PYTHON_BIN: ${{ steps.python.outputs.python-path }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Report exact PR diff
         id: report
         env:

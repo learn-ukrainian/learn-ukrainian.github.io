@@ -66,8 +66,8 @@ else
 fi
 
 # --- CI Gate pieces developers run locally (from scripts/ci/checks.sh) --------
-# Ruff — use the lockfile pin (requirements-lock.txt). A newer ruff from an
-# unpinned requirements.txt install can fail rules CI does not yet enforce.
+# Ruff — the uv.lock pin (uv sync --locked). A newer ruff can fail rules CI
+# does not yet enforce.
 run_check "Ruff (CI Gate)" \
   "$PYTHON" -m ruff check scripts/ tests/ agents_extensions/
 

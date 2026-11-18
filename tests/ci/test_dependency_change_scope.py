@@ -5,8 +5,8 @@ from __future__ import annotations
 import itertools
 import json
 import os
-import re
 import subprocess
+import tomllib
 from pathlib import Path
 from unittest.mock import patch
 
@@ -105,7 +105,6 @@ def test_denominator_is_loadable_and_covers_required_inputs() -> None:
     assert data["version"]
     paths = data["paths"]
     for expected in (
-        "requirements*.txt",
         "pyproject.toml",
         "uv.lock",
         "poetry.lock",
@@ -125,8 +124,7 @@ def test_denominator_is_loadable_and_covers_required_inputs() -> None:
 
 def test_path_matching_dependency_vs_non_dependency() -> None:
     patterns = scope.load_denominator()["paths"]
-    assert scope.path_in_denominator("requirements-lock.txt", patterns)
-    assert scope.path_in_denominator("requirements.txt", patterns)
+    assert scope.path_in_denominator("uv.lock", patterns)
     assert scope.path_in_denominator("pyproject.toml", patterns)
     assert scope.path_in_denominator("site/package-lock.json", patterns)
     assert scope.path_in_denominator("scripts/ci/audit_dependencies.py", patterns)
@@ -150,16 +148,16 @@ def test_rename_contributes_both_sides() -> None:
 
 
 def test_rename_into_manifest_runs_audit() -> None:
-    run, lines, matched = scope.decide_from_changed(["docs/old-name.md", "requirements.txt"])
+    run, lines, matched = scope.decide_from_changed(["docs/old-name.md", "pyproject.toml"])
     assert run is True
-    assert matched == ["requirements.txt"]
+    assert matched == ["pyproject.toml"]
     assert all(scope.NOT_APPLICABLE_LINE not in line for line in lines)
 
 
 def test_deleted_manifest_runs_audit() -> None:
-    run, _lines, matched = scope.decide_from_changed(["requirements-lock.txt"])
+    run, _lines, matched = scope.decide_from_changed(["uv.lock"])
     assert run is True
-    assert matched == ["requirements-lock.txt"]
+    assert matched == ["uv.lock"]
 
 
 def test_non_dependency_change_is_not_applicable() -> None:
@@ -322,12 +320,14 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     assert ".venv/bin/python" in out
 
 
-def _exact_pins(path: Path) -> dict[str, str]:
+def _declared_exact_pins() -> dict[str, str]:
+    """Exact ``==`` pins of pyproject.toml's dependencies and dependency groups."""
+    project = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    specs = [*project["project"]["dependencies"]]
+    for group in project.get("dependency-groups", {}).values():
+        specs.extend(spec for spec in group if isinstance(spec, str))
     pins: dict[str, str] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        spec = re.split(r"\s+#", line.strip(), maxsplit=1)[0]
-        if not spec or spec.startswith(("#", "-", ".")):
-            continue
+    for spec in specs:
         req = Requirement(spec)
         for item in req.specifier:
             if item.operator == "==":
@@ -335,11 +335,19 @@ def _exact_pins(path: Path) -> dict[str, str]:
     return pins
 
 
-def test_pinned_versions_diverge_between_requirements_and_lock():
-    """Exact pins agree across requirements.txt and the lock; psycopg matches psycopg-binary (#12476)."""
-    declared = _exact_pins(_REPO_ROOT / "requirements.txt")
-    locked = _exact_pins(_REPO_ROOT / "requirements-lock.txt")
-    diverged = {name: (ver, locked[name]) for name, ver in declared.items() if name in locked and locked[name] != ver}
-    assert not diverged, f"requirements.txt vs requirements-lock.txt: {diverged}"
-    for pins in (declared, locked):
-        assert pins["psycopg"] == pins["psycopg-binary"], pins
+def _locked_versions() -> dict[str, set[str]]:
+    lock = tomllib.loads((_REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
+    versions: dict[str, set[str]] = {}
+    for package in lock["package"]:
+        versions.setdefault(canonicalize_name(package["name"]), set()).add(package.get("version", ""))
+    return versions
+
+
+def test_pinned_versions_diverge_between_pyproject_and_lock():
+    """Exact pins agree across pyproject.toml and uv.lock; psycopg matches psycopg-binary (#12476)."""
+    declared = _declared_exact_pins()
+    locked = _locked_versions()
+    diverged = {name: (ver, locked.get(name)) for name, ver in declared.items() if locked.get(name) != {ver}}
+    assert not diverged, f"pyproject.toml vs uv.lock: {diverged}"
+    assert declared["psycopg"] == declared["psycopg-binary"], declared
+    assert locked["psycopg"] == locked["psycopg-binary"], locked

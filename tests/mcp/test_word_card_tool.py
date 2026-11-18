@@ -488,7 +488,6 @@ def test_server_modules_load_code_only_through_imports_the_digest_traces():
 
 def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
     from lu_machinery.review.render_contract import (
-        LOCK_FILE,
         SERVER_ENTRY,
         ReviewContractError,
         check_launch_contract,
@@ -497,7 +496,7 @@ def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
     )
 
     checkout = tmp_path / "checkout"
-    for relative in (SERVER_ENTRY, ".mcp/servers/sources/word_card.py", LOCK_FILE):
+    for relative in (SERVER_ENTRY, ".mcp/servers/sources/word_card.py", "uv.lock"):
         (checkout / relative).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(PROJECT_ROOT / relative, checkout / relative)
     before = server_code(checkout)

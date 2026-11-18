@@ -352,7 +352,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
         "persist-credentials": False,
         "fetch-depth": 0,
         "filter": "blob:none",
-        "sparse-checkout": "requirements-machinery.lock\n.github/actions/python-ci-env/action.yml\n.python-version\n",
+        "sparse-checkout": "uv.lock\n.github/actions/python-ci-env/action.yml\n.python-version\n",
         "sparse-checkout-cone-mode": False,
     }
     assert metadata["id"] == "metadata"
