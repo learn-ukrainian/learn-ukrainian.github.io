@@ -738,8 +738,11 @@ def test_text_joins_preserve_nested_store_builders(tmp_path, source, expression,
     path = tmp_path / tree / 'new.py'
     path.parent.mkdir()
     path.write_text(source)
+    # CPython 3.13+ omits empty lists from ast.dump unless show_empty is set; the
+    # lint's fingerprints keep 3.12's full form on every interpreter.
+    full_form = {"show_empty": True} if sys.version_info >= (3, 13) else {}
     fingerprint = hashlib.sha256(ast.dump(ast.parse(expression).body[0].value,
-                                         include_attributes=False).encode()).hexdigest()
+                                         include_attributes=False, **full_form).encode()).hexdigest()
     findings = lint.classify_store_source(source, f'{tree}/new.py')
     assert any(f.kind == 'store_path' and f.fingerprint == fingerprint for f in findings)
     assert len(findings) == (1 if source.startswith('message') else 2)

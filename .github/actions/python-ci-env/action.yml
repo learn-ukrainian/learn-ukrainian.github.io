@@ -50,6 +50,14 @@ runs:
         version=$(cat .python-version)
         printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
 
+    # uv sync runs with UV_PYTHON_DOWNLOADS=never, so the pinned interpreter must be
+    # on the runner. Callers that already ran setup-python hit its tool cache here.
+    - name: Set up the pinned Python
+      if: inputs.machinery-wheel-only != 'true'
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      with:
+        python-version: ${{ steps.python-pin.outputs.version }}
+
     - name: Set up uv
       id: setup-uv
       if: inputs.machinery-wheel-only != 'true' || inputs.with-uv == 'true'

@@ -111,13 +111,14 @@ PLAYWRIGHT_TOKEN_EXEMPT = {
     "tests/fixtures/ci_timings/sample_ci_runs.json": (13, "recorded CI job names"),
     "docs/l2-uk-en/v4-seminar-section-templates.yaml": (1, "the English word playwright in seminar prose"),
     "site/.gitignore": (1, "the ignore pattern for Playwright's cache directory"),
+    "pyproject.toml": (1, "the playwright dependency declaration"),
 }
 # The token rule reads every tracked text file, whatever its type: code also lives in .jsx,
 # .astro frontmatter, .mdx, .vue, extensionless scripts and more. Only prose formats, which
 # nothing executes, are left out.
 PROSE_SUFFIXES = (".md", ".txt", ".html", ".csv", ".rst")
-# npm writes lockfiles and never runs anything from them; they only record dependencies.
-LOCKFILE_NAMES = ("package-lock.json",)
+# npm and uv write lockfiles and never run anything from them; they only record dependencies.
+LOCKFILE_NAMES = ("package-lock.json", "uv.lock")
 # Learner content and lexicon data files: nothing executes them, and their prose uses the
 # English word playwright. A runnable file under these trees still gets the token rule, and
 # every other rule still reads them all. A package.json is never data, wherever it sits:
