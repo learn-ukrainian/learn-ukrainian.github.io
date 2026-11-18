@@ -166,7 +166,7 @@ Project-side:
   2. Conditional: `/api/rules?format=markdown`, `/api/session/current?agent=orchestrator`
   3. `/api/orient` (git, issues, delegate, runtime, health, pipeline) or `?fresh=true`
 - Key status: `/api/state/summary` (tracks: total/published_mdx/audit_passing/etc.), `/api/state/track-health/{a1,a2,...}`, `/api/state/pipeline/{track}`, `/api/orient`, `/api/delegate/active`, `/api/runtime/agents`, `/api/health`
-- Full contract: `/api/contracts/routes`
+- Full contract: `/openapi.json` (narrative: `docs/MONITOR-API.md`)
 
 **gh + MCP:** `gh` CLI installed and ready (pr list/view/diff/comment/merge). Also github MCP (search_tool first for schema, then use_tool github__*).
 

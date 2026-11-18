@@ -178,7 +178,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         ("claude-opus-5-5", "AGY/CLAUDE-OPUS-5-5[1m]", "anthropic", "gpt-6.2-sol"),
         ("gpt-6.2-sol", "agy:gpt-6.2-sol", "openai", "claude-opus-5-5"),
         ("gpt-6.2-sol", "gpt-6.2-sol-antigravity", "openai", "claude-opus-5-5"),
-        ("gpt-6.2-sol", "ANTIGRAVITY:GPT-6.1-SOL[1m]", "openai", "claude-opus-5-5"),
+        ("gpt-6.2-sol", "ANTIGRAVITY:GPT-6.2-SOL[1m]", "openai", "claude-opus-5-5"),
         ("gpt-6.2-sol", "gpt-6.2-sol[agy]", "openai", "claude-opus-5-5"),
     ],
 )

@@ -54,7 +54,7 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
         "ubuntu-latest",
         ".python-version",
         ".github/workflows/ci.yml",
-        "gpt-6.1-sol",
+        "gpt-6.2-sol",
         "kimi-code/k3",
     ):
         assert secret not in body
