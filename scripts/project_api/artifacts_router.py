@@ -32,7 +32,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, cache_invalidate, cache_retain
+from lu_machinery.api.state_helpers import cache_get_or_compute_async, cache_retain
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -55,16 +55,12 @@ _ARTIFACT_LIST_MAX_AGE_S = 3600.0
 # One stat walk serves every request in this window, so warm polls neither walk
 # the tree nor wait for a worker thread.
 _ARTIFACT_FINGERPRINT_TTL_S = 2.0
-# Distinct filter sets kept warm; the oldest is evicted. Bounds client-chosen keys.
-_ARTIFACT_MAX_FILTER_SETS = 16
 # A scan that overlaps a tree change is retried this many times, then served uncached.
 _ARTIFACT_SCAN_ATTEMPTS = 3
 # Context id -> (monotonic time the walk started, digest); newest walk wins.
 _artifact_fingerprints: dict[str, tuple[float, str]] = {}
 # Context id -> the walk in flight, shared by concurrent requests.
 _artifact_walks: dict[str, asyncio.Task[str]] = {}
-# Filter-set prefixes, oldest first.
-_artifact_filter_sets: dict[str, None] = {}
 _ARTIFACT_DISCOVERY_DIRS = ("docs", "audit")
 
 
@@ -137,16 +133,25 @@ class _TreeChangedDuringScan(Exception):
 
 
 def _artifact_tree_fingerprint(project_root: Path) -> str:
-    """Digest of every ``.md``/``.html`` file's path, mtime, size and resolved target under the discovery roots.
+    """Digest of the discovery roots' artifact files and directories.
 
-    The collector's output is a function of those files plus the context's
-    roots, so an unchanged digest means a cached list is still exact. A stat
-    walk costs about 10 ms against the ~450 ms parse-and-resolve collector.
+    It covers each root's resolved location, every directory's mtime (so a file
+    added and removed again still shows), and every ``.md``/``.html`` file's path,
+    mtime, size and, for a symlink, resolved target. The collector's output is a
+    function of those plus the context's roots, so an unchanged digest means a
+    cached list is still exact. The walk costs about 10 ms against the ~450 ms
+    collector.
     """
     entries: list[str] = []
     for name in _ARTIFACT_DISCOVERY_DIRS:
-        for dirpath, dirnames, filenames in os.walk(project_root / name):
+        root = project_root / name
+        entries.append(f"{root}\0root\0{os.path.realpath(root)}")
+        for dirpath, dirnames, filenames in os.walk(root):
             dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+            try:
+                entries.append(f"{dirpath}\0dir\0{os.stat(dirpath).st_mtime_ns}")
+            except OSError:
+                continue
             for filename in filenames:
                 if filename.startswith(".") or not filename.lower().endswith((".md", ".html")):
                     continue
@@ -163,10 +168,13 @@ def _artifact_tree_fingerprint(project_root: Path) -> str:
 
 
 def _artifact_context_id(ctx: MonitorContext) -> str:
-    """Fixed-length id of the roots the collector reads, so no two contexts share or overlap cache keys."""
+    """Fixed-length id of the roots the collector reads, so no two contexts share or overlap cache keys.
+
+    The project root is taken as written: the digest and the artifact paths are built from it.
+    """
     roots = ctx.roots
     payload = json.dumps(
-        [str(roots.project_root.resolve()), sorted((key, str(path)) for key, path in roots.effective_roots.items())]
+        [str(roots.project_root), sorted((key, str(path)) for key, path in roots.effective_roots.items())]
     )
     return hashlib.blake2b(payload.encode("utf-8", "surrogateescape"), digest_size=8).hexdigest()
 
@@ -191,15 +199,6 @@ async def _current_tree_fingerprint(context_id: str, project_root: Path) -> str:
         walk = loop.create_task(_walk_tree(context_id, project_root, time.monotonic()))
         _artifact_walks[context_id] = walk
     return await asyncio.shield(walk)
-
-
-def _remember_filter_set(prefix: str) -> None:
-    _artifact_filter_sets.pop(prefix, None)
-    _artifact_filter_sets[prefix] = None
-    while len(_artifact_filter_sets) > _ARTIFACT_MAX_FILTER_SETS:
-        oldest = next(iter(_artifact_filter_sets))
-        del _artifact_filter_sets[oldest]
-        cache_invalidate(oldest)
 
 
 @router.get("/html")
@@ -235,8 +234,10 @@ async def html_artifacts(
     filters = json.dumps(
         [class_ or "", date_from or "", status or "", author or "", list(types)], separators=(",", ":")
     )
-    prefix = f"artifacts-html:{context_id}:{hashlib.blake2b(filters.encode(), digest_size=8).hexdigest()}:"
-    _remember_filter_set(prefix)
+    filter_id = hashlib.blake2b(filters.encode(), digest_size=8).hexdigest()
+    # One generation per context: a new tree state or a different filter set replaces it, so the cache
+    # holds one list per context however many filter sets clients send.
+    prefix = f"artifacts-html:{context_id}:"
 
     def collect() -> dict:
         return collect_html_artifacts(
@@ -245,8 +246,7 @@ async def html_artifacts(
 
     for _ in range(_ARTIFACT_SCAN_ATTEMPTS):
         fingerprint = await _current_tree_fingerprint(context_id, project_root)
-        cache_key = prefix + fingerprint
-        # Replace the previous tree state's list for this filter set.
+        cache_key = f"{prefix}{filter_id}:{fingerprint}"
         cache_retain(prefix, cache_key)
 
         def collect_unchanged(expected: str = fingerprint) -> dict:
