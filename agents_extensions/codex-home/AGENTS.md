@@ -47,7 +47,7 @@
 - Use `sol_red_team_high` for adversarial code review and
   `sol_advisor_high` for consequential architecture and technical advice.
   Both roles are read-only; the driver retains final judgment.
-- Advice and designated approval come from Opus 5.5 and Sol 6.1. Designated
+- Advice and designated approval come from Opus 5.5 and Sol 6.2. Designated
   approval comes from the operator, or from the two agreeing; when one of them
   authored the proposal, the other's approval completes it, and a proposal by
   any other agent needs both; if they disagree, the operator decides. `sol_advisor_high` supplies only the Sol half.
