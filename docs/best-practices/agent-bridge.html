@@ -268,7 +268,7 @@ were removed in #8520):</p>
 <li>A reviewer alias selects its practical default. Add a formally eligible
 same-route model plus <code>--override-reason</code> for an exceptional operator pin,
 for example <code>--reviewer claude --model claude-opus-5-5</code> or
-<code>--reviewer codex --model gpt-6.1-sol</code>.</li>
+<code>--reviewer codex --model gpt-6.2-sol</code>.</li>
 <li><code>kimi</code> remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). <code>agy</code> refuses code review through this bridge. Native AGY dispatch admits low/medium risk code reviews; high/critical, infra and security reviews exclude Gemini. GLM-5.3 is
 <strong>LOCAL-ONLY</strong> / China egress and requires the matching egress policy.</li>
 <li><code>--no-claude-available</code> is a deprecated compatibility hint and never routes.</li>
@@ -659,7 +659,6 @@ threshold, then runs <code>VACUUM</code> to reclaim disk space.</p>
 <h2>API endpoints (for scripts + dashboards)</h2>
 <p>Read-only:</p>
 <ul>
-<li><code>GET /api/comms/channels</code> — list all channels</li>
 <li><code>GET /api/comms/channels/{name}</code> — channel metadata + context preview</li>
 <li><code>GET /api/comms/channels/{name}/messages?tail=N</code> — recent messages</li>
 <li><code>GET /api/comms/channels/{name}/threads/{thread_id}</code> — full thread</li>

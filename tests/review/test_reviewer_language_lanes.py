@@ -221,7 +221,7 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     source.write_text("value = 2\n", encoding="utf-8")
     git("add", ".")
     # A committed target is attributed by its X-Agent trailer (#9739): a Codex author, as --author-model says.
-    git("commit", "-qm", "change word store\n\nX-Agent: codex/gpt-6.1-sol")
+    git("commit", "-qm", "change word store\n\nX-Agent: codex/gpt-6.2-sol")
     head_sha = git("rev-parse", "HEAD")
     state_file = tmp_path / "review.json"
     assert (
@@ -285,7 +285,7 @@ def test_ukrainian_semantic_profile_still_fails_closed():
     assert "unsupported local-code-review profile" in resolution.fail_closed_reason
 
 
-@pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"), ("claude-opus-5-5", "gpt-6.1-sol")])
+@pytest.mark.parametrize("author,expected", [("gpt-6.2-sol", "claude-opus-5-5"), ("claude-opus-5-5", "gpt-6.2-sol")])
 def test_critical_ukrainian_code_review_prefers_opus_and_sol(author, expected):
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True, claude_account=HOST_ACCOUNT))
     assert resolution.selected.concrete_model == expected

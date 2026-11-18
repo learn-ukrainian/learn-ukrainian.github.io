@@ -275,11 +275,11 @@ For bounded implementation or investigation, read the machine-readable
 `lu_machinery/config/model_catalog.yaml`
 before dispatching:
 
-1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
+1. Use `gpt-6.2-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
    recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch
    for Luna. `gemini-3.8-flash-high` on AGY is a general read-only and workspace-write worker and does not take an advisory task (#12291).
-3. `gpt-6.1-sol` at `high` issues that envelope in a read-only dispatch. Put the
+3. `gpt-6.2-sol` at `high` issues that envelope in a read-only dispatch. Put the
    worker's `--print-advisory-binding` digest and envelope request in the brief,
    and dispatch with `--advisory-role bounded_advisory_envelope --advisory-binding
    <digest>` (a catalog `advisory_roles` decision). The envelope

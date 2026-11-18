@@ -2,7 +2,7 @@
 
 This is the canonical portable source for Codex home defaults, orchestration
 guidance, and named profiles. Routine coding and generic `multi_agent_v2`
-children default to GPT-6.1 Terra high. Drivers explicitly use GPT-6.1 Sol high.
+children default to GPT-6.1 Terra high. Drivers explicitly use GPT-6.2 Sol high.
 
 | Profile | Model | Effort | Access |
 | --- | --- | --- | --- |
@@ -10,10 +10,10 @@ children default to GPT-6.1 Terra high. Drivers explicitly use GPT-6.1 Sol high.
 | `luna_explorer_medium` | `gpt-6-luna` | medium | read-only |
 | `luna_explorer_high` | `gpt-6-luna` | high | read-only |
 | `luna_coder_high` | `gpt-6-luna` | high | workspace-write |
-| `sol_coder_high` | `gpt-6.1-sol` | high | workspace-write |
-| `sol_red_team_high` | `gpt-6.1-sol` | high | read-only |
-| `sol_ukrainian_content_high` | `gpt-6.1-sol` | high | workspace-write |
-| `sol_advisor_high` | `gpt-6.1-sol` | high | read-only |
+| `sol_coder_high` | `gpt-6.2-sol` | high | workspace-write |
+| `sol_red_team_high` | `gpt-6.2-sol` | high | read-only |
+| `sol_ukrainian_content_high` | `gpt-6.2-sol` | high | workspace-write |
+| `sol_advisor_high` | `gpt-6.2-sol` | high | read-only |
 
 The default spawned agent is Terra 6.1 high for routine non-security code.
 Terra receives owned paths, a complete brief and verification command. It has no
@@ -27,7 +27,7 @@ fit and resource policy admit. Use Luna medium for routine scouting and high
 for ambiguous investigations or bounded coding. Sol high
 handles hard coding and adversarial review. `sol_advisor_high` runs at high
 as the on-demand advisor for consequential design and difficult linguistic
-judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1:
+judgment. Advice and designated approval come from Opus 5.5 and Sol 6.2:
 approval comes from the operator or from the two agreeing; when one of them
 authored the proposal, the other's approval completes it, and a proposal by any
 other agent needs both; if they disagree, the operator decides (#9583, #9616). This profile supplies only the Sol half. Sol high

@@ -194,7 +194,7 @@ plan/lesson return recorder. Use the approved subject's coordinates:
 ```bash
 .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates
 .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 \
-  --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW_TASK --author-model gpt-6.1-sol
+  --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW_TASK --author-model gpt-6.2-sol
 ```
 
 The dispatch's result is a JSON object with `verdict: APPROVE` and `subject`:

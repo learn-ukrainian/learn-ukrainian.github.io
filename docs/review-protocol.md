@@ -243,7 +243,7 @@ TARGET_SHA=$(.venv/bin/python -m lu_machinery.verify_review --emit-target-manife
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
-  --author-model 'gpt-6.1-sol' --author-family openai --author-harness codex \
+  --author-model 'gpt-6.2-sol' --author-family openai --author-harness codex \
   --author-selection-reason 'accountable-author' \
   --reviewer-model 'grok-4.7' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \
@@ -384,14 +384,14 @@ record. Recipe: [`docs/runbooks/review-contract-canary.md`](runbooks/review-cont
 followed by quality tier and deterministic resource-pressure scoring within
 that fit and tier. An earlier YAML rung does not override a better role match.
 
-For a `gpt-6.1-sol` author with profile `code` and risk `medium` or `low`,
+For a `gpt-6.2-sol` author with profile `code` and risk `medium` or `low`,
 native `claude-opus-5-5` is eligible, but `claude-sonnet-5-5` matches a role
 earlier in that profile's role order, so Sonnet wins before `selection_score`
 breaks ties. This is the configured suitability rule, rather than an Opus health
 or quota exclusion. Both may report unknown health when no routing snapshot is
 supplied. When an explicit requested role fits both equally, Opus's authority
 tier wins. At risk `high`, only the models `review_scheduler.risk_reviewer_models`
-lists (`gpt-6.1-sol`, `claude-opus-5-5`) are eligible (#9538), so Sonnet is
+lists (`gpt-6.2-sol`, `claude-opus-5-5`) are eligible (#9538), so Sonnet is
 excluded with that stated reason. Critical security review excludes every Sonnet
 model.
 

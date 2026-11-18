@@ -811,7 +811,7 @@ the Claude binary stays in the harness table, including the retired KimiCC file.
 
 The CTO launchers `start-claude-cto.sh` and `start-codex-cto.sh` use driver mode
 and default to the registered `epics` stream, whose root epic is #10453.
-Their model defaults are `claude-sonnet-5-5` and `gpt-6.1-sol`, respectively,
+Their model defaults are `claude-sonnet-5-5` and `gpt-6.2-sol`, respectively,
 both at `high` effort. Command-line `--model` and `--effort` override
 `LAUNCHER_MODEL` and `LAUNCHER_EFFORT`. Both wrappers reject `--force` with exit 2
 and retain the driver identity, slot, occupancy, and duplicate-supervisor checks.
@@ -1092,7 +1092,7 @@ and `workspace-write`.
 
 ```bash
 .venv/bin/python scripts/dispatch.py dispatch \
-  --agent codex --model gpt-6.1-sol --effort high \
+  --agent codex --model gpt-6.2-sol --effort high \
   --task-id example-task --prompt-file brief.md \
   --mode workspace-write --worktree --owned-path scripts/example.py
 ```

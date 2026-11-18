@@ -1,8 +1,11 @@
-"""Load failures on the cited comms_router and batch-progress sites stay on the response (#8521)."""
+"""Load failures on the cited batch-progress sites stay on the response (#8521).
+
+The comms_router health route (GET /api/comms/health) left with lu-machinery
+0.1.31 (machinery #756), and with it the PID-file and broker-DB cases.
+"""
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 import subprocess
@@ -29,26 +32,6 @@ def comms_client(tmp_path: Path) -> TestClient:
     return TestClient(app)
 
 
-def test_corrupt_pid_file_is_surfaced_and_dead_pid_is_not(
-    tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
-) -> None:
-    pid_dir = tmp_path / ".mcp" / "servers" / "message-broker" / "pids"
-    pid_dir.mkdir(parents=True, exist_ok=True)
-    (pid_dir / "broken.json").write_text("{not-json", encoding="utf-8")
-    # In-range but unused: a dead pid is not a load error. 2**31-1 is above the probe cap.
-    (pid_dir / "dead.json").write_text(json.dumps({"pid": 2**22}), encoding="utf-8")
-
-    with caplog.at_level(logging.WARNING, logger="lu_machinery.api.comms_router"):
-        resp = comms_client.get("/api/comms/health")
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["alive_processes"] == 0
-    assert any("broken.json" in item for item in body["errors"])
-    assert all("dead.json" not in item for item in body["errors"])
-    assert any("broken.json" in record.message for record in caplog.records)
-
-
 def test_corrupt_curriculum_yaml_surfaces_track_error(
     tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -64,24 +47,6 @@ def test_corrupt_curriculum_yaml_surfaces_track_error(
     assert body["total_expected"] == 0
     assert any("a1" in item and "curriculum.yaml" in item for item in body["errors"])
     assert any("curriculum.yaml" in record.message for record in caplog.records)
-
-
-def test_broker_db_probe_failure_is_named(
-    tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
-) -> None:
-    db_path = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    db_path.mkdir()
-
-    with caplog.at_level(logging.WARNING, logger="lu_machinery.api.comms_router"):
-        resp = comms_client.get("/api/comms/health")
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["db_exists"] is True
-    assert body["db_writable"] is False
-    assert any("db:" in item and "OperationalError" in item for item in body["errors"])
-    assert any("broker DB" in record.message for record in caplog.records)
 
 
 def test_ps_timeout_is_not_reported_as_zero_processes(

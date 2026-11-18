@@ -201,11 +201,7 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
             assert "First rule body" not in rules.text
             assert "Second rule body" not in rules.text
 
-        # Rollovers endpoint
-        assert first_client.get("/api/rollovers").status_code == 200
-        assert second_client.get("/api/rollovers").status_code == 200
-
-    # Third uninitialized instance: missing DB must return 404 for status, digest, and drift
+    # Third uninitialized instance: missing DB must return 404 for status and digest
     third_root = tmp_path / "third"
     third_ctx = fixture_context(third_root)
     third_app = api_main.create_app(third_ctx, lifespan=no_lifespan)
@@ -216,7 +212,6 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         assert (
             third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404
         )  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
-        assert third_client.get("/api/session-streams/v1/drift").status_code == 404
 
 
 def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
@@ -281,7 +276,7 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
 
 
 def test_step8_ops_git_cluster_isolation(tmp_path: Path) -> None:
-    """Ops and git-hygiene routes read only the app's MonitorContext."""
+    """Ops and git-cleanup routes read only the app's MonitorContext."""
 
     @asynccontextmanager
     async def no_lifespan(_app):
@@ -316,12 +311,16 @@ def test_step8_ops_git_cluster_isolation(tmp_path: Path) -> None:
         assert first_retention["missing"] is False
         assert second_retention["missing"] is False
 
-        first_hygiene = first_client.get("/api/git/hygiene").json()
-        second_hygiene = second_client.get("/api/git/hygiene").json()
-        assert first_hygiene["dirty_total"] == 0
-        assert second_hygiene["dirty_total"] == 0
-        assert "error" in first_hygiene
-        assert "error" in second_hygiene
+        # GET /api/git/hygiene left with machinery #756; GET /api/git/cleanup
+        # is the surviving git read. Neither fixture root is a repository, so
+        # an app that read the real checkout would list its worktrees.
+        for client in (first_client, second_client):
+            cleanup = client.get("/api/git/cleanup")
+            assert cleanup.status_code == 200
+            cleanup_payload = cleanup.json()
+            assert cleanup_payload["stale_branches"] == []
+            assert cleanup_payload["removable_worktrees"] == []
+            assert cleanup_payload["protected_worktrees"] == []
 
 
 def _seed_sources_db(path: Path, *, rows: int) -> None:

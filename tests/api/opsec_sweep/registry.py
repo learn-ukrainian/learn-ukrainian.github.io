@@ -1,11 +1,11 @@
 """Explicit exercise records for the Monitor API OPSEC sweep.
 
 The live FastAPI tree is the denominator. ``ACCEPTED_DENOMINATORS`` holds the
-reviewed snapshots of that tree. Two snapshots are accepted: the installed
-machinery release, and the tree after the unused routes leave (machinery
-#752, which deletes ``agent_monitor_router``). A tree that matches neither
-fails. Adding an HTTP or WebSocket route changes the fingerprint and fails
-the sweep until a record is deliberately reviewed.
+reviewed snapshot of that tree for the installed machinery release
+(lu-machinery 0.1.31, after machinery #756 stopped serving the unused routes).
+A tree that does not match fails. Adding or removing an HTTP or WebSocket
+route changes the fingerprint and fails the sweep until a record is
+deliberately reviewed.
 A schema-hidden APIRoute is part of that HTTP inventory, so the sweep
 exercises every method it serves, unless ``FRAMEWORK_EXEMPT_OPERATIONS``
 lists that method and path. A mount prefix stays on the path before
@@ -49,19 +49,15 @@ class FrozenDenominator:
 
 
 # Measured from the live app. The count and the digest are one snapshot:
-# a tree matches only when all three fields match. The first is the installed
-# release (the agent-monitor routes are still mounted). The second is
-# machinery #752 (those routes, and the other unused routes, are gone).
+# a tree matches only when all three fields match. This is the installed
+# release, lu-machinery 0.1.31: machinery #756 removed 47 unused operations
+# (the agent-monitor, comms legacy, fleet facade/observer, runtime, rollovers,
+# git hygiene, route-contract and session-streams drift/dual-write routes).
 ACCEPTED_DENOMINATORS = (
     FrozenDenominator(
-        http_count=219,
+        http_count=172,
         websocket_count=1,
-        sha256="0ebc5863fcbee9b4717e45f5de739ec99b15854d366818859c71350a5f5b2fd8",
-    ),
-    FrozenDenominator(
-        http_count=174,
-        websocket_count=1,
-        sha256="34ba120c723bea40b54989694ad986dfb34e64ade14873199c9675bef40350e4",
+        sha256="a2ec8c146bdfe1cf7fe582bccf1d71bed724285070d25b9a5aa71f805f36c281",
     ),
 )
 
@@ -552,13 +548,6 @@ def _path_value(name: str) -> str:
 
 
 def _body_factory(path_template: str) -> Callable[[], Any] | None:
-    if path_template == "/api/comms/send":
-        return lambda: {
-            "from_llm": "codex",
-            "to_llm": "gemini",
-            "content": "opsec synthetic deprecated-route probe",
-            "task_id": "opsec-synthetic-task",
-        }
     if path_template == "/api/epics/v1/{stream_id}/bundles":
         member_name = "handoff.md"
         member_body = b"opsec fixture handoff\n"
@@ -613,8 +602,6 @@ def _query_for(path_template: str) -> dict[str, Any]:
     # Explicitly force side-effect-shaped flags to their read-only values.
     if path_template == "/api/orient":
         return {"lean": "true", "sections": "health"}
-    if path_template == "/api/session-streams/v1/drift":
-        return {"dry_run": "true"}
     if path_template == "/api/work/v1/next":
         return {"stream": "infra-harness", "limit": "1"}
     if path_template == "/api/knowledge/find":
@@ -628,70 +615,6 @@ def _query_for(path_template: str) -> dict[str, Any]:
     if path_template == "/api/epics/v1/{stream_id}/bundles/latest":
         return {"agent": "opsec-synthetic", "lineage_id": "opsec-lineage"}
     return {}
-
-
-def _agent_monitor_preflight_body() -> dict[str, Any]:
-    return {
-        "agent_id": "codex/opsec-sweep",
-        "task_name": "opsec_probe",
-        "required_ram_mb": 64,
-    }
-
-
-def _agent_monitor_register_body() -> dict[str, Any]:
-    return {
-        "agent_id": "codex/opsec-sweep",
-        "task_name": "opsec_register",
-        "pid": 1,
-        "process_create_time": 0.0,
-        "reserved_ram_mb": 64,
-    }
-
-
-def _agent_monitor_heartbeat_body() -> dict[str, Any]:
-    return {"lease_token": "lease_opsecbeat", "pid": 1}
-
-
-def _agent_monitor_probe(operation: Operation, path_values: Mapping[str, str]) -> ExerciseRecord:
-    """Probe a still-mounted agent-monitor mutation without importing its router.
-
-    Machinery #752 deletes the module. While an older release still mounts the
-    routes, the sweep reads them from the live route table. Preflight has no
-    auth and answers from its own fixture lease table. The other three refuse
-    an unauthenticated request before that table is opened.
-    """
-    if operation.path_template == "/api/agent-monitor/preflight":
-        return ExerciseRecord(
-            method=operation.method,
-            path_template=operation.path_template,
-            classification="mutation",
-            fixture="isolated",
-            path_values=path_values,
-            body_factory=_agent_monitor_preflight_body,
-            reason="preflight has no auth; the fixture store is the route's own lease table",
-            expected_statuses=(200,),
-            store="fixture batch_state/agent_monitor.sqlite3",
-        )
-    query: dict[str, Any] = {}
-    body_factory = None
-    if operation.path_template == "/api/agent-monitor/release":
-        query = {"lease_token": "lease_opsecfree"}
-    elif operation.path_template == "/api/agent-monitor/heartbeat":
-        body_factory = _agent_monitor_heartbeat_body
-    elif operation.path_template == "/api/agent-monitor/register":
-        body_factory = _agent_monitor_register_body
-    return ExerciseRecord(
-        method=operation.method,
-        path_template=operation.path_template,
-        classification="mutation",
-        fixture="isolated",
-        path_values=path_values,
-        query=query,
-        body_factory=body_factory,
-        reason="unauthenticated probe; the route refuses before the lease store",
-        expected_statuses=(401,),
-        store="none (refused before the lease store)",
-    )
 
 
 def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> ExerciseRecord:
@@ -743,16 +666,6 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             expected_statuses=(404,),
         )
 
-    if operation.method == "POST" and operation.path_template == "/api/comms/send":
-        return ExerciseRecord(
-            method=operation.method,
-            path_template=operation.path_template,
-            classification="read",
-            fixture="isolated",
-            body_factory=_body_factory(operation.path_template),
-            expected_statuses=(410,),
-        )
-
     if operation.key in FIXTURE_EMPTY_ROUTE_KEYS:
         return ExerciseRecord(
             method=operation.method,
@@ -764,9 +677,6 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             reason="fixture-local corpus is absent, so the documented empty envelope is expected",
             expected_statuses=(200,),
         )
-
-    if operation.path_template.startswith("/api/agent-monitor/") and operation.method in MUTATION_METHODS:
-        return _agent_monitor_probe(operation, path_values)
 
     if operation.method in MUTATION_METHODS:
         return _mutation_record(operation, path_values, statuses)
@@ -785,13 +695,10 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             expected_detail=exact.detail,
         )
 
-    classification: RouteClass = (
-        "read-side-effect" if operation.path_template == "/api/session-streams/v1/drift" else "read"
-    )
     return ExerciseRecord(
         method=operation.method,
         path_template=operation.path_template,
-        classification=classification,
+        classification="read",
         fixture="isolated",
         path_values=path_values,
         query=_query_for(operation.path_template),

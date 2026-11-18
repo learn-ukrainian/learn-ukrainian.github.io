@@ -101,7 +101,7 @@ pins:
     note: .mcp.json declares the sources server and does not pin a version.
   - name: pinned-model-ids
     pinned: >-
-      gpt-6.1-sol, gpt-6-luna, claude-opus-5-5,
+      gpt-6.2-sol, gpt-6-luna, claude-opus-5-5,
       claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high,
       grok-4.7, deepseek-v4.1-flash
     source: scripts/config/model_catalog.yaml

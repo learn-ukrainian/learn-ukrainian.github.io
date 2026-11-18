@@ -541,12 +541,9 @@ def _mentions_review_contract(tree: ast.AST) -> bool:
 def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
     root = Path(__file__).resolve().parents[1]
     installed = files("lu_machinery")
-    ownership = json.loads(installed.joinpath("lint/rename-map.json").read_text())
-    product = (
-        path for path in (root / "scripts").rglob("*.py")
-        if ownership.get(path.relative_to(root).as_posix()) != "machinery"
-        or path.relative_to(root).as_posix() == "scripts/ci/queue_review_gate.py"
-    )
+    # lu-machinery 0.1.31 (machinery #733) removed the extraction rename map:
+    # no machinery copy is left under scripts/, so every product script counts.
+    product = (root / "scripts").rglob("*.py")
     consumers = {
         "lu_machinery/" + path.relative_to(installed).as_posix()
         for path in installed.rglob("*.py")

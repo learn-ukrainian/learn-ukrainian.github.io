@@ -681,7 +681,7 @@ Dispatch a worker and record it in that run:
   --run-id a1-gate-policy \
   --task-id a1-gate-policy-worker \
   --agent codex \
-  --model gpt-6.1-sol \
+  --model gpt-6.2-sol \
   --mode workspace-write \
   --owned-path scripts/audit/ \
   --worktree \

@@ -16,7 +16,7 @@ from scripts.curriculum.evidence import lock
 from tests.build.test_fresh_draft_schema import load_fixture
 
 INPUTS = {key: "a" * 64 for key in regeneration.INPUT_KEYS}
-SEAT = {"agent": "codex", "model": "gpt-6.1-sol", "effort": "high"}
+SEAT = {"agent": "codex", "model": "gpt-6.2-sol", "effort": "high"}
 
 
 def _record(store, task_id="stable", **updates):
@@ -29,7 +29,7 @@ def _record(store, task_id="stable", **updates):
 
 
 def _available(task_id="stable", **overrides):
-    return writer._available_task_id(task_id, writer="codex", model="gpt-6.1-sol", effort="high", **overrides)
+    return writer._available_task_id(task_id, writer="codex", model="gpt-6.2-sol", effort="high", **overrides)
 
 
 @pytest.mark.parametrize("archived", [False, True])
@@ -99,7 +99,7 @@ def test_fresh_unreadable_done_advances_then_reuses_retry(tmp_path, monkeypatch,
 def _dispatch_options(tmp_path):
     return dict(
         writer="codex",
-        model="gpt-6.1-sol",
+        model="gpt-6.2-sol",
         effort="high",
         level="a1",
         slug="sample",
@@ -335,12 +335,12 @@ def test_fresh_completed_draft_cache_binds_writer_and_effort(tmp_path, effort):
 
     draft = tmp_path / "lesson-1.draft.yaml"
     meta = tmp_path / "lesson-1.writer.yaml"
-    assert not draft_matches_writer(draft, "codex:gpt-6.1-sol", effort)
-    meta.write_text(yaml.safe_dump({"writer": "codex", "model": "gpt-6.1-sol", "effort": "high"}))
-    assert draft_matches_writer(draft, "codex:gpt-6.1-sol", effort) == (effort != "medium")
-    assert not draft_matches_writer(draft, "agy:gpt-6.1-sol", effort)
+    assert not draft_matches_writer(draft, "codex:gpt-6.2-sol", effort)
+    meta.write_text(yaml.safe_dump({"writer": "codex", "model": "gpt-6.2-sol", "effort": "high"}))
+    assert draft_matches_writer(draft, "codex:gpt-6.2-sol", effort) == (effort != "medium")
+    assert not draft_matches_writer(draft, "agy:gpt-6.2-sol", effort)
     assert not draft_matches_writer(draft, "codex:another-model", effort)
     meta.write_text("[]")
-    assert not draft_matches_writer(draft, "codex:gpt-6.1-sol", effort)
+    assert not draft_matches_writer(draft, "codex:gpt-6.2-sol", effort)
     meta.write_text("[")
-    assert not draft_matches_writer(draft, "codex:gpt-6.1-sol", effort)
+    assert not draft_matches_writer(draft, "codex:gpt-6.2-sol", effort)

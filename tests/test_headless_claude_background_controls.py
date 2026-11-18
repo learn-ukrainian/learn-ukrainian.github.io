@@ -273,7 +273,7 @@ def test_native_benchmark_timeout_and_other_providers_are_retained(
     assert (call.ok, call.error) == (False, f"timed out after {module.REQUEST_TIMEOUT_S}s")
 
     monkeypatch.setattr(module.subprocess, "run", other_provider)
-    assert module.run_native_cli(module.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "no_mcp"), "p").ok
+    assert module.run_native_cli(module.Cell("openai", "gpt-6.2-sol", "native_cli", "medium", "no_mcp"), "p").ok
     (argv,) = direct
     assert argv[0] == "codex" and "--disallowedTools" not in argv
 

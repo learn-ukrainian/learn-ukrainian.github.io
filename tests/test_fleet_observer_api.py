@@ -210,77 +210,22 @@ def test_absent_plane_db_returns_deterministic_read_only_empty_states(
 ) -> None:
     assert not fleet_root.exists()
 
-    for path, key in [
-        ("/api/fleet/requests", "requests"),
-        ("/api/fleet/messages", "messages"),
-        ("/api/fleet/discussions", "discussions"),
-        ("/api/fleet/reviews", "reviews"),
-        ("/api/fleet/dead-letters", "dead_letters"),
-    ]:
-        response = client.get(path)
-
-        assert response.status_code == 200
-        payload = response.json()
-        assert payload["read_only"] is True
-        assert payload["availability"] == "db_missing"
-        assert payload[key] == []
-        assert payload["total"] == 0
+    # lu-machinery 0.1.31 (machinery #756) serves /requests as the only
+    # list route over the plane; messages, discussions, reviews and
+    # dead-letters are no longer mounted.
+    response = client.get("/api/fleet/requests")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["read_only"] is True
+    assert payload["availability"] == "db_missing"
+    assert payload["requests"] == []
+    assert payload["total"] == 0
 
     migrations = client.get("/api/fleet/migrations").json()
     assert migrations["read_only"] is True
     assert migrations["availability"] == "db_missing"
     assert migrations["migrations"] == []
     assert not fleet_root.exists(), "observer must not create a missing plane root"
-
-
-def test_facade_routes_reuse_read_only_fleet_projections(client: TestClient, fleet_root: Path) -> None:
-    _seed_plane(fleet_root)
-
-    help_response = client.get("/api/fleet/facade")
-    help_alias = client.get("/api/fleet/facade/help")
-    status = client.get("/api/fleet/facade/status")
-    board = client.get("/api/fleet/facade/board", params={"stream_id": "core"})
-    metrics = client.get("/api/fleet/facade/metrics")
-    backlog = client.get("/api/fleet/facade/backlog", params={"limit": 1})
-    dead = client.get("/api/fleet/facade/dead", params={"limit": 1})
-    broker = client.get("/api/fleet/facade/broker-report", params={"days": 7})
-
-    for response in (
-        help_response,
-        help_alias,
-        status,
-        board,
-        metrics,
-        backlog,
-        dead,
-        broker,
-    ):
-        assert response.status_code == 200
-
-    assert "reap_report" not in help_response.json()["endpoints"]
-    assert help_alias.json()["truth"] == help_response.json()["truth"]
-    assert status.json()["health"]["mode"] == "shadow"
-    assert status.json()["response_schema_version"] == "comms.v2"
-    assert "plane_root" not in status.json()["plane_status"]
-    assert "db_path" not in status.json()["plane_status"]["schema"]
-    assert "path" not in status.json()["plane_status"]["parity_telemetry"]
-    board_payload = board.json()
-    assert board_payload["response_schema_version"] == "comms.v2"
-    assert board_payload["board_status"] in {"ok", "degraded"}
-    assert "backlog_and_dead_letters" in board_payload["probes"]
-    assert "db_path" not in json.dumps(board_payload)
-    assert metrics.json()["source"] == "authority"
-    assert metrics.json()["read_only"] is True
-    assert "db_path" not in metrics.json()
-    assert metrics.json()["store"]["kind"] == "comms-plane"
-    assert backlog.json()["content_included"] is False
-    assert "db_path" not in backlog.json()
-    assert dead.json()["content_included"] is False
-    assert "db_path" not in dead.json()
-    assert broker.json()["schema"] == "fleet-broker-report.v1"
-    assert broker.json()["response_schema_version"] == "comms.v2"
-    assert all("path" not in store for store in broker.json()["stores"])
-    assert broker.json()["read_only"] is True
 
 
 def test_plane_health_and_overview_expose_pre_flip_read_only_posture(
@@ -332,14 +277,6 @@ def test_plane_health_and_overview_expose_active_authority_posture(
     }
     assert overview["counts"]["dead_letters"]["total"] == 1
 
-    dead_letters = client.get(
-        "/api/fleet/dead-letters",
-        params={"state": "failed", "agent": "codex", "source": "legacy-bridge"},
-    ).json()
-    assert dead_letters["total"] == 1
-    assert dead_letters["dead_letters"][0]["reason"] == "attempts_exhausted"
-    assert dead_letters["dead_letters"][0]["via"] == "queue"
-
 
 def test_authority_health_uses_only_recent_authority_evidence(
     fleet_root: Path,
@@ -381,56 +318,8 @@ def test_authority_health_uses_only_recent_authority_evidence(
     assert idle["jobs"] == {"total": 0, "by_state": {}}
 
 
-def test_message_and_request_filters_are_stable_and_bodies_are_bounded(
-    client: TestClient, fleet_root: Path
-) -> None:
+def test_request_filters_are_stable(client: TestClient, fleet_root: Path) -> None:
     _seed_plane(fleet_root)
-
-    response = client.get(
-        "/api/fleet/messages",
-        params={
-            "kind": "request",
-            "agent": "codex",
-            "source": "operator",
-            "conversation": "conv-1",
-            "since": "2026-08-01T11:59:00Z",
-            "until": "2026-08-01T12:01:00Z",
-            "limit": 1,
-        },
-    )
-
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["total"] == 1
-    assert payload["next_offset"] is None
-    message = payload["messages"][0]
-    assert message["source"] == "operator"
-    assert message["agent"] == "codex"
-    assert message["via"] == "dispatch"
-    assert len(message["body_preview"]) <= fleet_router.MAX_BODY_PREVIEW_CHARS
-    assert "secret-value" not in message["body_preview"]
-    assert message["artifact_available"] is True
-    assert "body_artifact_id" not in message
-
-    detail = client.get("/api/fleet/messages/message-request")
-    assert detail.status_code == 200
-    assert detail.headers["cache-control"] == "no-store"
-    assert detail.json()["read_only"] is True
-    assert detail.json()["body_policy"]["artifact_content"] == "omitted"
-    assert len(detail.json()["message"]["body_preview"]) <= fleet_router.MAX_BODY_DETAIL_CHARS
-    assert "secret-value" not in detail.json()["message"]["body_preview"]
-
-    authority_messages = client.get(
-        "/api/fleet/messages", params={"source": "legacy-bridge", "agent": "codex"}
-    )
-    assert authority_messages.status_code == 200
-    assert authority_messages.json()["total"] == 1
-    authority_message = authority_messages.json()["messages"][0]
-    assert authority_message["message_id"] == "authority-message"
-    assert authority_message["source"] == "legacy-bridge"
-    assert authority_message["agent"] == "codex"
-    assert authority_message["via"] == "queue"
-    assert "queue-secret" not in authority_message["body_preview"]
 
     requests = client.get(
         "/api/fleet/requests",
@@ -447,34 +336,8 @@ def test_message_and_request_filters_are_stable_and_bodies_are_bounded(
     assert requests.json()["requests"][0]["request_id"] == "request-1"
 
 
-def test_discussion_review_and_dead_letter_metadata_stay_read_only(
-    client: TestClient, fleet_root: Path
-) -> None:
+def test_authority_job_metadata_stays_read_only(client: TestClient, fleet_root: Path) -> None:
     _seed_plane(fleet_root)
-
-    discussion = client.get("/api/fleet/discussions", params={"kind": "request"})
-    assert discussion.status_code == 200
-    assert {item["conversation_id"] for item in discussion.json()["discussions"]} == {
-        "conv-1",
-        "authority-conv",
-    }
-
-    discussion_detail = client.get("/api/fleet/discussions/conv-1")
-    assert discussion_detail.status_code == 200
-    assert discussion_detail.headers["cache-control"] == "no-store"
-    assert discussion_detail.json()["body_policy"].startswith("redacted_inline")
-    assert discussion_detail.json()["discussion"]["message_count"] == 2
-    assert discussion_detail.json()["discussion"]["latest_message_at"] == "2026-08-01T12:02:00Z"
-    assert len(discussion_detail.json()["messages"]["messages"]) == 2
-
-    reviews = client.get(
-        "/api/fleet/reviews",
-        params={"kind": "cross-family-review", "state": "complete", "pr": 6159},
-    )
-    assert reviews.status_code == 200
-    assert reviews.json()["total"] == 1
-    assert reviews.json()["reviews"][0]["publication_count"] == 1
-    assert reviews.json()["reviews"][0]["sealed_verdict_available"] is True
 
     authority_jobs = client.get(
         "/api/fleet/authority/jobs",
@@ -538,21 +401,6 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     }
     assert "must-not-leak" not in json.dumps(failed_projection)
 
-    review_detail = client.get("/api/fleet/reviews/review-1")
-    assert review_detail.status_code == 200
-    assert review_detail.headers["cache-control"] == "no-store"
-    assert review_detail.json()["detail_policy"] == "raw_capture_and_sealed_verdict_blobs_omitted"
-    assert "sealed_verdict_artifact_id" not in review_detail.json()["review"]
-    assert "raw_capture_artifact_id" not in json.dumps(review_detail.json())
-
-    dead_letters = client.get(
-        "/api/fleet/dead-letters",
-        params={"state": "complete", "agent": "claude", "source": "operator"},
-    )
-    assert dead_letters.status_code == 200
-    assert dead_letters.json()["total"] == 1
-    assert dead_letters.json()["dead_letters"][0]["via"] == "fleet-comms"
-
 
 def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> None:
     """Calling fleet_reviews directly as a Python function with defaults must not
@@ -574,12 +422,16 @@ def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> Non
     assert result["filters"]["repository"] == public_repo
 
 
-def test_reviews_repository_filter_applies_before_count_and_pagination(
-    client: TestClient, fleet_root: Path
-) -> None:
+def test_reviews_repository_filter_applies_before_count_and_pagination(fleet_root: Path) -> None:
     """Exact repository filter participates in SQL COUNT/LIMIT so foreign volume
     cannot hide public rows or inflate public totals/truncation signals.
+
+    lu-machinery 0.1.31 (machinery #756) no longer mounts GET /api/fleet/reviews;
+    the Work API reads ``fleet_reviews`` as a Python function, so this calls it
+    the same way.
     """
+    from lu_machinery.api.fleet_router import fleet_reviews
+
     _seed_plane(fleet_root)
     public_repo = "learn-ukrainian/learn-ukrainian.github.io"
     foreign_repo = "evil-org/private-infra"
@@ -629,17 +481,11 @@ def test_reviews_repository_filter_applies_before_count_and_pagination(
     finally:
         connection.close()
 
-    unfiltered = client.get("/api/fleet/reviews", params={"limit": 10, "offset": 0})
-    assert unfiltered.status_code == 200
+    unfiltered = fleet_reviews(limit=10, offset=0)
     # Seed already has review-1 for public_repo; plus inserts.
-    assert unfiltered.json()["total"] == foreign_n + public_n + 1
+    assert unfiltered["total"] == foreign_n + public_n + 1
 
-    filtered = client.get(
-        "/api/fleet/reviews",
-        params={"repository": public_repo, "limit": 100, "offset": 0},
-    )
-    assert filtered.status_code == 200
-    payload = filtered.json()
+    payload = fleet_reviews(repository=public_repo, limit=100, offset=0)
     assert payload["filters"]["repository"] == public_repo
     # total is repository-scoped — private volume does not inflate it.
     assert payload["total"] == public_n + 1
@@ -652,23 +498,15 @@ def test_reviews_repository_filter_applies_before_count_and_pagination(
     assert foreign_repo not in json.dumps(payload)
 
     # Pagination offsets also advance only within the filtered set.
-    page = client.get(
-        "/api/fleet/reviews",
-        params={"repository": public_repo, "limit": 2, "offset": 2},
-    )
-    assert page.status_code == 200
-    assert page.json()["total"] == public_n + 1
-    assert len(page.json()["reviews"]) == 2
-    assert {row["repository"] for row in page.json()["reviews"]} == {public_repo}
+    page = fleet_reviews(repository=public_repo, limit=2, offset=2)
+    assert page["total"] == public_n + 1
+    assert len(page["reviews"]) == 2
+    assert {row["repository"] for row in page["reviews"]} == {public_repo}
 
-    foreign_only = client.get(
-        "/api/fleet/reviews",
-        params={"repository": foreign_repo, "limit": 5, "offset": 0},
-    )
-    assert foreign_only.status_code == 200
-    assert foreign_only.json()["total"] == foreign_n
-    assert len(foreign_only.json()["reviews"]) == 5
-    assert all(r["repository"] == foreign_repo for r in foreign_only.json()["reviews"])
+    foreign_only = fleet_reviews(repository=foreign_repo, limit=5, offset=0)
+    assert foreign_only["total"] == foreign_n
+    assert len(foreign_only["reviews"]) == 5
+    assert all(r["repository"] == foreign_repo for r in foreign_only["reviews"])
 
 
 def test_acp_and_runtime_provenance_reuse_existing_read_models(
@@ -760,7 +598,9 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     before = broker_path.read_bytes()
     monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
 
-    async def fake_processes(*, ctx: MonitorContext | None = None) -> dict:
+    # lu-machinery 0.1.31 runs these comms readers in a worker thread
+    # (asyncio.to_thread), so the stand-ins are synchronous like the originals.
+    def fake_processes(*, ctx: MonitorContext | None = None) -> dict:
         return {
             "alive": 2,
             "processes": [
@@ -768,7 +608,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
             ],
         }
 
-    async def fake_zombies(
+    def fake_zombies(
         *,
         stale_hours: float,
         pingpong_threshold: int,
@@ -874,7 +714,7 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
     broker_path.write_bytes(b"not-a-sqlite-database private-outage-detail")
     monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
 
-    async def unavailable(*_args: object, **_kwargs: object) -> dict:
+    def unavailable(*_args: object, **_kwargs: object) -> dict:
         raise RuntimeError("private dependency path and credential")
 
     def unavailable_batch(ctx: MonitorContext | None = None) -> dict:
@@ -933,8 +773,11 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
             "last_created": {"slug": "private-slug"},
         },
     )
+    # The comms router keeps no cache since lu-machinery 0.1.31 (machinery
+    # #743); the batch progress module's own cache_set binding is the write
+    # this snapshot must not reach.
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "cache_set",
         lambda *_args, **_kwargs: pytest.fail("operations snapshot must not write cache state"),
     )
@@ -1024,10 +867,10 @@ def test_operations_timed_out_process_probe_degrades_batch_section(
 ) -> None:
     monkeypatch.setattr(client.app.state, "ctx", fixture_context(tmp_path))
 
-    async def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
+    def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
         return {"alive": 0, "processes": []}
 
-    async def empty_zombies(**_kwargs: object) -> dict:
+    def empty_zombies(**_kwargs: object) -> dict:
         return {"count": 0, "zombies": []}
 
     def timed_out_batches(ctx: MonitorContext | None = None) -> dict:

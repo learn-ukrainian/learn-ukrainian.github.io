@@ -31,7 +31,11 @@ _BURST = 20
 # Attempt bound for observable polls. Not a latency budget: the loop exits
 # when the condition is true, and a loaded runner only makes each yield slower.
 _ATTEMPTS = 10_000
-_COLD_ROUTERS = (delegate_router, state_router, product_state_router, artifacts_router, epics_router)
+# Modules whose cold misses go through ``cache_get_or_compute_async``. Since
+# lu-machinery 0.1.31 (machinery #743) GET /api/delegate/tasks is a
+# stale-while-revalidate route: ``state_helpers.cache_read_swr`` makes that
+# call, so state_helpers' own binding is the one to gate.
+_COLD_ROUTERS = (state_helpers, state_router, product_state_router, artifacts_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
@@ -585,8 +589,18 @@ def test_cumulative_source_age_under_threshold_keeps_authorization(
     assert body["ranked_by_headroom"] == [{"lane": "codex"}]
 
 
-def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_delegate_list_keeps_one_entry_across_task_generations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A new task record never adds a second delegate-list cache entry.
+
+    lu-machinery 0.1.31 (machinery #743) serves GET /api/delegate/tasks
+    stale-while-revalidate: the stored value is returned with its true age
+    (``X-Snapshot-Age-S``) instead of keying a fresh scan on each task-store
+    generation, so one entry per context and query is the whole footprint.
+    """
     calls = {"n": 0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1_000.0)
 
     def scan(**_kwargs):
         calls["n"] += 1
@@ -604,8 +618,10 @@ def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypa
             assert first.json()["total"] == 1
             (tasks_dir / "one.json").write_text("{}", encoding="utf-8")
             second = await client.get("/api/delegate/tasks")
-            assert second.json()["total"] == 2
+            assert second.json()["total"] == 1
+            assert second.headers["X-Snapshot-Age-S"] == "0.000"
 
     asyncio.run(scenario())
-    keys = [key for key in state_helpers._ttl_cache if ":delegate:" in key]
+    assert calls["n"] == 1
+    keys = [key for key in state_helpers._ttl_cache if ":swr:delegate-tasks:" in key]
     assert len(keys) == 1

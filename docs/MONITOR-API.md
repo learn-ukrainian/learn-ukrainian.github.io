@@ -9,7 +9,7 @@ Base URL: `http://localhost:8765`
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
 and `http://localhost:8765/redoc` (ReDoc).
 
-**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page).
+**Definition authority for the public surface**: the route contract registry in `lu_machinery/api/route_contracts.py` (the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page). Since lu-machinery 0.1.31 (machinery #756) the registry is no longer served over HTTP; `GET /openapi.json` is the live machine-readable route list.
 
 This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `lu_machinery/api/**` (the installed lu-machinery release) and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `lu_machinery/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
@@ -22,7 +22,7 @@ for the operator and for agents.
   occupancy, rules, session, orient composition, static delivery and the
   contract registry. It never imports product code.
 - **Product** — `scripts/project_api/`: curriculum state (`/api/state/*`
-  except `routing-budget`, `github-budget` and `manifest`), dashboard,
+  except `routing-budget` and `manifest`), dashboard,
   artifacts, consultation, cost, decisions, governance, build events, images,
   sources, site, wiki, batch, atlas jobs, `/api/comms/batch-progress*`,
   `/api/telemetry/module-builds*`, `/api/config` and `/images/*`.
@@ -51,7 +51,7 @@ Agents learn the Ops API from **live HTTP surfaces**, not from the HTML pages
 | --- | --- | --- |
 | 1 | `GET /api/rules?format=markdown` | Binding rules (hash-cacheable) |
 | 2 | `GET /api/orient?lean=true` (+ optional `session=`) | Cold-start snapshot |
-| 3 | `GET /api/contracts/routes` | Machine-readable routes, freshness, schema versions, replacements |
+| 3 | `GET /openapi.json` | Machine-readable route list (the contract registry is `lu_machinery/api/route_contracts.py`) |
 | 4 | `GET /docs` / `GET /openapi.json` | Interactive + OpenAPI **Ops API 2.0.0** |
 | 5 | This file (`docs/MONITOR-API.md`) | Human narrative reference |
 
@@ -102,16 +102,15 @@ Payload contracts protect clients from silent shape breaks. Examples:
 | `response_schema_version: "authority.v2"` | `/api/state/preparation/{track}/{slug}` |
 | `response_schema_version: "orient.v2"` | `/api/orient` |
 | `response_schema_version: "comms.v2"` | `/api/comms` |
-| `response_schema_version: "session-streams.v2"` | `/api/session-streams` |
+| `response_schema_version: "session-streams.v3"` | `/api/session-streams` |
 
-Live registry: `GET /api/contracts/routes` (each contract may declare
-`response_schema_version`). Retired aliases return **404** with canonical
+Registry: `lu_machinery/api/route_contracts.py` in the installed release (each
+contract may declare `response_schema_version`). Retired aliases return **404** with canonical
 replacements listed in this file and in the contracts registry.
 
 ### 4. Canonical machine SSOT
 
 ```bash
-curl -s http://localhost:8765/api/contracts/routes | jq .
 curl -s http://localhost:8765/openapi.json | jq .info
 ```
 
@@ -125,24 +124,6 @@ Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation onl
 | GET | `/api/work/v1/next` | Stream-scoped actionable pick list (`stream=` required, `limit=` ≤25); warm cache only; 503 `building` / `stale` / `registry_unavailable` (unwrapped body) |
 | GET | `/api/work/v1/capabilities` | Schema digest, budgets, private-source seam (`not_configured`) |
 | GET | `/api/work/v1/health` | Work surface liveness |
-
-## Fleet facade — `/api/fleet/facade`
-
-This thin, read-only namespace makes the existing `python -m lu_machinery.fleet_comms fleet …` seat-facing surfaces available to Monitor clients. It does not introduce a message bus, write to the Fleet Comms plane, retrieve message bodies, or expose reaper apply mode.
-
-| Method | Path | Existing source |
-| --- | --- | --- |
-| GET | `/api/fleet/facade` or `/help` | Truth/Eyes map and endpoint index |
-| GET | `/api/fleet/facade/status` | `fleet status` plane status plus compact health |
-| GET | `/api/fleet/facade/board` | JSON cold-start board |
-| GET | `/api/fleet/facade/metrics` | Authority metrics collector |
-| GET | `/api/fleet/facade/backlog` | Authority backlog collector |
-| GET | `/api/fleet/facade/dead` | Authority dead-letter collector |
-| GET | `/api/fleet/facade/broker-report?days=7` | Legacy Broker Ops report (`days` is 1–90) |
-
-The facade is fail-open when the plane SQLite file is absent or unavailable: authority collector responses include `db_missing` or `db_error`, while status retains the plane schema diagnostic.
-
----
 
 ## Optional Context Telemetry Footer
 
@@ -298,7 +279,7 @@ atomically; the following manifest is the record of those boundaries:
 
 | Emitter family | Current path-bearing fields | Known consumers | PR-B shape | Schema version |
 | --- | --- | --- | --- | --- |
-| `session_streams_router.py` | `repo_root`, `db_path` (removed) | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v2 — DONE` |
+| `session_streams_router.py` | `repo_root`, `db_path` (removed) | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v3 — DONE` |
 | `repository_authority.py`, `preparation_state.py`, `state_router.py` | checkout and authority roots (removed) | `tests/test_orient_api.py` and preparation/state clients | `primary_checkout: {role, head_sha, dirty_count}`, `cwd_role` | `authority.v2 — DONE` |
 | `worktrees_router.py` | worktree filesystem paths | worktree dashboards and guardrail consumers | opaque worktree id, branch, role | `worktrees.v2` |
 | `comms_router.py`, fleet facade collectors | broker/fleet database paths | comms and fleet dashboards | `store: {reachable, kind}` | `comms.v2` (done #7182 PR-B) |
@@ -324,8 +305,7 @@ validation details. This keeps error responses inside the same sweep boundary.
 S="${LEARN_UKRAINIAN_SESSION_ID:-}"
 
 # 0. Product + route registry (cheap; do this when learning a new host or after API deploys).
-curl -s "http://localhost:8765/openapi.json" | jq .info
-curl -s "http://localhost:8765/api/contracts/routes" | jq '{generated_at, n_routes:(.route_contracts|length), n_pages:(.page_contracts|length)}'
+curl -s "http://localhost:8765/openapi.json" | jq '{info, n_paths:(.paths|length)}'
 
 # 1. Tiny session-bound index: hashes, identity, and trusted context telemetry.
 curl -s "http://localhost:8765/api/state/manifest?session=$S"
@@ -422,7 +402,7 @@ curl -sD - -o /dev/null http://localhost:8765/metrics
 
 ### `GET /api`
 
-Redirects (`307`) to the interactive API docs explorer at `/docs` (#7090). The bare `/api` path serves no payload of its own; use `/api/contracts/routes` for the machine-readable route registry.
+Redirects (`307`) to the interactive API docs explorer at `/docs` (#7090). The bare `/api` path serves no payload of its own; use `/openapi.json` for the machine-readable route list.
 
 ### `GET /api/health`
 
@@ -730,17 +710,7 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 `GET /api/state/routing-budget` consumes the same weekly rows as `source: notebook-report` with `age_s` when CodexBar on the API host has no authoritative weekly sample; the pinned `records_loaded=0` suppression lifts only when such data exists.
 
-### GitHub GraphQL budget
-
-`GET /api/state/github-budget` returns one `python -m lu_machinery.publish read budget` observation of
-`rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
-seconds, with concurrent cache misses coalesced into one probe. A successful
-zero remaining balance and GitHub's explicit `RATE_LIMIT` /
-`graphql_rate_limit` error both report `exhausted: true`; other command or
-response failures report `exhausted: null` and an error. This endpoint does not
-use `/rate_limit`, whose REST GraphQL summary can disagree with the live
-GraphQL API response. The read itself costs at least one GraphQL point per
-[GitHub's GraphQL rate-limit documentation](https://docs.github.com/en/graphql/overview/rate-limits-and-node-limits-for-the-graphql-api).
+### Occupancy load probe
 
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 
@@ -805,7 +775,7 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
 
 ### `POST /api/observer/presence`
 
-Loopback-only heartbeat for Grok Bot, QA Engineer, Cursor, Codex UI, and notebook Claude sessions. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not evidence of a live fleet registry row, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`, `cursor`, `codex`, `claude`; Claude requires an explicit notebook host. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an optional issue/PR token for GUI/session rows. Optional `epic`, `summary`, opaque `host_id`, `instance_id`, non-negative bounded `ctx_tokens`, and `window_tokens` are validated. The store key is `(host_id or cloud-observer, agent, instance_id or default)`, so notebook sessions do not clobber one another or legacy cloud rows. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show sanitized status, task, and optional instance). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
+Loopback-only heartbeat for Grok Bot, QA Engineer, Cursor, Codex UI, and notebook Claude sessions. This is **not** a RAM lease, not evidence of a live fleet registry row, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`, `cursor`, `codex`, `claude`; Claude requires an explicit notebook host. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an optional issue/PR token for GUI/session rows. Optional `epic`, `summary`, opaque `host_id`, `instance_id`, non-negative bounded `ctx_tokens`, and `window_tokens` are validated. The store key is `(host_id or cloud-observer, agent, instance_id or default)`, so notebook sessions do not clobber one another or legacy cloud rows. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show sanitized status, task, and optional instance). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
 
 Rows live 15 minutes and drop when stale or when Monitor restarts. Occupancy partitions them by opaque host. The default glance always keeps the observer-only `mac-operator` row; live heartbeats merge into it, and a quiet store still leaves the empty/unavailable seat. A SessionStart marker heartbeat is the only source of `working` for notebook sessions; the Mac GUI sweep reports `idle` while a process exists. The SessionStart/SessionEnd hooks manage local markers under the observer runtime directory, and the sweeper removes dead-PID or older-than-24-hour ghosts.
 
@@ -1303,7 +1273,7 @@ Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, litera
 
 ## Agent Comms Endpoints — `/api/comms/`
 
-Full agent communication monitoring, batch progress tracking, zombie detection, and cleanup.
+Live activity, batch progress tracking, broker channels, and cleanup. The message, conversation, zombie, stats, health and active-process routes were removed in lu-machinery 0.1.31 (machinery #756).
 
 ### `GET /api/comms/live-activity[?minutes=15]`
 
@@ -1338,38 +1308,6 @@ Health logic: `complete` (log says BATCH COMPLETE) > `healthy` (process running 
 ### `GET /api/comms/batch-progress/{track}`
 
 Detailed progress for one track. Includes a timeline of the 20 most recent research files.
-
-### `GET /api/comms/messages[?agent=x&task_id=x&msg_type=x&unacked_only=true&limit=100]`
-
-All messages with optional filters. Returns `preview` (300 chars), not full content.
-
-### `GET /api/comms/conversations[?limit=50]`
-
-Messages grouped by `task_id` with summary stats (msg_count, unacked, errors, agents involved).
-
-### `GET /api/comms/conversation/{task_id}`
-
-Full thread for one task. Returns all messages in order.
-
-### `GET /api/comms/zombies[?stale_hours=2&pingpong_threshold=5]`
-
-Auto-detect stuck patterns:
-- `stale_message` — unacked messages older than `stale_hours`
-- `pingpong` — rapid back-and-forth on same task (>threshold msgs in 1h)
-- `error_loop` — 3+ consecutive errors on same task
-- `orphan_pid` — PID files for dead processes
-
-### `GET /api/comms/stats`
-
-Message rate, error %, per-agent breakdown, queue depth.
-
-### `GET /api/comms/health`
-
-Broker DB health: exists, writable, size, queue depth, alive PID count.
-
-### `GET /api/comms/active-processes`
-
-Live bridge PID files with health status (alive/dead, age, agent, task_id).
 
 ### `POST /api/comms/cleanup[?max_age_hours=24]`
 
@@ -1418,9 +1356,8 @@ components whose hash changed. Full onboard map + versioning layers:
 [`docs/MONITOR-API.md`](MONITOR-API.md) § Where agents onboard / API versioning.
 
 ```bash
-# 0. After deploy / unfamiliar host: confirm product + contracts.
+# 0. After deploy / unfamiliar host: confirm the product and its route list.
 curl -s http://localhost:8765/openapi.json | jq .info
-curl -s http://localhost:8765/api/contracts/routes | jq .generated_at
 
 # 1. Index of hashes. Tiny.
 curl -s http://localhost:8765/api/state/manifest
@@ -1639,19 +1576,6 @@ Registered runtime adapters with default model and supported modes.
 }
 ```
 
-### `GET /api/runtime/usage?agent=&entrypoint=&days=7`
-
-Aggregated usage counts from `batch_state/api_usage/usage_*.jsonl`.
-
-```json
-{
-  "window_days": 7,
-  "records_total": 1234,
-  "by_agent": {"codex": {"total": 300, "ok": 280, "error": 10}},
-  "by_entrypoint": {"dispatch": {"total": 700, "ok": 690}}
-}
-```
-
 ### `GET /api/runtime/acpx?days=7`
 
 Read-only ACPX shadow posture and sanitized aggregate evidence. This endpoint
@@ -1851,44 +1775,6 @@ this read-only data only; it has no dashboard controls.
 `transport.mode` reflects the Monitor API process environment, not a global
 fleet switch; each TUI invocation still supplies its own default-off flag.
 
-### `GET /api/runtime/headroom?agent=codex&model=gpt-5.5`
-
-Quota gate for one `(agent, model)` pair.
-
-```json
-{
-  "agent": "codex",
-  "model": "gpt-5.5",
-  "has_headroom": true,
-  "reason": ""
-}
-```
-
-### `GET /api/runtime/recent?limit=50`
-
-Newest usage records from today's runtime logs, newest first.
-`source` is the initiating orchestrator, while `agent` is the destination and
-`via` is the transport. The runtime persists only bounded identifiers and
-reports legacy or unattributable records as `unknown`; it never guesses the
-caller from the destination agent. Failed calls also expose one body-free
-`failure_code`: `adapter_refused`, `protocol_output_limit`,
-`provider_unavailable`, `rate_limited`, `result_invalid`, `timeout`,
-`transport_error`, `unknown`, or a bounded ACP class:
-`acp_adapter_missing`, `acp_adapter_incompatible`, `acp_agent_startup`,
-`acp_agent_disconnected`, `acp_auth_required`, `acp_session_create_timeout`,
-`acp_permission_denied`, `acp_permission_unavailable`, `acp_turn_limit`,
-`acp_review_evidence_invalid`, or `acp_review_evidence_too_large`. Raw stderr, prompts,
-paths, credentials, signals, and provider text remain private.
-
-```json
-{
-  "records": [
-    {"ts": "2026-04-11T00:10:00Z", "source": "claude", "agent": "codex", "via": "delegate", "outcome": "ok", "failure_code": null},
-    {"ts": "2026-04-11T00:09:00Z", "source": "codex", "agent": "gemini", "via": "bridge", "outcome": "timeout", "failure_code": "timeout"}
-  ]
-}
-```
-
 ### `GET /api/runtime/transport-health`
 
 Read-only snapshot of the latest bounded fresh Codex CLI probe. The endpoint
@@ -1914,7 +1800,7 @@ Legacy v1 bridge receipts are invalidated.
   "checked_at": "2026-07-28T13:56:41Z",
   "expires_at": "2026-07-28T14:11:41Z",
   "age_seconds": 5,
-  "model": "gpt-6.1-sol",
+  "model": "gpt-6.2-sol",
   "effort": "low",
   "source": "receipt"
 }
@@ -1976,72 +1862,6 @@ Response:
   }
 ]
 ```
-
-## Legacy comms route telemetry — `/api/telemetry/legacy-comms-routes`
-
-The API records hourly usage aggregates for the deprecated messages,
-conversations, conversation-detail, send, and acknowledgement HTTP routes.
-The local store is `data/telemetry/legacy_comms_routes.db`; it is ignored by
-git, owner-only (`0600`), and retains 90 days.
-
-The recorder persists only normalized route ID, method, coarse caller class,
-status class, count, and first/last timestamps. It never stores path
-parameters, query values, request or response bodies, credentials, cookies,
-client addresses, or raw headers/User-Agent values. An exact
-`X-Learn-Uk-Caller` value is accepted only from a fixed allowlist; otherwise
-the User-Agent is classified in memory as browser, CLI, programmatic, test, or
-unknown and then discarded.
-
-`GET /api/telemetry/legacy-comms-routes?window=7d` accepts `1h`, `24h`, `7d`,
-`30d`, or `90d`. It returns all five route IDs, including zero-count routes,
-plus:
-
-- `coverage_started_at`: when this local store first began observing;
-- `window_fully_observed`: false until coverage spans the entire request;
-- `by_caller` and `by_status`: body-free aggregate counts;
-- `scope_note`: the explicit boundary that direct `ask-*` CLI calls bypass
-  these HTTP routes and are not counted.
-
-The first telemetry read or matching route request initializes coverage.
-Storage is fail-open for route serving: an unavailable telemetry database is
-logged but never changes the observed route response. This telemetry alone
-cannot authorize route deletion; direct bridge/CLI telemetry and the approved
-zero-use window remain separate gates under #6106.
-
-## Legacy one-shot bridge telemetry — `/api/telemetry/legacy-bridge-asks`
-
-The compatibility aliases that converge on `run_compat_ask` record hourly,
-body-free usage aggregates in the same owner-only local store as the legacy
-HTTP route telemetry. A valid invocation records `started` before authority or
-provider work. Its terminal result increments `succeeded` or `failed`; a
-process termination or crash remains visible as `unfinished`.
-
-Linked dispatch worktrees resolve this store through Git's primary checkout,
-so their invocations converge on the same fleet-wide local evidence plane read
-by the supervised Monitor API. Disposable worktree removal does not remove or
-fragment the observation history.
-
-The recorder persists only the normalized target (`agy`, `claude`, `codex`,
-`cursor`, `deepseek`, `glm`, `grok`, `kimi`, or `pool`), a fixed caller family,
-counts, and first/last timestamps. It never stores prompts, task IDs,
-attachments, model or effort requests, responses, error text, paths, or raw
-caller identities. Caller strings are classified in memory as `anthropic`,
-`openai`, `google`, `xai`, `moonshot`, `zhipu`, `deepseek`, `cursor`,
-`operator`, or `unknown`, and then discarded.
-
-`GET /api/telemetry/legacy-bridge-asks?window=7d` accepts `1h`, `24h`, `7d`,
-`30d`, or `90d`. It returns every allowlisted target, including zero-count
-targets, aggregate start/terminal/unfinished totals, counts by caller family,
-and the same honest `coverage_started_at` and `window_fully_observed` fields.
-Coverage begins on the first telemetry read or valid `run_compat_ask`
-invocation. Refused targets, empty task IDs, and attempts to use the one-shot
-path for formal review are not counted.
-
-Storage is fail-open: telemetry failure never replaces the bridge result. The
-store retains 90 days and is forced to owner-only (`0600`) permissions. This
-evidence does not cover other direct provider entry points and cannot by itself
-authorize alias or route deletion; the approved zero-use window and static
-caller inventory remain separate #6106 gates.
 
 ## Module Build Token Telemetry — `/api/telemetry/module-builds`
 
@@ -2372,32 +2192,14 @@ Payload allowlist is exactly `{task_id, research_id, surface, status}` on top of
 emitter envelope — never a digest body, title, summary, source URL, prompt, role,
 task family, track, owned paths, or context fingerprint.
 
-## Rollover Registry — `/api/rollovers`
+## Rollover Registry
 
-### `GET /api/rollovers`
-
-Read-only fleet audit of versioned rollover records. The response classifies
-valid and corrupt packets, reports live-pending counts, and includes exact IDs,
-human-readable task titles, age, last successful boundary, reconciliation
-state, blocking or terminal reason, and the next safe action. HTTP never
-exposes a mutation path.
-
-Optional query parameters are `agent`, `source_thread_id`,
-`replacement_thread_id`, `lineage_id`, `rollover_id`, and `stale_hours`.
-Supplying any exact selector switches to one-record projection mode. Multiple
-selectors are ANDed; no match returns `404`, and an ambiguous match returns
-`409` with candidates instead of selecting one.
-
-```bash
-curl -s "${MONITOR_API_BASE}/api/rollovers" | jq .
-curl -s "${MONITOR_API_BASE}/api/rollovers?agent=codex&lineage_id=<lineage-id>&rollover_id=<rollover-id>" | jq .
-```
-
-The `rollovers` section in `/api/orient` is the compact cold-start projection:
-counts plus live pending or confirmed-but-incompletely-cleaned entries. Use this
-endpoint for complete evidence and registry validation errors. Use
-`lu_machinery/orchestration/rollover_registry_cli.py` for evidence-gated exact
-reconciliation or maintenance.
+`GET /api/rollovers` was removed in lu-machinery 0.1.31 (machinery #756). The
+`rollovers` section in `/api/orient` is the compact cold-start projection:
+counts plus live pending or confirmed-but-incompletely-cleaned entries. Use
+`lu_machinery/orchestration/rollover_registry_cli.py` for complete evidence,
+registry validation errors, and evidence-gated exact reconciliation or
+maintenance.
 
 ## Orientation — `/api/orient`
 
@@ -3011,69 +2813,6 @@ never 500.
      "is_primary": true, "dirty": false, "change_types": [],
      "last_commit": {"sha": "abc1234", "committed_at": "...", "subject": "..."}}
   ]
-}
-```
-
-### Git hygiene — `GET /api/git/hygiene`
-
-Classifies current working-tree dirty files into actionable cleanup
-buckets. Exemption paths are loaded from
-`docs/best-practices/git-hygiene.md`; exempt files do not count toward
-`dirty_total`.
-
-| Endpoint | Purpose |
-|---|---|
-| `GET /api/git/hygiene` | Dirty-file taxonomy, remediation hints, and hygiene health |
-
-```bash
-curl -s http://localhost:8765/api/git/hygiene | python3 -m json.tool
-```
-
-Response:
-
-```json
-{
-  "generated_at": "2026-04-24T06:50:00Z",
-  "dirty_total": 6,
-  "exempt": {"wiki": 1, "draft_tickets": 1, "gitignored": 0, "other": 0, "total": 2},
-  "buckets": {
-    "stale_behind_main": {"count": 1, "files": ["stale.py"]},
-    "real_wip": {"count": 1, "files": ["wip.py"]},
-    "untracked_unexempted": {"count": 1, "files": ["scratch/todo.txt"]},
-    "intentional_deletions": {
-      "count": 3,
-      "files": ["feature/remove/a.txt", "feature/remove/b.txt", "feature/remove/c.txt"],
-      "pattern": "feature/remove/*"
-    }
-  },
-  "suggestions": [
-    {
-      "action": "restore_to_head",
-      "rationale": "pre-merge content; main moved past these files",
-      "files": ["stale.py"],
-      "command": "git checkout HEAD -- stale.py"
-    },
-    {
-      "action": "stash_wip",
-      "rationale": "local definitions or decorators need a stash or commit, not restore",
-      "files": ["wip.py"],
-      "command": "git stash push -m git-hygiene-wip -- wip.py"
-    },
-    {
-      "action": "gitignore_pattern",
-      "pattern": "scratch/",
-      "rationale": "untracked files are neither ignored nor policy-exempt",
-      "files": ["scratch/todo.txt"]
-    },
-    {
-      "action": "commit_deletions",
-      "rationale": "coherent deletion cluster with no modified or untracked files in the same subtree",
-      "pattern": "feature/remove/*",
-      "files": ["feature/remove/a.txt", "feature/remove/b.txt", "feature/remove/c.txt"]
-    }
-  ],
-  "health": "dirty",
-  "performance_ms": 42.5
 }
 ```
 

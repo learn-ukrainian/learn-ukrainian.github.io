@@ -193,28 +193,56 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(task_path, _task_payload("running", status="running", pid=111))
 
-    # _read_task_state opens via builtins.open (CodeQL sink-colocated guard),
-    # not Path.read_text — patch the real sink.
-    import builtins
-    from io import StringIO
+    # lu-machinery 0.1.31 (machinery #762) reads task records through
+    # task_store_paths.read_cached_task_record (os.open + os.fdopen) and
+    # memoizes a structural failure only when the file version is unchanged
+    # across the read. A transient invalid read is one that races a rewrite:
+    # the first read returns a truncated body while the file is rewritten.
+    import os
+    from collections import OrderedDict
 
-    original_open = builtins.open
+    from lu_machinery.common import task_store_paths
+
+    monkeypatch.setattr(task_store_paths, "_record_cache", OrderedDict())
+    monkeypatch.setattr(task_store_paths, "_record_cache_bytes", 0)
+    original_fdopen = task_store_paths.os.fdopen
     read_attempts = 0
     retry_delays = []
     target = task_path.resolve()
 
-    def flaky_open(file, *args, **kwargs):
+    class _RacedRead:
+        """The first read of the target sees a half-written body mid-rewrite."""
+
+        def __init__(self, handle):
+            self._handle = handle
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return self._handle.__exit__(*exc)
+
+        def fileno(self):
+            return self._handle.fileno()
+
+        def read(self, *_args):
+            info = target.stat()
+            os.utime(target, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000))
+            return b"{"
+
+    def flaky_fdopen(fd, *args, **kwargs):
         nonlocal read_attempts
+        handle = original_fdopen(fd, *args, **kwargs)
         try:
-            opened = Path(file).resolve()
+            opened = Path(os.readlink(f"/proc/self/fd/{fd}")).resolve()
         except OSError:
             opened = None
         if opened == target and read_attempts == 0:
             read_attempts += 1
-            return StringIO("{")
-        return original_open(file, *args, **kwargs)
+            return _RacedRead(handle)
+        return handle
 
-    monkeypatch.setattr(builtins, "open", flaky_open)
+    monkeypatch.setattr(task_store_paths.os, "fdopen", flaky_fdopen)
     monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
 
@@ -225,6 +253,7 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     assert response.json()["total"] == 1
     assert response.json()["tasks"][0]["task_id"] == "running"
     assert retry_delays == [delegate_router.TASK_READ_RETRY_SECONDS]
+    assert read_attempts == 1
 
 
 def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):

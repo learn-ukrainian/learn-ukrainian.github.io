@@ -153,7 +153,7 @@ agent → GET /api/orient
 ### Delegated task
 
 ```
-claude (session) → dispatch.py dispatch --agent codex --model gpt-6.1-sol --task-id issue-X
+claude (session) → dispatch.py dispatch --agent codex --model gpt-6.2-sol --task-id issue-X
   → spawns detached worker process
   → worker writes batch_state/tasks/issue-X.json (status=spawning → running)
   → worker calls runner.invoke() → codex CLI

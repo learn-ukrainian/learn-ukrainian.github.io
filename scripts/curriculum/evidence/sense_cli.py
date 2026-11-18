@@ -886,7 +886,7 @@ def parser(command: str) -> argparse.ArgumentParser:
             "Examples:\n  .venv/bin/python -m scripts.curriculum.evidence sense-select a1 --private-input PRIVATE_JSONL\n"
             "  .venv/bin/python -m scripts.curriculum.evidence sense-select a1 --private-input PRIVATE_JSONL --write --key-file KEY --key-id build1\n"
             "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates\n"
-            "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW --author-model gpt-6.1-sol\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW --author-model gpt-6.2-sol\n"
             "Outputs: public JSON decisions/candidates; --write updates bindings + lock; --check verifies and seals a clean head.\n"
             "Exit codes: 0 success; 1 invalid/stale evidence or suspected leak; 2 usage.\n"
             "Related: build-words, words-verify, pack-verify; docs/runbooks/reference-sense-bindings.md"

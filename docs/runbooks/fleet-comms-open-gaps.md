@@ -37,23 +37,25 @@ just because the inline body looks short.
 **Shipped:** SQLite streams + phase-one CLI; live streams include
 `epic:4387` (atlas), `epic:4707` (infra), `epic:4542`, `epic:4706`.
 
-**This PR:** dual-write inventory without retiring files:
+**Inventory:**
 
 ```bash
-.venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
-.venv/bin/python -m agents_extensions.shared.session_streams inventory --register
-# DB-first projection receipts + drift detection (no file rewrite / no cutover):
-.venv/bin/python -m agents_extensions.shared.session_streams project
-.venv/bin/python -m agents_extensions.shared.session_streams check-drift
-# under an active lease (SESSION_STREAM_* env):
-.venv/bin/python -m agents_extensions.shared.session_streams mirror-handoff \
-  --stream epic:4387
+.venv/bin/python -m lu_machinery.session_streams inventory --register
 ```
 
-Registry: manifest inventory from `scripts/config/issue_streams.yaml` via
-`agents_extensions/shared/session_streams/inventory.py` (Sol PR-H; not a hard-coded
-epic subset). Projection receipts land in `legacy_projection_receipts` after
-inventory; unrecorded file mutation is flagged as `drift` without flipping modes.
+Registry: manifest inventory from the installed release's
+`lu_machinery/config/issue_streams.yaml` via
+`lu_machinery/session_streams/inventory.py` (Sol PR-H; not a hard-coded epic
+subset).
+
+**Retired in lu-machinery 0.1.31 (machinery #760):** the handoff mirror and its
+commands (`dual-write-status`, `project`, `check-drift`, `mirror-handoff`,
+`mirror-atlas`), and the Monitor routes
+`GET /api/session-streams/v1/dual-write-status` and
+`GET /api/session-streams/v1/drift`. A lane's handoff content is its DB note;
+the `/api/session-streams` contract is `session-streams.v3`. The
+`legacy_mirrors` and `legacy_projection_receipts` tables stay readable through
+`session_streams dump`.
 
 **Still blocked for the session-stream continuity cutover:** operator gate
 after per-harness acceptance; session handoff files remain authoritative for
@@ -78,18 +80,18 @@ lint: #5642 / `lu_machinery/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Cross-family CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.1-sol` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Opus 5.5 escalation) |
-| **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | yes (`ask-codex --type review`) |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.2-sol` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Opus 5.5 escalation) |
+| **codex** | `gpt-6.2-sol` @ high | **`gpt-6.2-sol` @ high** | yes (`ask-codex --type review`) |
 | **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`ask-grok --type review`) |
 | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | no until #5555 — still *requests* CF |
-| **cursor** | `grok-4.7` @ high (or `composer-2.5`; Auto only for a well-defined coding dispatch) | **`gpt-6.1-sol` @ high** | no — formal CF requires attested `resolved_model` |
+| **cursor** | `grok-4.7` @ high (or `composer-2.5`; Auto only for a well-defined coding dispatch) | **`gpt-6.2-sol` @ high** | no — formal CF requires attested `resolved_model` |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
-| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
+| claude | claude-opus-5-5 | high | gpt-6.2-sol | high |
+| codex | gpt-6.2-sol | high | gpt-6.2-sol | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 Escalate when: architecture, hard multi-file judgment, high-stakes synthesis — not routine queue.
@@ -100,7 +102,7 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 # Claude escalate
 .venv/bin/python scripts/dispatch.py dispatch --agent claude --model claude-opus-5-5 ...
 # Codex named advisor escalate
-.venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6.1-sol ...
+.venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6.2-sol ...
 ```
 
 ## Formal CF defaults (orchestrator-ready)
@@ -218,7 +220,7 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 ## Closeout checklist
 
 - [x] #5392 — green tests for sidecar + TRUNCATED footer (`tests/test_reply_sidecar.py` 8/8, 2026-07-22)
-- [x] dual-write-status returns registered streams (`inventory --register` → 17/17 ok, drift=0; cutover still blocked by operator gate)
+- [x] dual-write-status returned registered streams (`inventory --register` → 17/17 ok, drift=0; cutover still blocked by operator gate); the command was retired with the mirror in lu-machinery 0.1.31 (machinery #760)
 - [x] backlog warning does not mention `gemini` when it is a dead lane (`fleet_comms backlog` exclude_retired includes gemini; total=0)
 - [x] empty-body process-ask records `transport empty-ask-body` (`tests/test_reply_sidecar.py` asserts raise + status)
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)

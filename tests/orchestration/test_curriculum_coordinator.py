@@ -407,7 +407,7 @@ def _published_credit(state: str = "credit_balance_present", *, fetched_at: date
         "state": state,
         "reason": "fixture",
         "credit_balance": 12.5,
-        "allowed_models": ["gpt-6.1-sol", "gpt-6-luna"],
+        "allowed_models": ["gpt-6.2-sol", "gpt-6-luna"],
         "evidence": {"credit_fetched_at": fetched_at.isoformat().replace("+00:00", "Z")},
     }
 
@@ -432,7 +432,7 @@ def test_near_cap_lane_with_fresh_credit_balance_passes_wave_gate() -> None:
     assert lane["credit"] == {
         "state": "credit_balance_present",
         "reason": "fixture",
-        "allowed_models": ["gpt-6.1-sol", "gpt-6-luna"],
+        "allowed_models": ["gpt-6.2-sol", "gpt-6-luna"],
         "wave_models": None,
         "model_check": coordinator.WAVE_MODELS_UNREADABLE,
     }
