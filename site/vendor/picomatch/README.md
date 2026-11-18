@@ -24,11 +24,16 @@ compiled as literal text (the treatment upstream already gives `*(*|x)`), unless
   so every repetition consumes the same number of characters; or
 - it has several branches that are all non-empty literals forming a uniquely decodable
   set (Sardinas-Patterson test), so no input can be split into branches in two ways.
+  Under case-insensitive matching (`nocase`, or `i` in `flags`) the branches must be
+  ASCII and are compared lower-cased.
 
-Repeated extglobs whose body holds `*`, `+`, a nested extglob, braces, quotes or an
-ambiguous alternation (`+(a|ab|b)`) now match only their literal text. Upstream's own test
-suite passes except for 65 assertions, all of that kind. A numeric `maxExtglobRecursion`
-no longer relaxes the guard; `maxExtglobRecursion: false` still turns it off.
+A body with any backslash fails both tests: the tokenizer gives escapes regex meaning
+(`\w`) and collapses backslash runs so that a following `?` can become a quantifier, so
+the analysis does not try to model them. Repeated extglobs whose body holds `*`, `+`, a
+nested extglob, braces, quotes, a backslash or an ambiguous alternation (`+(a|ab|b)`) now
+match only their literal text. Upstream's own test suite passes except for 76 assertions,
+all of that kind. A numeric `maxExtglobRecursion` no longer relaxes the guard;
+`maxExtglobRecursion: false` still turns it off.
 
 ## Rebuild and verify
 
@@ -41,7 +46,7 @@ chmod -R u=rwX,go=rX package
 ```
 
 The result is byte-identical to the committed tarball: integrity
-`sha512-wxG+7WV8klxi0ISaa2DuID1CZB2uwE1cRtzuoIwqJFiLDjGdQ0zwuBXBWuCtN3pFgyFVL5RNJ06cYRQhE8qTrg==`,
+`sha512-ymiVoFGGLwVKLw2xlBSg6eC9ZMvK7D0JCyQAx9kM50klgdXDTY2MdVKY/c+x61Bm0POrHTFlKhO1Lxr82ZduuA==`,
 the value of the `node_modules/picomatch` entry in both lockfiles. When you change the
 patch, bump the `-lu.N` suffix, rebuild, and update both lockfiles.
 

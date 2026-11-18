@@ -1,12 +1,12 @@
-diff -ruN a/package/lib/parse.js b/package/lib/parse.js
+diff -ruN a/package/lib/parse.js b2/package/lib/parse.js
 --- a/package/lib/parse.js
 +++ b/package/lib/parse.js
-@@ -284,6 +284,109 @@
+@@ -284,6 +284,99 @@
    return depth;
  };
 
 +// learn-ukrainian patch for GHSA-fc5q-39xc-vjpf (CVE-2026-112366), see
-+// ../LU-PATCH.md. A repeated extglob, `+(...)` or `*(...)`, backtracks
++// site/vendor/picomatch/README.md in learn-ukrainian. A repeated extglob, `+(...)` or `*(...)`, backtracks
 +// exponentially when one iteration can consume a variable number of
 +// characters (`+(*)`, `+(*a)`, `+(a+)`, nested extglobs) or when two
 +// branches can match the same text (`+(a|ab|b)`). These helpers fail
@@ -25,28 +25,10 @@ diff -ruN a/package/lib/parse.js b/package/lib/parse.js
 +
 +// Fixed width: only literal characters, `?` and bracket expressions, so every
 +// iteration consumes the same number of characters. Any quantifier, group,
-+// brace, quote or dangling escape fails the check.
-+const isFixedWidthBranch = branch => {
-+  let escaped = false;
-+
-+  for (const ch of unwrapAtGroups(branch)) {
-+    if (escaped === true) {
-+      escaped = false;
-+      continue;
-+    }
-+
-+    if (ch === '\\') {
-+      escaped = true;
-+      continue;
-+    }
-+
-+    if (/[*+(){}|"]/.test(ch)) {
-+      return false;
-+    }
-+  }
-+
-+  return escaped === false;
-+};
++// brace or quote fails the check, and so does any backslash: the tokenizer
++// collapses backslash runs and can then emit a following `?` as a regex
++// quantifier, so escapes are not modelled here.
++const isFixedWidthBranch = branch => !/[\\*+(){}|"]/.test(unwrapAtGroups(branch));
 +
 +// Bounds the decodability test below so that analysing a pattern stays cheap.
 +const MAX_ALTERNATION_CHARS = 1024;
@@ -55,19 +37,27 @@ diff -ruN a/package/lib/parse.js b/package/lib/parse.js
 +// the branch set is uniquely decodable (Sardinas-Patterson test): then every
 +// prefix of the input has at most one split into branches, so backtracking
 +// visits each input position at most once. When some text has two splits
-+// (`a|ab|b` on "ab"), each repetition doubles the work.
-+const isUnambiguousLiteralAlternation = branches => {
++// (`a|ab|b` on "ab"), each repetition doubles the work. The test runs on the
++// text the regex matches, so it fails closed where that differs from the
++// branch spelling: any backslash (escapes such as `\w` keep their regex
++// meaning) and, under case-insensitive matching, any non-ASCII character
++// (ASCII letters are then compared lower-cased).
++const isUnambiguousLiteralAlternation = (branches, caseless) => {
 +  const code = new Set();
 +  let size = 0;
 +
 +  for (const branch of branches) {
 +    const value = unwrapAtGroups(branch);
 +
-+    if (value === '' || value.includes('"') || !isPlainBranch(value) || value.endsWith('\\')) {
++    if (value === '' || /[\\"]/.test(value) || !isPlainBranch(value)) {
 +      return false;
 +    }
 +
-+    const literal = value.replace(/\\(.)/g, '$1');
++    if (caseless && /[^\x00-\x7f]/.test(value)) {
++      return false;
++    }
++
++    const literal = caseless ? value.toLowerCase() : value;
 +    size += literal.length;
 +
 +    if (code.has(literal) || size > MAX_ALTERNATION_CHARS) {
@@ -111,21 +101,23 @@ diff -ruN a/package/lib/parse.js b/package/lib/parse.js
  const analyzeRepeatedExtglob = (body, options) => {
    if (options.maxExtglobRecursion === false) {
      return { risky: false };
-@@ -343,6 +446,13 @@
+@@ -343,6 +436,15 @@
        : { risky: true };
    }
 
 +  // learn-ukrainian patch (GHSA-fc5q-39xc-vjpf): see the helpers above.
 +  const rawBranches = splitTopLevel(body);
 +
-+  if (rawBranches.length === 1 ? !isFixedWidthBranch(rawBranches[0]) : !isUnambiguousLiteralAlternation(rawBranches)) {
++  const caseless = String(options.flags || (options.nocase ? 'i' : '')).includes('i');
++
++  if (rawBranches.length === 1 ? !isFixedWidthBranch(rawBranches[0]) : !isUnambiguousLiteralAlternation(rawBranches, caseless)) {
 +    return { risky: true };
 +  }
 +
    return { risky: false };
  };
 
-diff -ruN a/package/package.json b/package/package.json
+diff -ruN a/package/package.json b2/package/package.json
 --- a/package/package.json
 +++ b/package/package.json
 @@ -1,14 +1,11 @@
