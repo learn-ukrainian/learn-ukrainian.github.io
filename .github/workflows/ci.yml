@@ -1032,7 +1032,9 @@ jobs:
               r"((?:[0-9]+!)?[0-9]+(?:\.[0-9]+)*(?:(?:a|b|rc)[0-9]+)?"
               r"(?:\.post[0-9]+)?(?:\.dev[0-9]+)?(?:\+[a-z0-9]+(?:\.[a-z0-9]+)*)?)"
           )
-          PIN = re.compile(NAME + "==" + VERSION + r"( \\)?")
+          # An optional PEP 508 environment marker after " ; ": the pin applies where it holds.
+          MARKER = r"(?: ; ([^\s\\][^\\]*?))?"
+          PIN = re.compile(NAME + "==" + VERSION + MARKER + r"( \\)?")
           DIRECT = re.compile(NAME + r" @ ([^\s;#]+)")
           LOCAL = re.compile(r"\./[A-Za-z0-9._/-]+")  # a local path names no index package; no extras or options
           HASH = re.compile(r" +--hash=sha256:[0-9a-f]{64}( \\)?")

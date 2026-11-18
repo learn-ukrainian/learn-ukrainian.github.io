@@ -35,13 +35,17 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     context = production_context()
     app = api_main.create_app(context)
 
-    assert [(entry.cls, entry.args) for entry in app.user_middleware] == [
-        (api_main.PrometheusMetricsMiddleware, ()),
+    # The metrics middleware is registered as its bound ``wrap`` hook, which owns the snapshot the app serves.
+    metrics_wrap = app.user_middleware[0].cls
+    assert metrics_wrap.__func__ is api_main.PrometheusMetricsMiddleware.wrap
+    assert isinstance(metrics_wrap.__self__, api_main.PrometheusMetricsMiddleware)
+    assert metrics_wrap.__self__.snapshot is app.state.metrics_snapshot
+    assert (app.user_middleware[0].args, app.user_middleware[0].kwargs) == ((), {})
+    assert [(entry.cls, entry.args) for entry in app.user_middleware[1:]] == [
         (BaseHTTPMiddleware, ()),
         (BaseHTTPMiddleware, ()),
         (CORSMiddleware, ()),
     ]
-    assert app.user_middleware[0].kwargs == {"context": context}
     assert app.user_middleware[1].kwargs["dispatch"] is opsec_path_sanitizer_middleware
     assert app.user_middleware[2].kwargs["dispatch"] is resilience_middleware
     assert app.user_middleware[3].kwargs == {
@@ -660,6 +664,8 @@ def test_metrics_endpoint_counts_requests_and_5xx_errors(tmp_path: Path, monkeyp
         failed = client.get("/api", follow_redirects=False)
         assert failed.status_code == 500
 
+        # /metrics serves a periodic snapshot; run the refresh the lifespan would, so the counters are visible.
+        app.state.metrics_snapshot.refresh()
         metrics = client.get("/metrics")
         assert metrics.status_code == 200
         pinned_type = "text/plain; version=0.0.4; charset=utf-8"
