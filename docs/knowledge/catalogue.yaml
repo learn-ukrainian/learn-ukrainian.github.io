@@ -2208,10 +2208,10 @@ store_registry:
       activity: dormant
       presence: present
       writers: []
-      writer_note: The broker server and every product reader were deleted on 2026-11-18; the file is retired history that stays on disk.
+      writer_note: No tracked product file writes it since the broker server and every product reader were deleted on 2026-11-18; the installed lu-machinery bridge (release 0.1.33, lu_machinery.ai_agent_bridge._db) can still create or migrate it until that bridge retires. No rows since 2026-11-03.
       journal: wal
-      busy_ms: null
-      busy_source: no_writer
+      busy_ms: 5000
+      busy_source: explicit
       protection: keep
       backup: none
       protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'

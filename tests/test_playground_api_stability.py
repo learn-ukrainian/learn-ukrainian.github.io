@@ -103,11 +103,11 @@ def three_run_perf_probe() -> Callable[[Callable[[], object]], tuple[list[object
 
 
 @pytest.mark.slow
-def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
+def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe, rebind_bridge_db):
     base_ctx = production_context()
     image_root = tmp_path / "textbook_images"
     image_root.mkdir()
-    test_ctx = with_product_roots(base_ctx, images_dir=image_root)
+    test_ctx = rebind_bridge_db(with_product_roots(base_ctx, images_dir=image_root))
     monkeypatch.setattr(app.state, "ctx", test_ctx)
 
     client = TestClient(app, raise_server_exceptions=False)

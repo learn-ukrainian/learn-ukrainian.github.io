@@ -265,6 +265,9 @@ batch_state/atlas-jobs/*
 # Archive of old content (pre-rebuild snapshots)
 _archive/
 
+# Installed bridge process files (release 0.1.33 still writes them; drop with the bridge)
+.mcp/servers/message-broker/pids/
+
 # Test artifacts
 test_git_mtime/
 

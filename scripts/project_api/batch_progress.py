@@ -22,7 +22,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get, cache_set
+from lu_machinery.api.state_helpers import cache_get, cache_set, ctx_scoped_ttl_key
 from lu_machinery.path_safety import safe_join
 
 router = APIRouter(tags=["comms"])
@@ -239,7 +239,8 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
 
     This is the main endpoint for monitoring overnight/background builds.
     """
-    cache_key = f"comms_batch_progress_{_preseed_log_dir(ctx)}"
+    # The track rows carry counts from this context's curriculum tree, so the key names it.
+    cache_key = ctx_scoped_ttl_key(ctx, "comms_batch_progress", _preseed_log_dir(ctx), ctx.roots.curriculum_root)
     cached = cache_get(cache_key, ttl=10.0)
     if cached is not None:
         return cached
