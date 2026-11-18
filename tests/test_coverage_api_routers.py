@@ -1,11 +1,8 @@
-"""Tests for API routers: comms batch progress and live activity, and sources.
+"""Tests for product API routers: comms batch progress and sources.
 
 Targets ~150+ tests for coverage improvement.
 """
 
-import json
-import sqlite3
-from datetime import UTC, datetime
 from unittest.mock import patch
 
 import pytest
@@ -30,36 +27,12 @@ def mock_project_root(tmp_path):
     (tmp_path / "data" / "literary_texts").mkdir(parents=True)
     (tmp_path / "logs").mkdir(parents=True)
     (tmp_path / "logs" / "research-preseed").mkdir(parents=True)
-    (tmp_path / ".mcp" / "servers" / "message-broker" / "pids").mkdir(parents=True)
     (tmp_path / "curriculum" / "l2-uk-en").mkdir(parents=True)
     return tmp_path
 
 
 @pytest.fixture()
-def broker_db(mock_project_root):
-    """Create a SQLite broker DB with the messages table."""
-    db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-    conn = sqlite3.connect(str(db_path))
-    conn.execute("""
-        CREATE TABLE messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            task_id TEXT,
-            from_llm TEXT,
-            to_llm TEXT,
-            message_type TEXT,
-            content TEXT,
-            data TEXT,
-            timestamp TEXT,
-            acknowledged INTEGER DEFAULT 0
-        )
-    """)
-    conn.commit()
-    conn.close()
-    return db_path
-
-
-@pytest.fixture()
-def _patch_config(mock_project_root, broker_db):
+def _patch_config(mock_project_root):
     """Patch config module paths to use tmp_path.
 
     comms_router itself keeps no path globals since #7269 step 5 — it
@@ -71,38 +44,30 @@ def _patch_config(mock_project_root, broker_db):
     with (
         patch("lu_machinery.api.config.PROJECT_ROOT", mock_project_root),
         patch("lu_machinery.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
-        patch("lu_machinery.api.config.MESSAGE_DB", broker_db),
     ):
         yield
 
 
-def _comms_ctx(project_root, **root_overrides):
+def _comms_ctx(project_root):
     """Build the comms app context for the fixture root (#7269 step 5).
 
     Same pattern as ``tests/test_comms_router_expiry_sweep.py``: a fixture
     context whose roots all live under the test's project root.
-    ``root_overrides`` replace individual ``MonitorRoots`` fields (e.g.
-    ``pid_dir=Path("/nonexistent")``).
     """
 
     from lu_machinery.api.monitor_context import fixture_context
 
-    ctx = fixture_context(project_root)
-    if root_overrides:
-        ctx = ctx.with_roots(**root_overrides)
-    return ctx
+    return fixture_context(project_root)
 
 
 @pytest.fixture()
 def comms_client(_patch_config, mock_project_root):
-    """TestClient for the comms router and the product batch-progress routes under its prefix."""
-    from lu_machinery.api.comms_router import router
-
+    """TestClient for the product batch-progress routes under the comms prefix."""
     from scripts.project_api.batch_progress import router as batch_progress_router
+
     app = FastAPI()
     app.state.ctx = _comms_ctx(mock_project_root)
     app.include_router(batch_progress_router, prefix="/api/comms")
-    app.include_router(router, prefix="/api/comms")
     return TestClient(app)
 
 
@@ -136,50 +101,6 @@ class TestCommsBatchProgress:
         data = r.json()
         assert "hist" in data["tracks"]
         assert data["tracks"]["hist"]["health"] == "complete"
-
-
-class TestCommsLiveActivity:
-    """Tests for /api/comms/live-activity endpoint."""
-
-    def test_live_activity_with_state_file(self, comms_client, mock_project_root):
-        # Create a recently-modified state-v3.json
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "test-module"
-        orch_dir.mkdir(parents=True)
-        state = {
-            "slug": "test-module",
-            "phases": {
-                "v3-content": {
-                    "status": "running",
-                    "ts": datetime.now(UTC).isoformat(),
-                    "task_id": "task-1",
-                    "mode": "build",
-                },
-            },
-        }
-        (orch_dir / "state-v3.json").write_text(json.dumps(state))
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        data = r.json()
-        assert len(data["in_progress"]) >= 1
-
-    def test_live_activity_with_v6_state_file(self, comms_client, mock_project_root):
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "v6-module"
-        orch_dir.mkdir(parents=True)
-        state = {
-            "mode": "v6",
-            "slug": "v6-module",
-            "phases": {
-                "write": {
-                    "status": "running",
-                    "ts": datetime.now(UTC).isoformat(),
-                    "task_id": "task-v6",
-                    "mode": "build",
-                },
-            },
-        }
-        (orch_dir / "state.json").write_text(json.dumps(state))
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        data = r.json()
-        assert any(item["slug"] == "v6-module" and item["phase"] == "write" for item in data["in_progress"])
 
 
 # ===========================================================================

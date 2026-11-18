@@ -2,17 +2,13 @@
 
 from __future__ import annotations
 
-import sqlite3
 import time
 from collections.abc import Callable
-from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from lu_machinery.ai_agent_bridge import _db
 from lu_machinery.api.main import app
 from lu_machinery.api.monitor_context import production_context
-from lu_machinery.api.telemetry import legacy_comms as legacy_comms_telemetry
 
 from scripts.project_api.context import with_product_roots
 from tests.latency_budget import assert_under_budget
@@ -24,16 +20,8 @@ DASHBOARD_LOADS = {
     "index.html": [
         "/api/dashboard/overview",
     ],
-    "channels.html": [
-        "/api/comms/channels",
-        "/api/comms/channels/general",
-        "/api/comms/channels/general/messages?tail=50",
-        "/api/comms/channels/general/deliveries?status=pending&limit=20",
-    ],
     "comms.html": [
-        "/api/comms/messages?limit=1&offset=0",
         "/api/comms/batch-progress",
-        "/api/comms/zombies",
     ],
     "curriculum-dashboard.html": [
         "/api/dashboard/overview",
@@ -67,13 +55,6 @@ BUDGETS = {
     # git, GH, RAG/textbook indexes, or cold in-memory caches. GH #1826 relaxes
     # these network/IO-bound smoke budgets to 1.5s while keeping health tight.
     "/api/comms/batch-progress": 1.5,
-    "/api/comms/channels": 1.5,
-    "/api/comms/channels/general": 1.5,
-    "/api/comms/channels/general/deliveries?status=pending&limit=20": 1.5,
-    "/api/comms/channels/general/messages?tail=50": 1.5,
-    "/api/comms/live-activity?minutes=30": 1.5,
-    "/api/comms/messages?limit=1&offset=0": 1.5,
-    "/api/comms/zombies": 1.5,
     "/api/config": 1.5,
     "/api/dashboard/module/a1/hello": 1.5,
     "/api/dashboard/overview": 1.5,
@@ -96,28 +77,6 @@ BUDGETS = {
     "/api/wiki/quality-gate/a1": 1.5,
     "/api/wiki/status/a1": 1.5,
 }
-
-
-def _init_broker_db(path: Path) -> None:
-    conn = sqlite3.connect(path)
-    conn.executescript(_db._LEGACY_SCHEMA)
-    conn.executescript(_db._CHANNELS_SCHEMA)
-    conn.execute(
-        """
-        INSERT INTO channels (name, created_at, description, include, subscribers)
-        VALUES ('general', '2026-05-06T00:00:00Z', 'General', '', 'claude,codex')
-        """
-    )
-    conn.execute(
-        """
-        INSERT INTO messages (
-            task_id, from_llm, to_llm, message_type, content, timestamp, acknowledged, status
-        )
-        VALUES ('smoke-a1-hello', 'codex', 'claude', 'message', 'smoke', '2026-05-06T00:00:00Z', 0, 'pending')
-        """
-    )
-    conn.commit()
-    conn.close()
 
 
 def _p95_of_three(timings: list[float]) -> float:
@@ -144,24 +103,11 @@ def three_run_perf_probe() -> Callable[[Callable[[], object]], tuple[list[object
 
 @pytest.mark.slow
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
-    broker_db = tmp_path / "messages.db"
-    _init_broker_db(broker_db)
-    # comms_router keeps no path globals since #7269 step 5 — it resolves
-    # its broker DB from the app's MonitorContext. Pin the context's message
-    # DB onto this smoke broker while keeping every other production root
-    # intact for the non-comms dashboards this test also exercises.
     base_ctx = production_context()
     image_root = tmp_path / "textbook_images"
     image_root.mkdir()
-    test_ctx = with_product_roots(
-        base_ctx.with_roots(message_db_path=broker_db),
-        images_dir=image_root,
-    )
+    test_ctx = with_product_roots(base_ctx, images_dir=image_root)
     monkeypatch.setattr(app.state, "ctx", test_ctx)
-    # A production context has no fixture root, so the legacy comms route
-    # telemetry (/api/comms/messages below) records under state_root(): the
-    # checkout's data/telemetry/legacy_comms_routes.db. Keep that store here.
-    monkeypatch.setattr(legacy_comms_telemetry, "state_root", lambda: tmp_path)
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []

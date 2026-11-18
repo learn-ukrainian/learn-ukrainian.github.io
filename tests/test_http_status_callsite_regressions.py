@@ -5,7 +5,6 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from lu_machinery.ai_agent_bridge import _gemini, _model
 from lu_machinery.ai_llm import fallback
 
 from build import dispatch as build_dispatch
@@ -17,7 +16,6 @@ from tools import analyze_textbook_pages, convert_plans_v4
 @pytest.mark.parametrize("classifier", [
     pipeline_dispatch._is_rate_limited,
     fallback.is_gemini_rate_limited,
-    _gemini._is_gemini_429_error,
     build_dispatch._is_rate_limited,  # Legacy helper, tested directly, no live caller claimed.
 ])
 @pytest.mark.parametrize("message,expected", [
@@ -46,11 +44,6 @@ def test_rate_classifiers_select_only_real_429(classifier, message, expected):
     (fallback.is_gemini_rate_limited, "no capacity available"),
     (fallback.is_gemini_rate_limited, "model is overloaded"),
     (fallback.is_gemini_rate_limited, "UNAVAILABLE"),
-    (_gemini._is_gemini_429_error, "TOO MANY REQUESTS"),
-    (_gemini._is_gemini_429_error, "RATE LIMIT"),
-    (_gemini._is_gemini_429_error, "rate_limit"),
-    (_gemini._is_gemini_429_error, "capacity unavailable"),
-    (_gemini._is_gemini_429_error, "no capacity available"),
     (build_dispatch._is_rate_limited, "RESOURCE_EXHAUSTED"),
     (build_dispatch._is_rate_limited, "rate_limit"),
     (build_dispatch._is_rate_limited, "capacity"),
@@ -62,34 +55,6 @@ def test_original_rate_keywords(classifier, message):
 
 def test_fallback_none_is_not_rate_limited():
     assert fallback.is_gemini_rate_limited(None) is False
-
-
-@pytest.mark.parametrize("message,attempt,expected", [
-    ("run 7f3a429c9e1b2d44", 0, "continue"),
-    ("HTTP429", 0, "retry"), ("HTTP429", 2, "stop"),
-    ("quota", 0, "retry"), ("exhausted your capacity", 0, "retry"),
-    ("Exhausted your capacity", 0, "continue"),
-    ("Model not found HTTP429", 0, "stop"),
-])
-def test_bridge_error_actions(monkeypatch, message, attempt, expected):
-    sleep = Mock()
-    monkeypatch.setattr(_gemini.time, "sleep", sleep)
-    assert _gemini._handle_gemini_error(message, "fixture-model", attempt, 3, 2) == expected
-    assert sleep.call_args_list == ([((2 * 2**attempt,),)] if expected == "retry" else [])
-
-
-@pytest.mark.parametrize("message,expected", [
-    ("run 7f3a429c9e1b2d44", "check failed"),
-    ("z429nonhexZ", "check failed"), ("HTTP429", "quota is exhausted"),
-    ("QUOTA", "quota is exhausted"), ("EXHAUSTED", "quota is exhausted"),
-    ("not found HTTP429", "not available on this account"),
-    ("NOT AVAILABLE", "not available on this account"),
-    ("invalid model", "not available on this account"),
-])
-def test_model_check_failure_message(capsys, message, expected):
-    result = subprocess.CompletedProcess([], 1, stdout="", stderr=message)
-    _model._handle_model_check_failure(result, "fixture-model", None)
-    assert expected in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("message,expected", [
@@ -217,15 +182,6 @@ def test_plan_conversion_offline_retry_control(monkeypatch, plan_cli, scenario, 
     assert sleep.call_count == (1 if recovered else 0)
     if scenario == "timeout":
         initial.kill.assert_called_once()
-
-
-@pytest.mark.parametrize("message,expected", [
-    ("run 7f3a429c9e1b2d44", False), ("HTTP429", True),
-])
-def test_inbox_capacity_adapter_uses_corrected_classifier(message, expected):
-    from lu_machinery.ai_agent_bridge._inbox import _is_gemini_capacity_error
-
-    assert _is_gemini_capacity_error(message) is expected
 
 
 @pytest.mark.parametrize("message,expected_fallback_checks", [
