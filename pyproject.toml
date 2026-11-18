@@ -144,6 +144,21 @@ dev = [
     # (pre-commit and CI) and TruffleHog through scripts/audit/secret_scan_local.py
     # (docs/runbooks/secret-scanning.md).
 ]
+# Narrow workflow environments (uv sync --only-group), so a job installs only what
+# it runs. Each is a subset of the project's own requirements above.
+# The lu-machinery release and its closure: jobs that run only its entry points.
+machinery = ["lu-machinery[api,mcp,postgres,pytest]==0.1.33"]
+# deploy-pages.yml: the release plus the build scripts' YAML, schema and regex imports.
+pages = [{ include-group = "machinery" }, "pyyaml>=6.0", "jsonschema>=4.20", "regex>=2026.5.9"]
+# atlas-grow.yml: the release plus the lexicon scripts' imports.
+atlas = [
+    { include-group = "machinery" },
+    "pyyaml>=6.0",
+    "jsonschema>=4.20",
+    "regex>=2026.5.9",
+    "requests[use-chardet-on-py3]>=2.34.2",
+    "ukrainian-word-stress>=2,<3",
+]
 
 [tool.uv]
 # One uv release writes and reads uv.lock: the one machinery pins

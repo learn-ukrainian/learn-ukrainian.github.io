@@ -113,23 +113,35 @@ runs:
         import tomllib
 
         lock_path, wheelhouse, requirement = sys.argv[1:4]
-        with open(lock_path, "rb") as handle:
-            packages = [p for p in tomllib.load(handle).get("package", []) if p.get("name") == "lu-machinery"]
+        RELEASES = "https://github.com/learn-ukrainian/machinery/releases/download"
+
+
+        def refuse(reason):
+            sys.exit(f"::error::uv.lock {reason}")
+
+
+        try:
+            with open(lock_path, "rb") as handle:
+                lock = tomllib.load(handle)
+        except (OSError, tomllib.TOMLDecodeError) as exc:
+            refuse(f"cannot be read as TOML ({type(exc).__name__})")
+        packages = lock.get("package")
+        if not isinstance(packages, list) or not all(isinstance(p, dict) for p in packages):
+            refuse("package must be an array of tables")
+        packages = [p for p in packages if p.get("name") == "lu-machinery"]
         if len(packages) != 1:
-            sys.exit(f"::error::uv.lock must lock exactly one lu-machinery package; found {len(packages)}")
-        package = packages[0]
-        version = package.get("version", "")
-        url = package.get("source", {}).get("url", "")
-        wheels = package.get("wheels", [])
+            refuse(f"must lock exactly one lu-machinery package; found {len(packages)}")
+        version, source, wheels = (packages[0].get(key) for key in ("version", "source", "wheels"))
+        if not isinstance(version, str) or re.fullmatch(r"[0-9]+(\.[0-9]+)*", version) is None:
+            refuse("must pin lu-machinery to an exact release version")
         name = f"lu_machinery-{version}-py3-none-any.whl"
-        if (re.fullmatch(r"[0-9]+(\.[0-9]+)*", version) is None
-                or not url.startswith("https://github.com/learn-ukrainian/machinery/releases/download/")
-                or not url.endswith(f"/v{version}/{name}")
-                or len(wheels) != 1 or wheels[0].get("url") != url):
-            sys.exit("::error::uv.lock must pin lu-machinery to one release wheel URL of learn-ukrainian/machinery")
+        url = f"{RELEASES}/v{version}/{name}"
+        if (source != {"url": url} or not isinstance(wheels, list) or len(wheels) != 1
+                or not isinstance(wheels[0], dict) or wheels[0].get("url") != url):
+            refuse(f"must pin lu-machinery {version} to the one release wheel {url}")
         match = re.fullmatch(r"sha256:([0-9a-f]{64})", str(wheels[0].get("hash", "")))
         if match is None:
-            sys.exit(f"::error::uv.lock carries no sha256 hash for lu-machinery {version}")
+            refuse(f"carries no sha256 hash for lu-machinery {version}")
         digest = match.group(1)
         with open(requirement, "w", encoding="utf-8") as handle:
             handle.write(f"lu-machinery=={version} --hash=sha256:{digest}\n")

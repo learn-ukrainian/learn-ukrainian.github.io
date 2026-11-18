@@ -71,10 +71,13 @@ jobs:
         run: |
           set -euo pipefail
           # Every locked package, the ml group's CPU torch build included (pyproject.toml
-          # [tool.uv.sources]). The hash-pinned lu-machinery release comes from the
+          # [tool.uv.sources]), except torchvision and open-clip-torch, which the slow
+          # selection never needed. The hash-pinned lu-machinery release comes from the
           # wheelhouse, as .github/actions/python-ci-env installs it (machinery
           # docs/release.md, Consumers); uv.lock's hashes decide which bytes install.
-          uv sync --locked --python "$(cat .python-version)" --no-install-package lu-machinery
+          uv sync --locked --python "$(cat .python-version)" \
+            --no-install-package torchvision --no-install-package open-clip-torch \
+            --no-install-package lu-machinery
           uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
             --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 

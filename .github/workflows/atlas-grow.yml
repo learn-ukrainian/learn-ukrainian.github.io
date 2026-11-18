@@ -80,11 +80,11 @@ jobs:
           UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          # The locked runtime and ml dependencies (ukrainian-word-stress; CPU torch).
+          # The locked lu-machinery closure plus the lexicon scripts' imports (group atlas).
           # The hash-pinned lu-machinery release comes from the wheelhouse, as
           # .github/actions/python-ci-env installs it (machinery docs/release.md,
           # Consumers); uv.lock's hashes decide which bytes install.
-          uv sync --locked --python "$(cat .python-version)" --no-group dev --no-install-package lu-machinery
+          uv sync --locked --python "$(cat .python-version)" --only-group atlas --no-install-package lu-machinery
           uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
             --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
