@@ -48,7 +48,7 @@ jobs:
     # and committer only (an empty-diff commit carrying that metadata).
     name: Queue commit metadata scan
     if: github.event_name == 'merge_group'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     # The installed release has no implicit product or state anchor: name this checkout for both,
     # as scripts/__init__.py does for the in-tree copy.
@@ -125,7 +125,7 @@ jobs:
       actions: read
     name: Secret scan
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
     # The installed release has no implicit product or state anchor: name this checkout for both,
@@ -254,7 +254,7 @@ jobs:
   # CI Gate requires this job's success in every tier.
   hydrate-release-assets:
     name: Hydrate release assets
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -348,7 +348,7 @@ jobs:
       contents: read
       actions: read
       issues: read
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -434,7 +434,7 @@ jobs:
     name: Frontend
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -522,7 +522,7 @@ jobs:
   pr-scope:
     name: PR pytest scope
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       full-suite: ${{ steps.scope.outputs.full-suite }}
@@ -570,7 +570,7 @@ jobs:
     name: Refresh pytest durations
     needs: [pr-scope]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -643,7 +643,7 @@ jobs:
     name: pytest (${{ matrix.shard }})
     needs: [pr-scope, refresh-pytest-durations, hydrate-release-assets]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
     # token scope, so the job holds only contents:read.
@@ -795,7 +795,7 @@ jobs:
     name: pytest report
     needs: [pytest]
     if: ${{ !cancelled() && needs.pytest.result == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -857,7 +857,7 @@ jobs:
     name: PR changed tests and guards
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # PR #11922 measured supported selection at 402s/567s and a 660s superset
     # with two workers. Invariants run independently in pr-invariants.
     timeout-minutes: 40
@@ -924,7 +924,7 @@ jobs:
     name: PR repository invariants
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # The 1,500s invariant subprocess ceiling and setup fit this job budget.
     timeout-minutes: 40
     steps:
@@ -986,7 +986,7 @@ jobs:
     # Runs the full audit only when the diff touches a dependency input
     # (scripts/ci/dependency_change_denominator.json) or the base is unknown;
     # otherwise the scope step cheap-exits and the job still ends success (#9871).
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # The installed release has no implicit product or state anchor: name this checkout for both,
     # as scripts/__init__.py does for the in-tree copy.
@@ -1044,7 +1044,7 @@ jobs:
     if: always()
     # Every dependency must finish with the result required by its event tier.
     needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, pr-invariants, pr-scope, refresh-pytest-durations, pytest, pytest-report]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read  # checkout, PR head and branch-tip fetches

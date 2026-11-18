@@ -37,7 +37,7 @@ jobs:
     # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
     if: ${{ github.event.schedule != '23 4 * * *' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The installed release has no implicit product: name this checkout.
     env:
@@ -79,7 +79,7 @@ jobs:
     # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
     if: ${{ github.event.schedule != '23 4 * * *' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # The installed release has no implicit product: name this checkout.
     env:
@@ -129,7 +129,7 @@ jobs:
     # findings, closing it when the audit comes back clean (#9871). The weekly
     # schedule and PR runs never touch issues.
     if: ${{ github.ref == 'refs/heads/main' && (github.event.schedule == '23 4 * * *' || github.event_name == 'workflow_dispatch') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -221,7 +221,7 @@ jobs:
     # Versions and repo-relative paths only, as a comment on the open
     # dependency-advisory issue. This job never opens a pull request.
     if: ${{ github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read

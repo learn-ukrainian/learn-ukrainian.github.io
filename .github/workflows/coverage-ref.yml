@@ -25,7 +25,7 @@ env:
 jobs:
   prepare:
     name: Validate commit and refresh shared pytest durations
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -133,7 +133,7 @@ jobs:
     name: Branch coverage (${{ matrix.shard }})
     needs:
     - prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Two workers need twice the previous job budget; the per-test budget is unchanged.
     # Residual: native code that never returns to Python can defer a signal
     # timeout until the 90-minute job limit, losing the whole shard's data.
@@ -316,7 +316,7 @@ jobs:
     - prepare
     - pytest
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       COVERAGE_CORE: ctrace
