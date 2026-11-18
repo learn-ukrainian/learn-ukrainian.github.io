@@ -498,7 +498,10 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     for prepared in ("rules", "validate", "preflight", "deploy", "exec"):
         assert names.count(prepared) == 1, (prepared, events)
     if mode == "driver":
-        assert names.count("lease-open") == names.count("lease-close") == names.count("rollover-import") == 1
+        assert names.count("lease-open") == names.count("lease-close") == 1
+        # lu-machinery 0.1.32 (machinery #768) retired the pre-lease rollover-bundle
+        # import; the stub above would record it if a launcher still ran it.
+        assert names.count("rollover-import") == 0, events
         assert names.index("lease-open") < names.index("provider xdist=2") < names.index("lease-close")
         # Caller arguments, then the driver binding (a lane agent may lead). The
         # Claude CTO seat holds the epics lease but its state lane is cto (#12496).

@@ -2196,10 +2196,10 @@ task family, track, owned paths, or context fingerprint.
 
 `GET /api/rollovers` was removed in lu-machinery 0.1.31 (machinery #756). The
 `rollovers` section in `/api/orient` is the compact cold-start projection:
-counts plus live pending or confirmed-but-incompletely-cleaned entries. Use
-`lu_machinery/orchestration/rollover_registry_cli.py` for complete evidence,
-registry validation errors, and evidence-gated exact reconciliation or
-maintenance.
+counts plus live pending or confirmed-but-incompletely-cleaned entries.
+lu-machinery 0.1.32 (machinery #768) removed `rollover_registry_cli`;
+exact reconciliation and maintenance use the retained bootstrap and
+library APIs.
 
 ## Orientation — `/api/orient`
 

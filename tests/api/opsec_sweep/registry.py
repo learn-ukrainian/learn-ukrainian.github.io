@@ -18,7 +18,6 @@ class is part of the walker contract.
 
 from __future__ import annotations
 
-import base64
 import hashlib
 import re
 from collections.abc import Callable, Iterable, Mapping
@@ -27,7 +26,6 @@ from datetime import date
 from typing import Any, Literal
 
 from fastapi.routing import APIRoute
-from lu_machinery.orchestration import thread_handoff
 from starlette.routing import Mount, Route, WebSocketRoute
 
 from . import tracking_issues
@@ -50,14 +48,15 @@ class FrozenDenominator:
 
 # Measured from the live app. The count and the digest are one snapshot:
 # a tree matches only when all three fields match. This is the installed
-# release, lu-machinery 0.1.31: machinery #756 removed 47 unused operations
-# (the agent-monitor, comms legacy, fleet facade/observer, runtime, rollovers,
-# git hygiene, route-contract and session-streams drift/dual-write routes).
+# release, lu-machinery 0.1.32: machinery #756 (0.1.31) removed 47 unused
+# operations (the agent-monitor, comms legacy, fleet facade/observer, runtime,
+# rollovers, git hygiene, route-contract and session-streams drift/dual-write
+# routes) and machinery #768 (0.1.32) removed the four epic rollover-bundle routes.
 ACCEPTED_DENOMINATORS = (
     FrozenDenominator(
-        http_count=172,
+        http_count=168,
         websocket_count=1,
-        sha256="a2ec8c146bdfe1cf7fe582bccf1d71bed724285070d25b9a5aa71f805f36c281",
+        sha256="b948f1ba48b2e16172146d3a975b855e7f181a9cc53d036d50d977037a6f39db",
     ),
 )
 
@@ -547,57 +546,6 @@ def _path_value(name: str) -> str:
     return "opsec-synthetic"
 
 
-def _body_factory(path_template: str) -> Callable[[], Any] | None:
-    if path_template == "/api/epics/v1/{stream_id}/bundles":
-        member_name = "handoff.md"
-        member_body = b"opsec fixture handoff\n"
-        members = {member_name: member_body}
-        manifest = {
-            "schema": "rollover-bundle.v1",
-            "agent": "codex",
-            "stream_id": "epic:9999",
-            "lineage_id": "opsec-lineage",
-            "rollover_id": "rollover-opsec",
-            "generation": 1,
-            "status": "pending_start",
-            "prepared_at": "2026-01-01T00:00:00Z",
-            "source_root": "{{REPO_ROOT}}",
-            "exported_at": "2026-01-01T00:00:00Z",
-            "files": [
-                {
-                    "path": member_name,
-                    "sha256": hashlib.sha256(member_body).hexdigest(),
-                    "bytes": len(member_body),
-                    "tokenized": True,
-                }
-            ],
-            "tokenized_members": [member_name],
-            "upload_seq": 0,
-            "bundle_sha256": "",
-        }
-        manifest["bundle_sha256"] = thread_handoff._bundle_digest(members, manifest)
-        blob = thread_handoff._bundle_archive(members, manifest)
-        return lambda: {
-            "stream_id": "epic:9999",
-            "session_id": "opsec-bundle-session",
-            "lease_id": "opsec-bundle-lease",
-            "generation": 1,
-            "fencing_token": 1,
-            "agent": "codex",
-            "harness": "codex-cli",
-            "instance_id": "opsec-bundle-instance",
-            "process_id": 1,
-            "host_id": "opsec-host-id",
-            "heartbeat_at": "2026-01-01T00:00:00Z",
-            "expires_at": "2026-01-01T00:15:00Z",
-            "ttl_seconds": 900,
-            "version": 1,
-            "manifest": manifest,
-            "blob": base64.b64encode(blob).decode("ascii"),
-        }
-    return None
-
-
 def _query_for(path_template: str) -> dict[str, Any]:
     # Explicitly force side-effect-shaped flags to their read-only values.
     if path_template == "/api/orient":
@@ -610,10 +558,6 @@ def _query_for(path_template: str) -> dict[str, Any]:
         return {"q": "opsec synthetic", "limit": "1"}
     if path_template == "/api/comms/inbox":
         return {"agent": "codex", "limit": "1"}
-    if path_template == "/api/epics/v1/{stream_id}/bundles":
-        return {"agent": "opsec-synthetic", "lineage_id": "opsec-lineage", "limit": "1"}
-    if path_template == "/api/epics/v1/{stream_id}/bundles/latest":
-        return {"agent": "opsec-synthetic", "lineage_id": "opsec-lineage"}
     return {}
 
 
@@ -638,33 +582,6 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
     explicit_5xx_reason = EXERCISED_READ_5XX_REASONS.get(operation.key)
     if explicit_5xx_reason is None:
         statuses = tuple(status for status in statuses if not 500 <= status < 600)
-
-    if operation.path_template in {
-        "/api/epics/v1/{stream_id}/bundles",
-        "/api/epics/v1/{stream_id}/bundles/latest",
-        "/api/epics/v1/{stream_id}/bundles/{upload_seq}",
-    }:
-        if operation.method == "POST":
-            return ExerciseRecord(
-                method=operation.method,
-                path_template=operation.path_template,
-                classification="mutation",
-                fixture="isolated",
-                path_values=path_values,
-                body_factory=_body_factory(operation.path_template),
-                reason="the isolated TestClient is a non-loopback peer, so the upload must refuse before store access",
-                expected_statuses=(403,),
-            )
-        return ExerciseRecord(
-            method=operation.method,
-            path_template=operation.path_template,
-            classification="read",
-            fixture="isolated",
-            path_values=path_values,
-            query=_query_for(operation.path_template),
-            reason="the synthetic epic is absent from the disposable fixture store, so the read returns 404",
-            expected_statuses=(404,),
-        )
 
     if operation.key in FIXTURE_EMPTY_ROUTE_KEYS:
         return ExerciseRecord(
@@ -702,7 +619,6 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
         fixture="isolated",
         path_values=path_values,
         query=_query_for(operation.path_template),
-        body_factory=_body_factory(operation.path_template),
         reason=explicit_5xx_reason,
         expected_statuses=statuses,
     )

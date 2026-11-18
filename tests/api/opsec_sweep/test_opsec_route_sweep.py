@@ -799,12 +799,6 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
     for key in registry.FIXTURE_EMPTY_ROUTE_KEYS:
         assert by_key[key].fixture == "isolated"
         assert by_key[key].expected_statuses == (200,)
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].classification == "mutation"
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].body() is not None
-    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].expected_statuses == (403,)
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
-    assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
     find_record = by_key["GET /api/knowledge/find"]
     assert find_record.expected_statuses == (503,)
     assert find_record.expected_detail == {"code": "CalledProcessError", "message": "request rejected"}
@@ -825,7 +819,7 @@ def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
     mutations = {record.key: record for record in records if record.classification == "mutation"}
     skipped = {key for key, record in mutations.items() if record.fixture == "skip"}
     assert skipped == set(registry.MUTATION_SKIPS)
-    assert set(mutation_recipes.RECIPES) | {"POST /api/epics/v1/{stream_id}/bundles"} | skipped == set(mutations)
+    assert set(mutation_recipes.RECIPES) | skipped == set(mutations)
     for key, recipe in mutation_recipes.RECIPES.items():
         record = mutations[key]
         assert record.fixture == "isolated" and record.store == recipe.store

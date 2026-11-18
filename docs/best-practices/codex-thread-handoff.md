@@ -425,43 +425,23 @@ the same time. Generic registry detection is therefore fail-closed for mutation
 and returns structured candidates; any corrupt durable source also keeps
 generic detection non-mutating. It never chooses by title, age, or directory
 order. A unique exact selector can proceed while unrelated packets remain
-untouched:
+untouched.
 
-```bash
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli audit
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli detect \
-  --agent codex --source-thread-id <predecessor-task-id>
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli detect \
-  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id>
-```
+lu-machinery 0.1.32 (machinery #768) removed the `rollover_registry_cli`
+command line. Detection, reconciliation, supersession, cleanup and
+abandonment run through the retained bootstrap and library APIs with the
+same exact-identity selectors and evidence-gated proofs described here.
 
 For an unrecorded native successor or disputed cleanup state, capture an
-authoritative app/automation snapshot and compare it without mutation:
-
-```bash
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli reconcile-exact \
-  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
-  --snapshot <native-snapshot.json>
-```
-
-Only a consistent result may be repeated with `--apply`. The snapshot binds the
+authoritative app/automation snapshot and compare it without mutation.
+Only a consistent result may be applied. The snapshot binds the
 exact predecessor, replacement, title readback or honest unsupported fallback,
 confirmation proof, archive receipt, automation ID, cleanup authorization, and
 retirement receipt. A title, task absence, local process absence, or stale age
 does not prove a native action.
 
-Cleanup, supersession, and abandonment use immutable evidence-gated plans:
+Cleanup, supersession, and abandonment use immutable evidence-gated plans.
 
-```bash
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli supersede-exact \
-  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
-  --plan --proof-file <proof.json>
-.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli supersede-exact \
-  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
-  --apply --plan-file <plan.json>
-```
-
-`finish-cleanup-exact` and `abandon-exact` follow the same plan/apply shape.
 Never bulk-delete old leases. See
 `agents_extensions/shared/contracts/rollover-registry.md` for required proof
 assertions and lifecycle boundaries.
