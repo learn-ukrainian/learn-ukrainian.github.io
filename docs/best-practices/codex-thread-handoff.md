@@ -365,10 +365,9 @@ then detects the prepared packet. Delegated workers
 (`LEARN_UKRAINIAN_DISPATCH_TASK_ID` set) and every other profile keep the
 continuation behaviour.
 
-Rollover bundle import is unchanged: when a local and a remote bundle tie on
-the order key but differ in content, import refuses ("bundle order ties but
-content differs; refusing to choose a copy") and SessionStart continues
-without it. Safe reconciliation of such ties is tracked in #9789.
+lu-machinery 0.1.32 (machinery #768) retired the rollover-bundle import:
+SessionStart and the launchers no longer fetch or import bundles. The lane's
+DB note is its handoff content.
 
 ## Safety Checks
 
