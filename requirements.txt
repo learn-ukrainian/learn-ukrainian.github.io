@@ -117,7 +117,7 @@ graphql-core==3.3.1  # scripts/common/github_client.py (imported only when a doc
 # Security floors (transitive deps held above their vulnerable range)
 # soupsieve comes via beautifulsoup4 (beautifulsoup4==4.15.0 requires soupsieve>=1.6.1).
 # CVE-2026-126192 is fixed in 2.10; CVE-2026-126190 is fixed in 4.0.
-soupsieve>=4.0
+soupsieve>=4.1
 
 # Repository runtime dependency; install requirements from the repository root.
 ./packages/v4-runtime
