@@ -1226,17 +1226,6 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
                 continue
             if Path(value).resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
                 monkeypatch.setattr(module, attribute, isolated_path)
-
-    # The production API app has a context and store handles created at import.
-    # Rebuild both against the isolated path, preserving other configured roots.
-    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
-        api_main = _loaded_module(package, 'api', "main")
-        if api_main is None:
-            continue
-        app = vars(api_main).get("app")
-        context = getattr(getattr(app, "state", None), "ctx", None)
-        if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
-            monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
     return isolated_path
 
 

@@ -1,6 +1,6 @@
 """SQLite store registry and census (#11092, DB plan step 1).
 
-* The repository catalogue carries the registry: 33 named stores present (28 active, 2
+* The repository catalogue carries the registry: 33 named stores present (27 active, 3
   dormant, 2 staged, 1 orphan), 9 declared-absent defaults, the dynamic families and
   the evidence directories, each row with the required fields (AC-01, AC-03).
 * The static check rejects wrong backup facts, protection below the nightly, keep
@@ -75,11 +75,11 @@ def row_by_path(reg: dict, path: str) -> dict:
 def test_the_registry_reproduces_the_reconciled_inventory():
     present = rows(presence='present')
     assert len(present) == 33
-    assert Counter(r['activity'] for r in present) == {'active': 28, 'dormant': 2, 'staged': 2, 'orphan': 1}
+    assert Counter(r['activity'] for r in present) == {'active': 27, 'dormant': 3, 'staged': 2, 'orphan': 1}
     active = Counter(r['kind'] for r in present if r['activity'] == 'active')
-    assert active == {'operational': 5, 'cache': 3, 'reference': 9, 'derived': 3, 'job_state': 8}
+    assert active == {'operational': 4, 'cache': 3, 'reference': 9, 'derived': 3, 'job_state': 8}
     assert {r['path'] for r in rows(activity='dormant')} == {
-        'wiki/.state/progress.db', 'data/ulif_dump.db'}
+        'wiki/.state/progress.db', 'data/ulif_dump.db', '.mcp/servers/message-broker/messages.db'}
     assert {r['path'] for r in rows(activity='staged')} == {'data/sum20_staging.db', 'data/sum20_slovnyk_staging.db'}
     assert {r['path'] for r in rows(activity='orphan')} == {'batch_state/fleet-comms/v1/artifacts/comms.sqlite3'}
     assert row_by_path(REGISTRY, 'batch_state/review-findings/a1.sqlite')['activity'] == 'active'
@@ -172,11 +172,11 @@ MUTATIONS = {
         _set('data/embeddings/manifest.db', busy_ms=10000),
         "busy_ms 10000 but 'scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__' sets 30000"),
     'busy timeout other than the named helper sets': (
-        _set('.mcp/servers/message-broker/messages.db', busy_ms=10000),
-        "busy_ms 10000 but '.mcp/servers/message-broker/server.py:get_db' sets 5000"),
+        _set('data/sources.db', busy_ms=10000),
+        "busy_ms 10000 but 'scripts/wiki/sources_db.py:_open_conn' sets 30000"),
     'explicit busy timeout set only in an unnamed helper': (
-        _set('.mcp/servers/message-broker/messages.db', busy_setters=DROP),
-        "'.mcp/servers/message-broker/server.py:handle_send_message' sets no busy timeout; name the shared helper"),
+        _set('data/sources.db', busy_setters=DROP),
+        "'scripts/wiki/build_sources_db.py:build' sets no busy timeout; name the shared helper"),
     'default busy source while the writer sets one': (
         _set('data/embeddings/manifest.db', busy_source='default', busy_ms=5000), 'record it as explicit'),
     'busy setters on a default source': (
@@ -184,8 +184,8 @@ MUTATIONS = {
              busy_setters=['scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__']),
         "busy_setters is for busy_source explicit, not 'default'"),
     'undefined busy setter': (
-        _set('.mcp/servers/message-broker/messages.db', busy_setters=['.mcp/servers/message-broker/server.py:nope']),
-        "busy setter '.mcp/servers/message-broker/server.py:nope': 'nope' is not defined"),
+        _set('data/sources.db', busy_setters=['scripts/wiki/sources_db.py:nope']),
+        "busy setter 'scripts/wiki/sources_db.py:nope': 'nope' is not defined"),
 }
 
 
@@ -396,8 +396,8 @@ def test_a_materialised_registry_reproduces_the_33_count(tmp_path):
     assert result.ok, (result.unregistered, result.problems, result.missing)
     counts = result.counts(REGISTRY)
     assert counts['named_stores_present'] == 33 and counts['missing'] == 0
-    assert counts['by_activity'] == {'active': 28, 'dormant': 2, 'orphan': 1, 'staged': 2}
-    assert counts['active_by_kind'] == {'cache': 3, 'derived': 3, 'job_state': 8, 'operational': 5,
+    assert counts['by_activity'] == {'active': 27, 'dormant': 3, 'orphan': 1, 'staged': 2}
+    assert counts['active_by_kind'] == {'cache': 3, 'derived': 3, 'job_state': 8, 'operational': 4,
                                         'reference': 9}
     assert counts['declared_absent_rows'] == 8
 

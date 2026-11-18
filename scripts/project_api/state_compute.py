@@ -33,7 +33,6 @@ from .curriculum_state import (
     detect_pipeline_version,
     find_content_file,
     get_audit_status,
-    get_broker_messages_for_slug,
     get_final_review_info,
     get_plan_slugs,
     get_research_score,
@@ -401,7 +400,6 @@ def compute_module_detail(
     *,
     curriculum_root: Path | None = None,
     plans_root: Path | None = None,
-    message_db: Any = None,
 ) -> dict:
     """Compute single module deep-dive data."""
     if curriculum_root is None:
@@ -455,7 +453,7 @@ def compute_module_detail(
         "enriched": plan_has_revision_log(plan_file),
         "quick_verify": _get_quick_verify(orch_dir),
         "consultations": state_data.get("consultations", []),
-        "comms": get_broker_messages_for_slug(slug, message_db=message_db),
+        "comms": [],
         "generated_at": datetime.now(UTC).isoformat(),
     }
 

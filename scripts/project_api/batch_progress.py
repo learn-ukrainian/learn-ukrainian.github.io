@@ -23,10 +23,9 @@ from typing import Any
 from fastapi import APIRouter, Depends
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from lu_machinery.api.state_helpers import cache_get, cache_set
-from lu_machinery.api.telemetry.legacy_comms import LegacyCommsTelemetryRoute
 from lu_machinery.path_safety import safe_join
 
-router = APIRouter(tags=["comms"], route_class=LegacyCommsTelemetryRoute)
+router = APIRouter(tags=["comms"])
 
 BATCH_LOG_TAIL_BYTES = 256 * 1024
 
@@ -240,7 +239,7 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
 
     This is the main endpoint for monitoring overnight/background builds.
     """
-    cache_key = f"comms_batch_progress_{_preseed_log_dir(ctx)}_{ctx.roots.pid_dir}"
+    cache_key = f"comms_batch_progress_{_preseed_log_dir(ctx)}"
     cached = cache_get(cache_key, ttl=10.0)
     if cached is not None:
         return cached

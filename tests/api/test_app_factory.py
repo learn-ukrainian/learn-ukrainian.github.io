@@ -100,7 +100,6 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
 
     assert context.roots.plans_root == context.roots.curriculum_root / "plans"
     assert sources_db(context).path.resolve().is_relative_to(tmp_path.resolve())
-    assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.epics_database.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.work_in_flight == {}
@@ -538,11 +537,6 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
     (first_root / "logs" / "dispatcher.log").write_text("First dispatcher log line\n", encoding="utf-8")
     (second_root / "logs").mkdir(parents=True, exist_ok=True)
     (second_root / "logs" / "dispatcher.log").write_text("Second dispatcher log line\n", encoding="utf-8")
-
-    # A leftover broken broker file must be invisible to the retired dashboard views.
-    broker_path = first_ctx.stores.message_db.path
-    broker_path.parent.mkdir(parents=True, exist_ok=True)
-    broker_path.write_bytes(b"not a SQLite database")
 
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)

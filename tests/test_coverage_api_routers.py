@@ -4,7 +4,6 @@ Targets ~150+ tests for coverage improvement.
 """
 
 import json
-import sqlite3
 from datetime import UTC, datetime
 from unittest.mock import patch
 
@@ -30,36 +29,12 @@ def mock_project_root(tmp_path):
     (tmp_path / "data" / "literary_texts").mkdir(parents=True)
     (tmp_path / "logs").mkdir(parents=True)
     (tmp_path / "logs" / "research-preseed").mkdir(parents=True)
-    (tmp_path / ".mcp" / "servers" / "message-broker" / "pids").mkdir(parents=True)
     (tmp_path / "curriculum" / "l2-uk-en").mkdir(parents=True)
     return tmp_path
 
 
 @pytest.fixture()
-def broker_db(mock_project_root):
-    """Create a SQLite broker DB with the messages table."""
-    db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-    conn = sqlite3.connect(str(db_path))
-    conn.execute("""
-        CREATE TABLE messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            task_id TEXT,
-            from_llm TEXT,
-            to_llm TEXT,
-            message_type TEXT,
-            content TEXT,
-            data TEXT,
-            timestamp TEXT,
-            acknowledged INTEGER DEFAULT 0
-        )
-    """)
-    conn.commit()
-    conn.close()
-    return db_path
-
-
-@pytest.fixture()
-def _patch_config(mock_project_root, broker_db):
+def _patch_config(mock_project_root):
     """Patch config module paths to use tmp_path.
 
     comms_router itself keeps no path globals since #7269 step 5 — it
@@ -71,26 +46,20 @@ def _patch_config(mock_project_root, broker_db):
     with (
         patch("lu_machinery.api.config.PROJECT_ROOT", mock_project_root),
         patch("lu_machinery.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
-        patch("lu_machinery.api.config.MESSAGE_DB", broker_db),
     ):
         yield
 
 
-def _comms_ctx(project_root, **root_overrides):
+def _comms_ctx(project_root):
     """Build the comms app context for the fixture root (#7269 step 5).
 
     Same pattern as ``tests/test_comms_router_expiry_sweep.py``: a fixture
     context whose roots all live under the test's project root.
-    ``root_overrides`` replace individual ``MonitorRoots`` fields (e.g.
-    ``pid_dir=Path("/nonexistent")``).
     """
 
     from lu_machinery.api.monitor_context import fixture_context
 
-    ctx = fixture_context(project_root)
-    if root_overrides:
-        ctx = ctx.with_roots(**root_overrides)
-    return ctx
+    return fixture_context(project_root)
 
 
 @pytest.fixture()

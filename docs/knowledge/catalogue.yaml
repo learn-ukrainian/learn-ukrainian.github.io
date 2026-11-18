@@ -2205,13 +2205,13 @@ store_registry:
     - path: .mcp/servers/message-broker/messages.db
       owner: infra-harness
       kind: operational
-      activity: active
+      activity: dormant
       presence: present
-      writers: [.mcp/servers/message-broker/server.py:handle_send_message]
+      writers: []
+      writer_note: The broker server and every product reader were deleted on 2026-11-18; the file is retired history that stays on disk.
       journal: wal
-      busy_ms: 5000
-      busy_source: explicit
-      busy_setters: [.mcp/servers/message-broker/server.py:get_db]
+      busy_ms: null
+      busy_source: no_writer
       protection: keep
       backup: none
       protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'

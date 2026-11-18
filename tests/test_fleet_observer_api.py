@@ -20,9 +20,9 @@ import scripts.project_api.batch_progress as product_batch_progress
 @pytest.fixture()
 def client(tmp_path: Path) -> TestClient:
     app = FastAPI()
-    # The /operations route resolves the broker DB and read-model roots from
-    # the app's MonitorContext (same as production); keep every root under the
-    # test's tmp_path unless a test pins a broker DB explicitly.
+    # The /operations route resolves its read-model roots from the app's
+    # MonitorContext (same as production); keep every root under the test's
+    # tmp_path.
     app.state.ctx = fixture_context(tmp_path)
     app.include_router(fleet_router.router, prefix="/api/fleet")
     return TestClient(app)
@@ -43,12 +43,6 @@ def product_fleet_batches(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> No
     provider = build_api(fixture_context(tmp_path)).fleet_batches
     assert provider is not None
     monkeypatch.setattr(product_contribution, "_fleet_batches", provider)
-
-
-def _broker_ctx(root: Path, broker_path: Path) -> MonitorContext:
-    """Fixture context whose legacy broker DB is pinned to ``broker_path``."""
-    ctx = fixture_context(root)
-    return ctx.with_roots(message_db_path=broker_path)
 
 
 @pytest.fixture()
@@ -582,57 +576,6 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    broker_path = tmp_path / "legacy-broker.db"
-    connection = sqlite3.connect(broker_path)
-    try:
-        connection.execute(
-            "CREATE TABLE messages(id INTEGER PRIMARY KEY, acknowledged INTEGER NOT NULL)"
-        )
-        connection.executemany(
-            "INSERT INTO messages(acknowledged) VALUES (?)",
-            [(0,), (0,), (1,)],
-        )
-        connection.commit()
-    finally:
-        connection.close()
-    before = broker_path.read_bytes()
-    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
-
-    # lu-machinery 0.1.31 runs these comms readers in a worker thread
-    # (asyncio.to_thread), so the stand-ins are synchronous like the originals.
-    def fake_processes(*, ctx: MonitorContext | None = None) -> dict:
-        return {
-            "alive": 2,
-            "processes": [
-                {"pid": 99123, "file": "secret-pid.json", "task_id": "private-task"}
-            ],
-        }
-
-    def fake_zombies(
-        *,
-        stale_hours: float,
-        pingpong_threshold: int,
-        ctx: MonitorContext | None = None,
-    ) -> dict:
-        assert stale_hours == 2.0
-        assert pingpong_threshold == 5
-        return {
-            "count": 55,
-            "zombies": [
-                {
-                    "type": "stale_message",
-                    "severity": "critical",
-                    "age_hours": index + 0.25,
-                    "message_id": index,
-                    "task_id": "private-task",
-                    "preview": "Bearer source-secret",
-                    "from": "private-sender",
-                    "to": "private-recipient",
-                }
-                for index in range(55)
-            ],
-        }
-
     def fake_batches(ctx: MonitorContext | None = None) -> dict:
         return {
             "generated_at": "2026-08-02T00:00:00Z",
@@ -654,8 +597,6 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
             },
         }
 
-    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", fake_processes)
-    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", fake_zombies)
     monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", fake_batches)
 
     response = client.get("/api/fleet/operations")
@@ -664,20 +605,6 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     payload = response.json()
     assert payload["read_only"] is True
     assert payload["writes_enabled"] is False
-    assert payload["availability"] == "available"
-    assert payload["broker"] == {
-        "availability": "available",
-        "db_exists": True,
-        "readable": True,
-        "size_kb": pytest.approx(broker_path.stat().st_size / 1024, abs=0.1),
-        "unacknowledged_depth": 2,
-        "live_process_count": 2,
-        "process_availability": "available",
-    }
-    assert payload["zombies"]["total"] == 55
-    assert payload["zombies"]["returned"] == fleet_router.MAX_OPERATIONS_ITEMS
-    assert payload["zombies"]["truncated"] is True
-    assert set(payload["zombies"]["items"][0]) == {"type", "severity", "age_hours"}
     assert payload["batches"]["total"] == 55
     assert payload["batches"]["returned"] == fleet_router.MAX_OPERATIONS_ITEMS
     assert payload["batches"]["truncated"] is True
@@ -692,16 +619,11 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     }
     for forbidden in (
         "source-secret",
-        "private-task",
-        "private-sender",
-        "private-recipient",
         "private-slug",
         "private.log",
-        "secret-pid.json",
         "provider --token",
     ):
         assert forbidden not in response.text
-    assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
 
 
 @pytest.mark.usefixtures("product_fleet_batches")
@@ -710,28 +632,15 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    broker_path = tmp_path / "broken-broker.db"
-    broker_path.write_bytes(b"not-a-sqlite-database private-outage-detail")
-    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
-
-    def unavailable(*_args: object, **_kwargs: object) -> dict:
-        raise RuntimeError("private dependency path and credential")
-
     def unavailable_batch(ctx: MonitorContext | None = None) -> dict:
         raise RuntimeError("private dependency path and credential")
 
-    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", unavailable)
-    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", unavailable)
     monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", unavailable_batch)
 
     response = client.get("/api/fleet/operations")
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["availability"] == "unavailable"
-    assert payload["broker"]["availability"] == "db_unavailable"
-    assert payload["broker"]["live_process_count"] is None
-    assert payload["zombies"]["availability"] == "unavailable"
     assert payload["batches"]["availability"] == "unavailable"
     assert "private" not in response.text
     assert "credential" not in response.text
@@ -867,12 +776,6 @@ def test_operations_timed_out_process_probe_degrades_batch_section(
 ) -> None:
     monkeypatch.setattr(client.app.state, "ctx", fixture_context(tmp_path))
 
-    def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
-        return {"alive": 0, "processes": []}
-
-    def empty_zombies(**_kwargs: object) -> dict:
-        return {"count": 0, "zombies": []}
-
     def timed_out_batches(ctx: MonitorContext | None = None) -> dict:
         return {
             "running_processes": None,
@@ -890,8 +793,6 @@ def test_operations_timed_out_process_probe_degrades_batch_section(
             },
         }
 
-    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
-    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
     monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", timed_out_batches)
 
     response = client.get("/api/fleet/operations")
