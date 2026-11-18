@@ -1,4 +1,4 @@
-diff -ruN a/package/lib/parse.js b2/package/lib/parse.js
+diff -ruN a/package/lib/parse.js b3/package/lib/parse.js
 --- a/package/lib/parse.js
 +++ b/package/lib/parse.js
 @@ -284,6 +284,99 @@
@@ -37,11 +37,15 @@ diff -ruN a/package/lib/parse.js b2/package/lib/parse.js
 +// the branch set is uniquely decodable (Sardinas-Patterson test): then every
 +// prefix of the input has at most one split into branches, so backtracking
 +// visits each input position at most once. When some text has two splits
-+// (`a|ab|b` on "ab"), each repetition doubles the work. The test runs on the
-+// text the regex matches, so it fails closed where that differs from the
-+// branch spelling: any backslash (escapes such as `\w` keep their regex
-+// meaning) and, under case-insensitive matching, any non-ASCII character
-+// (ASCII letters are then compared lower-cased).
++// (`a|ab|b` on "ab"), each repetition doubles the work. The test must run on
++// the text the regex matches, so a branch may hold only characters that the
++// tokenizer emits as exactly themselves: ASCII letters and digits and a few
++// plain punctuation marks. Anything else, such as a backslash (`\w` keeps its
++// regex meaning), a NUL (the tokenizer drops it), a comma or a non-ASCII
++// character, fails closed. Under case-insensitive matching the branches are
++// compared lower-cased.
++const LITERAL_BRANCH = /^[A-Za-z0-9 _.~#%&'/:;<=>-]+$/;
++
 +const isUnambiguousLiteralAlternation = (branches, caseless) => {
 +  const code = new Set();
 +  let size = 0;
@@ -49,11 +53,7 @@ diff -ruN a/package/lib/parse.js b2/package/lib/parse.js
 +  for (const branch of branches) {
 +    const value = unwrapAtGroups(branch);
 +
-+    if (value === '' || /[\\"]/.test(value) || !isPlainBranch(value)) {
-+      return false;
-+    }
-+
-+    if (caseless && /[^\x00-\x7f]/.test(value)) {
++    if (!LITERAL_BRANCH.test(value)) {
 +      return false;
 +    }
 +
@@ -117,7 +117,7 @@ diff -ruN a/package/lib/parse.js b2/package/lib/parse.js
    return { risky: false };
  };
 
-diff -ruN a/package/package.json b2/package/package.json
+diff -ruN a/package/package.json b3/package/package.json
 --- a/package/package.json
 +++ b/package/package.json
 @@ -1,14 +1,11 @@
