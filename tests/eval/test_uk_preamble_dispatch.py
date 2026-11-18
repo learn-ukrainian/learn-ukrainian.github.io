@@ -536,13 +536,14 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
     assert read_json(tasks_dir / "retry-seat-attempt-1.json") == previous
     worker.settle_left_worktrees()
     # Only explicit scheduled settlement adds a disposition to the failed record; the released
-    # dispatcher records the task scratch's disposition with the worktree's.
+    # dispatcher records the task scratch's disposition with the worktree's; since lu-machinery
+    # 0.1.34 a run that created no scratch reports it as absent.
     settled = dict(
         worktree_disposition="retained",
         worktree_disposition_reason="provider_liveness_unknown",
         task_scratch_bytes=None,
-        task_scratch_disposition="retained",
-        task_scratch_disposition_reason="worktree retained: scratch kept with it",
+        task_scratch_disposition="absent",
+        task_scratch_disposition_reason="no scratch created by this run",
     )
     assert read_json(tasks_dir / f"{task.task_id}.json") == {**original, **settled}
     assert raw_path(results, task.task_id).read_bytes() == original_raw
