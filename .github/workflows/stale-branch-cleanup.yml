@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 1
           sparse-checkout: |
             .github/branch-cleanup-keep.txt
-            requirements-machinery.lock
+            uv.lock
             .github/actions/python-ci-env/action.yml
             .python-version
           sparse-checkout-cone-mode: false
@@ -43,12 +43,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Remove eligible remote branches
         env:
           GH_TOKEN: ${{ github.token }}

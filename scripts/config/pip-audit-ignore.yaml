@@ -4,7 +4,7 @@
 # Every suppressed vulnerability requires:
 # - id: CVE or PYSEC identifier
 # - package: affected package name
-# - version: currently pinned version in requirements-lock.txt
+# - version: currently pinned version in uv.lock
 # - status: upstream-unpatched | upstream-fix-pending | accepted-risk
 # - reason: technical justification why the vulnerability cannot be exploited in this repository
 #

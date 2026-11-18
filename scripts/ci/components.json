@@ -497,15 +497,6 @@
     "pyrightconfig.json": [
       "shared-core"
     ],
-    "requirements-dev.txt": [
-      "shared-core"
-    ],
-    "requirements-lock.txt": [
-      "shared-core"
-    ],
-    "requirements.txt": [
-      "shared-core"
-    ],
     "run-dispatcher.sh": [
       "harness"
     ],
@@ -631,6 +622,9 @@
       "practice-frontend"
     ],
     "tsconfig.json": [
+      "shared-core"
+    ],
+    "uv.lock": [
       "shared-core"
     ],
     "zizmor.yml": [

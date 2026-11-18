@@ -111,7 +111,6 @@
  "scripts/audit/check_adrs.py": "product",
  "scripts/audit/check_atlas_intake_freeze.py": "product",
  "scripts/audit/check_atlas_manifest_enrichment.py": "product",
- "scripts/audit/check_ci_dependencies.py": "product",
  "scripts/audit/check_content_spelling.py": "product",
  "scripts/audit/check_decisions.py": "product",
  "scripts/audit/check_framing_compliance_changed.py": "product",

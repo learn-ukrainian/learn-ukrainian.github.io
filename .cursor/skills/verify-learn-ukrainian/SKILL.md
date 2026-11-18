@@ -30,10 +30,8 @@ Prerequisites outside Launch (once per machine):
 
 ```bash
 # Python project env (primary checkout setup only; never create a worktree venv)
-uv venv .venv --python 3.12
-uv pip install --python .venv/bin/python -r requirements-lock.txt
-# If you install from requirements.txt, pin ruff to the lockfile version before checks:
-#   uv pip install --python .venv/bin/python 'ruff==0.17.4'
+# uv reads .python-version, pyproject.toml and uv.lock (the CI versions, ruff included).
+uv sync --locked
 (cd site && npm ci)
 ```
 

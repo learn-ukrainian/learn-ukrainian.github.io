@@ -66,7 +66,7 @@ def test_bound_core_provenance_admits_identical_bytes_across_machinery_checkouts
         subprocess.run(["git", "clone", "--shared", "--no-checkout", "--quiet", str(REPO_ROOT), str(checkout)],
                        check=True, capture_output=True, timeout=60)
         subprocess.run(["git", "sparse-checkout", "set", "--no-cone", "/scripts/",
-                        "/agents_extensions/shared/rules/", "/schemas/", "/.mcp/", "/requirements-lock.txt"],
+                        "/agents_extensions/shared/rules/", "/schemas/", "/.mcp/", "/uv.lock"],
                        cwd=checkout, check=True, capture_output=True, timeout=60)
         subprocess.run(["git", "checkout", "--quiet", "--detach", head], cwd=checkout,
                        check=True, capture_output=True, timeout=60)

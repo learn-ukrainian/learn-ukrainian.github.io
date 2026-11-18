@@ -47,17 +47,24 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          # The next step installs with uv sync.
+          with-uv: 'true'
 
       - name: Create Python venv
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          python -m venv .venv
-          # The hash-pinned lu-machinery release first, as .github/actions/python-ci-env installs it
-          # (machinery docs/release.md, Consumers); the lock's hashes decide which bytes install.
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --require-hashes --no-deps --find-links "$wheelhouse" -r requirements-machinery.lock
+          # The locked runtime dependencies (no ml or dev group).
+          # The hash-pinned lu-machinery release comes from the wheelhouse, as
+          # .github/actions/python-ci-env installs it (machinery docs/release.md,
+          # Consumers); uv.lock's hashes decide which bytes install.
+          uv sync --locked --python "$(cat .python-version)" --no-default-groups --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
       - name: Resolve the last successful Pages deployment
         id: last-deploy
@@ -177,20 +184,25 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          # The next step installs with uv sync.
+          with-uv: 'true'
 
       - name: Create Python venv
         working-directory: .
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
-          python -m venv .venv
           set -euo pipefail
-          .venv/bin/python -m pip install --upgrade pip
-          # The hash-pinned lu-machinery release first, as .github/actions/python-ci-env installs it
-          # (machinery docs/release.md, Consumers); the lock's hashes decide which bytes install.
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --require-hashes --no-deps --find-links "$wheelhouse" -r requirements-machinery.lock
-          .venv/bin/python -m pip install PyYAML==6.0.3 jsonschema==4.26.0 regex==2026.5.9
+          # The locked runtime dependencies (no ml or dev group).
+          # The hash-pinned lu-machinery release comes from the wheelhouse, as
+          # .github/actions/python-ci-env installs it (machinery docs/release.md,
+          # Consumers); uv.lock's hashes decide which bytes install.
+          uv sync --locked --python "$(cat .python-version)" --no-default-groups --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
       - name: Restore Atlas lexicon manifest cache
         id: atlas-manifest-cache

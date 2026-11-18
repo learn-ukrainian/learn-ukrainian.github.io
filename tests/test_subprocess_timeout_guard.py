@@ -3,7 +3,7 @@
 Background: a timeout-less ``subprocess.*`` hang held a CI runner for 357 minutes
 (run ``30109965086``) because three guards were missing at once: call-site
 ``timeout=``, job ``timeout-minutes``, and ``pytest-timeout``. Job caps landed in
-PR #5735; ``pytest-timeout`` is pinned in ``requirements*.txt`` and enforced via
+PR #5735; ``pytest-timeout`` is pinned in ``pyproject.toml`` and ``uv.lock`` and enforced via
 ``pyproject.toml`` (``timeout = 120``, ``timeout_method = "thread"``) plus the
 CI pytest invocation. This module keeps the *call-site* fence from regrowing and
 proves a hang fails fast *and names the test*.
@@ -69,9 +69,9 @@ def test_pytest_timeout_budget_is_documented_in_pyproject() -> None:
     text = (_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert "timeout = 120" in text
     assert 'timeout_method = "thread"' in text or "timeout_method = 'thread'" in text
-    assert "pytest-timeout" in (_REPO_ROOT / "requirements.txt").read_text(encoding="utf-8")
-    lock = (_REPO_ROOT / "requirements-lock.txt").read_text(encoding="utf-8")
-    assert "pytest-timeout==" in lock
+    assert '"pytest-timeout>=' in text
+    lock = (_REPO_ROOT / "uv.lock").read_text(encoding="utf-8")
+    assert '\nname = "pytest-timeout"\n' in lock
 
 
 def test_ci_pytest_invokes_timeout_flags() -> None:

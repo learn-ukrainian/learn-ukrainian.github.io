@@ -1,11 +1,12 @@
 name: 'Python CI environment'
 description: >-
-  Set up uv, install the hash-pinned lu-machinery release from
-  requirements-machinery.lock and then requirements-lock.txt into .venv
-  (offline-first with an index retry, #9061), install ./packages/v4-runtime,
-  then verify the Atlas lexicon manifest. Shared by ci.yml and uv-cache-warm.yml so
-  the install cannot drift between jobs (#9062). With machinery-wheel-only it only
-  fetches the locked lu-machinery wheel, for jobs that install that wheel alone: the
+  Set up uv, install the project environment into .venv with uv sync --locked
+  from uv.lock on the Python in .python-version (offline-first with an index
+  retry, #9061), install the hash-checked lu-machinery release wheel, build the
+  ./packages/v4-runtime assets, then verify the Atlas lexicon manifest. Shared by
+  ci.yml and uv-cache-warm.yml so the install cannot drift between jobs (#9062).
+  With machinery-wheel-only it only fetches the locked lu-machinery wheel and
+  writes its hash-pinned requirement, for jobs that install that wheel alone: the
   repository's one copy of the fetch.
 inputs:
   save-cache:
@@ -13,19 +14,30 @@ inputs:
     default: ${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}
   machinery-wheel-only:
     description: >-
-      'true' fetches the locked lu-machinery wheel into the wheelhouse and does nothing
-      else (no uv, no installs); the job installs it with its own --require-hashes command.
+      'true' fetches the locked lu-machinery wheel into the wheelhouse and writes the
+      machinery-requirement file, and does nothing else (no project install); the job
+      installs the wheel with its own --require-hashes command.
+    default: 'false'
+  with-uv:
+    description: >-
+      'true' also puts the pinned uv on PATH in machinery-wheel-only mode, without the
+      uv cache, for jobs that read uv.lock with uv (the dependency audit exports it).
     default: 'false'
   hydrate-manifest:
     description: 'Verify the Atlas manifest; disable for jobs that only warm dependency caches.'
     default: 'true'
 outputs:
   uv-cache-key:
-    description: 'Exact setup-uv cache key for this runner, Python and both lock files.'
+    description: 'Exact setup-uv cache key for this runner, Python and uv.lock.'
     value: ${{ steps.setup-uv.outputs.cache-key }}
   machinery-wheelhouse:
-    description: 'Directory holding the locked lu-machinery wheel; empty when the checkout has no machinery lock.'
+    description: 'Directory holding the locked lu-machinery wheel.'
     value: ${{ steps.machinery-wheel.outputs.wheelhouse }}
+  machinery-requirement:
+    description: >-
+      Requirements file pinning the locked lu-machinery version and its uv.lock SHA-256;
+      install it with --no-index --no-deps --require-hashes --find-links machinery-wheelhouse.
+    value: ${{ steps.machinery-wheel.outputs.requirement }}
 
 runs:
   using: 'composite'
@@ -40,20 +52,21 @@ runs:
 
     - name: Set up uv
       id: setup-uv
-      if: inputs.machinery-wheel-only != 'true'
+      if: inputs.machinery-wheel-only != 'true' || inputs.with-uv == 'true'
       uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
-        version: '0.12.9'
+        # pyproject.toml [tool.uv] required-version: the one uv that writes and
+        # reads uv.lock (machinery .github/workflows/pins.txt UV_VERSION).
+        version: '0.13.1'
         # Read the same pin as setup-python; avoid uv's interpreter inference
         # producing an unknown cache key before a matching environment exists.
         python-version: ${{ steps.python-pin.outputs.version }}
-        enable-cache: true
-        # Hash of both locks, in this order (lu_machinery.ci.cache_hygiene
-        # recomputes it). setup-uv restores that exact key and passes no
-        # restore-keys; a different lock cannot satisfy --offline.
-        cache-dependency-glob: |
-          requirements-lock.txt
-          requirements-machinery.lock
+        # The audit-only uv of machinery-wheel-only jobs neither restores nor saves.
+        enable-cache: ${{ inputs.machinery-wheel-only != 'true' }}
+        # setup-uv restores that exact key (lu_machinery.ci.cache_hygiene
+        # recomputes it from uv.lock) and passes no restore-keys; a different
+        # lock cannot satisfy --offline.
+        cache-dependency-glob: uv.lock
         # Only refs/heads/main saves (the nightly schedule and uv-cache-warm.yml),
         # so the one entry every ref can read is the only one written (#9101).
         # A pull_request save lands on refs/pull/N/merge, readable only by that
@@ -64,70 +77,71 @@ runs:
         # gh-readonly-queue ref is unreadable by the next run) and still cannot.
         save-cache: ${{ inputs.save-cache }}
 
-    # lu-machinery is not on PyPI: the exact release wheel goes into a temporary
-    # wheelhouse (machinery docs/release.md, Consumers). Every CI job needs it, so
-    # it comes from the Actions cache, keyed on the wheel name and the lock's
-    # hashes; a miss downloads it through the authenticated releases API. The
-    # anonymous release URL failed with HTTP 403 for whole retry windows when the
-    # shared hosted-runner address pool was throttled. The lock's hash, not the
+    # lu-machinery is not on PyPI: uv.lock pins the exact release wheel URL and its
+    # SHA-256 (machinery docs/release.md, Consumers). Every CI job needs it, so it
+    # comes from the Actions cache, keyed on the wheel name and the lock's hash; a
+    # miss downloads it through the authenticated releases API. The anonymous
+    # release URL failed with HTTP 403 for whole retry windows when the shared
+    # hosted-runner address pool was throttled, so uv sync never fetches that URL
+    # here (--no-install-package lu-machinery below). The lock's hash, not the
     # source, decides which bytes install.
     - name: Locate the locked lu-machinery wheel
       id: machinery-wheel
       shell: bash
-      env:
-        WHEEL_ONLY: ${{ inputs.machinery-wheel-only }}
       run: |
         set -euo pipefail
-        machinery_lock=requirements-machinery.lock
-        # A checkout without the lock (coverage-ref.yml measuring an older
-        # commit) installs no lu-machinery; ci.yml's "Report lu-machinery"
-        # step imports it, so a missing lock fails CI Gate there.
-        if [[ ! -f "${machinery_lock}" ]]; then
-          if [[ "${WHEEL_ONLY}" == 'true' ]]; then
-            echo "::error::${machinery_lock} is missing"
-            exit 1
-          fi
-          echo 'locked=false' >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
-        mapfile -t versions < <(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' "${machinery_lock}")
-        if (( ${#versions[@]} != 1 )); then
-          echo "::error::${machinery_lock} must pin exactly one lu-machinery==X.Y.Z line"
+        if [[ ! -f uv.lock ]]; then
+          # coverage-ref.yml runs this action against the commit it measures:
+          # commits before the uv switch (#13194) have no uv.lock to install from.
+          echo "::error::uv.lock is missing; this action installs only from uv.lock"
           exit 1
         fi
-        version="${versions[0]}"
-        # The --hash values of the lu-machinery requirement: its line and the
-        # backslash-continued lines after it.
-        mapfile -t hashes < <(awk '
-          /^lu-machinery==/ { stanza = 1 }
-          stanza { if (match($0, /--hash=sha256:[0-9a-f]{64}/)) print substr($0, RSTART + 14, 64); if ($0 !~ /\\$/) exit }
-        ' "${machinery_lock}")
-        if (( ${#hashes[@]} == 0 )); then
-          echo "::error::${machinery_lock} carries no --hash=sha256 for lu-machinery==${version}"
-          exit 1
-        fi
-        digest="$(printf '%s\n' "${hashes[@]}" | sort | sha256sum | cut -c1-16)"
         wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+        requirement="${RUNNER_TEMP}/lu-machinery-requirement.txt"
         mkdir -p "${wheelhouse}"
-        {
-          echo 'locked=true'
-          echo "version=${version}"
-          echo "wheel=lu_machinery-${version}-py3-none-any.whl"
-          echo "hashes=${hashes[*]}"
-          echo "wheelhouse=${wheelhouse}"
-          echo "cache-key=lu-machinery-wheel-${version}-${digest}"
-        } >> "$GITHUB_OUTPUT"
+        python3 -I - uv.lock "${wheelhouse}" "${requirement}" >> "$GITHUB_OUTPUT" <<'PY'
+        import re
+        import sys
+        import tomllib
+
+        lock_path, wheelhouse, requirement = sys.argv[1:4]
+        with open(lock_path, "rb") as handle:
+            packages = [p for p in tomllib.load(handle).get("package", []) if p.get("name") == "lu-machinery"]
+        if len(packages) != 1:
+            sys.exit(f"::error::uv.lock must lock exactly one lu-machinery package; found {len(packages)}")
+        package = packages[0]
+        version = package.get("version", "")
+        url = package.get("source", {}).get("url", "")
+        wheels = package.get("wheels", [])
+        name = f"lu_machinery-{version}-py3-none-any.whl"
+        if (re.fullmatch(r"[0-9]+(\.[0-9]+)*", version) is None
+                or not url.startswith("https://github.com/learn-ukrainian/machinery/releases/download/")
+                or not url.endswith(f"/v{version}/{name}")
+                or len(wheels) != 1 or wheels[0].get("url") != url):
+            sys.exit("::error::uv.lock must pin lu-machinery to one release wheel URL of learn-ukrainian/machinery")
+        match = re.fullmatch(r"sha256:([0-9a-f]{64})", str(wheels[0].get("hash", "")))
+        if match is None:
+            sys.exit(f"::error::uv.lock carries no sha256 hash for lu-machinery {version}")
+        digest = match.group(1)
+        with open(requirement, "w", encoding="utf-8") as handle:
+            handle.write(f"lu-machinery=={version} --hash=sha256:{digest}\n")
+        print(f"version={version}")
+        print(f"wheel={name}")
+        print(f"hash={digest}")
+        print(f"wheelhouse={wheelhouse}")
+        print(f"requirement={requirement}")
+        print(f"cache-key=lu-machinery-wheel-{version}-{digest[:16]}")
+        PY
 
     - name: Restore the lu-machinery wheel
       id: machinery-wheel-cache
-      if: steps.machinery-wheel.outputs.locked == 'true'
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.machinery-wheel.outputs.wheelhouse }}
         key: ${{ steps.machinery-wheel.outputs.cache-key }}
 
     - name: Download the lu-machinery wheel
-      if: steps.machinery-wheel.outputs.locked == 'true' && steps.machinery-wheel-cache.outputs.cache-hit != 'true'
+      if: steps.machinery-wheel-cache.outputs.cache-hit != 'true'
       shell: bash
       env:
         # The job's token (contents: read is enough for a public release); the
@@ -153,31 +167,26 @@ runs:
 
     # Checked here, too, so a corrupt download is never saved to the cache.
     - name: Verify the lu-machinery wheel against the lock
-      if: steps.machinery-wheel.outputs.locked == 'true'
       shell: bash
       env:
-        HASHES: ${{ steps.machinery-wheel.outputs.hashes }}
+        EXPECTED: ${{ steps.machinery-wheel.outputs.hash }}
         WHEEL_PATH: ${{ steps.machinery-wheel.outputs.wheelhouse }}/${{ steps.machinery-wheel.outputs.wheel }}
         CACHE_HIT: ${{ steps.machinery-wheel-cache.outputs.cache-hit }}
       run: |
         set -euo pipefail
         actual="$(sha256sum "${WHEEL_PATH}" | cut -d' ' -f1)"
-        for expected in ${HASHES}; do
-          if [[ "${actual}" == "${expected}" ]]; then
-            echo "lu-machinery wheel ${WHEEL_PATH##*/} sha256 ${actual} matches the lock (cache hit: ${CACHE_HIT:-false})"
-            exit 0
-          fi
-        done
-        echo "::error::${WHEEL_PATH##*/} sha256 ${actual} is not a hash in requirements-machinery.lock"
-        exit 1
+        if [[ "${actual}" != "${EXPECTED}" ]]; then
+          echo "::error::${WHEEL_PATH##*/} sha256 ${actual} is not the uv.lock hash ${EXPECTED}"
+          exit 1
+        fi
+        echo "lu-machinery wheel ${WHEEL_PATH##*/} sha256 ${actual} matches uv.lock (cache hit: ${CACHE_HIT:-false})"
 
     # About 5 MiB, written only on a miss: main writes the entry every ref can
     # read; a pull request also writes its own (readable only by that PR, so a
     # version bump hits on reruns); merge_group and diagnostic runs do not.
     - name: Save the lu-machinery wheel
       if: >-
-        steps.machinery-wheel.outputs.locked == 'true'
-        && steps.machinery-wheel-cache.outputs.cache-hit != 'true'
+        steps.machinery-wheel-cache.outputs.cache-hit != 'true'
         && (inputs.save-cache == 'true' || github.event_name == 'pull_request')
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
@@ -189,44 +198,28 @@ runs:
       shell: bash
       env:
         MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.wheelhouse }}
+        MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.requirement }}
+        PYTHON_VERSION: ${{ steps.python-pin.outputs.version }}
+        # uv sync writes the environment the jobs call as .venv/bin/python.
+        UV_PROJECT_ENVIRONMENT: .venv
+        UV_PYTHON_DOWNLOADS: never
       run: |
         set -euo pipefail
-        # No ensurepip (~2 s): pip, setuptools and wheel are pinned in the lock
-        # and installed from it below.
-        python -m venv --without-pip .venv
-        # lu-machinery first, with --require-hashes: every package it pins is
-        # then installed from a hash-checked wheel, and the unhashed
-        # requirements-lock.txt install below finds those packages already
-        # present. Both files must carry the same version of a shared package.
-        machinery_lock=requirements-machinery.lock
-        if [[ -n "${MACHINERY_WHEELHOUSE}" ]]; then
-          if ! uv pip install --offline --python .venv/bin/python --require-hashes --no-deps \
-              --find-links "${MACHINERY_WHEELHOUSE}" -r "${machinery_lock}"; then
-            echo 'uv cache incomplete for the machinery lock; retrying installation from the index'
-            uv pip install --python .venv/bin/python --require-hashes --no-deps \
-              --find-links "${MACHINERY_WHEELHOUSE}" -r "${machinery_lock}"
-          fi
-        fi
-        # Drop live-ML wheels; the unit suite does not import them and they
-        # exceed the 15m budget. Check the installed dependency graph below.
-        # Also drop the local v4-runtime path: it is built once, without build
-        # isolation, after the lock install; leaving it in the lock builds the
-        # same package twice.
-        grep -viE -e '^(torch|torchvision|open_clip_torch|stanza)==' -e '^\./packages/v4-runtime$' requirements-lock.txt \
-          > "${RUNNER_TEMP}/requirements-ci.txt"
-        if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
+        # --locked refuses a uv.lock that no longer matches pyproject.toml, and
+        # every wheel is checked against its locked SHA-256. Excluded by name:
+        # the live-ML wheels (the unit suite does not import them and they exceed
+        # the 15m budget; pytest-slow-nightly.yml installs them) and lu-machinery,
+        # installed below from the hash-checked wheelhouse.
+        sync=(uv sync --locked --python "${PYTHON_VERSION}"
+          --no-install-package torch --no-install-package torchvision
+          --no-install-package open-clip-torch --no-install-package stanza
+          --no-install-package lu-machinery)
+        if ! "${sync[@]}" --offline; then
           echo 'uv cache incomplete; retrying installation from the index'
-          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          "${sync[@]}"
         fi
-        uv pip install --python .venv/bin/python --no-deps --no-build-isolation ./packages/v4-runtime
-        # The seven known missing ML dependencies result from the CI wheel
-        # filter. The fallback accepts only those exact omissions.
-        check_exit=0
-        uv pip check --python .venv/bin/python || check_exit=$?
-        if (( check_exit != 0 )); then
-          if (( check_exit != 1 )); then exit "$check_exit"; fi
-          .venv/bin/python scripts/audit/check_ci_dependencies.py
-        fi
+        uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+          --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
         .venv/bin/python packages/v4-runtime/build_assets.py
 
     # Use the same pointer key and path as deploy-pages and pytest-slow-nightly.

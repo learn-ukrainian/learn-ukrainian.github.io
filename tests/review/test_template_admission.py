@@ -23,7 +23,7 @@ def copy_review_checkout(target: Path) -> Path:
     for name in ("scripts", ".mcp", "agents_extensions"):
         shutil.copytree(SOURCE / name, target / name, symlinks=True,
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
-    shutil.copyfile(SOURCE / "requirements-lock.txt", target / "requirements-lock.txt")
+    shutil.copyfile(SOURCE / "uv.lock", target / "uv.lock")
     return target
 
 

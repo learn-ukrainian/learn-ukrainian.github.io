@@ -125,7 +125,7 @@ _SKIP_PATH_SUBSTRINGS = [
     "data/vesum.db",
     "wiki/.state/",
     "docs/references/external/",
-    "requirements-lock.txt",
+    "uv.lock",
     "audit/",
     "_archive/",
 ]

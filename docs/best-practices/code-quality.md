@@ -18,11 +18,11 @@ python3 scripts/build/v7_build.py a1 m01-alphabet --worktree   # missing deps
 python scripts/build/v7_build.py a1 m01-alphabet --worktree    # wrong version
 ```
 
-**Why:** The venv uses pyenv Python 3.12.15 compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec. Homebrew Python will silently fail on vector search.
+**Why:** The venv runs the CPython named in `.python-version` with every dependency `uv.lock` pins. sqlite-vec needs an interpreter that can load SQLite extensions: uv's managed CPython can; Homebrew Python silently fails on vector search.
 
-If recreating the venv:
+If recreating the venv (uv reads `.python-version`, `pyproject.toml` and `uv.lock`):
 ```bash
-rm -rf .venv && ~/.pyenv/versions/3.12.15/bin/python -m venv .venv
+rm -rf .venv && uv sync --locked
 ```
 
 ---

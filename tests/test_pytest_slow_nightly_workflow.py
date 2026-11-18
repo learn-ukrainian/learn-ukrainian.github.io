@@ -6,9 +6,9 @@ imported ``jsonschema`` and died, so no slow test ever ran.
 
 These tests execute the workflow's own ``run`` scripts in workflow order in an
 offline sandbox. A ``python`` shim stands in for setup-python: it has no project
-dependencies. Its ``-m venv`` creates a ``.venv/bin/python`` that gains the
-project's packages only after ``pip install -r`` receives a file carrying the
-locked ``jsonschema`` pin. The verification step then reaches the real
+dependencies. A ``uv`` shim stands in for uv: ``uv sync`` creates a
+``.venv/bin/python`` that gains the project's packages only when the sync is
+``--locked`` and the checkout's ``uv.lock`` locks ``jsonschema``. The verification step then reaches the real
 ``load_manifest()`` against controlled pointer and manifest fixtures. Its
 release download goes through a synthetic GitHub client that refuses every
 request before opening a socket, so a hydrate attempt fails without network.
@@ -35,8 +35,8 @@ from scripts.lexicon.manifest_io import DOWNLOAD_ATTEMPTS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "pytest-slow-nightly.yml"
-REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
-MACHINERY_LOCK = REPO_ROOT / "requirements-machinery.lock"
+UV_LOCK = REPO_ROOT / "uv.lock"
+PYTHON_VERSION_FILE = REPO_ROOT / ".python-version"
 JOB = "pytest-slow"
 INSTALL_STEP = "Install dependencies"
 VERIFY_STEP = "Verify Atlas manifest matches pointer (rehydrate if stale)"
@@ -88,9 +88,9 @@ def _sha256(data: bytes) -> str:
 
 
 def _locked_jsonschema() -> str:
-    return next(
-        line for line in REQUIREMENTS_LOCK.read_text(encoding="utf-8").splitlines() if line.startswith("jsonschema==")
-    )
+    line = 'name = "jsonschema"'
+    assert line in UV_LOCK.read_text(encoding="utf-8").splitlines(), "uv.lock no longer locks jsonschema"
+    return line
 
 
 def _write_executable(path: Path, text: str) -> None:
@@ -126,8 +126,8 @@ def _build_sandbox(root: Path, control: str) -> tuple[Path, dict[str, str]]:
     shutil.copy2(REPO_ROOT / "scripts" / "lexicon" / "manifest_io.py", lexicon / "manifest_io.py")
     for client_package in (common, release_common):
         (client_package / "github_client.py").write_text(OFFLINE_GITHUB_CLIENT, encoding="utf-8")
-    shutil.copy2(REQUIREMENTS_LOCK, workspace / "requirements-lock.txt")
-    shutil.copy2(MACHINERY_LOCK, workspace / "requirements-machinery.lock")
+    shutil.copy2(UV_LOCK, workspace / "uv.lock")
+    shutil.copy2(PYTHON_VERSION_FILE, workspace / ".python-version")
 
     data_dir = workspace / "site" / "src" / "data"
     data_dir.mkdir(parents=True)
@@ -167,31 +167,30 @@ def _build_sandbox(root: Path, control: str) -> tuple[Path, dict[str, str]]:
     # A venv python with the project packages only after the locked install.
     venv_python = f"""#!/usr/bin/env bash
 venv="$(cd "$(dirname "$0")/.." && pwd)"
-if [[ "$1 $2 $3" == "-m pip install" ]]; then
-  shift 3
-  echo "$*" >> "$venv/pip-installs.log"
-  while (( $# )); do
-    if [[ "$1" == "-r" ]] && grep -qxF '{_locked_jsonschema()}' "$2"; then
-      touch "$venv/locked-dependencies"
-    fi
-    shift
-  done
-  exit 0
-fi
 if [[ -e "$venv/locked-dependencies" ]]; then exec '{real}' "$@"; fi
 exec '{real}' -S "$@"
 """
     (root / "venv-python").write_text(venv_python, encoding="utf-8")
-    # setup-python stand-in: stdlib only, and it can create the venv.
+    # setup-python stand-in: stdlib only.
+    _write_executable(bin_dir / "python", f"#!/usr/bin/env bash\nexec '{real}' -S \"$@\"\n")
+    # uv stand-in: sync creates the venv; only a --locked sync of a lock that
+    # locks jsonschema gives it the project packages. pip install is a no-op.
     _write_executable(
-        bin_dir / "python",
+        bin_dir / "uv",
         f"""#!/usr/bin/env bash
-if [[ "$1" == "-m" && "$2" == "venv" ]]; then
-  mkdir -p "$3/bin"
-  install -m 0755 '{root / "venv-python"}' "$3/bin/python"
+echo "$*" >> '{root / "uv-calls.log"}'
+if [[ "$1" == "sync" ]]; then
+  venv="${{UV_PROJECT_ENVIRONMENT:-.venv}}"
+  mkdir -p "$venv/bin"
+  install -m 0755 '{root / "venv-python"}' "$venv/bin/python"
+  if [[ " $* " == *" --locked "* ]] && grep -qxF '{_locked_jsonschema()}' uv.lock; then
+    touch "$venv/locked-dependencies"
+  fi
   exit 0
 fi
-exec '{real}' -S "$@"
+if [[ "$1 $2" == "pip install" ]]; then exit 0; fi
+echo "unexpected uv call: $*" >&2
+exit 2
 """,
     )
     runner_temp = root / "runner-temp"
@@ -207,6 +206,7 @@ exec '{real}' -S "$@"
         "XDG_CACHE_HOME": str(home / ".cache"),
         "RUNNER_TEMP": str(runner_temp),
         "MACHINERY_WHEELHOUSE": str(wheelhouse),
+        "MACHINERY_REQUIREMENT": str(runner_temp / "lu-machinery-requirement.txt"),
         "LU_LEXICON_MANIFEST_CACHE": str(cache_dir),
         "LU_GITHUB_CACHE_DIR": str(home / "github-cache"),
         "OFFLINE_DOWNLOAD_LOG": str(root / "offline-downloads.log"),
@@ -283,7 +283,7 @@ def _edit_step(workflow: dict, name: str, **changes: object) -> dict:
 
 def _original(workflow: dict) -> dict:
     """The pre-#11030 order: setup interpreter, before the venv exists."""
-    mutated = _move_before(workflow, VERIFY_STEP, "Restore pip wheel cache")
+    mutated = _move_before(workflow, VERIFY_STEP, "Fetch the locked lu-machinery wheel")
     _step(mutated, VERIFY_STEP)["run"] = ORIGINAL_VERIFY_RUN
     return mutated
 
@@ -311,8 +311,8 @@ def test_valid_control_records_locked_install_before_loader(tmp_path: Path) -> N
     result = _run_until_verification(_steps(_load_workflow()), tmp_path, "valid")
 
     assert _verified(result), result.stderr
-    installs = (tmp_path / "workspace" / ".venv" / "pip-installs.log").read_text(encoding="utf-8")
-    assert f"--no-deps -r {tmp_path / 'runner-temp' / 'requirements-ci.txt'}" in installs
+    calls = (tmp_path / "uv-calls.log").read_text(encoding="utf-8").splitlines()
+    assert any(call.startswith("sync --locked ") for call in calls), calls
     assert (tmp_path / "workspace" / ".venv" / "locked-dependencies").exists()
     assert _offline_downloads(tmp_path) == []
 
@@ -352,7 +352,7 @@ def test_cached_control_rehydrates_the_pinned_manifest(tmp_path: Path) -> None:
 
 def _drop_locked_install(workflow: dict) -> dict:
     run = _step(workflow, INSTALL_STEP)["run"]
-    kept = "\n".join(line for line in run.splitlines() if '-r "${RUNNER_TEMP}' not in line)
+    kept = "\n".join(line.replace(" --locked", "") for line in run.splitlines())
     return _edit_step(workflow, INSTALL_STEP, run=kept + "\n")
 
 
@@ -376,7 +376,7 @@ MUTATIONS = {
     "original-order-and-interpreter": _original,
     "verify-before-install": lambda wf: _move_before(wf, VERIFY_STEP, INSTALL_STEP),
     "verify-with-setup-interpreter": _setup_interpreter,
-    "install-without-locked-requirements": _drop_locked_install,
+    "install-without-locked-sync": _drop_locked_install,
     "verification-removed": _drop_verification,
     "loader-call-removed": _skip_loader_call,
     "continue-on-error": lambda wf: _edit_step(wf, VERIFY_STEP, **{"continue-on-error": True}),

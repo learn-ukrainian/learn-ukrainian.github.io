@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 345,
-    "probe_count": 690,
+    "cli_count": 344,
+    "probe_count": 688,
     "cli_paths": [
       "scripts/analytics/vocab_progression.py",
       "scripts/atlas/a1_slice3_inputs.py",
@@ -46,7 +46,6 @@
       "scripts/audit/check_adrs.py",
       "scripts/audit/check_atlas_intake_freeze.py",
       "scripts/audit/check_atlas_manifest_enrichment.py",
-      "scripts/audit/check_ci_dependencies.py",
       "scripts/audit/check_content_spelling.py",
       "scripts/audit/check_decisions.py",
       "scripts/audit/check_locked_module_not_published.py",
@@ -350,7 +349,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "de2afdf2bd8c396f1fe0244a8de0207f1082b8f508890b74232d63077e1648c1"
+    "cli_paths_sha256": "2eac943f49aeef6b3e3cc00cf541c1151e7721f7d941220b3485fe0f60468f8c"
   },
   "failures": [
     {

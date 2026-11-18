@@ -26,7 +26,7 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 ### Prerequisites
 
 - macOS (primary dev platform)
-- [pyenv](https://github.com/pyenv/pyenv) with Python 3.12.15
+- [uv](https://docs.astral.sh/uv/) 0.13.1 (`pyproject.toml` `[tool.uv] required-version`); it installs the Python in `.python-version`
 - Node.js 20+ (for Starlight frontend)
 
 ### Installation
@@ -36,24 +36,11 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 
-# 2. Python environment (sqlite extensions required for VESUM)
-PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.15
-pyenv local 3.12.15
-python -m venv .venv
-# The pinned lu-machinery release comes first: it is not on PyPI, and
-# packages/v4-runtime (in requirements.txt) depends on it. Only its
-# platform-independent wheel is checked against the hash in
-# requirements-machinery.lock (the rest of that lock pins Linux CI wheels);
-# the requirements install then resolves its dependencies for this platform.
-version="$(sed -nE 's/^lu-machinery==([0-9.]+) \\$/\1/p' requirements-machinery.lock)"
-mkdir -p .venv/lu-machinery-wheelhouse
-curl -fsSL -o ".venv/lu-machinery-wheelhouse/lu_machinery-${version}-py3-none-any.whl" \
-  "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
-awk '/^lu-machinery==/{f=1;print;next} f&&/^[[:space:]]/{print;next} f{exit}' \
-  requirements-machinery.lock > .venv/lu-machinery.req
-.venv/bin/pip install --require-hashes --no-deps \
-  --find-links .venv/lu-machinery-wheelhouse -r .venv/lu-machinery.req
-.venv/bin/pip install -r requirements.txt
+# 2. Python environment: the CPython in .python-version (uv's managed build
+# loads SQLite extensions, which VESUM needs) and every package uv.lock pins,
+# each checked against its locked SHA-256. The lu-machinery release wheel is
+# not on PyPI; pyproject.toml [tool.uv.sources] names its release URL.
+uv sync --locked
 
 # 3. Frontend
 cd starlight && npm install && cd ..
@@ -159,8 +146,7 @@ survivors on success, error, or timeout. The fake smoke always runs.
 The repo ships a `.pre-commit-config.yaml` that mirrors the CI checks locally. Install once per clone:
 
 ```bash
-pip install pre-commit
-pre-commit install
+.venv/bin/pre-commit install   # pre-commit is in the dev group uv sync installs
 ```
 
 After that, every `git commit` runs:

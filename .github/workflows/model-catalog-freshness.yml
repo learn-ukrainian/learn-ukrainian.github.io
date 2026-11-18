@@ -6,7 +6,7 @@ on:
       - 'scripts/config/model_catalog.yaml'
       - 'scripts/config/fleet_communications.yaml'
       - 'scripts/review/model_catalog.py'
-      - 'requirements-machinery.lock'
+      - 'uv.lock'
       - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
       - 'scripts/lint/lint_fleet_roster.py'
@@ -22,7 +22,7 @@ on:
       - 'scripts/config/model_catalog.yaml'
       - 'scripts/config/fleet_communications.yaml'
       - 'scripts/review/model_catalog.py'
-      - 'requirements-machinery.lock'
+      - 'uv.lock'
       - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
       - 'scripts/lint/lint_fleet_roster.py'
@@ -76,12 +76,12 @@ jobs:
       - name: Install the locked lu-machinery release
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
         run: |
           set -euo pipefail
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           .venv/bin/python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
 
       - name: Validate catalog structure and freshness
         run: .venv/bin/python -m lu_machinery.lint.lint_model_catalog

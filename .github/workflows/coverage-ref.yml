@@ -71,7 +71,7 @@ jobs:
           scripts/opsec/gh_snapshot.py
           scripts/opsec/prepublish.py
           .python-version
-          requirements-machinery.lock
+          uv.lock
         sparse-checkout-cone-mode: false
         ref: ${{ steps.validate.outputs.validated_revision }}
     - name: Check out measurement tooling
@@ -96,12 +96,12 @@ jobs:
     - name: Install the locked lu-machinery release
       env:
         MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+        MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
       run: |
         set -euo pipefail
         wheelhouse="${MACHINERY_WHEELHOUSE}"
-        sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
         python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-          --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
     - name: Refresh pytest duration snapshot
       env:
         GH_TOKEN: ${{ github.token }}
@@ -163,7 +163,8 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: '5'
-      # Python 3.12.15 + coverage 7.16.2: sysmon cannot measure branches.
+      # ctrace, the core of every earlier measurement: on Python 3.12, coverage's
+      # sysmon core could not measure branches (coverage 7.16.2).
       # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
       COVERAGE_CORE: ctrace
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage

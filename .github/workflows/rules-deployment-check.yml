@@ -4,7 +4,7 @@ permissions:
   contents: read
 
 # Agent files are deployed by the installed lu-machinery release
-# (`lu_machinery.agent_deploy`, pinned in requirements-machinery.lock) from the
+# (`lu_machinery.agent_deploy`, pinned in uv.lock) from the
 # release resources plus the product sources agents_extensions/deployment.v1.json
 # names. Every input of that composition is in the path filters below.
 on:
@@ -18,7 +18,7 @@ on:
       - 'agents_extensions/codex/**'
       - 'agents_extensions/agy/**'
       - 'package.json'
-      - 'requirements-machinery.lock'
+      - 'uv.lock'
       - 'scripts/pre_commit/project_python.sh'
       - 'scripts/lib/project_interpreter.sh'
       - 'scripts/lib/deploy_extensions.sh'
@@ -36,7 +36,7 @@ on:
       - 'agents_extensions/codex/**'
       - 'agents_extensions/agy/**'
       - 'package.json'
-      - 'requirements-machinery.lock'
+      - 'uv.lock'
       - 'scripts/pre_commit/project_python.sh'
       - 'scripts/lib/project_interpreter.sh'
       - 'scripts/lib/deploy_extensions.sh'

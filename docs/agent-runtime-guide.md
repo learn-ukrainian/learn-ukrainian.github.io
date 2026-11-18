@@ -1183,7 +1183,7 @@ rendered it (`lu_machinery/review/render_contract.py`):
   a symlink contributes its target's bytes; `__pycache__`, documents and
   modules the server never imports do not count. Imports outside the
   repository (standard library, third-party) and dynamic `importlib` imports
-  are not traced. `requirements-lock.txt`: the sha256 of the checkout's lock,
+  are not traced. `uv.lock`: the sha256 of the checkout's lock,
   which pins every third-party package the environment is built from; a
   checkout without it refuses as `review_server_lock_missing`. Accepted
   residual: an installed package that changes without a lock change (for
