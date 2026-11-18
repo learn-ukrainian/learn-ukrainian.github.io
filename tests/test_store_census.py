@@ -33,6 +33,8 @@ from scripts.docs import store_census as sc
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)
 REGISTRY = sc.registry(CATALOGUE)
+# The one store whose busy timeout is set by a helper the registry names (busy_setters), not by its writer.
+NAMED_HELPER_STORE = next(r['path'] for r in REGISTRY['stores'] if r.get('busy_setters'))
 ALLOWLIST = json.loads((REPO / sc.ALLOWLIST_PATH).read_text(encoding="utf-8"))
 STUDY_EVIDENCE_DIRS = {'batch_state/preserved', 'batch_state/devops-*', 'batch_state/codex-atlas',
                        'batch_state/briefs', 'batch_state/open-model-data-*', 'batch_state/review-receipts'}
@@ -172,10 +174,10 @@ MUTATIONS = {
         _set('data/embeddings/manifest.db', busy_ms=10000),
         "busy_ms 10000 but 'scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__' sets 30000"),
     'busy timeout other than the named helper sets': (
-        _set('data/sources.db', busy_ms=10000),
+        _set(NAMED_HELPER_STORE, busy_ms=10000),
         "busy_ms 10000 but 'scripts/wiki/sources_db.py:_open_conn' sets 30000"),
     'explicit busy timeout set only in an unnamed helper': (
-        _set('data/sources.db', busy_setters=DROP),
+        _set(NAMED_HELPER_STORE, busy_setters=DROP),
         "'scripts/wiki/build_sources_db.py:build' sets no busy timeout; name the shared helper"),
     'default busy source while the writer sets one': (
         _set('data/embeddings/manifest.db', busy_source='default', busy_ms=5000), 'record it as explicit'),
@@ -184,7 +186,7 @@ MUTATIONS = {
              busy_setters=['scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__']),
         "busy_setters is for busy_source explicit, not 'default'"),
     'undefined busy setter': (
-        _set('data/sources.db', busy_setters=['scripts/wiki/sources_db.py:nope']),
+        _set(NAMED_HELPER_STORE, busy_setters=['scripts/wiki/sources_db.py:nope']),
         "busy setter 'scripts/wiki/sources_db.py:nope': 'nope' is not defined"),
 }
 
