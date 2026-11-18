@@ -105,7 +105,7 @@ parso==0.8.7
 pathspec==1.1.1
 peft==0.20.0
 pexpect==4.9.0
-pip==26.2.1
+pip==26.3
 pillow==13.0.0
 platformdirs==4.11.11
 playwright==1.64.1
@@ -122,7 +122,7 @@ psycopg-binary==3.3.6
 ptyprocess==0.7.0
 pure-eval==0.2.3
 pyahocorasick==2.3.1
-pyarrow==26.0.0
+pyarrow==26.0.1
 pycparser==3.12
 pydantic==2.14.2
 pydantic_core==2.50.2
@@ -132,13 +132,13 @@ PyJWT==2.15.1
 pymorphy3==2.0.6
 pymorphy3-dicts-ru==2.4.417150.4580142
 pymorphy3-dicts-uk==2.4.1.1.1663094765
-PyMuPDF==2.0
-pymupdf-layout==2.0
-pymupdf4llm==2.0
+PyMuPDF==2.1
+pymupdf-layout==2.1
+pymupdf4llm==2.1
 pypdf==6.21.4
 pytest==9.1.1
 pytest-cov==7.1.0
-pytest-mock==3.16.0
+pytest-mock==3.17.0
 pytest-rerunfailures==16.7
 pytest-timeout==2.4.0
 pytest-xdist==3.8.0
@@ -194,7 +194,7 @@ uvicorn==0.54.0
 virtualenv==21.14.13
 vulture==2.16
 wcwidth==0.6.0
-websockets==16.0
+websockets==17.4
 Werkzeug==3.1.9
 wheel==0.48.0
 xxhash==3.7.0
