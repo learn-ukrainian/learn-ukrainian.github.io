@@ -76,6 +76,7 @@ import contextlib
 import functools
 import importlib
 import importlib.machinery
+import importlib.util
 import ipaddress
 import itertools
 import linecache
@@ -1681,9 +1682,11 @@ def _isolate_legacy_bridge_telemetry(
         check_venv_integrity,
         check_worktree_cleanup_integrity,
     )
-    from lu_machinery.telemetry import legacy_bridge
-
-    monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
+    # Machinery PR 819 removes the legacy-bridge telemetry writer; isolate it only while the
+    # installed release still ships it. Remove this block once the product pins such a release.
+    if importlib.util.find_spec("lu_machinery.telemetry.legacy_bridge") is not None:
+        legacy_bridge = importlib.import_module("lu_machinery.telemetry.legacy_bridge")
+        monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
     for module, fn_name, bucket in (
         (check_primary_integrity, "check_primary_integrity", "primary-integrity"),
         (check_node_modules_integrity, "check_node_modules_integrity", "node-modules-integrity"),
