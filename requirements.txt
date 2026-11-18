@@ -15,7 +15,7 @@ fastapi>=0.139.0
 uvicorn>=0.48.0
 # uvicorn's WebSocket protocol implementation: without it uvicorn refuses the
 # Monitor API's /ws/batch upgrade (scripts/project_api/batch_router.py).
-websockets>=16.0
+websockets>=17.4
 httpx>=0.28
 prometheus-client>=0.26.0
 
