@@ -1210,6 +1210,20 @@ def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
     return Path(raw_path).resolve(), False
 
 
+def _rebind_bridge_db_roots(context: Any, isolated_path: Path) -> Any:
+    """Return ``context`` with every root that still names a bridge DB bound to ``isolated_path``.
+
+    Matches by value, so it does nothing for a Monitor release whose roots no
+    longer carry a bridge database.
+    """
+    stale = {
+        name: isolated_path
+        for name, value in vars(context.roots).items()
+        if isinstance(value, Path) and value.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE
+    }
+    return context.with_roots(**stale) if stale else context
+
+
 @pytest.fixture(autouse=True)
 def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Redirect imported and future bridge users to one per-test database."""
@@ -1227,17 +1241,22 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
             if Path(value).resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
                 monkeypatch.setattr(module, attribute, isolated_path)
 
-    # The production API app has a context and store handles created at import.
-    # Rebuild both against the isolated path, preserving other configured roots.
+    # The production API app has a context created at import; rebind it to the isolated path.
     for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
         api_main = _loaded_module(package, 'api', "main")
         if api_main is None:
             continue
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
-        if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
-            monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
+        if context is not None and (rebound := _rebind_bridge_db_roots(context, isolated_path)) is not context:
+            monkeypatch.setattr(app.state, "ctx", rebound)
     return isolated_path
+
+
+@pytest.fixture
+def rebind_bridge_db(isolated_bridge_db: Path) -> Callable[[Any], Any]:
+    """Rebind a Monitor context built from ``production_context()`` to the per-test bridge DB."""
+    return lambda context: _rebind_bridge_db_roots(context, isolated_bridge_db)
 
 
 @pytest.fixture(autouse=True)

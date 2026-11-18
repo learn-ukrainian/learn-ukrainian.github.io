@@ -2205,13 +2205,13 @@ store_registry:
     - path: .mcp/servers/message-broker/messages.db
       owner: infra-harness
       kind: operational
-      activity: active
+      activity: dormant
       presence: present
-      writers: [.mcp/servers/message-broker/server.py:handle_send_message]
+      writers: []
+      writer_note: No tracked product file writes it since the broker server and every product reader were deleted on 2026-11-18; the installed lu-machinery bridge (release 0.1.33, lu_machinery.ai_agent_bridge._db) can still create or migrate it until that bridge retires. No rows since 2026-11-03.
       journal: wal
       busy_ms: 5000
       busy_source: explicit
-      busy_setters: [.mcp/servers/message-broker/server.py:get_db]
       protection: keep
       backup: none
       protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'

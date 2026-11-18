@@ -624,36 +624,3 @@ class TestLoadCurriculum:
         yaml_file.write_text("broken: [unclosed list", encoding="utf-8")
         data = load_curriculum(curriculum_yaml=yaml_file)
         assert data == {}
-
-
-class TestGetBrokerMessagesForSlug:
-    """get_broker_messages_for_slug queries database with limit."""
-
-    def test_respects_limit_and_order(self, tmp_path):
-        import sqlite3
-
-        from lu_machinery.api.monitor_context import DatabaseHandle
-        from lu_machinery.api.resilience import connect_sqlite
-
-        from scripts.project_api.curriculum_state import get_broker_messages_for_slug
-
-        db_path = tmp_path / "messages.sqlite3"
-        conn = sqlite3.connect(str(db_path))
-        conn.execute(
-            "CREATE TABLE messages (id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT, message_type TEXT, content TEXT, timestamp TEXT)"
-        )
-        for i in range(1, 10):
-            conn.execute(
-                "INSERT INTO messages VALUES (?, ?, 'agent1', 'agent2', 'chat', ?, '2026-08-26T12:00:00Z')",
-                (i, "task-test-module-slug", f"content {i}"),
-            )
-        conn.commit()
-        conn.close()
-
-        handle = DatabaseHandle(db_path, lambda path, **kw: connect_sqlite(str(path)))
-        results = get_broker_messages_for_slug("test-module-slug", limit=3, message_db=handle)
-        assert len(results) == 3
-        # Ordered by id DESC
-        assert results[0]["id"] == 9
-        assert results[1]["id"] == 8
-        assert results[2]["id"] == 7
