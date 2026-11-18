@@ -19,8 +19,12 @@ checks. Codex flagged that mixing these would muddy the contract.
 
 from __future__ import annotations
 
+import asyncio
+import hashlib
 import json
+import os
 import re
+import time
 from pathlib import Path
 from typing import Any, cast
 
@@ -28,7 +32,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from lu_machinery.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -43,9 +47,16 @@ from .state_compute import _get_review_score
 
 router = APIRouter(tags=["artifacts"])
 
-# Dashboard polls share one tree walk. Direct collector calls stay uncached so
-# a caller that just wrote a file still sees it.
-_ARTIFACT_LIST_TTL_S = 15.0
+# The artifact list is rebuilt only when a stat walk of the discovery roots shows
+# a change (see ``_artifact_tree_fingerprint``). The age ceiling only bounds the
+# staleness of a change that leaves no stat trace. Direct collector calls stay
+# uncached so a caller that just wrote a file still sees it.
+_ARTIFACT_LIST_MAX_AGE_S = 3600.0
+# One stat walk serves every request in this window, so warm polls neither walk
+# the tree nor wait for a worker thread. One entry per context root.
+_ARTIFACT_FINGERPRINT_TTL_S = 2.0
+_artifact_fingerprints: dict[str, tuple[float, str]] = {}
+_ARTIFACT_DISCOVERY_DIRS = ("docs", "audit")
 
 
 # ---------------------------------------------------------------------
@@ -112,6 +123,43 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 # ---------------------------------------------------------------------
 
 
+def _artifact_tree_fingerprint(project_root: Path) -> str:
+    """Digest of every ``.md``/``.html`` file's path, mtime and size under the discovery roots.
+
+    The collector's output is a function of those files plus the context's
+    roots, so an unchanged digest means a cached list is still exact. A stat
+    walk costs about 10 ms against the ~450 ms parse-and-resolve collector.
+    """
+    entries: list[str] = []
+    for name in _ARTIFACT_DISCOVERY_DIRS:
+        for dirpath, dirnames, filenames in os.walk(project_root / name):
+            dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+            for filename in filenames:
+                if filename.startswith(".") or not filename.lower().endswith((".md", ".html")):
+                    continue
+                path = os.path.join(dirpath, filename)
+                try:
+                    stat = os.stat(path)
+                    link = os.readlink(path) if os.path.islink(path) else ""
+                except OSError:
+                    continue
+                entries.append(f"{path}\0{stat.st_mtime_ns}\0{stat.st_size}\0{link}")
+    entries.sort()
+    return hashlib.blake2b("\n".join(entries).encode("utf-8", "surrogateescape"), digest_size=16).hexdigest()
+
+
+def _matches_filters(
+    item: dict[str, Any], *, class_: str | None, date_from: str | None, status: str | None, author: str | None
+) -> bool:
+    """Same predicate the collector applies, evaluated on its own output fields."""
+    return not (
+        (class_ and item["class"] != class_)
+        or (status and item["status"] != status)
+        or (author and item["author"] != author)
+        or (date_from and item["date"] < date_from)
+    )
+
+
 @router.get("/html")
 async def html_artifacts(
     class_: str | None = Query(None, alias="class"),
@@ -130,36 +178,31 @@ async def html_artifacts(
         status: Filter by status.
         author: Filter by author.
     """
-    types: tuple[str, ...]
-    if type_ == "html":
-        types = ("html",)
-    elif type_ == "md":
-        types = ("md",)
-    else:
-        types = ("html", "md")
-
     resolved = resolve_context(ctx)
-    # One JSON part, so a colon inside a filter cannot collide with another filter.
-    cache_key = ctx_scoped_ttl_key(
-        resolved,
-        "artifacts-html",
-        json.dumps(
-            [class_ or "", date_from or "", status or "", author or "", list(types)],
-            separators=(",", ":"),
-        ),
-    )
-    return await cache_get_or_compute_async(
+    # One unfiltered list per context and tree state, so request filters cannot
+    # grow the cache; each request filters the shared list.
+    prefix = ctx_scoped_ttl_key(resolved, "artifacts-html") + ":"
+    seen = _artifact_fingerprints.get(prefix)
+    if seen is not None and time.monotonic() - seen[0] < _ARTIFACT_FINGERPRINT_TTL_S:
+        fingerprint = seen[1]
+    else:
+        fingerprint = await asyncio.to_thread(_artifact_tree_fingerprint, resolved.roots.project_root)
+        _artifact_fingerprints[prefix] = (time.monotonic(), fingerprint)
+    cache_key = prefix + fingerprint
+    cache_retain(prefix, cache_key)
+    full = await cache_get_or_compute_async(
         cache_key,
-        _ARTIFACT_LIST_TTL_S,
-        lambda: collect_html_artifacts(
-            class_filter=class_,
-            date_from=date_from,
-            status=status,
-            author=author,
-            types=types,
-            ctx=resolved,
-        ),
+        _ARTIFACT_LIST_MAX_AGE_S,
+        lambda: collect_html_artifacts(types=("html", "md"), ctx=resolved),
     )
+    suffix = f".{type_}" if type_ else None
+    artifacts = [
+        item
+        for item in full["artifacts"]
+        if (suffix is None or item["path"].lower().endswith(suffix))
+        and _matches_filters(item, class_=class_, date_from=date_from, status=status, author=author)
+    ]
+    return JSONResponse({"generated_at": full["generated_at"], "total": len(artifacts), "artifacts": artifacts})
 
 
 def _level_cfg(track: str) -> dict | None:

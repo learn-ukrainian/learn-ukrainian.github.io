@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
 from lu_machinery.api import docs_router
 from lu_machinery.api.monitor_context import MonitorContext, fixture_context, get_ctx
@@ -59,35 +60,54 @@ def artifact_context(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Monitor
 
 
 @pytest.mark.parametrize(
-    "query",
+    ("query", "filters"),
     [
-        "",
-        "?type=html",
-        "?type=md",
-        "?class=handoff&status=green&author=codex&date_from=2026-10-01",
-        "?date_from=2026-09-01",
+        ("", {}),
+        ("?type=html", {"types": ("html",)}),
+        ("?type=md", {"types": ("md",)}),
+        (
+            "?class=handoff&status=green&author=codex&date_from=2026-10-01",
+            {"class_filter": "handoff", "status": "green", "author": "codex", "date_from": "2026-10-01"},
+        ),
+        ("?date_from=2026-09-01", {"date_from": "2026-09-01"}),
     ],
 )
-def test_artifacts_response_bytes_match_before_optimization(
-    artifact_context: MonitorContext, monkeypatch: pytest.MonkeyPatch, query: str
+def test_artifacts_response_bytes_match_uncached_collector(
+    artifact_context: MonitorContext, monkeypatch: pytest.MonkeyPatch, query: str, filters: dict
 ) -> None:
+    """The cached, request-filtered route must serialise exactly what the collector returns for those filters.
+
+    A defect class this also pins: the stat-fingerprinted cache serving a list from before a new file was written.
+    """
+    monkeypatch.setattr(artifacts_router, "_ARTIFACT_FINGERPRINT_TTL_S", 0.0)
     app = FastAPI()
     app.include_router(artifacts_router.router, prefix="/api/artifacts")
     app.dependency_overrides[get_ctx] = lambda: artifact_context
     with TestClient(app) as client:
         with monkeypatch.context() as baseline:
-            # The original collector and parsers are unchanged. Restore its
-            # original relative-path operation, including resolved containment,
-            # to produce the pre-change response on exactly the same inputs.
-            baseline.setattr(
-                docs_router, "_relative_to_root", lambda path, root: path.relative_to(root).as_posix()
-            )
-            before = client.get(f"/api/artifacts/html{query}")
+            # Restore the collector's original relative-path operation, including
+            # resolved containment, to produce the pre-change response on the same inputs.
+            baseline.setattr(docs_router, "_relative_to_root", lambda path, root: path.relative_to(root).as_posix())
+            before = JSONResponse(
+                docs_router.collect_html_artifacts(ctx=artifact_context, **{"types": ("html", "md"), **filters})
+            ).body
         after = client.get(f"/api/artifacts/html{query}")
-    assert before.status_code == after.status_code == 200
-    assert after.content == before.content
+    assert after.status_code == 200
+    assert after.content == before
     if not query:
         assert after.json()["total"] == 6
+
+    (artifact_context.roots.project_root / "docs/research/added.md").write_text(
+        "---\nclass: handoff\nstatus: green\ndate: 2026-10-02\nauthor: codex\n---\n# Added\n", encoding="utf-8"
+    )
+    with TestClient(app) as client:
+        refreshed = client.get(f"/api/artifacts/html{query}")
+    expected = JSONResponse(
+        docs_router.collect_html_artifacts(ctx=artifact_context, **{"types": ("html", "md"), **filters})
+    ).body
+    assert refreshed.content == expected
+    if not query:
+        assert refreshed.json()["total"] == 7
 
 
 def test_docs_resolved_containment_rejects_escape(tmp_path: Path) -> None:
