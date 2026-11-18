@@ -7,8 +7,6 @@ import builtins
 import sqlite3
 from contextlib import closing
 from pathlib import Path
-from types import SimpleNamespace
-from unittest.mock import Mock
 
 import pytest
 from lu_machinery.common.repo_root import machinery_path
@@ -89,26 +87,3 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
         with pytest.raises(sqlite3.DatabaseError):
             connection.execute("ATTACH DATABASE ':memory:' AS attached")
     assert db.read_bytes() == before
-
-
-def test_dashboard_broker_routes_through_monitor_context(tmp_path):
-    reader = "scripts/project_api/dashboard_comms.py"
-    tree = ast.parse((machinery_path(reader.removeprefix("scripts/")) if reader in READERS else ROOT / reader).read_text())
-    definition = next(
-        node for node in tree.body
-        if isinstance(node, ast.FunctionDef) and node.name == "get_broker_db"
-    )
-    db = tmp_path / "broker.db"
-    db.touch()
-    connection = SimpleNamespace(row_factory=None)
-    connect = Mock(return_value=connection)
-    resolved = SimpleNamespace(stores=SimpleNamespace(message_db=SimpleNamespace(path=db, connect=connect)))
-    resolve_context = Mock(return_value=resolved)
-    namespace = {"sqlite3": sqlite3, "resolve_context": resolve_context, "MonitorContext": SimpleNamespace}
-    exec(compile(ast.Module(body=[definition], type_ignores=[]), reader, "exec"), namespace)
-    context = object()
-
-    assert namespace["get_broker_db"](context) is connection
-    resolve_context.assert_called_once_with(context)
-    connect.assert_called_once_with(read_only=True)
-    assert connection.row_factory is sqlite3.Row

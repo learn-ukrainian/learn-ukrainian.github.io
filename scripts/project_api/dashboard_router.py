@@ -30,15 +30,7 @@ from lu_machinery.api.state_helpers import (
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .curriculum_state import get_plan_slugs, monitor_surface
-from .dashboard_comms import (
-    collect_stuck_tasks,
-    ensure_broker_cols,
-    fetch_broker_messages,
-    get_broker_db,
-    get_watcher_log_tail,
-    is_watcher_running,
-    read_dispatcher_state,
-)
+from .dashboard_comms import read_dispatcher_state
 from .dashboard_helpers import (
     compute_track_stats,
     default_research_info,
@@ -699,7 +691,6 @@ def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
     """Two-stage pipeline status: otaman queue, hetman queue, active builds."""
     active_builds = find_active_builds(ctx)
     otaman_queue, hetman_queue, final_review_queue = scan_pipeline_queues(ctx)
-    broker_messages = fetch_broker_messages(ctx)
     dispatcher_state = read_dispatcher_state(ctx)
 
     return {
@@ -710,7 +701,7 @@ def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
         "otaman_queue_total": len(otaman_queue),
         "hetman_queue_total": len(hetman_queue),
         "final_review_queue_total": len(final_review_queue),
-        "broker_messages": broker_messages,
+        "broker_messages": [],
         "dispatcher_state": dispatcher_state,
         "timestamp": datetime.now(UTC).isoformat(),
     }
@@ -756,14 +747,16 @@ def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
     }
 
 
-# ==================== COMMS MONITORING ====================
+# ==================== RETIRED COMMS VIEWS ====================
+
+_COMMS_RETIRED = "Dashboard messaging has been retired."
 
 
 @router.get("/comms")
-def comms_status(ctx: MonitorContext = Depends(get_ctx)):
-    """Communications monitoring: watcher health, message stats, delivery metrics."""
-    result = {
-        "watcher": is_watcher_running(ctx),
+def comms_status():
+    """Return the retired communications dashboard status."""
+    return {
+        "watcher": {"running": False, "pid": None},
         "stats": {},
         "unread": {},
         "tasks": [],
@@ -772,165 +765,20 @@ def comms_status(ctx: MonitorContext = Depends(get_ctx)):
         "delivery_stats": {},
         "watcher_log_tail": [],
         "timestamp": datetime.now(UTC).isoformat(),
+        "error": _COMMS_RETIRED,
     }
-
-    conn = get_broker_db(ctx)
-    if not conn:
-        result["error"] = "Broker database not found"
-        return result
-
-    cur = conn.cursor()
-
-    cur.execute("SELECT COUNT(*) FROM messages")
-    total = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0")
-    unread_total = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM messages WHERE status = 'delivery_failed'")
-    failed_total = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM messages WHERE message_type = 'error'")
-    errors_total = cur.fetchone()[0]
-
-    result["stats"] = {
-        "total_messages": total,
-        "unread": unread_total,
-        "delivery_failed": failed_total,
-        "errors": errors_total,
-    }
-
-    cur.execute("""
-        SELECT to_llm, COUNT(*) FROM messages
-        WHERE acknowledged = 0
-        GROUP BY to_llm
-    """)
-    result["unread"] = {row[0]: row[1] for row in cur.fetchall()}
-
-    cur.execute("""
-        SELECT
-            task_id,
-            COUNT(*) as msg_count,
-            SUM(CASE WHEN acknowledged = 0 THEN 1 ELSE 0 END) as unread,
-            SUM(CASE WHEN status = 'delivery_failed' THEN 1 ELSE 0 END) as failed,
-            MAX(timestamp) as last_activity,
-            GROUP_CONCAT(DISTINCT from_llm) as participants
-        FROM messages
-        WHERE task_id IS NOT NULL
-        GROUP BY task_id
-        ORDER BY MAX(id) DESC
-        LIMIT 20
-    """)
-    result["tasks"] = [
-        {
-            "task_id": row["task_id"],
-            "message_count": row["msg_count"],
-            "unread": row["unread"],
-            "failed": row["failed"],
-            "last_activity": row["last_activity"],
-            "participants": row["participants"],
-        }
-        for row in cur.fetchall()
-    ]
-
-    cur.execute("""
-        SELECT status, COUNT(*) FROM messages
-        GROUP BY status
-    """)
-    result["delivery_stats"] = {(row[0] or "pending"): row[1] for row in cur.fetchall()}
-
-    cur.execute("""
-        SELECT id, task_id, from_llm, to_llm, message_type,
-               SUBSTR(content, 1, 300) as content_preview,
-               timestamp, acknowledged, status
-        FROM messages
-        ORDER BY id DESC LIMIT 50
-    """)
-    result["recent_messages"] = [
-        {
-            "id": row["id"],
-            "task_id": row["task_id"],
-            "from": row["from_llm"],
-            "to": row["to_llm"],
-            "type": row["message_type"],
-            "content_preview": row["content_preview"],
-            "timestamp": row["timestamp"],
-            "acknowledged": bool(row["acknowledged"]),
-            "status": row["status"] or "pending",
-        }
-        for row in cur.fetchall()
-    ]
-
-    conn.close()
-
-    result["stuck_tasks"] = collect_stuck_tasks(ctx)
-    result["watcher_log_tail"] = get_watcher_log_tail(ctx=ctx)
-
-    return result
 
 
 @router.get("/comms/message/{message_id}")
-def comms_message_detail(message_id: int, ctx: MonitorContext = Depends(get_ctx)):
-    """Full content of a single message."""
-    conn = get_broker_db(ctx)
-    if not conn:
-        raise HTTPException(status_code=503, detail="Broker database not found")
-    cur = conn.cursor()
-    cols = ensure_broker_cols(conn)
-    select_cols = ["id", "task_id", "from_llm", "to_llm", "message_type", "content", "timestamp", "acknowledged"]
-    if "status" in cols:
-        select_cols.append("status")
-    if "data" in cols:
-        select_cols.append("data")
-    cur.execute(f"SELECT {','.join(select_cols)} FROM messages WHERE id = ?", (message_id,))
-    row = cur.fetchone()
-    conn.close()
-    if not row:
-        raise HTTPException(status_code=404, detail=f"Message {message_id} not found")
-    return {
-        "id": row["id"],
-        "task_id": row["task_id"],
-        "from": row["from_llm"],
-        "to": row["to_llm"],
-        "type": row["message_type"],
-        "content": row["content"],
-        "data": row["data"] if "data" in cols else None,
-        "timestamp": row["timestamp"],
-        "acknowledged": bool(row["acknowledged"]),
-        "status": row["status"] if "status" in cols else "unknown",
-    }
+def comms_message_detail(message_id: int):
+    """Return the retirement notice in the existing message-not-found response."""
+    raise HTTPException(status_code=404, detail=_COMMS_RETIRED)
 
 
 @router.get("/comms/conversation/{task_id}")
-def comms_conversation(task_id: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Full conversation thread for a task, chronological order."""
-    conn = get_broker_db(ctx)
-    if not conn:
-        raise HTTPException(status_code=503, detail="Broker database not found")
-    cur = conn.cursor()
-    cols = ensure_broker_cols(conn)
-    select_cols = ["id", "task_id", "from_llm", "to_llm", "message_type", "content", "timestamp", "acknowledged"]
-    if "status" in cols:
-        select_cols.append("status")
-    cur.execute(
-        f"SELECT {','.join(select_cols)} FROM messages WHERE task_id = ? ORDER BY id ASC",
-        (task_id,),
-    )
-    messages = [
-        {
-            "id": row["id"],
-            "from": row["from_llm"],
-            "to": row["to_llm"],
-            "type": row["message_type"],
-            "content": row["content"],
-            "timestamp": row["timestamp"],
-            "acknowledged": bool(row["acknowledged"]),
-            "status": row["status"] if "status" in cols else "unknown",
-        }
-        for row in cur.fetchall()
-    ]
-    conn.close()
-    return {"task_id": task_id, "messages": messages, "count": len(messages)}
+def comms_conversation(task_id: str):
+    """Return the empty conversation envelope for the requested task."""
+    return {"task_id": task_id, "messages": [], "count": 0}
 
 
 @router.get("/comms/messages")
@@ -941,54 +789,6 @@ def comms_messages(
     to_llm: str | None = None,
     task_id: str | None = None,
     unread_only: bool = False,
-    ctx: MonitorContext = Depends(get_ctx),
 ):
-    """Paginated, filterable message list."""
-    conn = get_broker_db(ctx)
-    if not conn:
-        raise HTTPException(status_code=503, detail="Broker database not found")
-    cur = conn.cursor()
-
-    where_parts = []
-    params: list = []
-    if from_llm:
-        where_parts.append("from_llm = ?")
-        params.append(from_llm)
-    if to_llm:
-        where_parts.append("to_llm = ?")
-        params.append(to_llm)
-    if task_id:
-        where_parts.append("task_id = ?")
-        params.append(task_id)
-    if unread_only:
-        where_parts.append("acknowledged = 0")
-
-    where_clause = f"WHERE {' AND '.join(where_parts)}" if where_parts else ""
-
-    cur.execute(f"SELECT COUNT(*) FROM messages {where_clause}", params)
-    total = cur.fetchone()[0]
-
-    cur.execute(
-        f"""SELECT id, task_id, from_llm, to_llm, message_type,
-                   SUBSTR(content, 1, 500) as content_preview,
-                   timestamp, acknowledged, status
-            FROM messages {where_clause}
-            ORDER BY id DESC LIMIT ? OFFSET ?""",
-        [*params, limit, offset],
-    )
-    messages = [
-        {
-            "id": row["id"],
-            "task_id": row["task_id"],
-            "from": row["from_llm"],
-            "to": row["to_llm"],
-            "type": row["message_type"],
-            "content_preview": row["content_preview"],
-            "timestamp": row["timestamp"],
-            "acknowledged": bool(row["acknowledged"]),
-            "status": row["status"] or "pending",
-        }
-        for row in cur.fetchall()
-    ]
-    conn.close()
-    return {"messages": messages, "total": total, "limit": limit, "offset": offset}
+    """Return the empty message page with the requested pagination values."""
+    return {"messages": [], "total": 0, "limit": limit, "offset": offset}
