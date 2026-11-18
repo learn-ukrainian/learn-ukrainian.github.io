@@ -9,7 +9,7 @@ Covers:
   5. state_build.py — build status, ETA, track health, enrichment
   6. state_issues.py — issue collection, review analysis, patterns
   7. dashboard_helpers.py — parse_slug, scan_track_cached, find_active_builds
-  8. dashboard_comms.py — watcher health, stuck tasks, dispatcher state, broker
+  8. dashboard_comms.py — dispatcher state
 """
 
 import json

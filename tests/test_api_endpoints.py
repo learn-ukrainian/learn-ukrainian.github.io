@@ -9,7 +9,7 @@ Validates:
   5. All routers are mounted (check app.routes)
   6. Extracted helpers: _read_yaml_file, _extract_word_count_from_status,
      _compute_track_stats, _extract_review_info, _get_orchestration_info,
-     _classify_module_queue, _fetch_broker_messages, _default_research_info
+     _classify_module_queue, _default_research_info
 """
 
 import importlib.metadata

@@ -6,7 +6,6 @@ import json
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
-from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
@@ -19,11 +18,10 @@ from fastapi.testclient import TestClient
 from lu_machinery.api import main as api_main
 from lu_machinery.api.monitor_context import fixture_context, production_context
 from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from lu_machinery.api.resilience import TimedSQLiteConnection, resilience_middleware
+from lu_machinery.api.resilience import resilience_middleware
 from lu_machinery.session_streams import inventory as stream_inventory
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from scripts.project_api import dashboard_comms
 from scripts.project_api.context import product_roots, sources_db
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
@@ -541,6 +539,11 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
     (second_root / "logs").mkdir(parents=True, exist_ok=True)
     (second_root / "logs" / "dispatcher.log").write_text("Second dispatcher log line\n", encoding="utf-8")
 
+    # A leftover broken broker file must be invisible to the retired dashboard views.
+    broker_path = first_ctx.stores.message_db.path
+    broker_path.parent.mkdir(parents=True, exist_ok=True)
+    broker_path.write_bytes(b"not a SQLite database")
+
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
@@ -566,31 +569,27 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert "Second dispatcher log line" in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
         assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
 
+        status = first_client.get("/api/dashboard/comms")
+        assert status.status_code == 200
+        assert status.json()["error"] == "Dashboard messaging has been retired."
+        assert status.json()["recent_messages"] == []
 
-def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None:
-    context = fixture_context(tmp_path / "fixture")
-    handle = context.stores.message_db
-    assert handle is not None
-    handle.path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(handle.path) as conn:
-        conn.execute("CREATE TABLE messages (body TEXT)")
-        conn.execute("INSERT INTO messages VALUES ('fixture message')")
-    conn = dashboard_comms.get_broker_db(context)
-    try:
-        assert isinstance(conn, TimedSQLiteConnection)
-        assert conn.row_factory is sqlite3.Row
-        assert conn.execute("SELECT body FROM messages").fetchone()["body"] == "fixture message"
-        with pytest.raises(sqlite3.OperationalError, match="readonly"):
-            conn.execute("INSERT INTO messages VALUES ('forbidden')")
-    finally:
-        conn.close()
+        page = first_client.get("/api/dashboard/comms/messages?limit=7&offset=2&unread_only=true")
+        assert page.status_code == 200
+        assert page.json() == {"messages": [], "total": 0, "limit": 7, "offset": 2}
 
-    outside = tmp_path / "outside.sqlite"
-    with sqlite3.connect(outside) as conn:
-        conn.execute("CREATE TABLE messages (body TEXT)")
-    context = replace(context, stores=replace(context.stores, message_db=replace(handle, path=outside)))
-    with pytest.raises(ValueError, match="escapes"):
-        dashboard_comms.get_broker_db(context)
+        conversation = first_client.get("/api/dashboard/comms/conversation/sample-task")
+        assert conversation.status_code == 200
+        assert conversation.json() == {"task_id": "sample-task", "messages": [], "count": 0}
+
+        message = first_client.get("/api/dashboard/comms/message/1")
+        assert message.status_code == 404
+        assert message.json()["detail"] == "Dashboard messaging has been retired."
+
+        pipeline = first_client.get("/api/dashboard/pipeline")
+        assert pipeline.status_code == 200
+        assert pipeline.json()["broker_messages"] == []
+        assert pipeline.json()["dispatcher_state"] == {"tracks": {"first_track": {"status": "active"}}}
 
 
 def _prometheus_samples(body: str) -> list[tuple[str, dict[str, str], float]]:
