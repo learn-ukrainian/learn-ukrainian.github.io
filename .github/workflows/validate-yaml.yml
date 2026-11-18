@@ -30,7 +30,7 @@ concurrency:
 jobs:
   validate-activities:
     name: Activities & Vocab
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -120,7 +120,7 @@ jobs:
 
   validate-plans:
     name: Curriculum Plans
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -255,7 +255,7 @@ jobs:
 
   schema-check:
     name: Schema JSON Syntax
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Checkout

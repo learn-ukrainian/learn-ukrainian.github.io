@@ -72,7 +72,7 @@ setup_fixture() {
   local root="$1"
 
   rm -rf "$root"
-  mkdir -p "$root/docs/session-state" "$root/.venv/bin" "$root/.mcp/servers/message-broker" "$TMP_ROOT/home"
+  mkdir -p "$root/docs/session-state" "$root/.venv/bin" "$TMP_ROOT/home"
   # Dispatching stub: most tests just need a python-version banner, but the
   # strict-adoption-gate fixtures (below) need a controllable
   # `check_research_registry.py --strict-adoption` response without a real
@@ -88,7 +88,6 @@ if [[ "$*" == *lu_machinery* && ( "${1:-}" == "-c" || "${1:-}" == "-I" ) ]]; the
 fi
 printf "Python 3.12.15\n"
 PYEOF
-  printf 'fixture db\n' > "$root/.mcp/servers/message-broker/messages.db"
   printf '3.12.15\n' > "$root/.python-version"
   chmod +x "$root/.venv/bin/python"
   mkdir -p "$root/scripts/orchestration"

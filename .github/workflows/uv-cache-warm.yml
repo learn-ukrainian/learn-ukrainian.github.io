@@ -58,7 +58,7 @@ env:
 jobs:
   warm:
     name: Warm uv cache
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
       uv-cache-key: ${{ steps.python-ci-env.outputs.uv-cache-key }}
@@ -92,7 +92,7 @@ jobs:
     # setup-uv saves in its post step, which runs after every step of `warm`,
     # so the entry can only be checked from a later job.
     needs: warm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       actions: read

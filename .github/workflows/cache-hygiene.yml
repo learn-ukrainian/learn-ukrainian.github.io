@@ -48,7 +48,7 @@ jobs:
   prune:
     name: Prune dead cache entries
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       actions: write
@@ -93,7 +93,7 @@ jobs:
   import-check:
     name: Import cache hygiene
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read

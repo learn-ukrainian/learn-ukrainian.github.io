@@ -576,7 +576,6 @@ def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(get_ctx
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
-        message_db=ctx.stores.message_db,
     )
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
@@ -639,7 +638,6 @@ def module_detail_by_slug(
         level_cfg,
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
-        message_db=ctx.stores.message_db,
     )
     if "error" in full:
         return JSONResponse(status_code=404, content=full)

@@ -28,7 +28,7 @@ concurrency:
 jobs:
   grow:
     name: Promote clean Word Atlas grow candidates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     # Job-scoped (zizmor excessive-permissions): only this job pushes the
     # grow branch and opens/updates its PR.

@@ -23,7 +23,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -672,38 +671,6 @@ def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     except OSError:
         return False
     return content_mtime > 0 and review_mtime < content_mtime
-
-
-def get_broker_messages_for_slug(
-    slug: str,
-    limit: int = 20,
-    *,
-    message_db: Any = None,
-) -> list[dict]:
-    """Query broker DB for messages related to a module slug."""
-    if message_db is None:
-        return []
-    conn = None
-    try:
-        if hasattr(message_db, "connect"):
-            conn = message_db.connect(read_only=True)
-        else:
-            return []
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute(
-            "SELECT id, task_id, from_llm, to_llm, message_type, "
-            "substr(content, 1, 200) as preview, timestamp "
-            "FROM messages WHERE task_id LIKE ? "
-            "ORDER BY id DESC LIMIT ?",
-            (f"%{slug}%", limit),
-        ).fetchall()
-        return [dict(r) for r in rows]
-    except Exception:
-        return []
-    finally:
-        if conn is not None:
-            with contextlib.suppress(Exception):
-                conn.close()
 
 
 def get_final_review_info(
