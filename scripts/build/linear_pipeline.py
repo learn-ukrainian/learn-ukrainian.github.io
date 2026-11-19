@@ -71,6 +71,7 @@ from scripts.audit.content_surface_gates import scan_module_surface
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+from scripts.batch.batch_gemini_config import GEMINI_REVIEW_MODEL, GEMINI_ROUTINE_MODEL
 from scripts.build.alphabet_modules import (
     filter_dropped_original_paragraphs,
     filter_line_break_activities,
@@ -135,14 +136,14 @@ WRITER_CHOICES = (
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "gemini-tools": {"model": GEMINI_ROUTINE_MODEL, "effort": "high"},
     "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.7", "effort": "medium"},
     "cursor-tools": {"model": "grok-4.7-high", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # AGY selects the model via --model; effort remains a telemetry placeholder.
-    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "agy-tools": {"model": GEMINI_ROUTINE_MODEL, "effort": "high"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -179,11 +180,11 @@ REVIEWER_CHOICES = (
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "gemini-tools": {"model": GEMINI_REVIEW_MODEL, "effort": "high"},
     "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
+    "agy-tools": {"model": GEMINI_REVIEW_MODEL, "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",

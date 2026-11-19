@@ -1,17 +1,18 @@
-"""Comprehensive tests for explicit Pro model preservation and Flash defaults.
+"""Explicit model preservation and the catalog default for the Otaman dispatch.
 
-Rule (operator 2026-09-22):
-Flash High is the default for routine and deep; Pro is used ONLY when a caller
-explicitly asks for it. An explicit --model / model= value must always win.
+The default is the review seat the installed catalog assigns (the AGY ACP pin);
+an explicit --model / model= value must always win.
 """
 
 from unittest.mock import MagicMock, patch
+
+from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
 from scripts.batch.batch_otaman import dispatch_otaman
 
 
 def test_dispatch_otaman_default_and_explicit_model():
-    """dispatch_otaman defaults to Flash High and respects explicit Pro model."""
+    """dispatch_otaman defaults to the catalog review seat and respects an explicit model."""
     captured = []
 
     def fake_run(cmd, *args, **kwargs):
@@ -25,10 +26,10 @@ def test_dispatch_otaman_default_and_explicit_model():
         dispatch_otaman("a1", 2, "test-mod-pro", model="gemini-3.1-pro-high")
 
     assert len(captured) == 2
-    # Check default uses gemini-3.8-flash-high
+    # The default is the AGY ACP participant pin, the only model the ask-gemini bridge admits
     cmd_default = captured[0]
     idx_default = cmd_default.index("--model")
-    assert cmd_default[idx_default + 1] == "gemini-3.8-flash-high"
+    assert cmd_default[idx_default + 1] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
 
     # Check explicit Pro uses gemini-3.1-pro-high
     cmd_pro = captured[1]

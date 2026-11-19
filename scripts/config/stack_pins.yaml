@@ -102,8 +102,8 @@ pins:
   - name: pinned-model-ids
     pinned: >-
       gpt-6.2-sol, gpt-6-luna, claude-opus-5-5,
-      claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high,
-      grok-4.7, deepseek-v4.1-flash
+      claude-haiku-5-5, claude-sonnet-5-5, gemini-4-neon-high,
+      gemini-4-hydrogen-medium, grok-4.7, deepseek-v4.1-flash
     source: scripts/config/model_catalog.yaml
     owner: Infra
     review_by: "2026-11-16"

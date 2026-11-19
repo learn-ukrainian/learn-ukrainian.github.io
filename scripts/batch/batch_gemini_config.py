@@ -9,14 +9,18 @@ Module N = levels.{track}.modules[N-1] (1-indexed position in the array).
 from pathlib import Path
 
 import yaml
+from lu_machinery.agent_runtime.adapters import acpx
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.review import model_catalog
 
 try:
-    from lu_machinery.common.repo_root import project_interpreter
-except ImportError:  # repo root on path, scripts/ is not
-    from lu_machinery.common.repo_root import project_interpreter
-from slug_utils import review_path as _review_path
-from slug_utils import status_path as _status_path
-from slug_utils import to_bare_slug
+    from slug_utils import review_path as _review_path
+    from slug_utils import status_path as _status_path
+    from slug_utils import to_bare_slug
+except ModuleNotFoundError:  # imported as scripts.batch.batch_gemini_config: repo root on path, scripts/ is not
+    from scripts.slug_utils import review_path as _review_path
+    from scripts.slug_utils import status_path as _status_path
+    from scripts.slug_utils import to_bare_slug
 
 
 def __getattr__(name: str) -> str:
@@ -41,12 +45,67 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
-# Gemini uses the subscribed Flash pin; tier names remain compatibility aliases.
-PRO_MODEL = "gemini-3.8-flash-high"  # Pro is retired, not subscribed (2026-10-23)
-FLASH_MODEL = "gemini-3.8-flash-high"               # Default AGY Flash tier
-FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
-GEMINI_REVIEW_MODEL = PRO_MODEL  # Same subscribed Flash route
-FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
+
+class GeminiSeatUnavailable(RuntimeError):
+    """The installed lu-machinery catalog assigns no executable Gemini seat for one or more roles."""
+
+    def __init__(self, roles: tuple[str, ...], reason: str) -> None:
+        super().__init__(
+            f"no Gemini seat for role {', '.join(map(repr, roles))} in the installed lu-machinery "
+            f"catalog ({reason}); install a lu-machinery release that assigns one"
+        )
+        self.roles = roles
+
+
+GEMINI_ROLES = ("review", "routine")
+
+
+def _gemini_seat(role: str, catalog: dict) -> str:
+    """Return the AGY wire id the validated ``catalog`` assigns to ``role``, or raise ``GeminiSeatUnavailable``.
+
+    ``review``: the AGY ACP participant pin, the only model ``ask-agy``/``ask-gemini`` admit
+    (review, judge and every caller that dispatches through the bridge).
+    ``routine``: the catalog's AGY orchestrator seat as its AGY wire id (native ``agy`` generation).
+    Either seat must be an active catalog model with the AGY transport.
+    """
+    if role not in GEMINI_ROLES:
+        raise GeminiSeatUnavailable((role,), "unknown role")
+    try:
+        if role == "review":
+            wire_id = acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
+        else:
+            wire_id = catalog["models"][catalog["orchestrator_seats"]["agy"]["model_id"]]["routing_wire_ids"]["agy"]
+        if isinstance(wire_id, str) and wire_id:
+            model_catalog.require_execution_model(wire_id, transport="agy", catalog=catalog)
+            return wire_id
+    except Exception as exc:  # any lookup or admission failure means this role has no seat; the cause is chained
+        raise GeminiSeatUnavailable((role,), f"{type(exc).__name__}: {exc}") from exc
+    raise GeminiSeatUnavailable((role,), f"seat is {wire_id!r}")
+
+
+def _gemini_seats() -> tuple[str, str]:
+    """Resolve both roles at import, so every caller fails at import; no placeholder and no default.
+
+    The catalog is loaded and validated once, before either role, so a role never inherits an
+    error that belongs to the catalog as a whole. A catalog that cannot be loaded or validated,
+    whatever the validator raises, yields no seat for any role; the cause is chained and its
+    message names the bad entry where the validator does.
+    """
+    try:
+        catalog = model_catalog.load_model_catalog()
+    except Exception as exc:
+        raise GeminiSeatUnavailable(GEMINI_ROLES, f"the catalog is invalid: {type(exc).__name__}: {exc}") from exc
+    review, routine = (_gemini_seat(role, catalog) for role in GEMINI_ROLES)
+    return review, routine
+
+
+# The two Gemini roles, resolved from the installed catalog at import (no model literals).
+GEMINI_REVIEW_MODEL, GEMINI_ROUTINE_MODEL = _gemini_seats()
+# Tier names are compatibility aliases. Their callers dispatch through the AGY ACP bridge,
+# which admits only the review seat.
+PRO_MODEL = GEMINI_REVIEW_MODEL
+FLASH_MODEL = GEMINI_REVIEW_MODEL
+FLASH_LITE_MODEL = GEMINI_REVIEW_MODEL
 
 # Timeouts (seconds) — the hard_timeout ceiling for LLM-dispatch steps.
 #

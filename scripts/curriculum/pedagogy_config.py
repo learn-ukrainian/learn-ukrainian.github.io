@@ -1,8 +1,8 @@
 """Pedagogical configuration of the Ukrainian curriculum (product).
 
-Track settings (``TRACK_CONFIG``), live immersion policy (``IMMERSION_POLICIES``
-and its helpers), wiki-coverage thresholds, recycle cadence and the writer's
-global constraints. Prompt generation, the build engines and the audit gates
+Live immersion policy (``IMMERSION_POLICIES`` and its helpers), wiki-coverage
+thresholds, recycle cadence and the writer's global constraints. It binds no
+model seat. Prompt generation, the build engines and the audit gates
 read them from here. Machinery does not import this module: dispatch admission
 keeps its ``DISPATCH_*`` floors in ``scripts/config.py`` and reads the product
 decisions it needs from ``scripts/curriculum/admission_policy.v1.json`` through
@@ -15,133 +15,12 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from batch_gemini_config import FLASH_MODEL, PRO_MODEL
+    from level_config import base_level
 except ModuleNotFoundError:
     _SCRIPTS_DIR = Path(__file__).resolve().parents[1]
     if str(_SCRIPTS_DIR) not in sys.path:
         sys.path.insert(0, str(_SCRIPTS_DIR))
-    from batch_gemini_config import FLASH_MODEL, PRO_MODEL
-
-from level_config import base_level
-
-# =============================================================================
-# TRACK CONFIGURATION
-# =============================================================================
-
-TRACK_CONFIG: dict[str, dict[str, Any]] = {
-    # --- Core Tracks (Beginner/Intermediate) ---
-    "a1": {
-        "model": FLASH_MODEL,
-        "persona": "The Helpful Neighbor",
-        "immersion_range": [0.10, 0.50],
-    },
-    "a2": {
-        "model": FLASH_MODEL,
-        "persona": "The Cultural Guide",
-        "immersion_range": [0.50, 0.90],
-    },
-    "b1": {
-        "model": FLASH_MODEL,
-        "persona": "The Storyteller",
-        "immersion_range": [1.0, 1.0],
-    },
-    "b2": {
-        "model": FLASH_MODEL,
-        "persona": "The Urbanist",
-        "immersion_range": [1.0, 1.0],
-    },
-    "c1": {
-        "model": PRO_MODEL,
-        "persona": "The Analyst",
-        "immersion_range": [1.0, 1.0],
-    },
-    "c2": {
-        "model": PRO_MODEL,
-        "persona": "The Connoisseur",
-        "immersion_range": [1.0, 1.0],
-    },
-
-    # --- Seminar Tracks (Advanced/Scholar) ---
-    "hist": {
-        "model": PRO_MODEL,
-        "persona": "The Decolonizer",
-        "immersion_range": [1.0, 1.0],
-    },
-    "istorio": {
-        "model": PRO_MODEL,
-        "persona": "The Sensory Historian",
-        "immersion_range": [1.0, 1.0],
-    },
-    "bio": {
-        "model": PRO_MODEL,
-        "persona": "The Humanist Biographer",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit": {
-        "model": PRO_MODEL,
-        "persona": "The Stylistic Critic",
-        "immersion_range": [1.0, 1.0],
-    },
-
-    # --- Specialized Literature Tracks ---
-    "lit-war": {
-        "model": PRO_MODEL,
-        "persona": "The Trauma Analyst",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-essay": {
-        "model": PRO_MODEL,
-        "persona": "The Intellectual Historian",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-fantastika": {
-        "model": PRO_MODEL,
-        "persona": "The World-Builder",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-hist-fic": {
-        "model": PRO_MODEL,
-        "persona": "The Historical Narratologist",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-humor": {
-        "model": PRO_MODEL,
-        "persona": "The Irony Analyst",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-youth": {
-        "model": PRO_MODEL,
-        "persona": "The Childhood Scholar",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-doc": {
-        "model": PRO_MODEL,
-        "persona": "The Witness Documentarian",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-drama": {
-        "model": PRO_MODEL,
-        "persona": "The Avant-Garde Playwright",
-        "immersion_range": [1.0, 1.0],
-    },
-    "lit-crimea": {
-        "model": PRO_MODEL,
-        "persona": "The Crimean Narratologist",
-        "immersion_range": [1.0, 1.0],
-    },
-
-    # --- Scholar Tracks ---
-    "ruth": {
-        "model": PRO_MODEL,
-        "persona": "The Baroque Scholar",
-        "immersion_range": [1.0, 1.0],
-    },
-    "oes": {
-        "model": PRO_MODEL,
-        "persona": "The Paleographer",
-        "immersion_range": [1.0, 1.0],
-    },
-}
+    from level_config import base_level
 
 # =============================================================================
 # IMMERSION POLICY
@@ -712,22 +591,6 @@ def get_overshoot_factor(level: str) -> float:
 MAX_SENTENCE_LENGTH = 25  # Words
 MANDATORY_CALLOUT_DENSITY = 6 # Callouts per module
 
-# =============================================================================
-# TURN SEQUENCE LOGIC
-# =============================================================================
-
-TURN_SEQUENCE = [1, 2, 3, 3.1, 3.5, 4, 5]
-
-def get_config(track: str) -> dict[str, Any]:
-    """Retrieves config for a specific track, falling back to default core config."""
-    track = base_level(track)
-    return TRACK_CONFIG.get(track, {
-        "model": FLASH_MODEL,
-        "persona": "The Helpful Neighbor",
-        "immersion_range": [0.5, 1.0],
-    })
-
-
 def _immersion_track_key(track: str) -> str:
     """Map concrete tracks to the immersion policy family that governs them."""
     track = base_level(track)
@@ -866,11 +729,3 @@ def get_immersion_rule(
     if letter_module and _immersion_track_key(track) in {"a1", "a2"}:
         return f"{rule}\n\n{_ulp_letter_module_contract(track)}"
     return rule
-
-
-if __name__ == "__main__":
-    # Simple CLI test
-    if len(sys.argv) > 1:
-        print(get_config(sys.argv[1]))
-    else:
-        print("Usage: python scripts/curriculum/pedagogy_config.py <track_name>")

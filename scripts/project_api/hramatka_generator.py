@@ -13,10 +13,13 @@ from enum import StrEnum
 from typing import Any, Protocol, cast
 from urllib.error import HTTPError, URLError
 
+from scripts.batch.batch_gemini_config import GEMINI_REVIEW_MODEL, GEMINI_ROUTINE_MODEL
+
 from .curriculum_state import monitor_surface
 
-PRIMARY_MODEL = "gemini-3.8-flash-high"
-SECONDARY_MODEL = "gemini-3.8-flash-high"
+# Routine generation runs on the catalog's routine seat; a transient failure retries on the review seat.
+PRIMARY_MODEL = GEMINI_ROUTINE_MODEL
+SECONDARY_MODEL = GEMINI_REVIEW_MODEL
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0
 
