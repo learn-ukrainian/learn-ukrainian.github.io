@@ -1,8 +1,5 @@
 schema: package-boundary.v1
 packages:
-  docs:
-    reason: Validates the product documentation and store registry.
-    role: product
   ai_agent_bridge:
     reason: operator classification
     role: machinery
@@ -344,12 +341,6 @@ files:
   scripts/__init__.py:
     reason: Shared package-root binding for product and retained machinery consumers.
     role: shared
-  scripts/docs/catalogue.py:
-    reason: Validates this product documentation and store index.
-    role: product
-  scripts/docs/store_census.py:
-    reason: Censuses this product stores against its registry and backup facts.
-    role: product
   scripts/review/digest/__init__.py:
     reason: Re-exports the lesson-digest generator, which is product.
     role: product

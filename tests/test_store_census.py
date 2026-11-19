@@ -26,16 +26,17 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-
-from scripts.docs import catalogue as cat
-from scripts.docs import store_census as sc
+from lu_machinery.docs import catalogue as cat
+from lu_machinery.docs import store_census as sc
 
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)
 REGISTRY = sc.registry(CATALOGUE)
 # The one store whose busy timeout is set by a helper the registry names (busy_setters), not by its writer.
 NAMED_HELPER_STORE = next(r['path'] for r in REGISTRY['stores'] if r.get('busy_setters'))
-ALLOWLIST = json.loads((REPO / sc.ALLOWLIST_PATH).read_text(encoding="utf-8"))
+# The product keeps its backup allowlist beside its owner registries (scripts/config/).
+ALLOWLIST_PATH = "scripts/config/backup-allowlist.json"
+ALLOWLIST = json.loads((REPO / ALLOWLIST_PATH).read_text(encoding="utf-8"))
 STUDY_EVIDENCE_DIRS = {'batch_state/preserved', 'batch_state/devops-*', 'batch_state/codex-atlas',
                        'batch_state/briefs', 'batch_state/open-model-data-*', 'batch_state/review-receipts'}
 
@@ -115,7 +116,7 @@ def test_registry_rows_name_stores_and_producers_never_host_locations():
 
 def writer_sources() -> tuple[set[str], dict[str, str]]:
     files = sc.writer_files(CATALOGUE)
-    return files | {sc.ALLOWLIST_PATH}, {p: (REPO / p).read_text(encoding='utf-8') for p in files}
+    return files | {ALLOWLIST_PATH}, {p: (REPO / p).read_text(encoding='utf-8') for p in files}
 
 
 OWNERS = cat.owner_keys(REPO)
@@ -123,7 +124,8 @@ OWNERS = cat.owner_keys(REPO)
 
 def static(catalogue: dict, literals: dict[str, list[str]] | None = None) -> list[str]:
     tracked, sources = writer_sources()
-    return sc.registry_errors(catalogue, tracked, OWNERS, ALLOWLIST, sources, literals)
+    return sc.registry_errors(catalogue, tracked, OWNERS, ALLOWLIST, sources, literals,
+                              allowlist_path=ALLOWLIST_PATH)
 
 
 def test_the_repository_registry_has_no_static_errors():
@@ -153,7 +155,7 @@ def _set(path: str, **fields):
 MUTATIONS = {
     'backup fact contradicts the allowlist': (
         _set('batch_state/tasks/write-ownership.sqlite3', backup='keep', protection_gap=DROP),
-        f"backup is 'keep' but {sc.ALLOWLIST_PATH} gives 'none'"),
+        f"backup is 'keep' but {ALLOWLIST_PATH} gives 'none'"),
     'protection below the nightly': (_set('data/atlas.db', protection='rebuild'), 'backup reduction'),
     'keep without a recorded gap': (_set('batch_state/review-findings/a1.sqlite', protection_gap=DROP),
                                     'needs protection_gap'),
