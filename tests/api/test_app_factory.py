@@ -70,7 +70,6 @@ def test_factory_lifespan_is_wired_and_runs(monkeypatch: pytest.MonkeyPatch, tmp
     stop_periodic_refresh = Mock()
     monkeypatch.setattr(api_main, "preload_all", Mock())
     monkeypatch.setattr(api_main, "install_signal_logging", Mock())
-    monkeypatch.setattr(api_main, "ensure_broker_db_ready", Mock())
     monkeypatch.setattr(api_main, "seed_manifest_inventory", Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())
     monkeypatch.setattr(api_main, "warm_projection_cache", Mock())
