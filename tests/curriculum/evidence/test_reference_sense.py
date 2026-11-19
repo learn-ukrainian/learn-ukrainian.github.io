@@ -911,7 +911,7 @@ def review_dispatch(tmp_path):
                             "review_id": "review-test", "attempt_id": "attempt-test", "prompt_sha256": prompt_sha,
                             "machinery_dependencies": json.loads(Path(f"{prompt_file}.files_read.json").read_text())[
                                 "render_contract"]["machinery_dependencies"]},
-        "model": "gemini-3.8-flash-high",
+        "model": "gemini-4-neon-high",
         "agent": "agy",
         "finished_at": "2026-10-03T00:00:00Z",
         "result_file": str(result),

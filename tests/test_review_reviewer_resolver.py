@@ -568,7 +568,7 @@ def test_gemini_code_review_refuses_forged_endpoint_in_ladder_and_pin(monkeypatc
     injected = replace(
         SONNET_5_5,
         name="injected-gemini",
-        concrete_model="gemini-3.8-flash-high",
+        concrete_model="gemini-4-neon-high",
         family="google",
         route="agy",
         transport="agy",
@@ -1120,7 +1120,7 @@ def test_ladders_end_the_frontier_rungs_with_opus(risk):
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "claude-sonnet-5-5-agy"
-        assert ladder[6][0].name == "gemini-3.8-flash-high"
+        assert ladder[6][0].name == "gemini-4-neon-high"
         assert len(ladder) == 7
         assert "muse" not in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
@@ -1434,7 +1434,7 @@ def test_muse_not_selected_when_health_is_unknown_or_unhealthy():
 
     exhausted = resolve_reviewer(
         ResolverInputs(
-            author_model="gemini-3.8-flash-high",
+            author_model="gemini-4-hydrogen-medium",
             risk="low",
             review_profile="infra",
             structural=True,
@@ -1457,7 +1457,7 @@ def test_muse_not_selected_when_health_is_unknown_or_unhealthy():
 
     near_cap = resolve_reviewer(
         ResolverInputs(
-            author_model="gemini-3.8-flash-high",
+            author_model="gemini-4-hydrogen-medium",
             risk="low",
             review_profile="infra",
             structural=True,
@@ -1630,7 +1630,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 _AUTHOR_MODELS = {
     "openai": "gpt-6.2-sol",
     "anthropic": "claude-opus-5-5",
-    "google": "gemini-3.8-flash-high",
+    "google": "gemini-4-hydrogen-medium",
     "xai": "grok-4.7",
     "moonshot": "composer-2.5",
     "zhipu": "glm-5.3",
@@ -1717,7 +1717,7 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
 def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     fallback = replace(REVIEW_CANDIDATES["claude-sonnet-5-5-agy"], last_resort=True)
     first = REVIEW_CANDIDATES[primary]
-    inputs = ResolverInputs(author_model="gemini-3.8-flash-high", risk="medium", review_profile=profile, claude_account=HOST_ACCOUNT)
+    inputs = ResolverInputs(author_model="gemini-4-hydrogen-medium", risk="medium", review_profile=profile, claude_account=HOST_ACCOUNT)
     # Higher load and a reversed ladder must not put the last resort first.
     snapshot = {"agents": {first.route: {"status": "healthy", "scheduler": {"completed_input_bytes": 999999}}}}
     resolution = resolve_reviewer(inputs, ladder=((fallback,), (first,)), runtime_state=snapshot)

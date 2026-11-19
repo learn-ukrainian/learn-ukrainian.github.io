@@ -131,10 +131,10 @@ def _calls(state: Path) -> list[list[str]]:
     "seat_key,pin,display_label,backend_id",
     [
         (
-            "gemini-3.8-flash-high",
-            "gemini-3.8-flash-high",
-            "Gemini 3.8 Flash (High)",
-            "gemini-3-flash-preview",
+            "gemini-4-neon-high",
+            "gemini-4-neon-high",
+            "Gemini 4 Neon (High)",
+            "gemini-4-neon-high",
         ),
         (
             "claude-opus-5-5",
@@ -196,13 +196,20 @@ def test_matching_agy_parse_passes_eval_identity_check(
     )
     parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
     claude_pin = pin in {"claude-opus-5-5-high", "claude-sonnet-5-5-high"}
-    if claude_pin and reported_model is None:
-        # Absent Claude runtime identity is refused, never a matching successful worker.
+    gemini4_pin = pin.startswith("gemini-4-")
+    if (claude_pin or gemini4_pin) and reported_model is None:
+        # Absent Claude or Gemini 4 runtime identity is refused, never a matching successful worker.
         assert parsed.ok is False
         assert parsed.stderr_excerpt == "agy_model_identity_missing"
         assert parsed.response == ""
         assert parsed.substitution is None
         assert parsed.model_identity is None
+        return
+    if gemini4_pin and reported_form == "display":
+        # A Gemini 4 seat must report its exact selector; a display label is not that identity.
+        assert parsed.ok is False
+        assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+        assert parsed.response == ""
         return
     assert parsed.ok is True and parsed.response == "READY"
     if claude_pin:
@@ -257,7 +264,7 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
 
 def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
     dispatcher, prompt, _state = fake
-    seat = SEATS["gemini-3.8-flash-high"]
+    seat = SEATS["gemini-4-neon-high"]
     plain = dispatcher._dispatch_args("t-flash", seat, "review", prompt)
     assert "--review-profile" not in plain and "--require-review-verdict" not in plain
     dispatcher.review_profile = "ukrainian"
@@ -277,8 +284,8 @@ def test_flash_dispatch_carries_no_effort(fake, monkeypatch, boundary):
     dispatcher, prompt, state = fake
     monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: boundary)
     with pytest.raises(DispatchError, match="new evaluation run tag"):
-        dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
-    dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
+        dispatcher.dispatch("t-flash", SEATS["gemini-4-neon-high"], "writing", prompt, force_new=True)
+    dispatcher.dispatch("t-flash", SEATS["gemini-4-neon-high"], "writing", prompt, force_new=False)
     args = _calls(state)[-1]
     assert "--effort" not in args and "--force-new" not in args
     assert args[args.index("--agent") + 1] == "agy"

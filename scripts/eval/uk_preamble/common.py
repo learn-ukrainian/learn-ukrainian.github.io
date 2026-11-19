@@ -64,7 +64,7 @@ class Seat:
 
 
 SEATS: dict[str, Seat] = {
-    "gemini-3.8-flash-high": Seat("gemini-3.8-flash-high", "flash", "agy", "gemini-3.8-flash-high", None, "google"),
+    "gemini-4-neon-high": Seat("gemini-4-neon-high", "flash", "agy", "gemini-4-neon-high", None, "google"),
     "gpt-6.1-sol": Seat("gpt-6.1-sol", "sol", "codex", "gpt-6.1-sol", "high", "openai"),
     "claude-opus-5-5": Seat("claude-opus-5-5", "opus", "claude", "claude-opus-5-5", "high", "anthropic"),
 }

@@ -122,7 +122,7 @@ def test_native_original50_untrusted_identity_freezer_and_per_card_sources_refus
     monkeypatch.setattr(reviews, "_review_repository_root", lambda *_args: primary)
     inspection, population, spec = _native50_engine_shape(tmp_path)
     producer = inspection["producer"]
-    producer.update(model="gemini-3.8-flash-high", family="google")
+    producer.update(model="gemini-4-neon-high", family="google")
     judgments = {"schema_version": "a1-original50-judgments.v1", "scope_sha256": inspection["scope_sha256"], "items": []}
     events = [{"event": "init", "init": {"model": producer["model"]}}]
     for index, card in enumerate(population["original50"]):

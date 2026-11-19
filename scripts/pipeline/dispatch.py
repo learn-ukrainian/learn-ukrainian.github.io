@@ -123,13 +123,18 @@ _TRANSIENT_PATTERNS = [
 
 _LEGACY_GEMINI_TO_AGY_MODEL = {
     "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
-    "gemini-3.0-flash-preview": "gemini-3.8-flash-high",
 }
 
 
 def _agy_model(model: str | None) -> str:
+    """Return the requested model, or the AGY ACP participant's registered pin by default."""
     if not model:
-        return "gemini-3.8-flash-high"
+        from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
+
+        pin = registered_participant_model("agy")
+        if not pin:
+            raise ValueError("AGY ACP has no registered model pin; pass an explicit model.")
+        return pin
     return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
@@ -227,14 +232,15 @@ def dispatch_gemini(
     stdout_only: bool = False, allow_write: bool = False,
     output_file: Path | None = None, timeout: int = 1800,
 ) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini with stdout_only=True and Flash fallback.
+    """Dispatch a prompt to Gemini with stdout_only=True and same-route fallback.
 
     This is the default dispatch used by the pipeline. Always forces stdout_only=True.
-    Default calls use Flash; Flash-Lite is an alias of the same route and adds no capacity.
-    Pro is used only when explicitly requested by the caller.
+    Default calls use the AGY ACP participant's registered pin; configured fallback
+    rungs that resolve to the same route add no capacity and are attempted once.
+    Retired Pro is never reached by default.
     """
     if model is None:
-        model = "gemini-3.8-flash-high"
+        model = _agy_model(None)
     ok, output = dispatch_gemini_raw(
         prompt, task_id, model=model,
         stdout_only=True,  # Always stdout-only in pipeline
