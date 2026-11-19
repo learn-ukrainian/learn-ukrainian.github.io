@@ -30,7 +30,7 @@ def subscribed_reviewer_routes(monkeypatch):
     """
     for name in ("GEMMA_SURFACE_ROUTE", "FRONTIER_OPENCODE_ROUTE"):
         historical = getattr(llm_reviewer_dispatch, name)
-        model = "gemini-3.8-flash-high"
+        model = "gemini-4-neon-high"
         route = replace(
             historical, reviewer_model_id=model,
             bridge_command=(historical.bridge_command[0], "--model", model),

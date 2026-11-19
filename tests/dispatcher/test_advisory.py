@@ -93,14 +93,14 @@ def test_sealed_envelope_admission_and_record(launch, capsys, tmp_path, defect, 
         worker.start.assert_called_once()
 
 
-@pytest.mark.parametrize("model", ["gpt-6.2-sol", "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("model", ["gpt-6.2-sol", "gemini-4-hydrogen-medium"])
 def test_non_bounded_model_needs_no_advisory(launch, capsys, model):
     """Defect class: bounded admission refuses Sol, or Gemini without an advisory task."""
     launch[launch.index("--model") + 1] = model
     launch = launch[:-2]  # owned paths on a read-only non-review task are refused (#12141)
     assert cli.main(launch) == 0
     assert "advisory_envelope" not in store.read("worker")
-    if model == "gemini-3.8-flash-high":
+    if model == "gemini-4-hydrogen-medium":
         refused = launch.copy()
         refused[refused.index("--task-id") + 1] = "worker-flag"
         assert cli.main([*refused, "--advisory-task", "advisor"]) == 2
@@ -114,7 +114,7 @@ def test_non_bounded_model_needs_no_advisory(launch, capsys, model):
     ("workspace-write", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", True),
     ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", True),
 ])
-def test_flash_ukrainian_review_of_record_is_admitted_only_read_only(
+def test_gemini_ukrainian_review_of_record_is_admitted_only_read_only(
     launch, capsys, tmp_path, mode, profile, family, path, admitted,
 ):
     """Defect class: a read-only review of record is refused for its family or for naming code paths.
@@ -130,7 +130,7 @@ def test_flash_ukrainian_review_of_record_is_admitted_only_read_only(
             ["git", "-C", str(tmp_path), "remote", "add", "origin", "https://github.com/example/public.git"],
             check=True, capture_output=True, timeout=30,
         )
-    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    launch[launch.index("--model") + 1] = "gemini-4-neon-high"
     launch[launch.index("--owned-path") + 1] = path
     launch += ["--mode", mode, "--review-profile", profile, "--research-task-family", family]
     assert cli.main(launch) == (0 if admitted else 2)
@@ -184,7 +184,7 @@ def test_advisory_role_dispatch_refuses_unbound_or_writable_decisions(launch, ca
 def test_advisory_role_dispatch_runs_only_on_a_native_harness(launch, capsys):
     """Defect: a runtime-reported harness seals the requested model, not the one that ran (review F1)."""
     launch[launch.index("--agent") + 1] = "agy"
-    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    launch[launch.index("--model") + 1] = "gemini-4-neon-high"
     assert cli.main([*launch[:-2], "--advisory-role", "bounded_advisory_envelope", "--advisory-binding", "e" * 64]) == 2
     assert "native harness" in capsys.readouterr().err
     worker.start.assert_not_called()

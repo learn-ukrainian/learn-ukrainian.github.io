@@ -147,8 +147,8 @@ def _subscribed_capture_records():
         for name in ("GEMMA_SURFACE_ROUTE", "FRONTIER_OPENCODE_ROUTE"):
             historical = getattr(llm_reviewer_dispatch, name)
             route = replace(
-                historical, reviewer_model_id="gemini-3.8-flash-high",
-                bridge_command=(historical.bridge_command[0], "--model", "gemini-3.8-flash-high"),
+                historical, reviewer_model_id="gemini-4-neon-high",
+                bridge_command=(historical.bridge_command[0], "--model", "gemini-4-neon-high"),
             )
             patcher.setattr(llm_reviewer_dispatch, name, route)
         yield

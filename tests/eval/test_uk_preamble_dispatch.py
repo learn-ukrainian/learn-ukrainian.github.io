@@ -43,11 +43,15 @@ from scripts.eval.uk_preamble.runner import (
 from tests.dispatcher.conftest import install_claude_doctor_stub
 
 CALLER = "harness"
-# lu-machinery 0.1.31 retires gpt-6.1-sol; the dispatcher refuses it before launch. The
-# frozen seat table keeps it (the uk-behaviour freeze pins common.py), so the tests
-# that run the real dispatch CLI use the live Sol 6.2 seat in its place.
+# lu-machinery 0.1.31 retires gpt-6.1-sol and 0.1.39 leaves gemini-3.8-flash-high only its
+# historical-record role; the dispatcher refuses both before launch. The frozen seat table keeps
+# them (the uk-behaviour freeze pins common.py), so the tests that run the real dispatch CLI use
+# the live seat the catalog admits for the same dispatch: Sol 6.2, and Neon High. These eval
+# dispatches run read-only on the Ukrainian lane, which the dispatcher admits only for a seat with
+# a review role; Neon High is the only AGY selector holding one (Hydrogen is refused).
+_LIVE_SEAT_IDS = {"gpt-6.1-sol": "gpt-6.2-sol", "gemini-3.8-flash-high": "gemini-4-neon-high"}
 LIVE_SEATS = {
-    key: replace(seat, seat_id="gpt-6.2-sol", model="gpt-6.2-sol") if key == "gpt-6.1-sol" else seat
+    key: replace(seat, seat_id=_LIVE_SEAT_IDS[key], model=_LIVE_SEAT_IDS[key]) if key in _LIVE_SEAT_IDS else seat
     for key, seat in SEATS.items()
 }
 
@@ -132,8 +136,8 @@ def _calls(state: Path) -> list[list[str]]:
     [
         (
             "gemini-3.8-flash-high",
-            "gemini-3.8-flash-high",
-            "Gemini 3.8 Flash (High)",
+            "gemini-4-neon-high",
+            "Gemini 4 Neon (High)",
             "gemini-3-flash-preview",
         ),
         (
@@ -196,13 +200,21 @@ def test_matching_agy_parse_passes_eval_identity_check(
     )
     parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
     claude_pin = pin in {"claude-opus-5-5-high", "claude-sonnet-5-5-high"}
-    if claude_pin and reported_model is None:
-        # Absent Claude runtime identity is refused, never a matching successful worker.
+    gemini4_pin = pin.startswith("gemini-4-")
+    if (claude_pin or gemini4_pin) and reported_model is None:
+        # Absent Claude or Gemini 4 runtime identity is refused, never a matching successful worker.
         assert parsed.ok is False
         assert parsed.stderr_excerpt == "agy_model_identity_missing"
         assert parsed.response == ""
         assert parsed.substitution is None
         assert parsed.model_identity is None
+        return
+    if gemini4_pin and reported_form in {"display", "backend"}:
+        # A Gemini 4 seat must report its exact selector; a display label or another model's
+        # backend id is not that identity.
+        assert parsed.ok is False
+        assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+        assert parsed.response == ""
         return
     assert parsed.ok is True and parsed.response == "READY"
     if claude_pin:

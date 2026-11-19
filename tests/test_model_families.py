@@ -204,8 +204,8 @@ def test_unknown_writer_refuses_on_live_path_with_lineage_error() -> None:
     with pytest.raises(llm_reviewer_dispatch.ReviewerLineageError):
         route = replace(
             llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE,
-            reviewer_model_id="gemini-3.8-flash-high",
-            bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
+            reviewer_model_id="gemini-4-neon-high",
+            bridge_command=("ask-agy", "--model", "gemini-4-neon-high"),
         )
         llm_reviewer_dispatch.validate_cross_family(route, lineage)
 
@@ -220,8 +220,8 @@ def test_self_review_still_blocks_when_families_match() -> None:
     with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
         route = replace(
             llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE,
-            reviewer_model_id="gemini-3.8-flash-high",
-            bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
+            reviewer_model_id="gemini-4-neon-high",
+            bridge_command=("ask-agy", "--model", "gemini-4-neon-high"),
         )
         llm_reviewer_dispatch.validate_cross_family(route, lineage)
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="medium", claude_account=HOST_ACCOUNT)
