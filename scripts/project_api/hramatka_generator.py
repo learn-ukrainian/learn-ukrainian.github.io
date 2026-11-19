@@ -18,15 +18,17 @@ from lu_machinery.review.model_catalog import load_model_catalog
 
 from .curriculum_state import monitor_surface
 
+_ABSENT_SEAT = "gemini-seat-absent-from-installed-catalog"
+
 
 def _seats() -> tuple[str, str]:
     """Routine generation seat (Hydrogen) and the review-grade retry seat (Neon), from the installed catalog.
 
     The provider client is injected by the private service, so no ACP pin limits the primary.
     """
-    hydrogen = load_model_catalog()["models"]["gemini-4-hydrogen"].get("routing_wire_ids", {}).get("agy")
-    # An absent seat is a name the provider refuses by name, never a failure at import.
-    return hydrogen or "gemini-seat-absent-from-installed-catalog", registered_participant_model("agy") or "gemini-seat-absent-from-installed-catalog"
+    hydrogen = load_model_catalog()["models"].get("gemini-4-hydrogen", {}).get("routing_wire_ids", {}).get("agy")
+    # An absent seat binds as a name, so import never fails; generation refuses it before any provider call.
+    return hydrogen or _ABSENT_SEAT, registered_participant_model("agy") or _ABSENT_SEAT
 
 
 PRIMARY_MODEL, SECONDARY_MODEL = _seats()
@@ -178,6 +180,8 @@ def generate_qualified_lesson(
     Content rejected by QG is never retried as a transport failure.
     """
 
+    if _ABSENT_SEAT in (primary_model, secondary_model):
+        raise ValueError("The installed catalog assigns no Gemini seat for Hramatka generation; pass an explicit model.")
     attempts: list[GenerationAttempt] = []
     models = (primary_model, secondary_model)
 

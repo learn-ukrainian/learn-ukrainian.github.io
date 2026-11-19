@@ -57,7 +57,7 @@ def _hydrogen_model() -> str:
     """The routine-work seat: the AGY wire id the installed catalog gives gemini-4-hydrogen."""
     from lu_machinery.review.model_catalog import load_model_catalog
 
-    wire_id = load_model_catalog()["models"]["gemini-4-hydrogen"].get("routing_wire_ids", {}).get("agy")
+    wire_id = load_model_catalog()["models"].get("gemini-4-hydrogen", {}).get("routing_wire_ids", {}).get("agy")
     return wire_id if isinstance(wire_id, str) and wire_id else ABSENT_SEAT
 
 
