@@ -628,9 +628,10 @@ arrives on stdin rather than argv. Codex additionally requires its non-secret
 ChatGPT auth-method selector:
 
 ```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Reply with exactly READY.' |
   ACPX_AUTH_CHAT_GPT=1 LU_ACPX_TRANSPORT=shadow \
-  .venv/bin/python -m lu_machinery.agent_runtime.acpx_pilot \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.agent_runtime.acpx_pilot \
   --target codex --cwd . --task-id pilot-6063 \
   --correlation-id pilot-6063-codex-v1 \
   --idempotency-key pilot-6063-codex-v1
