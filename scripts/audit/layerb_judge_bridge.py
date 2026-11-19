@@ -60,10 +60,22 @@ BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
 GROK_FLAT_SCHEMA_BUILDER_VERSION = "qg-layer-b-judge-grok-flat-schema.v1"
 GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
+
+
+def _agy_seat() -> str:
+    """The Gemini review seat: the AGY pin the installed catalog registers."""
+    from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
+
+    pin = registered_participant_model("agy")
+    if not pin:
+        raise RuntimeError("AGY ACP has no registered model pin; pass an explicit model.")
+    return pin
+
+
 DEFAULT_MODELS = {
     "codex": "gpt-6.2-sol",
     "grok": "grok-4.7",  # operator order 2026-09-22 (#8464), rotated from grok-4.6
-    "gemini": "gemini-3.8-flash-high",
+    "gemini": _agy_seat(),
 }
 CODEX_DISABLED_FEATURES = (
     "shell_tool",

@@ -29,6 +29,7 @@ from lu_machinery.agent_runtime.json_parse import extract_json_object
 from lu_machinery.common.repo_root import project_interpreter
 
 VENV_PYTHON = project_interpreter(PROJECT_ROOT.resolve())
+from batch_gemini_config import NEON_MODEL
 
 # Structured prompt that returns JSON (reliable parsing)
 NATURALNESS_PROMPT = """Evaluate the naturalness of this Ukrainian educational text.
@@ -103,7 +104,7 @@ def _parse_naturalness_json(raw_output: str) -> dict | None:
     return parsed if "score" in parsed else None
 
 
-def call_agy(prompt: str, task_id: str, model: str = "gemini-3.8-flash-high") -> tuple[str, dict]:
+def call_agy(prompt: str, task_id: str, model: str = NEON_MODEL) -> tuple[str, dict]:
     """Call AGY and return raw response + parsed JSON."""
     try:
         result = subprocess.run(
@@ -299,7 +300,7 @@ def check_naturalness(
     md_file_path: str,
     update_meta: bool = True,
     force: bool = False,
-    model: str = "gemini-3.8-flash-high",
+    model: str = NEON_MODEL,
 ) -> tuple[int, str]:
     """
     Check naturalness with dual AI validation.
@@ -372,7 +373,7 @@ if __name__ == '__main__':
     parser.add_argument('file', help='Path to markdown file')
     parser.add_argument('--no-update', action='store_true', help='Do not update meta.yaml')
     parser.add_argument('--force', action='store_true', help='Re-check even if already evaluated')
-    parser.add_argument('--model', default='gemini-3.8-flash-high', help='Gemini model to use')
+    parser.add_argument('--model', default=NEON_MODEL, help='Gemini model to use')
 
     args = parser.parse_args()
 

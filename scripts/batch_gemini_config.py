@@ -22,6 +22,8 @@ from batch.batch_gemini_config import (
     FALLBACK_MODEL,
     FLASH_LITE_MODEL,
     FLASH_MODEL,
+    HYDROGEN_MODEL,
+    NEON_MODEL,
     PHASES_DIR,
     PROJECT_ROOT,
     PRO_MODEL,

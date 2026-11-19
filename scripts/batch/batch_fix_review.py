@@ -35,6 +35,7 @@ import scripts  # noqa: F401  (binds the product roots for the installed release
 # isort: split
 from lu_machinery.common.repo_root import project_interpreter
 
+from batch_gemini_config import NEON_MODEL
 from curriculum.quality.thresholds import STYLE_REVIEW_TARGET
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
@@ -626,7 +627,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=20)
     parser.add_argument("--module", type=int, help="Process a single module")
-    parser.add_argument("--model", default="gemini-3.8-flash-high")
+    parser.add_argument("--model", default=NEON_MODEL)
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen")
     parser.add_argument("--review-only", action="store_true", help="Only run reviews, no fixes")
     args = parser.parse_args()

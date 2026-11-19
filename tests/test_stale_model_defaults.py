@@ -42,9 +42,10 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
     require_execution_model(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_MODEL_ID, transport="native_claude")
     for model in (batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL):
         require_execution_model(model, transport="agy")
-    # All tier names resolve to subscribed Flash; no extra capacity.
+    # Tier names map to the 0.1.39 catalog seats: every ACP-dispatched tier -> Neon.
     assert batch_gemini_config.FLASH_LITE_MODEL == batch_gemini_config.FLASH_MODEL
-    assert {batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL} == {"gemini-3.8-flash-high"}
+    assert batch_gemini_config.PRO_MODEL == "gemini-4-neon-high"
+    assert batch_gemini_config.FLASH_MODEL == "gemini-4-neon-high"
 
 
 @pytest.mark.parametrize("module", [code_review_benchmark, judge_calibration_matrix])
