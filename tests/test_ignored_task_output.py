@@ -505,7 +505,9 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
         record,
     )
     assert output._identity_cache_path(tasks).exists() is publish_cache
-    assert "retrying complete inventory once" in capsys.readouterr().err
+    # An archive move is followed to its exact counterpart inside one pass
+    # (lu-machinery 0.1.43); a redispatch or staging move still restarts it.
+    assert ("retrying complete inventory once" in capsys.readouterr().err) is (move != "archive")
 
 
 @pytest.mark.parametrize("failure", ["vanished", "permission", "corrupt"])
