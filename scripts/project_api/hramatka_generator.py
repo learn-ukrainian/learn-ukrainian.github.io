@@ -14,20 +14,19 @@ from typing import Any, Protocol, cast
 from urllib.error import HTTPError, URLError
 
 from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
-from lu_machinery.review.model_catalog import load_model_catalog
 
 from .curriculum_state import monitor_surface
 
 
-def _seats() -> tuple[str, str]:
-    """Routine generation seat (Hydrogen) and the review-grade retry seat (Neon), from the installed catalog."""
-    neon = registered_participant_model("agy")
-    if not neon:
-        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no retry seat.")
-    return load_model_catalog()["models"]["gemini-4-hydrogen"]["routing_wire_ids"]["agy"], neon
+def _agy_seat() -> str:
+    """The AGY ACP seat (the only model that route admits), read from the installed registry."""
+    pin = registered_participant_model("agy")
+    if not pin:
+        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no seat.")
+    return pin
 
 
-PRIMARY_MODEL, SECONDARY_MODEL = _seats()
+PRIMARY_MODEL = SECONDARY_MODEL = _agy_seat()
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0
 

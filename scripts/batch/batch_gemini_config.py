@@ -59,10 +59,10 @@ def _hydrogen_model() -> str:
 
 
 # Tier names are compatibility aliases; the seats come from the installed catalog, not literals.
-NEON_MODEL = _neon_model()  # review, judge, advisory
-HYDROGEN_MODEL = _hydrogen_model()  # routine work
+NEON_MODEL = _neon_model()  # review, judge, advisory; the only model the AGY ACP route (ask-agy) accepts
+HYDROGEN_MODEL = _hydrogen_model()  # native-AGY routine work (the linear-pipeline gemini/agy writer lanes)
 PRO_MODEL = NEON_MODEL
-FLASH_MODEL = HYDROGEN_MODEL
+FLASH_MODEL = NEON_MODEL  # every FLASH_MODEL caller dispatches over the AGY ACP route, which admits only Neon
 FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
 GEMINI_REVIEW_MODEL = NEON_MODEL
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
