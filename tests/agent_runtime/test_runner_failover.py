@@ -887,7 +887,7 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
         "pin": pin,
         "display": label,
         "backend": backend,
-        "different": "gemini-3.8-flash-high",
+        "different": "gemini-4-hydrogen-medium",
         "whitespace": "   ",
     }[form]
     init = {"event": "init", "init": {}}
@@ -1123,7 +1123,7 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
     if case not in {"matched", "provider-failure"}:
         assert result.failure_code == "provider_policy_refusal"
     assert bool(result.model_identity and result.model_identity["actual_model_known"]) is known
-    actual = {"other-pin": other, "other-family": "gemini-3.8-flash-high"}.get(case, pin)
+    actual = {"other-pin": other, "other-family": "gemini-4-hydrogen-medium"}.get(case, pin)
     if known:
         assert result.model_identity["actual_model"] == actual
     saved, = [json.loads(line) for line in usage_file.read_text().splitlines()]

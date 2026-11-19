@@ -155,20 +155,20 @@ class TestDispatchAgent:
     def test_gemini_dispatch_exhausts_agy_without_flash_cli(
         self, mock_invoke, _mock_pace, tmp_path,
     ):
-        """The subscribed Flash route exhausts once through AGY, never native CLI."""
+        """The subscribed Gemini route exhausts once through AGY, never native CLI."""
         from lu_machinery.agent_runtime.errors import RateLimitedError
 
-        mock_invoke.side_effect = RateLimitedError("agy", "gemini-3.8-flash-high", "agy 429")
+        mock_invoke.side_effect = RateLimitedError("agy", "gemini-4-hydrogen-medium", "agy 429")
         ok, raw = dispatch_agent(
             "test prompt", agent="gemini-tools", phase="write",
-            orch_dir=tmp_path, timeout=300, model="gemini-3.8-flash-high",
+            orch_dir=tmp_path, timeout=300, model="gemini-4-hydrogen-medium",
             mcp_tools=True, sleep_fn=lambda _s, _r: None,
         )
         assert ok is False
         assert raw == "__RATE_LIMITED__"
         mock_invoke.assert_called_once()
         assert mock_invoke.call_args.args[0] == "agy"
-        assert mock_invoke.call_args.kwargs["model"] == "gemini-3.8-flash-high"
+        assert mock_invoke.call_args.kwargs["model"] == "gemini-4-hydrogen-medium"
         assert mock_invoke.call_args.kwargs["tool_config"] is None
 
 

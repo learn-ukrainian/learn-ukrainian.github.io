@@ -191,7 +191,7 @@ def _assert_burst(responses: list[httpx.Response], calls: dict[str, int], overla
 # covers every sibling that shares the joiner counter (#11366).
 _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[str, object]]] = {
     "delegate_active": (
-        delegate_router, "active_delegate_tasks", delegate_router.router,
+        delegate_router, "_active_snapshot_tasks", delegate_router.router,
         "/api/delegate", "/api/delegate/active", {"total": 0, "tasks": []},
     ),
     "delegate_tasks": (
@@ -278,11 +278,12 @@ def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pyte
 def _assert_active_snapshot_burst(tmp_path, monkeypatch, *, intruder=None):
     calls = {"n": 0}
 
-    def slow(**_kwargs):
+    def slow(*_args, **_kwargs):
         calls["n"] += 1
         return {"total": 0, "tasks": []}
 
-    monkeypatch.setattr(delegate_router, "active_delegate_tasks", slow)
+    # The lifespan writer reads hot records through _active_snapshot_tasks (machinery 0.1.42).
+    monkeypatch.setattr(delegate_router, "_active_snapshot_tasks", slow)
     app = _mount(tmp_path, delegate_router.router, "/api/delegate")
 
     async def scenario():
