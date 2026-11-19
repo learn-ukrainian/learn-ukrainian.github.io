@@ -37,7 +37,13 @@ def test_missing_envelope_refuses_before_side_effects(launch, capsys, tmp_path, 
     assert "BOUNDED_ENVELOPE_REQUIRED" in capsys.readouterr().err
     worker.start.assert_not_called()
     git.create_worktree.assert_not_called()
-    assert not (tmp_path / "tasks").exists()
+    # Since machinery 0.1.41 (#892) a refusal leaves one never-started record under a fresh id, never
+    # the requested id, so the refused launch is auditable and its task id stays reusable.
+    assert not store.record_path("worker").exists()
+    records = [json.loads(path.read_text()) for path in (tmp_path / "tasks").glob("*.json")]
+    assert records
+    assert all(r["status"] == "failed" and r["never_started_reason"] and r["requested_task_id"] == "worker"
+               for r in records)
 
 
 @pytest.mark.parametrize("model", ["gpt-6-luna"])
