@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import importlib
 import importlib.util
 import linecache
 import sys
@@ -12,6 +11,7 @@ from types import SimpleNamespace
 
 import pytest
 from lu_machinery.agent_runtime.adapters import acpx
+from lu_machinery.lib.readonly_sqlite import import_named_module
 from lu_machinery.review import model_catalog
 from lu_machinery.review.model_catalog import (
     ModelCatalogError,  # the refusing subjects run the installed release
@@ -153,10 +153,10 @@ def test_missing_catalog_gemini_seat_fails_every_caller_at_import(module, role, 
         monkeypatch.delitem(sys.modules, name, raising=False)
 
     if module not in _GEMINI_SEAT_CALLERS:
-        importlib.import_module(module)  # binds no seat, so a missing seat cannot break it
+        import_named_module(module)  # binds no seat, so a missing seat cannot break it
         return
     with pytest.raises(RuntimeError) as raised:
-        importlib.import_module(module)
+        import_named_module(module)
     assert type(raised.value).__name__ == "GeminiSeatUnavailable"
     assert raised.value.role == role
     assert repr(role) in str(raised.value)
