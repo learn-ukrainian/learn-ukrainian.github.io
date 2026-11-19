@@ -112,7 +112,7 @@ FLASH_LITE_MODEL = GEMINI_REVIEW_MODEL
 # Semantics — IMPORTANT, rewritten 2026-04-24 to match post-#1184 reality:
 #
 #   - ``hard_timeout`` is the ONLY kill signal the watchdog honors
-#     (scripts/agent_runtime/watchdog.py:294-332). Stall detection was
+#     (lu_machinery/agent_runtime/watchdog.py). Stall detection was
 #     deleted on 2026-04-10 after four documented per-CLI failure modes
 #     proved it unreliable (Gemini block-buffers stdout, Codex state-file
 #     moves across versions, mtime fires only at startup, each CLI has

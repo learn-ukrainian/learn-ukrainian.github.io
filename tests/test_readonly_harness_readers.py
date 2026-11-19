@@ -9,7 +9,7 @@ import pytest
 from lu_machinery.common.repo_root import machinery_path
 
 READERS = (
-    "scripts/agent_runtime/acpx_discuss.py",
+    "agent_runtime/acpx_discuss.py",
     "scripts/ai_agent_bridge/_opencode.py",
     "scripts/api/fleet_router.py",
     "scripts/api/fleet_workers_collect.py",

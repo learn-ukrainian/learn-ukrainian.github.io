@@ -61,7 +61,7 @@ dependencies = [
 
     # Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix:
     # installed transitively until a from-scratch venv rebuild lost them).
-    "psutil>=7.2",  # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
+    "psutil>=7.2",  # lu_machinery/agent_runtime/watchdog.py
     "filelock>=3.32.2",  # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
     "rapidfuzz>=3.14.6",  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
 

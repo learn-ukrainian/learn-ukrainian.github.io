@@ -2305,7 +2305,7 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
     elif condition == "relative_home":
         data = json.loads(paths[1].read_text())
         data[hooks.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] = (
-            "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy"
+            "../.venv/bin/python ../lu_machinery/agent_runtime/secret_print_hook.py --harness agy"
         )
         paths[1].write_text(json.dumps(data))
     elif condition == "disabled":

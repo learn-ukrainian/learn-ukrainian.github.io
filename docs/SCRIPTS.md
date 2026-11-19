@@ -932,7 +932,7 @@ long-queue procedure: `docs/runbooks/test-slots.md`.
 
 ### Agent runtime
 
-`scripts/agent_runtime/` is the universal adapter layer for the dispatchable agent
+`lu_machinery/agent_runtime/` is the universal adapter layer for the dispatchable agent
 lanes. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md). Gemini-family
 work uses AGY; the legacy Gemini CLI route is unsupported.
 

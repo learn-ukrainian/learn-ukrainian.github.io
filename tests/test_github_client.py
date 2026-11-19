@@ -1676,7 +1676,7 @@ def test_cli_transport_skips_runtime_shim(tmp_path):
     import os
     import sys
 
-    shim = tmp_path / "scripts/agent_runtime/shims/gh"
+    shim = tmp_path / "lu_machinery/agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
     shim.write_text("#!/bin/sh\nexit 99\n")
     shim.chmod(0o755)

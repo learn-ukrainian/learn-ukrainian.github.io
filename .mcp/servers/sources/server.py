@@ -53,7 +53,7 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(_path))
 
 # Sibling modules of this file import by plain name, after scripts/ and the repository root, which is the
-# order the review digest (scripts/review/render_contract.server_code) traces them in.
+# order the review digest (lu_machinery.review.render_contract.server_code) traces them in.
 SERVER_DIR = Path(__file__).resolve().parent
 if str(SERVER_DIR) not in sys.path:
     sys.path.append(str(SERVER_DIR))

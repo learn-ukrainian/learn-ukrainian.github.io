@@ -38,7 +38,7 @@ rm -rf .venv && uv sync --locked
 | `scripts/build/enrich.py` | Deterministic post-write enrichment | **Current** |
 | `scripts/build/activity_repair.py` | Deterministic activity fixer (#1185) | **Current** |
 | `scripts/build/activity_validator.py` | Activity YAML validation | **Current** |
-| `scripts/agent_runtime/` | Unified Claude/Gemini/Codex adapter | **Current** |
+| `lu_machinery/agent_runtime/` | Unified Claude/Gemini/Codex adapter | **Current** |
 | `scripts/build/build_module_v5.py` (+ stub at scripts/build_module_v5.py) | Legacy v5 entrypoint | **RETIRED** — do not use |
 | `scripts/build/pipeline_v5.py` (+ stub at scripts/pipeline_v5.py) | Legacy v5 phases | **RETIRED** — do not use |
 

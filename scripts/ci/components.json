@@ -839,12 +839,6 @@
       ]
     },
     {
-      "path": "scripts/agent_runtime/",
-      "components": [
-        "harness"
-      ]
-    },
-    {
       "path": "scripts/api/",
       "components": [
         "harness"

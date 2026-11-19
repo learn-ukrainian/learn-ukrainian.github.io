@@ -1,12 +1,12 @@
 #!/bin/sh
 # CLAUDE_CODE_SHELL_PREFIX of read-only native Claude dispatches (#12378, decision REVIEW-BOUNDARY-1101).
-# Claude Code runs "<this file> '<command script>'" for every Bash call; shell_main in
-# scripts/dispatcher/agy_sandbox.py runs the script inside the read-only boundary. The code comes
+# Claude Code runs "<this file> '<command script>'" for every Bash call. The installed
+# lu_machinery/dispatcher/agy_sandbox.py module has no shell_main, so this prefix refuses. The code comes
 # from the checkout this file really lives in, never from the reviewed worktree.
 refuse() { echo "claude read-only boundary refused: $1" >&2; exit 125; }
 self=$(readlink -f -- "$0") || refuse claude_review_shell_unresolved
-# This file is <root>/<package>/dispatcher/claude_review_shell, found by directory depth. The package is
-# named by the directory the file really lives in, because that is the directory imported from <root>.
+# This file is <root>/<package>/dispatcher/claude_review_shell, found by directory depth. The checkout
+# check stays. The command runner is the installed lu_machinery.dispatcher.agy_sandbox module.
 dispatcher=${self%/*}
 package_dir=${dispatcher%/*}
 package=${package_dir##*/}
@@ -17,4 +17,4 @@ case $package in '' | [0-9]* | *[!A-Za-z0-9_]*) refuse claude_review_shell_root_
 worktree=$(readlink -f -- "${LU_REVIEW_SHELL_WORKTREE:-/}") || refuse claude_review_shell_worktree_unresolved
 case "$root/" in "$worktree"/*) refuse claude_review_shell_root_is_reviewed_worktree ;; esac
 [ -x "${LU_REVIEW_SHELL_PYTHON:-}" ] || refuse claude_review_shell_interpreter_missing
-exec "$LU_REVIEW_SHELL_PYTHON" -I -c 'import importlib, sys; sys.path.insert(0, sys.argv[1]); sandbox = importlib.import_module(sys.argv[2] + ".dispatcher.agy_sandbox"); raise SystemExit(sandbox.shell_main(sys.argv[3:]))' "$root" "$package" "$@"
+exec "$LU_REVIEW_SHELL_PYTHON" -I -c 'import importlib, sys; sandbox = importlib.import_module("lu_machinery.dispatcher.agy_sandbox"); runner = getattr(sandbox, "shell_main", None); sys.stderr.write("claude read-only boundary refused: shell_main missing from lu_machinery.dispatcher.agy_sandbox\n") if runner is None else None; raise SystemExit(125 if runner is None else runner(sys.argv[1:]))' "$@"

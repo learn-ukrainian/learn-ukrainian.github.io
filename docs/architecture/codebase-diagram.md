@@ -20,7 +20,7 @@ flowchart TB
 
     subgraph Orchestration["Orchestration layer"]
         Bridge["scripts/ai_agent_bridge/"]
-        Runtime["scripts/agent_runtime/"]
+        Runtime["lu_machinery/agent_runtime/"]
         Monitor["Monitor API :8765"]
         Orchestrator["curriculum-orchestrator"]
     end
@@ -325,7 +325,7 @@ flowchart TB
 | `curriculum/` | Authoring source — plans, lessons, activities, vocab |
 | `scripts/build/` | V7 linear pipeline — plan → writer → QG → MDX |
 | `scripts/audit/` | Deterministic quality gates (word counts, pedagogy, Russianisms) |
-| `scripts/agent_runtime/` | Single entrypoint for all AI CLI invocations |
+| `lu_machinery/agent_runtime/` | Single entrypoint for all AI CLI invocations |
 | `scripts/ai_agent_bridge/` | Inter-agent messaging and dispatch |
 | `starlight/` | Astro site with 40+ interactive React activity components |
 | `data/` | RAG corpora, translations, lexicon databases |

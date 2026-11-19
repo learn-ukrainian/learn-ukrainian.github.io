@@ -499,7 +499,7 @@ SESSION_IDENTITY_ENV_VARS = (
     "LEARN_UKRAINIAN_OBSERVED_MODEL_ID",
     "LEARN_UKRAINIAN_OBSERVED_CONTEXT_WINDOW_TOKENS",
     "LEARN_UKRAINIAN_THREAD_LEASE_GENERATION",
-    # Dispatch worker identity (scripts/dispatcher/environment.py).
+    # Dispatch worker identity (lu_machinery/dispatcher/environment.py).
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LU_X_AGENT_TRAILER",
@@ -512,7 +512,7 @@ SESSION_IDENTITY_ENV_VARS = (
     # Telemetry run/session ids (lu_machinery.telemetry.emit).
     "LU_RUN_ID",
     "LU_SESSION_ID",
-    # Codex hook probe session (scripts/agent_runtime/codex_hook_probe.py).
+    # Codex hook probe session (lu_machinery/agent_runtime/codex_hook_probe.py).
     "CODEX_HOOK_PROBE_LOG",
     "CODEX_HOOK_PROBE_DENY_TOOLS",
     # Harness-native ids the hooks read; the harness, not a launcher, sets them.
