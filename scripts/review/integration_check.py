@@ -107,7 +107,6 @@ def _agy_seat() -> str:
     return pin
 
 
-SECOND_SEAT_MODEL = ("agy", _agy_seat())  # the third family: the writer is openai, the first seat anthropic
 
 
 # --- running the product entry points -------------------------------------------------------------
@@ -548,7 +547,7 @@ class ModuleWorld(World):
             conn.close()
 
     def second_seat_task(self) -> str:
-        return self.task("review-google", *SECOND_SEAT_MODEL)
+        return self.task("review-google", "agy", _agy_seat())  # the third family: the writer is openai, the first seat anthropic
 
     def approve_all(self) -> None:
         for n in (1, 2, 3):

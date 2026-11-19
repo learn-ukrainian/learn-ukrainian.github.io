@@ -20,13 +20,8 @@ from batch.batch_gemini_config import (
     CLAUDE_MODEL_CORE_CONTENT,
     CURRICULUM_DIR,
     FALLBACK_MODEL,
-    FLASH_LITE_MODEL,
-    FLASH_MODEL,
-    HYDROGEN_MODEL,
-    NEON_MODEL,
     PHASES_DIR,
     PROJECT_ROOT,
-    PRO_MODEL,
     PRO_TRACKS,
     SEMINAR_TRACKS,
     get_module_index,
@@ -37,19 +32,33 @@ from batch.batch_gemini_config import (
 )
 
 if TYPE_CHECKING:
-    from batch.batch_gemini_config import VENV_PYTHON as VENV_PYTHON
+    from batch.batch_gemini_config import (
+        FLASH_LITE_MODEL as FLASH_LITE_MODEL,
+        FLASH_MODEL as FLASH_MODEL,
+        GEMINI_REVIEW_MODEL as GEMINI_REVIEW_MODEL,
+        HYDROGEN_MODEL as HYDROGEN_MODEL,
+        NEON_MODEL as NEON_MODEL,
+        PRO_MODEL as PRO_MODEL,
+        VENV_PYTHON as VENV_PYTHON,
+    )
+
+# Model seats resolve from the installed catalog on first access, so importing this shim never needs a seat.
+_LAZY_NAMES = frozenset({
+    "FLASH_LITE_MODEL", "FLASH_MODEL", "GEMINI_REVIEW_MODEL", "HYDROGEN_MODEL", "NEON_MODEL", "PRO_MODEL",
+})
 
 
 def __getattr__(name: str) -> str:
-    """Re-export ``VENV_PYTHON`` without resolving it at import.
+    """Re-export ``VENV_PYTHON`` and the model seats without resolving them at import.
 
     The implementation resolves the interpreter on first use. Binding it
     here would crash release snapshots and copied trees that import this
     shim only for model names.
     """
-    if name != "VENV_PYTHON":
+    if name != "VENV_PYTHON" and name not in _LAZY_NAMES:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    from batch.batch_gemini_config import VENV_PYTHON
+    import batch.batch_gemini_config as real
 
-    globals()["VENV_PYTHON"] = VENV_PYTHON
-    return VENV_PYTHON
+    value = getattr(real, name)
+    globals()[name] = value
+    return value

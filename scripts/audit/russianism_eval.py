@@ -41,7 +41,13 @@ def _agy_seat() -> str:
 
 PYTHON, BRIDGE = project_interpreter(), "lu_machinery.ai_agent_bridge"
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
-DEFAULT_MODELS = f"claude-opus-5-5,claude-sonnet-5-5,gpt-6.2-sol,gpt-6-luna,{_agy_seat()}"
+
+
+def _default_models() -> str:
+    """The default model list; the Gemini seat is resolved when the default is used, not at import."""
+    return f"claude-opus-5-5,claude-sonnet-5-5,gpt-6.2-sol,gpt-6-luna,{_agy_seat()}"
+
+
 FROM_AGENT = "russianism-eval"
 _FOUND_COUNT_RE, _WORD_RE = re.compile(r"Found\s+(\d+)\s+Russicism", re.IGNORECASE), re.compile(r"[\w'’-]+", re.UNICODE)
 
@@ -379,7 +385,9 @@ def run_eval(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run Russianism eval prompts across bridge model variants.")
     parser.add_argument("--prompts", required=True, type=Path, help="Prompt YAML path.")
-    parser.add_argument("--models", default=DEFAULT_MODELS, help=f"Comma-separated model list. Default: {DEFAULT_MODELS}")
+    parser.add_argument(
+        "--models", help="Comma-separated model list. Default: Opus, Sonnet, Sol, Luna and the installed catalog's Gemini review seat."
+    )
     parser.add_argument("--out-dir", type=Path, help="Output directory. Default: audit/russianism-eval-{timestamp}.")
     parser.add_argument("--max-parallel", type=int, default=1, help="Maximum concurrent bridge calls.")
     parser.add_argument("--dry-run", action="store_true", help="Validate and print planned dispatches without agent calls.")
@@ -389,8 +397,8 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None, caller: BridgeCaller | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        prompts, models = load_prompts(args.prompts), _parse_models(args.models)
-    except (OSError, ValueError, yaml.YAMLError) as exc:
+        prompts, models = load_prompts(args.prompts), _parse_models(args.models or _default_models())
+    except (OSError, RuntimeError, ValueError, yaml.YAMLError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     if args.max_parallel < 1:

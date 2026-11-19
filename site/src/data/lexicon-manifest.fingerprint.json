@@ -399,7 +399,7 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "558d1e0203abc68f06ff2e93e2ac45832f5ddd82ddd65b2cff04bff09929d52b"
+        "sha256": "e54cbe05b6f1a67da2bbc06fc459a711714e9ff079a7d0c3be18661351e2f3bb"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
