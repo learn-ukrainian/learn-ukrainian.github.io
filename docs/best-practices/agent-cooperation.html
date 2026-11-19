@@ -134,7 +134,7 @@
 together without degrading each other's output quality.
 Historical protocol archive: <code>docs/archive/CLAUDE-GEMINI-COOPERATION.md</code>
 Review evidence contract: <a href="../review-protocol.md"><code>docs/review-protocol.md</code></a></p>
-<p><strong>Runtime layer:</strong> All agent CLI invocations route through <code>scripts/agent_runtime/</code>.
+<p><strong>Runtime layer:</strong> All agent CLI invocations route through <code>lu_machinery/agent_runtime/</code>.
 If you're touching an agent subprocess, read <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a> first.</p>
 <p><strong>Seat onboarding (canonical ownership matrix):</strong>
 <a href="../runbooks/agent-seat-onboarding.md"><code>docs/runbooks/agent-seat-onboarding.md</code></a> —
@@ -605,7 +605,7 @@ default; other agents update it only when the task explicitly asks for a router
 change.</p>
 <h3>Runtime layer — single source of truth for agent CLI calls</h3>
 <p>As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
-invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies to:</p>
+invoked through <code>invoke()</code> in <code>lu_machinery/agent_runtime/runner.py</code>. This applies to:</p>
 <ul>
 <li><code>scripts/ai_agent_bridge/</code> — bridge messaging (<code>ask-agy</code>, <code>ask-codex</code>, <code>process-claude</code>, etc.)</li>
 <li><code>scripts/build/dispatch.py</code> — pipeline phase dispatch (<code>skeleton</code>, <code>write</code>, <code>review</code>, etc.)</li>
