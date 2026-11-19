@@ -1804,7 +1804,7 @@ requires-dist = [
     { name = "jinja2", specifier = ">=3.1" },
     { name = "jsonschema", specifier = ">=4.20" },
     { name = "learn-ukrainian-v4-runtime", directory = "packages/v4-runtime" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl" },
     { name = "lxml", specifier = ">=6.1" },
     { name = "markdown-it-py", specifier = ">=4.2.0" },
     { name = "mcp", specifier = ">=2.2,<3" },
@@ -1841,7 +1841,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 atlas = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
     { name = "requests", extras = ["use-chardet-on-py3"], specifier = ">=2.34.2" },
@@ -1862,7 +1862,7 @@ dev = [
     { name = "wheel", specifier = ">=0.48.0" },
     { name = "yamllint", specifier = ">=1.38.0" },
 ]
-machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl" }]
+machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl" }]
 ml = [
     { name = "av", specifier = ">=18.1.0" },
     { name = "datasets", specifier = ">=5.0.1" },
@@ -1879,7 +1879,7 @@ ml = [
 ]
 pages = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
 ]
@@ -2010,8 +2010,8 @@ wheels = [
 
 [[package]]
 name = "lu-machinery"
-version = "0.1.39"
-source = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl" }
+version = "0.1.40"
+source = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl" }
 dependencies = [
     { name = "fastapi" },
     { name = "filelock" },
@@ -2030,7 +2030,7 @@ dependencies = [
     { name = "starlette" },
 ]
 wheels = [
-    { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.39/lu_machinery-0.1.39-py3-none-any.whl", hash = "sha256:4d7d527d41bbf4af0e03a95fe0a6b6f6bd7bc99ef54b3401cb4e707b6fea13fb" },
+    { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.40/lu_machinery-0.1.40-py3-none-any.whl", hash = "sha256:dc78418a1c02eabc33eb130a38fab44d6badfe51d6f0d57ea8fdaec4d8ce0b53" },
 ]
 
 [package.optional-dependencies]
