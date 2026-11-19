@@ -27,8 +27,8 @@ def _clear_mcp_config_cache() -> None:
 
 
 def _point_release_default(monkeypatch: pytest.MonkeyPatch, config_path: Path) -> None:
-    # The switched product subjects resolve .mcp.json through the installed release.  # TRANSITIONAL-PKG3-B2
-    monkeypatch.setattr(  # TRANSITIONAL-PKG3-B2
+    # The installed release defaults to the product root's .mcp.json; the test owns its config instead.
+    monkeypatch.setattr(
         tool_config_mod, "_resolved_mcp_config_path", lambda path: (path or config_path).resolve()
     )
 
@@ -163,7 +163,7 @@ def test_runtime_tool_config_raises_and_emits_resolution_event(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
@@ -193,7 +193,7 @@ def test_runtime_tool_config_emits_resolution_event_success(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = linear_pipeline._runtime_tool_config(
@@ -231,7 +231,7 @@ def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
     reviewer — reviewers should also only call ``mcp__sources__*``.
     """
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
 
     config = linear_pipeline._runtime_tool_config("codex-tools", workspace_dir=linear_pipeline.PROJECT_ROOT)
 
@@ -285,7 +285,7 @@ def test_runtime_tool_config_codex_tools_scoped_codex_home(
     test 2026-05-22) and confirmed via ``ab ask-codex``.
     """
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
 
     # Stand in a fake $CODEX_HOME so we don't depend on a real Codex
     # login on the runner; auth.json just needs to exist for the helper
@@ -327,7 +327,7 @@ def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     ``mcp_config_resolved`` so downstream observability sees the
     expected first event unchanged."""
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
 
     fake_home = tmp_path / "fake-codex-home"
     fake_home.mkdir()
@@ -359,7 +359,7 @@ def test_runtime_tool_config_codex_tools_missing_auth_warns(
     run ``codex login``. The actual ``codex exec`` invocation will fail
     loud with its own missing-auth error if it tries to run."""
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
 
     bad_home = tmp_path / "no-auth-codex-home"
     bad_home.mkdir()
@@ -399,7 +399,7 @@ def test_runtime_tool_config_non_codex_tools_no_disable_features(
     don't understand the key. The pipeline emits it only for codex-tools.
     """
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
 
     for agent in ("claude-tools", "gemini-tools", "grok-tools", "deepseek-tools"):
         config = linear_pipeline._runtime_tool_config(agent, workspace_dir=linear_pipeline.PROJECT_ROOT)
@@ -413,7 +413,7 @@ def test_wiki_review_codex_emits_resolution_event(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = wiki_review._tool_config_for(
@@ -435,7 +435,7 @@ def test_wiki_review_codex_raises_when_unconfigured(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     with pytest.raises(wiki_review.WikiReviewError, match="tool-less"):
@@ -456,7 +456,7 @@ def test_wiki_review_claude_no_raise_when_unconfigured(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = tmp_path / ".mcp.json"
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = wiki_review._tool_config_for(
@@ -477,7 +477,7 @@ def test_runtime_tool_config_claude_tools_emits_resolution_event_success(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = linear_pipeline._runtime_tool_config(
@@ -500,7 +500,7 @@ def test_runtime_tool_config_gemini_tools_emits_resolution_event_success(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = linear_pipeline._runtime_tool_config(
@@ -562,7 +562,7 @@ def test_invoke_writer_refuses_tool_less_codex_before_invoker(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
-    _point_release_default(monkeypatch, config_path)  # TRANSITIONAL-PKG3-B2
+    _point_release_default(monkeypatch, config_path)
     events: list[tuple[str, dict[str, Any]]] = []
 
     def fail_if_called(*_args: Any, **_kwargs: Any) -> None:

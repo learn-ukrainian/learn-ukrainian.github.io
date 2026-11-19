@@ -16,7 +16,7 @@ def machinery_package() -> str:
     names, not paths, so a spelled path would name a directory the extracted layout lacks. The
     name comes from the imported package's unresolved file location (design-v1 amendment 1).
     """
-    from lu_machinery.common import repo_root  # TRANSITIONAL-PKG3-B2: held consumers copy checkout-relative paths.
+    from lu_machinery.common import repo_root
 
     return Path(os.path.abspath(repo_root.__file__)).parents[1].name
 

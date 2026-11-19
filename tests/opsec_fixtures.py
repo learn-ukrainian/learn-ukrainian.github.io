@@ -120,9 +120,7 @@ def synthetic_opsec(tmp_path, monkeypatch):
     import importlib
 
     directory = make_tooling(tmp_path / "tooling")
-    # Product publishers run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-    for name in ("lu_machinery.opsec.prepublish",):  # TRANSITIONAL-PKG3-B2
-        monkeypatch.setattr(importlib.import_module(name), "private_tooling", lambda: directory)
+    monkeypatch.setattr(importlib.import_module("lu_machinery.opsec.prepublish"), "private_tooling", lambda: directory)
     return directory
 
 
@@ -131,14 +129,12 @@ def publisher_transport(monkeypatch):
     """Explicitly inject existing subprocess spies at the typed transport boundary."""
     import importlib
 
-    # Product publishers send through the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-    for name in ("lu_machinery.publish.github",):  # TRANSITIONAL-PKG3-B2
-        github = importlib.import_module(name)
+    github = importlib.import_module("lu_machinery.publish.github")
 
-        def send(argv, *, runner, _original=github._send, **kwargs):
-            return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
+    def send(argv, *, runner, _original=github._send, **kwargs):
+        return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
 
-        monkeypatch.setattr(github, "_send", send)
+    monkeypatch.setattr(github, "_send", send)
 
 
 def copy_publisher_scripts(source: Path, destination: Path) -> None:

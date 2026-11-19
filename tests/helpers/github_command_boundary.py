@@ -15,8 +15,7 @@ def install_github_command_boundary(monkeypatch):
         kwargs.pop("fresh", None)
         return subprocess.run(args, timeout=kwargs.pop("timeout", 30), **kwargs)
 
-    for name in ("lu_machinery.common.github_client", "lu_machinery.common.github_client"):  # TRANSITIONAL-PKG3-B2
-        monkeypatch.setattr(importlib.import_module(name), "run", run)
+    monkeypatch.setattr(importlib.import_module("lu_machinery.common.github_client"), "run", run)
 
 
 @pytest.fixture

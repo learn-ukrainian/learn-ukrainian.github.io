@@ -14,10 +14,7 @@ def github_transport(monkeypatch):
     """
     import importlib
 
-    # Product tests run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-    modules = [
-        importlib.import_module(name) for name in ("lu_machinery.common.github_client", "lu_machinery.common.github_client")
-    ]  # TRANSITIONAL-PKG3-B2
+    github_client = importlib.import_module("lu_machinery.common.github_client")
 
     def install(handler):
         calls = []
@@ -27,14 +24,12 @@ def github_transport(monkeypatch):
             calls.append((method, endpoint, headers, body, timeout))
             return handler(method, endpoint, headers, body, timeout)
 
-        for github_client in modules:  # TRANSITIONAL-PKG3-B2
+        def client(_constructor=github_client.GitHubClient, **kwargs):
+            store = _constructor(**{**kwargs, "transport": transport})
+            install.clients.append(store)
+            return store
 
-            def client(_constructor=github_client.GitHubClient, **kwargs):
-                store = _constructor(**{**kwargs, "transport": transport})
-                install.clients.append(store)
-                return store
-
-            monkeypatch.setattr(github_client, "GitHubClient", client)
+        monkeypatch.setattr(github_client, "GitHubClient", client)
         return calls
 
     return install
