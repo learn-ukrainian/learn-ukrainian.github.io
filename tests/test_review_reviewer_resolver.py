@@ -1115,8 +1115,9 @@ def test_ladders_end_the_frontier_rungs_with_opus(risk):
     if risk == "critical":
         assert len(ladder) == 4
     elif risk == "high":
-        assert len(ladder) == 4
-        assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.2-sol", "claude-opus-5-5"}
+        assert len(ladder) == 5
+        assert ladder[4][0].name == "gemini-4-neon-high"
+        assert {c.concrete_model for rung in ladder for c in rung} == _SOL_OPUS | {"gemini-4-neon"}
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "claude-sonnet-5-5-agy"
@@ -1747,17 +1748,20 @@ def test_grok_critical_review_pin_fails_the_risk_gate(candidate, profile):
 
 
 _SOL_OPUS = {"gpt-6.2-sol", "claude-opus-5-5"}
+# Neon is the last HIGH rung (code profile only; lu-machinery 0.1.40): it reviews only when Sol and Opus cannot.
+_HIGH_REVIEWERS = _SOL_OPUS | {"gemini-4-neon"}
 _HIGH_SEATS = {
     "openai_frontier_b",
     "openai_frontier",
     "claude-opus-5-5",
     "claude-opus-5-5-agy",
+    "gemini-4-neon-high",
 }
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
 # (author, Sol state, profile) -> expected concrete reviewer; None = no reviewer.
 _HIGH_DENOMINATOR = {
     (author, sol, profile): (
-        ("gpt-6.2-sol" if sol == "healthy" else None)
+        ("gpt-6.2-sol" if sol == "healthy" else ("gemini-4-neon" if profile == "code" else None))
         if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
         else (
             "gpt-6.2-sol"
@@ -1773,7 +1777,7 @@ _HIGH_DENOMINATOR = {
 
 @pytest.mark.parametrize("key", sorted(_HIGH_DENOMINATOR))
 def test_high_risk_resolves_to_sol_or_opus(key):
-    """The denominator admits only Sol and Opus; the Cursor Grok transport (#9769) retired (GROK-CANCEL-1110)."""
+    """The denominator admits Sol and Opus, then Neon on the code profile; the Cursor Grok transport (#9769) retired (GROK-CANCEL-1110)."""
     author, sol, profile = key
     snapshot = _SOL_UNAVAILABLE if sol == "unavailable" else None
     resolution = resolve_reviewer(
@@ -1791,7 +1795,7 @@ def test_high_risk_resolves_to_sol_or_opus(key):
         return
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected
-    assert resolution.selected.concrete_model in _SOL_OPUS
+    assert resolution.selected.concrete_model in _HIGH_REVIEWERS
     assert resolution.selected.transport in {"native_codex", "native_claude", "agy"}
 
 
