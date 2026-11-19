@@ -7,7 +7,7 @@
 # lifecycle contract in docs/architecture/docs-authority-lifecycle.md; it does
 # not replace them and it is separate from the ADR-011 research registry.
 #
-# Rules (checked by `.venv/bin/python -m scripts.docs.catalogue check`):
+# Rules (checked by `.venv/bin/python -m lu_machinery.docs.catalogue check`):
 # - Every path Git tracks under the tracked roots resolves to exactly one
 #   family. The most specific glob wins (exact path, then more literal path
 #   segments, then more literal characters). Equal-specificity matches from two
@@ -50,7 +50,7 @@
 # - store_registry (below the entries) names every SQLite store, one row per
 #   file, with its writer, journal, busy, protection and backup facts (#11092).
 # - docs/README.md's family table is generated from this file:
-#   `.venv/bin/python -m scripts.docs.catalogue readme`.
+#   `.venv/bin/python -m lu_machinery.docs.catalogue readme`.
 # Search it (and tracked names and text) with `.venv/bin/python -m lu_machinery.docs.find "<query>"`.
 # Census and evidence: docs/knowledge/inventory/catalogue-census-2026-10-01.md.
 schema_version: 1
@@ -109,7 +109,7 @@ entries:
       - {topic: documentation lifecycle vocabulary, path: docs/architecture/docs-authority-lifecycle.md}
       - {topic: docs inventory tool contract, path: docs/knowledge/inventory/README.md}
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.docs.catalogue check --json"}
+      - {surface: cli, how: ".venv/bin/python -m lu_machinery.docs.catalogue check --json"}
       - {surface: cli, how: ".venv/bin/python -m lu_machinery.docs.docs_inventory (writes audit/docs-inventory/)"}
     content_searchable: true
 
@@ -2139,7 +2139,7 @@ entries:
 
 # ================================================================ SQLite store registry (#11092)
 # One row per SQLite store the project owns (DB plan step 1). Checked by
-# `.venv/bin/python -m scripts.docs.catalogue check` (static) and
+# `.venv/bin/python -m lu_machinery.docs.catalogue check` (static) and
 # `... catalogue census --root <checkout> --expect-present` (filesystem, read-only).
 # - stores: one row per named physical file, present or declared in code but
 #   absent. writers are file:function (Class.method) entry points that must be

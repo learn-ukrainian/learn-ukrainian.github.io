@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/docs-knowledge/catalogue.schema.json",
   "title": "Document and data catalogue (#9412)",
-  "description": "Family-level catalogue of tracked docs/registry/evidence paths and logical data/ stores. Lifecycle values follow docs/architecture/docs-authority-lifecycle.md. Validated by scripts/docs/catalogue.py.",
+  "description": "Family-level catalogue of tracked docs/registry/evidence paths and logical data/ stores. Lifecycle values follow docs/architecture/docs-authority-lifecycle.md. Validated by lu_machinery.docs.catalogue.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "denominator", "status_mapping", "entries", "residual"],
@@ -82,7 +82,7 @@
       "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*(?:^|/)\\.\\.(?:/|#|(?![^\\n]|\\n)))[^\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
     },
     "glob": {
-      "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
+      "description": "Catalogue glob dialect (also used by lu_machinery.docs.catalogue): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
       "type": "string",
       "minLength": 1,
       "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*//)(?![^\\u0000-\\u001f\\u007f-\\u009f]*/(?![^\\n]|\\n))(?!(?:[^\\u0000-\\u001f\\u007f-\\u009f]*/)?\\.\\.?(?:/|(?![^\\n]|\\n)))(?![^\\u0000-\\u001f\\u007f-\\u009f]*[^/]\\*\\*)(?![^\\u0000-\\u001f\\u007f-\\u009f]*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
@@ -216,7 +216,7 @@
       }
     },
     "writerRef": {
-      "description": "A write entry point: a tracked file, ':' and a module-level function or Class.method defined in it (checked by scripts/docs/store_census.py).",
+      "description": "A write entry point: a tracked file, ':' and a module-level function or Class.method defined in it (checked by lu_machinery.docs.store_census).",
       "type": "string",
       "pattern": "^(?!/)[^:\\u0000-\\u001f\\u007f-\\u009f]+:[A-Za-z_][A-Za-z0-9_]*(?:[.][A-Za-z_][A-Za-z0-9_]*)*(?![^\\n]|\\n)"
     },
@@ -302,7 +302,7 @@
       }
     },
     "storeRegistry": {
-      "description": "Every SQLite store the project owns (#11092); validated and censused by scripts/docs/store_census.py.",
+      "description": "Every SQLite store the project owns (#11092); validated and censused by lu_machinery.docs.store_census.",
       "type": "object",
       "additionalProperties": false,
       "required": ["census_roots", "stores", "families", "evidence_dirs", "non_stores"],

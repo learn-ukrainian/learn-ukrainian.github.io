@@ -899,8 +899,8 @@ def test_configured_module_refuses_sqlite_names_before_importing(name, monkeypat
 
 def test_configured_module_loads_a_module_of_this_checkout():
     assert repo_root.product_root().resolve() == REPO_ROOT.resolve()
-    real = product_entry.load_configured_module("scripts.docs.store_census")
-    assert real is sys.modules["scripts.docs.store_census"]
+    real = product_entry.load_configured_module("scripts.project_api.route_contracts")
+    assert real is sys.modules["scripts.project_api.route_contracts"]
 
 
 def test_configured_module_loads_and_binds_the_parent(configured_module):
