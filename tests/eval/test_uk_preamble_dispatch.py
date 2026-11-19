@@ -43,11 +43,14 @@ from scripts.eval.uk_preamble.runner import (
 from tests.dispatcher.conftest import install_claude_doctor_stub
 
 CALLER = "harness"
-# lu-machinery 0.1.31 retires gpt-6.1-sol; the dispatcher refuses it before launch. The
-# frozen seat table keeps it (the uk-behaviour freeze pins common.py), so the tests
-# that run the real dispatch CLI use the live Sol 6.2 seat in its place.
+# lu-machinery 0.1.31 retires gpt-6.1-sol and 0.1.39 leaves gemini-3.8-flash-high only its
+# historical-record role; the dispatcher refuses both before launch. The frozen seat table keeps
+# them (the uk-behaviour freeze pins common.py), so the tests that run the real dispatch CLI use
+# the live seat the catalog assigns to the same role: Sol 6.2, and Neon High (the only AGY
+# review and Ukrainian-review selector).
+_LIVE_SEAT_IDS = {"gpt-6.1-sol": "gpt-6.2-sol", "gemini-3.8-flash-high": "gemini-4-neon-high"}
 LIVE_SEATS = {
-    key: replace(seat, seat_id="gpt-6.2-sol", model="gpt-6.2-sol") if key == "gpt-6.1-sol" else seat
+    key: replace(seat, seat_id=_LIVE_SEAT_IDS[key], model=_LIVE_SEAT_IDS[key]) if key in _LIVE_SEAT_IDS else seat
     for key, seat in SEATS.items()
 }
 
@@ -131,7 +134,7 @@ def _calls(state: Path) -> list[list[str]]:
     "seat_key,pin,display_label,backend_id",
     [
         (
-            "gemini-4-neon-high",
+            "gemini-3.8-flash-high",
             "gemini-4-neon-high",
             "Gemini 4 Neon (High)",
             "gemini-4-neon-high",
@@ -264,7 +267,7 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
 
 def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
     dispatcher, prompt, _state = fake
-    seat = SEATS["gemini-4-neon-high"]
+    seat = SEATS["gemini-3.8-flash-high"]
     plain = dispatcher._dispatch_args("t-flash", seat, "review", prompt)
     assert "--review-profile" not in plain and "--require-review-verdict" not in plain
     dispatcher.review_profile = "ukrainian"
@@ -284,8 +287,8 @@ def test_flash_dispatch_carries_no_effort(fake, monkeypatch, boundary):
     dispatcher, prompt, state = fake
     monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: boundary)
     with pytest.raises(DispatchError, match="new evaluation run tag"):
-        dispatcher.dispatch("t-flash", SEATS["gemini-4-neon-high"], "writing", prompt, force_new=True)
-    dispatcher.dispatch("t-flash", SEATS["gemini-4-neon-high"], "writing", prompt, force_new=False)
+        dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
+    dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
     args = _calls(state)[-1]
     assert "--effort" not in args and "--force-new" not in args
     assert args[args.index("--agent") + 1] == "agy"
