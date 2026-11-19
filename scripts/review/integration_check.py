@@ -49,6 +49,7 @@ from jsonschema import Draft202012Validator
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 from lu_machinery.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
 from lu_machinery.common.task_store_paths import tasks_dir
@@ -98,7 +99,15 @@ BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a term
 UNITS: list[dict[str, Any]] = [
     {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "narration", "text": PROSE},
 ]
-SECOND_SEAT_MODEL = ("agy", "gemini-3.8-flash-high")  # the third family: the writer is openai, the first seat anthropic
+def _agy_seat() -> str:
+    """The Gemini review seat: the AGY pin the installed catalog registers."""
+    pin = registered_participant_model("agy")
+    if not pin:
+        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no second seat.")
+    return pin
+
+
+SECOND_SEAT_MODEL = ("agy", _agy_seat())  # the third family: the writer is openai, the first seat anthropic
 
 
 # --- running the product entry points -------------------------------------------------------------

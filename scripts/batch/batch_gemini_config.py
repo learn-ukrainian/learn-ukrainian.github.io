@@ -41,11 +41,30 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
-# Gemini uses the subscribed Flash pin; tier names remain compatibility aliases.
-PRO_MODEL = "gemini-3.8-flash-high"  # Pro is retired, not subscribed (2026-10-23)
-FLASH_MODEL = "gemini-3.8-flash-high"               # Default AGY Flash tier
+def _neon_model() -> str:
+    """The review/judge seat: the AGY participant pin the installed catalog registers."""
+    from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
+
+    pin = registered_participant_model("agy")
+    if not pin:
+        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no review seat.")
+    return pin
+
+
+def _hydrogen_model() -> str:
+    """The routine-work seat: the AGY wire id the installed catalog gives gemini-4-hydrogen."""
+    from lu_machinery.review.model_catalog import load_model_catalog
+
+    return str(load_model_catalog()["models"]["gemini-4-hydrogen"]["routing_wire_ids"]["agy"])
+
+
+# Tier names are compatibility aliases; the seats come from the installed catalog, not literals.
+NEON_MODEL = _neon_model()  # review, judge, advisory
+HYDROGEN_MODEL = _hydrogen_model()  # routine work
+PRO_MODEL = NEON_MODEL
+FLASH_MODEL = HYDROGEN_MODEL
 FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
-GEMINI_REVIEW_MODEL = PRO_MODEL  # Same subscribed Flash route
+GEMINI_REVIEW_MODEL = NEON_MODEL
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
 # Timeouts (seconds) — the hard_timeout ceiling for LLM-dispatch steps.

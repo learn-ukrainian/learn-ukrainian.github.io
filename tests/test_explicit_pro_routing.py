@@ -25,10 +25,10 @@ def test_dispatch_otaman_default_and_explicit_model():
         dispatch_otaman("a1", 2, "test-mod-pro", model="gemini-3.1-pro-high")
 
     assert len(captured) == 2
-    # Check default uses gemini-3.8-flash-high
+    # Check default uses the catalog routine seat (Hydrogen)
     cmd_default = captured[0]
     idx_default = cmd_default.index("--model")
-    assert cmd_default[idx_default + 1] == "gemini-3.8-flash-high"
+    assert cmd_default[idx_default + 1] == "gemini-4-hydrogen-medium"
 
     # Check explicit Pro uses gemini-3.1-pro-high
     cmd_pro = captured[1]

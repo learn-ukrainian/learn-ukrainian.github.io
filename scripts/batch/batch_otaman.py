@@ -64,7 +64,7 @@ from batch.batch_dispatcher_config import (
     TRACKS,
     TrackState,
 )
-from batch_gemini_config import PROJECT_ROOT, VENV_PYTHON, get_module_index, get_module_paths
+from batch_gemini_config import HYDROGEN_MODEL, PROJECT_ROOT, VENV_PYTHON, get_module_index, get_module_paths
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -257,7 +257,7 @@ def check_dependencies(track_name: str, track_summaries: dict) -> tuple[bool, li
 
 def dispatch_otaman(track_name: str, num: int, slug: str,
                     timeout: int = FOREMAN_TIMEOUT,
-                    model: str = "gemini-3.8-flash-high") -> dict:
+                    model: str = HYDROGEN_MODEL) -> dict:
     """Dispatch a single module to the Gemini Otaman.
 
     Calls: ask-gemini "/otaman {track} {num}" --task-id otaman-{slug}
@@ -422,7 +422,7 @@ class BatchOtaman:
                  include_tracks=None, exclude_tracks=None,
                  max_runtime_hours=None, force_track=None,
                  workers=MAX_WORKERS,
-                 model="gemini-3.8-flash-high"):
+                 model=HYDROGEN_MODEL):
         self.one_shot = one_shot
         self.dry_run = dry_run
         self.include_tracks = set(include_tracks) if include_tracks else None
@@ -877,7 +877,7 @@ def cmd_run(args):
         exclude_tracks=args.exclude_tracks or [],
         max_runtime_hours=args.max_runtime_hours,
         workers=getattr(args, 'workers', MAX_WORKERS),
-        model=getattr(args, 'model', 'gemini-3.8-flash-high'),
+        model=getattr(args, 'model', HYDROGEN_MODEL),
     )
     bf.run()
 
@@ -895,7 +895,7 @@ def cmd_dispatch_one(args):
         one_shot=True,
         force_track=args.track,
         dry_run=args.dry_run,
-        model=getattr(args, 'model', 'gemini-3.8-flash-high'),
+        model=getattr(args, 'model', HYDROGEN_MODEL),
     )
     bf.run()
 
@@ -919,12 +919,12 @@ def main():
     p_run.add_argument("--exclude-tracks", nargs="+", metavar="T")
     p_run.add_argument("--max-runtime-hours", type=float, metavar="H")
     p_run.add_argument("--workers", type=int, default=MAX_WORKERS, help="Max parallel sessions (default 2)")
-    p_run.add_argument("--model", default="gemini-3.8-flash-high", help="Gemini model to dispatch to")
+    p_run.add_argument("--model", default=HYDROGEN_MODEL, help="Gemini model to dispatch to")
 
     p_one = subs.add_parser("dispatch-one", help="Force one track")
     p_one.add_argument("--track", required=True)
     p_one.add_argument("--dry-run", action="store_true")
-    p_one.add_argument("--model", default="gemini-3.8-flash-high", help="Gemini model to dispatch to")
+    p_one.add_argument("--model", default=HYDROGEN_MODEL, help="Gemini model to dispatch to")
 
     args = parser.parse_args()
     {"scan": cmd_scan, "status": cmd_status, "run": cmd_run, "dispatch-one": cmd_dispatch_one}[args.command](args)

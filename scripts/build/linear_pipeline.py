@@ -58,6 +58,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
+from batch_gemini_config import HYDROGEN_MODEL, NEON_MODEL
 
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "folk_heritage_attestations.yaml"
 FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "foreign_proper_noun_attestations.yaml"
@@ -135,14 +136,14 @@ WRITER_CHOICES = (
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "gemini-tools": {"model": HYDROGEN_MODEL, "effort": "high"},
     "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.7", "effort": "medium"},
     "cursor-tools": {"model": "grok-4.7-high", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # AGY selects the model via --model; effort remains a telemetry placeholder.
-    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "agy-tools": {"model": HYDROGEN_MODEL, "effort": "high"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -179,11 +180,11 @@ REVIEWER_CHOICES = (
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
+    "gemini-tools": {"model": NEON_MODEL, "effort": "high"},
     "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
+    "agy-tools": {"model": NEON_MODEL, "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
