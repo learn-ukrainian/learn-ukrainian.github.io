@@ -28,10 +28,11 @@ from lu_machinery.ai_agent_bridge._job_host_forward import _seat_substitution_fr
 from lu_machinery.common.repo_root import project_interpreter
 
 from scripts.audit.checks.russicism_detection import check_russicisms
+from scripts.batch.batch_gemini_config import GEMINI_REVIEW_MODEL
 
 PYTHON, BRIDGE = project_interpreter(), "lu_machinery.ai_agent_bridge"
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
-DEFAULT_MODELS = "claude-opus-5-5,claude-sonnet-5-5,gpt-6.2-sol,gpt-6-luna,gemini-3.8-flash-high"
+DEFAULT_MODELS = f"claude-opus-5-5,claude-sonnet-5-5,gpt-6.2-sol,gpt-6-luna,{GEMINI_REVIEW_MODEL}"
 FROM_AGENT = "russianism-eval"
 _FOUND_COUNT_RE, _WORD_RE = re.compile(r"Found\s+(\d+)\s+Russicism", re.IGNORECASE), re.compile(r"[\w'’-]+", re.UNICODE)
 

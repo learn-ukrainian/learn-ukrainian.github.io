@@ -55,6 +55,7 @@ from lu_machinery.common.task_store_paths import tasks_dir
 from lu_machinery.lib.readonly_sqlite import open_readonly
 from lu_machinery.review import findings_db, second_seat
 
+from scripts.batch.batch_gemini_config import GEMINI_REVIEW_MODEL
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
@@ -98,7 +99,7 @@ BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a term
 UNITS: list[dict[str, Any]] = [
     {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "narration", "text": PROSE},
 ]
-SECOND_SEAT_MODEL = ("agy", "gemini-3.8-flash-high")  # the third family: the writer is openai, the first seat anthropic
+SECOND_SEAT_MODEL = ("agy", GEMINI_REVIEW_MODEL)  # the third family: the writer is openai, the first seat anthropic
 
 
 # --- running the product entry points -------------------------------------------------------------

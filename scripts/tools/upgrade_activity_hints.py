@@ -33,6 +33,7 @@ import scripts  # noqa: F401  (binds the product roots for the installed release
 # isort: split
 from lu_machinery.common.repo_root import project_interpreter
 
+from batch_gemini_config import GEMINI_REVIEW_MODEL
 from tools.plan_autofix import _bump_version
 
 logger = logging.getLogger(__name__)
@@ -167,7 +168,7 @@ def _bridge_command() -> list[str]:
     ]
 
 
-def call_agy(prompt: str, model: str = "gemini-3.8-flash-high", timeout: int = 120) -> str | None:
+def call_agy(prompt: str, model: str = GEMINI_REVIEW_MODEL, timeout: int = 120) -> str | None:
     """Call AGY through ai_agent_bridge and return stdout."""
     try:
         command = _bridge_command()
@@ -248,7 +249,7 @@ def upgrade_plan(
     plan_path: Path,
     *,
     dry_run: bool = False,
-    model: str = "gemini-3.8-flash-high",
+    model: str = GEMINI_REVIEW_MODEL,
 ) -> tuple[int, list[str]]:
     """Upgrade vague activity_hints in a plan file.
 
@@ -357,7 +358,7 @@ def main():
     parser.add_argument("slug", nargs="?", help="Module slug (or --all for all plans)")
     parser.add_argument("--all", action="store_true", help="Process all plans with vague hints")
     parser.add_argument("--dry-run", action="store_true", help="Show what would change without modifying")
-    parser.add_argument("--model", default="gemini-3.8-flash-high", help="AGY model to use")
+    parser.add_argument("--model", default=GEMINI_REVIEW_MODEL, help="AGY model to use (default: the catalog review seat)")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")

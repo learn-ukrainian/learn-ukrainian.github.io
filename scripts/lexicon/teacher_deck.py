@@ -802,7 +802,7 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_de
         epilog="""Examples:
   .venv/bin/python -m scripts.lexicon.teacher_deck record-review --queue /tmp/deck/lesson-sentence-review.json \\
       --cloze /tmp/deck/practice-cloze.teacher.json --results /tmp/withheld-part1.tsv --positions 0-774 \\
-      --reviewer "gemini-3.8-flash-high (review-8843-lang-1)" --reviewed-at 2026-09-27
+      --reviewer "<reviewer model> (<review task id>)" --reviewed-at <YYYY-MM-DD>
 Inputs: --results is `clozeId<TAB>code` per withheld item (code ERR/AMBIG/FRAG/PRIV).
 Outputs: rewrites --ledger (sorted, sentence hashes only) and prints the counts.
 Exit codes: 0 recorded; 1 a result or queue item does not match the cloze file; 2 unreadable inputs.
@@ -814,7 +814,7 @@ Related: docs/practice/teacher-deck-artifacts.md; #8843.
     add("--cloze", type=Path, required=True, help="The cloze file the queue was built with (resolves cloze ids).")
     add("--results", type=Path, required=True, help="Review result TSV: clozeId<TAB>code per withheld item.")
     add("--positions", help="0-based inclusive queue range the reviewer covered, e.g. 0-774 (default: all).")
-    add("--reviewer", required=True, help="Reviewer model and task id, e.g. 'gemini-3.8-flash-high (review-...)'.")
+    add("--reviewer", required=True, help="Reviewer model and task id, as '<reviewer model> (<review task id>)'.")
     add("--reviewed-at", required=True, help="Review date, YYYY-MM-DD.")
     add(
         "--ledger",

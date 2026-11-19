@@ -55,6 +55,7 @@ from lu_machinery.agent_runtime.tool_calls import normalize_tool_calls
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from scripts.audit import layerb_shadow
+from scripts.batch.batch_gemini_config import GEMINI_REVIEW_MODEL
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
@@ -63,7 +64,7 @@ GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
 DEFAULT_MODELS = {
     "codex": "gpt-6.2-sol",
     "grok": "grok-4.7",  # operator order 2026-09-22 (#8464), rotated from grok-4.6
-    "gemini": "gemini-3.8-flash-high",
+    "gemini": GEMINI_REVIEW_MODEL,
 }
 CODEX_DISABLED_FEATURES = (
     "shell_tool",

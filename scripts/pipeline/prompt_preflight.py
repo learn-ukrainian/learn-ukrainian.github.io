@@ -17,6 +17,7 @@ from pathlib import Path
 
 import yaml
 
+from batch_gemini_config import GEMINI_REVIEW_MODEL
 from pipeline.core import log
 
 # ---------------------------------------------------------------------------
@@ -450,13 +451,12 @@ def run_prompt_preflight(
         PreflightResult with status and issues.
     """
     if dispatch_fn is None:
-        from batch_gemini_config import FLASH_MODEL
         from pipeline.core import dispatch_gemini
 
         def dispatch_fn(prompt_text):
             return dispatch_gemini(
                 prompt_text, task_id="preflight",
-                model=FLASH_MODEL, stdout_only=True, timeout=300,
+                model=GEMINI_REVIEW_MODEL, stdout_only=True, timeout=300,
             )
 
     rendered_prompt = rendered_prompt_path.read_text("utf-8")
