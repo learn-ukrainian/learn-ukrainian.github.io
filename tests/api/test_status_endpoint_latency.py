@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import concurrent.futures
 import threading
+import time
 import types
 from collections.abc import Callable
 from pathlib import Path
@@ -28,9 +29,11 @@ from scripts.project_api import artifacts_router
 from scripts.project_api import state_router as product_state_router
 
 _BURST = 20
-# Attempt bound for observable polls. Not a latency budget: the loop exits
-# when the condition is true, and a loaded runner only makes each yield slower.
-_ATTEMPTS = 10_000
+# Hang guard for observable polls, in seconds. Not a latency budget: the loop
+# exits the moment the condition is true. Yield counts are no bound, because a
+# loaded runner spins the loop through thousands of yields in milliseconds
+# before a worker thread gets the GIL; only elapsed time tracks that wait.
+_POLL_DEADLINE_S = 60.0
 # Modules whose cold misses go through ``cache_get_or_compute_async``. Since
 # lu-machinery 0.1.31 (machinery #743) GET /api/delegate/tasks is a
 # stale-while-revalidate route (and GET /api/artifacts/html uses
@@ -54,12 +57,12 @@ def _mount(tmp_path: Path, router, prefix: str) -> FastAPI:
 
 
 async def _until(ready, failure: str) -> None:
-    """Poll until ``ready`` or the attempt bound is exhausted."""
-    for _ in range(_ATTEMPTS):
-        if ready():
-            return
-        await asyncio.sleep(0)
-    pytest.fail(failure)
+    """Poll until ``ready`` or the wall-clock hang guard expires."""
+    deadline = time.monotonic() + _POLL_DEADLINE_S
+    while not ready():
+        if time.monotonic() >= deadline:
+            pytest.fail(failure)
+        await asyncio.sleep(0.001)
 
 
 class _ColdOverlap:
@@ -490,10 +493,10 @@ def test_expired_routing_budget_reports_age_and_withdraws_authorization(
             assert first.json()["diagnostics"]["stale"] is False
             clock["t"] += state_router.ROUTING_BUDGET_TTL_S + 5
             aged = await client.get("/api/state/routing-budget")
-            for _ in range(50):
-                if calls["n"] >= 2 and not state_helpers._refresh_keys:
-                    break
-                await asyncio.sleep(0.02)
+            await _until(
+                lambda: calls["n"] >= 2 and not state_helpers._refresh_keys,
+                "aged routing budget refresh did not finish",
+            )
             clock["t"] = 1_000.0 + state_router.ROUTING_BUDGET_MAX_AGE_S + 1
             withdrawn = await client.get("/api/state/routing-budget")
         return aged.json(), withdrawn.json()
