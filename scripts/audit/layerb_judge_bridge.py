@@ -66,16 +66,14 @@ def _agy_seat() -> str:
     """The Gemini review seat: the AGY pin the installed catalog registers."""
     from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
 
-    pin = registered_participant_model("agy")
-    if not pin:
-        raise BridgeInputError("AGY ACP has no registered model pin; pass --judge-model.")
-    return pin
+    return registered_participant_model("agy") or "gemini-seat-absent-from-installed-catalog"  # an absent seat is refused by name at dispatch
 
 
 DEFAULT_MODELS = {
     "codex": "gpt-6.2-sol",
     "grok": "grok-4.7",  # operator order 2026-09-22 (#8464), rotated from grok-4.6
-}  # the gemini seat is resolved on selection (_default_model), so an absent seat refuses only that family
+    "gemini": _agy_seat(),
+}
 CODEX_DISABLED_FEATURES = (
     "shell_tool",
     "apps",
@@ -1325,7 +1323,7 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Tool-disabled Layer-B entailment judge bridge.")
-    parser.add_argument("--judge-family", choices=(*DEFAULT_MODELS, "gemini"), default="codex")
+    parser.add_argument("--judge-family", choices=tuple(DEFAULT_MODELS), default="codex")
     parser.add_argument("--judge-model")
     parser.add_argument(
         "--judge-model-version",
@@ -1338,12 +1336,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def _default_model(family: str) -> str:
-    return _agy_seat() if family == "gemini" else DEFAULT_MODELS[family]
-
-
 def _config_from_args(args: argparse.Namespace) -> BridgeConfig:
-    model = args.judge_model or _default_model(args.judge_family)
+    model = args.judge_model or DEFAULT_MODELS[args.judge_family]
     model_version = args.judge_model_version or model
     if args.judge_family == "grok" and (model != "grok-4.7" or model_version != "grok-4.7"):
         raise BridgeInputError("Grok Layer-B judges must use grok-4.7")

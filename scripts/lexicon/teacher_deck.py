@@ -802,7 +802,7 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_de
         epilog="""Examples:
   .venv/bin/python -m scripts.lexicon.teacher_deck record-review --queue /tmp/deck/lesson-sentence-review.json \\
       --cloze /tmp/deck/practice-cloze.teacher.json --results /tmp/withheld-part1.tsv --positions 0-774 \\
-      --reviewer "<reviewer model> (<review task id>)" --reviewed-at <YYYY-MM-DD>
+      --reviewer "<reviewer model> (<review task id>)" --reviewed-at "<YYYY-MM-DD>"
 Inputs: --results is `clozeId<TAB>code` per withheld item (code ERR/AMBIG/FRAG/PRIV).
 Outputs: rewrites --ledger (sorted, sentence hashes only) and prints the counts.
 Exit codes: 0 recorded; 1 a result or queue item does not match the cloze file; 2 unreadable inputs.

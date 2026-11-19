@@ -101,12 +101,10 @@ UNITS: list[dict[str, Any]] = [
 ]
 def _agy_seat() -> str:
     """The Gemini review seat: the AGY pin the installed catalog registers."""
-    pin = registered_participant_model("agy")
-    if not pin:
-        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no second seat.")
-    return pin
+    return registered_participant_model("agy") or "gemini-seat-absent-from-installed-catalog"  # an absent seat is refused by name at dispatch
 
 
+SECOND_SEAT_MODEL = ("agy", _agy_seat())  # the third family: the writer is openai, the first seat anthropic
 
 
 # --- running the product entry points -------------------------------------------------------------
@@ -547,7 +545,7 @@ class ModuleWorld(World):
             conn.close()
 
     def second_seat_task(self) -> str:
-        return self.task("review-google", "agy", _agy_seat())  # the third family: the writer is openai, the first seat anthropic
+        return self.task("review-google", *SECOND_SEAT_MODEL)
 
     def approve_all(self) -> None:
         for n in (1, 2, 3):

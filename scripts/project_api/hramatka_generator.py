@@ -24,26 +24,12 @@ def _seats() -> tuple[str, str]:
 
     The provider client is injected by the private service, so no ACP pin limits the primary.
     """
-    neon = registered_participant_model("agy")
-    if not neon:
-        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no retry seat.")
-    primary = load_model_catalog()["models"]["gemini-4-hydrogen"].get("routing_wire_ids", {}).get("agy")
-    if not isinstance(primary, str) or not primary:
-        raise RuntimeError("The installed catalog gives gemini-4-hydrogen no AGY wire id; no primary seat.")
-    return primary, neon
+    hydrogen = load_model_catalog()["models"]["gemini-4-hydrogen"].get("routing_wire_ids", {}).get("agy")
+    # An absent seat is a name the provider refuses by name, never a failure at import.
+    return hydrogen or "gemini-seat-absent-from-installed-catalog", registered_participant_model("agy") or "gemini-seat-absent-from-installed-catalog"
 
 
-
-
-def __getattr__(name: str) -> str:
-    """Resolve ``PRIMARY_MODEL`` / ``SECONDARY_MODEL`` on first use, so a missing seat refuses only generation."""
-    if name not in {"PRIMARY_MODEL", "SECONDARY_MODEL"}:
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    primary, secondary = _seats()
-    globals()["PRIMARY_MODEL"], globals()["SECONDARY_MODEL"] = primary, secondary
-    return primary if name == "PRIMARY_MODEL" else secondary
-
-
+PRIMARY_MODEL, SECONDARY_MODEL = _seats()
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0
 
@@ -181,8 +167,8 @@ def generate_qualified_lesson(
     *,
     transport: ProviderTransport,
     qg_scan: QualityGate = monitor_surface.scan_hramatka_lesson,
-    primary_model: str | None = None,
-    secondary_model: str | None = None,
+    primary_model: str = PRIMARY_MODEL,
+    secondary_model: str = SECONDARY_MODEL,
 ) -> GenerationResult:
     """Generate once-qualified lesson content with bounded provider failover.
 
@@ -193,10 +179,6 @@ def generate_qualified_lesson(
     """
 
     attempts: list[GenerationAttempt] = []
-    if primary_model is None or secondary_model is None:
-        default_primary, default_secondary = _seats()
-        primary_model = primary_model or default_primary
-        secondary_model = secondary_model or default_secondary
     models = (primary_model, secondary_model)
 
     for number in range(1, MAX_PROVIDER_ATTEMPTS + 1):

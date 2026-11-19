@@ -20,19 +20,16 @@ from slug_utils import to_bare_slug
 
 
 def __getattr__(name: str) -> str:
-    """Resolve ``VENV_PYTHON`` and the model seats on first use, not at import.
+    """Resolve ``VENV_PYTHON`` on first use, not at import.
 
     A release snapshot and a copied tree have no ``.venv``. Import of this
     module (the sense-lint and API startup chain) must succeed there; the
     interpreter is needed only when a later spawn asks for it.
     """
-    if name == "VENV_PYTHON":
-        value = str(project_interpreter(PROJECT_ROOT.resolve()))
-    elif name in _SEAT_RESOLVERS or name in _SEAT_ALIASES:
-        value = _seat(name)  # model seats resolve from the installed catalog on first access
-    else:
+    if name != "VENV_PYTHON":
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    globals()[name] = value
+    value = str(project_interpreter(PROJECT_ROOT.resolve()))
+    globals()["VENV_PYTHON"] = value
     return value
 
 
@@ -44,14 +41,16 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
+# The dispatcher and the AGY ACP route refuse this name ("not in the model catalog"), so a catalog that
+# lacks a seat refuses the callers that dispatch to it, while importing and `--help` keep working.
+ABSENT_SEAT = "gemini-seat-absent-from-installed-catalog"
+
+
 def _neon_model() -> str:
     """The review/judge seat: the AGY participant pin the installed catalog registers."""
     from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
 
-    pin = registered_participant_model("agy")
-    if not pin:
-        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no review seat.")
-    return pin
+    return registered_participant_model("agy") or ABSENT_SEAT
 
 
 def _hydrogen_model() -> str:
@@ -59,32 +58,16 @@ def _hydrogen_model() -> str:
     from lu_machinery.review.model_catalog import load_model_catalog
 
     wire_id = load_model_catalog()["models"]["gemini-4-hydrogen"].get("routing_wire_ids", {}).get("agy")
-    if not isinstance(wire_id, str) or not wire_id:
-        raise RuntimeError("The installed catalog gives gemini-4-hydrogen no AGY wire id; no routine seat.")
-    return wire_id
+    return wire_id if isinstance(wire_id, str) and wire_id else ABSENT_SEAT
 
 
 # Tier names are compatibility aliases; the seats come from the installed catalog, not literals.
-# They resolve on first access (module __getattr__ above), so a catalog without a Gemini seat refuses the callers that
-# select it and leaves module indexing and the policy imports of this file untouched.
-_SEAT_RESOLVERS = {
-    "NEON_MODEL": lambda: _neon_model(),  # review, judge, advisory; the only model the AGY ACP route (ask-agy) accepts
-    "HYDROGEN_MODEL": lambda: _hydrogen_model(),  # native-AGY routine work (the linear-pipeline gemini/agy writer lanes)
-}
-# Every FLASH_MODEL caller dispatches over the AGY ACP route, which admits only Neon; no separate capacity tier.
-_SEAT_ALIASES = {
-    "PRO_MODEL": "NEON_MODEL",
-    "FLASH_MODEL": "NEON_MODEL",
-    "FLASH_LITE_MODEL": "NEON_MODEL",
-    "GEMINI_REVIEW_MODEL": "NEON_MODEL",
-}
-
-
-def _seat(name: str) -> str:
-    """Resolve a model seat (or alias) by name from the installed catalog."""
-    return _SEAT_RESOLVERS[_SEAT_ALIASES.get(name, name)]()
-
-
+NEON_MODEL = _neon_model()  # review, judge, advisory; the only model the AGY ACP route (ask-agy) accepts
+HYDROGEN_MODEL = _hydrogen_model()  # native-AGY routine work (the linear-pipeline gemini/agy writer lanes)
+PRO_MODEL = NEON_MODEL
+FLASH_MODEL = NEON_MODEL  # every FLASH_MODEL caller dispatches over the AGY ACP route, which admits only Neon
+FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
+GEMINI_REVIEW_MODEL = NEON_MODEL
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
 # Timeouts (seconds) — the hard_timeout ceiling for LLM-dispatch steps.
@@ -216,6 +199,7 @@ def _seminar(quick_ref_name: str) -> dict:
     """Build a seminar track config. Only quick_ref differs between tracks."""
     return {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": SEMINAR_TEMPLATES,
         "quick_ref": QUICK_REF_DIR / f"{quick_ref_name}.md",
@@ -227,6 +211,7 @@ def _core(quick_ref_name: str) -> dict:
     """Build a core track config. Only quick_ref differs between tracks."""
     return {
         "type": "core",
+        "model": PRO_MODEL,
         "phases": [1, 2, 3, 5],
         "templates": CORE_TEMPLATES,
         "quick_ref": QUICK_REF_DIR / f"{quick_ref_name}.md",
@@ -263,6 +248,7 @@ TRACK_CONFIGS = {
 # Default for unlisted tracks
 DEFAULT_CONFIG = {
     "type": "core",
+    "model": FLASH_MODEL,
     "phases": [2, 3, 5],
     "templates": _COMMON_TEMPLATES,
     "quick_ref": None,
@@ -339,8 +325,6 @@ def num_for_slug(track: str, slug: str) -> int:
 def get_track_config(track_name: str) -> dict:
     """Get config for a track, with quick_ref auto-detection."""
     config = TRACK_CONFIGS.get(track_name, DEFAULT_CONFIG).copy()
-    # The model seat resolves here, not at import: tracks in TRACK_CONFIGS use the PRO_MODEL alias, the rest FLASH_MODEL.
-    config["model"] = _seat("PRO_MODEL" if track_name in TRACK_CONFIGS else "FLASH_MODEL")
 
     # Auto-detect quick_ref if not set or file missing
     if not config.get("quick_ref") or not config["quick_ref"].exists():
