@@ -110,7 +110,7 @@ def consistency_stream(slug, case):
     elif case in {"other-pin", "mismatch-then-duplicate", "mismatch-then-session"}:
         init["model"] = other
     elif case == "other-family":
-        init["model"] = "gemini-3.8-flash-high"
+        init["model"] = "gemini-4-hydrogen-medium"
     elif case == "nested-model":
         init["init"] = {"model": other}
     elif case == "nested-session":

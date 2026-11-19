@@ -737,23 +737,6 @@ def test_argon_pre_identity_provider_failures_keep_flash_classification(tmp_path
     assert parsed.failure_code != "provider_policy_refusal"
 
 
-@pytest.mark.parametrize(
-    ("requested", "selector"),
-    [
-        ("gemini-3.8-flash-high", "gemini-3.8-flash-high"),
-        ("gemini-3.8-flash-medium", "gemini-3.8-flash-medium"),
-        ("gemini-3.8-flash-low", "gemini-3.8-flash-low"),
-        ("Gemini 3.8 Flash (High)", "gemini-3.8-flash-high"),
-        ("Gemini 3.8 Flash (Medium)", "gemini-3.8-flash-medium"),
-        ("Gemini 3.8 Flash (Low)", "gemini-3.8-flash-low"),
-    ],
-)
-def test_listed_flash_selectors_still_pass_through(tmp_path: Path, requested: str, selector: str) -> None:
-    assert AgyAdapter.resolve_model_slug(requested) == selector
-    plan = _build(tmp_path, model=requested)
-    assert _model_after_flag(plan) == selector
-
-
 @pytest.mark.parametrize("model", [
     "gemini-4-argon", "gemini-4-argon-ultra", "gemini-4-argon-xhigh", "gemini-4-argon-max",
     "gemini-4-argon-high-preview", "gemini-4-argon-minimal", "gemini-4-pro", "gemini-9.9-pro-preview",
@@ -2192,6 +2175,12 @@ def test_finished_run_mentioning_an_unrelated_task_is_accepted_without_warning(t
         "Gemini 3.7 Flash (High)",
         "gemini-3.6-flash-medium",
         "Gemini 3.6 Flash (Low)",
+        "gemini-3.8-flash-high",
+        "gemini-3.8-flash-medium",
+        "gemini-3.8-flash-low",
+        "Gemini 3.8 Flash (High)",
+        "Gemini 3.8 Flash (Medium)",
+        "Gemini 3.8 Flash (Low)",
         "claude-sonnet-4-6",
         "Claude Sonnet 4.6 (Thinking)",
         "claude-opus-4-6-thinking",
