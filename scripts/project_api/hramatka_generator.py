@@ -13,10 +13,24 @@ from enum import StrEnum
 from typing import Any, Protocol, cast
 from urllib.error import HTTPError, URLError
 
+from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
+from lu_machinery.review.model_catalog import load_model_catalog
+
 from .curriculum_state import monitor_surface
 
-PRIMARY_MODEL = "gemini-3.8-flash-high"
-SECONDARY_MODEL = "gemini-3.8-flash-high"
+
+def _seats() -> tuple[str, str]:
+    """Routine generation seat (Hydrogen) and the review-grade retry seat (Neon), from the installed catalog.
+
+    The provider client is injected by the private service, so no ACP pin limits the primary.
+    """
+    neon = registered_participant_model("agy")
+    if not neon:
+        raise RuntimeError("AGY ACP has no registered model pin; the installed catalog assigns no retry seat.")
+    return str(load_model_catalog()["models"]["gemini-4-hydrogen"]["routing_wire_ids"]["agy"]), neon
+
+
+PRIMARY_MODEL, SECONDARY_MODEL = _seats()
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0
 
