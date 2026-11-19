@@ -5,7 +5,7 @@ from pathlib import Path
 
 from lu_machinery.agent_runtime.agy_hook_config import (
     GUARD_NAME,
-    guard_registration,  # TRANSITIONAL-PKG3-B2: held gate command format.
+    guard_registration,
 )
 
 

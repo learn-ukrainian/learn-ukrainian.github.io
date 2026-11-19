@@ -28,17 +28,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-# TRANSITIONAL-PKG3-B2: the release API cannot load the in-tree product factory until F lands,
-# so the endpoint sections (4 and 6) drive the in-tree app with the copies that app reads.
 import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
-from lu_machinery.orchestration import issue_stream_audit as app_isa  # TRANSITIONAL-PKG3-B2
 from lu_machinery.orchestration import issue_stream_audit as isa
 from lu_machinery.research import consumption
 from lu_machinery.research import observability as obs
-from lu_machinery.research import registry as app_reg  # TRANSITIONAL-PKG3-B2
 from lu_machinery.research import registry as reg
 
 from scripts.audit import check_research_registry as crr
@@ -792,7 +788,7 @@ def _primary_at(monkeypatch, root) -> None:
 
 @pytest.fixture
 def endpoint_root(tmp_path, monkeypatch):
-    monkeypatch.setattr(app_reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
     # The release reads the audit cache from the configured primary checkout,
     # not a module constant; an empty fixture primary has no cache.
     _primary_at(monkeypatch, tmp_path)
@@ -801,7 +797,7 @@ def endpoint_root(tmp_path, monkeypatch):
 
 
 def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
-    monkeypatch.setenv(app_reg.ENV_FLAG, "false")  # kill switch OFF
+    monkeypatch.setenv(reg.ENV_FLAG, "false")  # kill switch OFF
     _write_registry(endpoint_root, [_make_record(endpoint_root, "r1", state="deferred")])
     resp = client.get("/api/knowledge/monitor")
     assert resp.status_code == 200
@@ -811,7 +807,7 @@ def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
 
 
 def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
-    monkeypatch.setenv(app_reg.ENV_FLAG, "false")
+    monkeypatch.setenv(reg.ENV_FLAG, "false")
     refs = endpoint_root / "docs" / "references"
     refs.mkdir(parents=True, exist_ok=True)
     (refs / "research-registry.yaml").write_text("{ this: [is not: valid", "utf-8")
@@ -821,7 +817,7 @@ def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
 
 
 def test_monitor_privacy_allowlist_no_sensitive_fields(endpoint_root, monkeypatch):
-    monkeypatch.setenv(app_reg.ENV_FLAG, "false")
+    monkeypatch.setenv(reg.ENV_FLAG, "false")
     _write_registry(endpoint_root, [_make_record(endpoint_root, "r1")])
     _surface(endpoint_root, datetime.now(UTC) - timedelta(minutes=5), "secret-task-id-1234", "r1")
     blob = json.dumps(client.get("/api/knowledge/monitor").json())
@@ -880,12 +876,12 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
     assert "open_issue_numbers" not in body
     assert "open_issue_titles" not in body
     assert "root_results" not in body
-    assert not set(app_isa.PRIVATE_CACHE_KEYS) & set(body)
+    assert not set(isa.PRIVATE_CACHE_KEYS) & set(body)
     assert body["open_total"] == 3 and body["ok"] is True
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
-    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router
 
     calls = []
     monkeypatch.setattr(
@@ -917,13 +913,13 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     """#10793: a cache published by either writer (the strict checker's validated
     publication or a Monitor ``run_audit`` refresh) leaks no private key through
     the route or the Work projection, and keeps run_audit's warnings."""
-    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
-    from lu_machinery.ci import check_issue_task_quality as checker  # TRANSITIONAL-PKG3-B2
-    from lu_machinery.work import sources_public  # TRANSITIONAL-PKG3-B2
+    from lu_machinery.api import issues_router
+    from lu_machinery.ci import check_issue_task_quality as checker
+    from lu_machinery.work import sources_public
 
     repo = "learn-ukrainian/learn-ukrainian.github.io"
     registry = {"devops": [5703], "harness": [6943]}
-    report = app_isa.classify(
+    report = isa.classify(
         [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}], registry, {5703: (set(), {123}), 6943: (set(), set())}
     )
     report.update(repository=repo, warnings=[])
@@ -933,7 +929,7 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     ]
     # The release writes and reads the cache under the configured primary (no ROOT/CACHE_PATH).
     _primary_at(monkeypatch, tmp_path)
-    monkeypatch.setattr(app_isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
+    monkeypatch.setattr(isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
     if publisher == "membership_writer":
         assert checker.write_membership_cache(report, repo, registry)
     else:
@@ -942,15 +938,15 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
             "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
         )
         # The release audits its packaged registry (REGISTRY_PATH), not one under the root.
-        monkeypatch.setattr(app_isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
-        monkeypatch.setattr(app_isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
-        monkeypatch.setattr(app_isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
+        monkeypatch.setattr(isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
+        monkeypatch.setattr(isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
+        monkeypatch.setattr(isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
         monkeypatch.setattr(
-            app_isa,
+            isa,
             "_fetch_subissue_batch",
             lambda cursors, *a: {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors},
         )
-        app_isa.run_audit(tmp_path)
+        isa.run_audit(tmp_path)
     cache = tmp_path / "batch_state/issue_stream_audit.json"
     assert json.loads(cache.read_text())["schema_version"] == 1
     assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
@@ -970,14 +966,14 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         "ok", "open_total", "orphans", "pending_native_link", "refresh", "refreshing", "repository",
         "schema_version", "streams", "warnings",
     }
-    assert "root_results" not in body and not set(app_isa.PRIVATE_CACHE_KEYS) & set(body)
+    assert "root_results" not in body and not set(isa.PRIVATE_CACHE_KEYS) & set(body)
     assert "PRIVATE_TITLE_CANARY" not in json.dumps(body)
     assert body["warnings"] == hygiene
 
     projection = sources_public.fetch_streams_projection()
     assert projection.status == "ok"
     assert "root_results" not in projection.payload
-    assert not set(app_isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
+    assert not set(isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
     assert "PRIVATE_TITLE_CANARY" not in json.dumps(projection.payload)
     assert projection.payload["open_stream_membership"] == {"123": ["devops"]}
 
@@ -1013,7 +1009,7 @@ def test_strict_adoption_gate_runs_as_bare_script():
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
-    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router
 
     def _fake_read_cache(max_age_s):
         if max_age_s == 3600:
@@ -1037,7 +1033,7 @@ def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monke
 
 
 def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):
-    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router
 
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
     monkeypatch.setattr(
@@ -1066,7 +1062,7 @@ def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch
 
 
 def test_issues_streams_no_cache_schedules_once_and_returns_immediately(monkeypatch):
-    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router
 
     calls = []
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)

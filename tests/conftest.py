@@ -124,9 +124,6 @@ pytest_plugins = [
     "tests.data_store_fixtures",
 ]
 
-# Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-_API_STATUS_PACKAGES = ("lu_machinery.api",)  # TRANSITIONAL-PKG3-B2
-
 
 def _under_tests_api(request: pytest.FixtureRequest) -> bool:
     path = getattr(request.node, "path", None)
@@ -139,21 +136,12 @@ def _under_tests_api(request: pytest.FixtureRequest) -> bool:
     return relative.parts[:2] == ("tests", 'api')
 
 
-def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
-    modules = []
-    for package in _API_STATUS_PACKAGES:
-        module_name = f"{package}.{name}"
-        if package == "lu_machinery.api":
-            module = sys.modules.get(module_name)
-            if module is None:
-                continue
-        else:
-            module = importlib.import_module(module_name)
-        modules.append(module)
-    return modules
+def _api_status_module(name: str):
+    """An already-imported installed ``lu_machinery.api`` module, or None (never imported here)."""
+    return sys.modules.get(f"lu_machinery.api.{name}")
 
 
-def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
+def _no_api_claude_provider(claude_account_usage):
     def _no_provider(directory: int, account: str) -> None:
         raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
 
@@ -162,36 +150,41 @@ def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
 
 def reset_api_status_caches() -> None:
     """Drop process-global status and per-account Claude caches."""
-    for state_helpers in _api_status_modules("state_helpers"):  # TRANSITIONAL-PKG3-B2
+    state_helpers = _api_status_module("state_helpers")
+    if state_helpers is not None:
         state_helpers.cache_invalidate()
-    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+    claude_account_usage = _api_status_module("claude_account_usage")
+    if claude_account_usage is not None:
         claude_account_usage._reset_for_tests()
 
 
 def judge_api_git_below_tmp_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """The probe's Git check sees only directories the test built under ``tmp_path``."""
     boundary = tmp_path.resolve()
-    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+    claude_account_usage = _api_status_module("claude_account_usage")
+    if claude_account_usage is None:
+        return
 
-        def inside_git(path: Path, _module=claude_account_usage) -> bool:
-            return any(
-                _module._git_tree(directory)
-                for directory in (path, *path.parents)
-                if directory.is_relative_to(boundary)
-            )
+    def inside_git(path: Path) -> bool:
+        return any(
+            claude_account_usage._git_tree(directory)
+            for directory in (path, *path.parents)
+            if directory.is_relative_to(boundary)
+        )
 
-        monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+    monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
 
 
 def refuse_api_claude_provider(monkeypatch: pytest.MonkeyPatch) -> None:
     """No API test reaches the real credential owner unless it installs a fixture provider."""
     from types import SimpleNamespace
 
-    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+    claude_account_usage = _api_status_module("claude_account_usage")
+    if claude_account_usage is not None:
         monkeypatch.setattr(
             claude_account_usage,
             "_private_usage",
-            lambda _module=claude_account_usage: SimpleNamespace(prove_claude_owner=_no_api_claude_provider(_module)),
+            lambda: SimpleNamespace(prove_claude_owner=_no_api_claude_provider(claude_account_usage)),
         )
 
 
@@ -1112,18 +1105,16 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
         state["ready"] = True
         state["reason"] = None
 
-    # Both machinery copies: the in-tree one and the installed release.  # TRANSITIONAL-PKG3-B2
-    for name in ("lu_machinery.orchestration.dispatch_isolation", "lu_machinery.orchestration.dispatch_isolation"):  # TRANSITIONAL-PKG3-B2
-        dispatch_isolation = importlib.import_module(name)
+    dispatch_isolation = importlib.import_module("lu_machinery.orchestration.dispatch_isolation")
 
-        def _probe(env: Any = None, _module: Any = dispatch_isolation, **_kwargs: Any) -> Any:
-            source = os.environ if env is None else env
-            forced = _module._forced_fallback(source)
-            if forced is not None:
-                return forced
-            return _module.ProbeResult(ready=state["ready"], reason=state["reason"])
+    def _probe(env: Any = None, **_kwargs: Any) -> Any:
+        source = os.environ if env is None else env
+        forced = dispatch_isolation._forced_fallback(source)
+        if forced is not None:
+            return forced
+        return dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
 
-        monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
+    monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
     return state
 
 
@@ -1795,19 +1786,13 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     records hold real rate limits. Credit-lane tests monkeypatch both readers
     themselves.
     """
-    for name in ("lu_machinery.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
-        if name.startswith("scripts."):
-            credit_lane = sys.modules.get(name)
-            if credit_lane is None:
-                continue
-        else:
-            credit_lane = importlib.import_module(name)
-        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
-        monkeypatch.setattr(
-            credit_lane,
-            "read_recent_rate_limits",
-            lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
-        )
+    credit_lane = importlib.import_module("lu_machinery.fleet.credit_lane")
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+    monkeypatch.setattr(
+        credit_lane,
+        "read_recent_rate_limits",
+        lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
+    )
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the
@@ -1882,14 +1867,14 @@ class _RedirectRefreshSidecarLoader:
 class _IssueStreamRefreshImportHook:
     """Redirect refresh sidecars on the audit module's first import (#10519)."""
 
-    _MODULES = ("lu_machinery.orchestration.issue_stream_audit", "lu_machinery.orchestration.issue_stream_audit")  # TRANSITIONAL-PKG3-B2
+    _MODULE = "lu_machinery.orchestration.issue_stream_audit"
 
     def __init__(self, state: Path, lock: Path) -> None:
         self._state = state
         self._lock = lock
 
     def find_spec(self, fullname, path, target=None):
-        if fullname not in self._MODULES:  # TRANSITIONAL-PKG3-B2
+        if fullname != self._MODULE:
             return None
         spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
         if spec is None or spec.loader is None:
@@ -1914,11 +1899,10 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
     state_dir = _write_ownership_base / f"issue-audit-refresh-{next(_WRITE_OWNERSHIP_SEQ)}"
     state = state_dir / "issue_stream_audit_refresh.json"
     lock = state_dir / "issue_stream_audit_refresh.lock"
-    for name in _IssueStreamRefreshImportHook._MODULES:  # TRANSITIONAL-PKG3-B2
-        module = sys.modules.get(name)
-        if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
-            monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
-            monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
+    module = sys.modules.get(_IssueStreamRefreshImportHook._MODULE)
+    if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
+        monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
+        monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
     hook = _IssueStreamRefreshImportHook(state, lock)
     sys.meta_path.insert(0, hook)
     try:
@@ -2131,20 +2115,19 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
-    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
-        api_config = _loaded_module(package, 'api', 'config')
-        if api_config is not None:
-            monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-        monitor_context = _loaded_module(package, 'api', "monitor_context")
-        if monitor_context is not None:
-            monitor_context.production_context.cache_clear()
-        api_main = _loaded_module(package, 'api', "main")
-        if api_main is None:
-            continue
-        app = vars(api_main).get("app")
-        context = getattr(getattr(app, "state", None), "ctx", None)
-        if context is not None:
-            monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+    api_config = _loaded_module("lu_machinery", "api", "config")
+    if api_config is not None:
+        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+    monitor_context = _loaded_module("lu_machinery", "api", "monitor_context")
+    if monitor_context is not None:
+        monitor_context.production_context.cache_clear()
+    api_main = _loaded_module("lu_machinery", "api", "main")
+    if api_main is None:
+        return
+    app = vars(api_main).get("app")
+    context = getattr(getattr(app, "state", None), "ctx", None)
+    if context is not None:
+        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
 
 
 # Per-process, not per-test: ``mktemp`` scans the base directory for the next
@@ -4163,19 +4146,13 @@ def _hermetic_agy_claude_window(monkeypatch):
     which catalog seat those tests select. The default reading is a fresh
     empty window. A test of the real reader restores ``__wrapped__``.
     """
-    for name in ("lu_machinery.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
-        if name.startswith("scripts."):
-            mp = sys.modules.get(name)
-            if mp is None:
-                continue
-        else:
-            mp = importlib.import_module(name)
-        real = mp.routing_budget_used_pct
+    mp = importlib.import_module("lu_machinery.agent_runtime.model_pause")
+    real = mp.routing_budget_used_pct
 
-        def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):
-            if lane == _window:
-                return 0.0
-            return _real(lane, account=account)
+    def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):
+        if lane == _window:
+            return 0.0
+        return _real(lane, account=account)
 
-        wrapped.__wrapped__ = real
-        monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)
+    wrapped.__wrapped__ = real
+    monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)

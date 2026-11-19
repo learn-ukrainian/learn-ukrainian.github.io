@@ -36,8 +36,6 @@ def init_review_repo(tmp_path: Path) -> tuple[Path, str]:
 def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Real ordinary Git scope, even when a dispatch test stubs process spawning."""
     from lu_machinery.review import security_paths, target_resolution
-    from lu_machinery.review import security_paths as held_paths  # TRANSITIONAL-PKG3-B2: held spawn isolation.
-    from lu_machinery.review import target_resolution as held_target  # TRANSITIONAL-PKG3-B2: held spawn isolation.
 
     repo, _base = init_review_repo(tmp_path)
     file = repo / "ordinary.py"
@@ -53,7 +51,7 @@ def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         with patch.object(subprocess, "run", real_run), patch.object(subprocess, "Popen", real_popen):
             return run_git(args, cwd, timeout=timeout)
 
-    for module in (target_resolution, security_paths, held_target, held_paths):
+    for module in (target_resolution, security_paths):
         monkeypatch.setattr(module, "_run_git", fixture_git)
     return repo
 

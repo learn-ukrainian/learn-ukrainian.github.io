@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from lu_machinery.review import findings_db
-from lu_machinery.review.seeds import manifest as sm  # TRANSITIONAL-PKG3-B2: held subjects compare exact Seed types.
+from lu_machinery.review.seeds import manifest as sm
 
 LEVEL = "a1"
 WRITER_FAMILY = "anthropic"
