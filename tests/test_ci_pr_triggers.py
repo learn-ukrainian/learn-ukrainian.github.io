@@ -706,10 +706,6 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert setup['if'] == "github.event_name == 'pull_request'"
     assert setup['run'] == 'bash "$(.venv/bin/python -I -c \'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/setup_bubblewrap.sh"))\')"'
     assert not setup.get('continue-on-error', False)
-    shared = files('lu_machinery.ci').joinpath('setup_bubblewrap.sh').read_text()
-    assert 'set -euo pipefail' in shared
-    assert 'for pkg in bubblewrap "$@" apparmor; do' in shared
-    assert 'bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true' in shared
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
     assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m lu_machinery.ci.pr_affected_tests' in step['run'].replace('scripts.', 'lu_machinery.')

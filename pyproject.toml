@@ -11,7 +11,7 @@ dependencies = [
     # The pinned lu-machinery release, its runtime extras and its tested closure
     # (machinery docs/release.md, Consumers). [tool.uv.sources] names the release
     # wheel; uv.lock carries its SHA-256. A machinery release adoption updates both.
-    "lu-machinery[api,postgres,pytest]==0.1.36",
+    "lu-machinery[api,postgres,pytest]==0.1.38",
     # Repository runtime package (packages/v4-runtime).
     "learn-ukrainian-v4-runtime",
 
@@ -147,7 +147,7 @@ dev = [
 # Narrow workflow environments (uv sync --only-group), so a job installs only what
 # it runs. Each is a subset of the project's own requirements above.
 # The lu-machinery release and its closure: jobs that run only its entry points.
-machinery = ["lu-machinery[api,postgres,pytest]==0.1.36"]
+machinery = ["lu-machinery[api,postgres,pytest]==0.1.38"]
 # deploy-pages.yml: the release plus the build scripts' YAML, schema and regex imports.
 pages = [{ include-group = "machinery" }, "pyyaml>=6.0", "jsonschema>=4.20", "regex>=2026.5.9"]
 # atlas-grow.yml: the release plus the lexicon scripts' imports.
@@ -168,7 +168,7 @@ required-version = "==0.13.1"
 default-groups = ["ml", "dev"]
 
 [tool.uv.sources]
-lu-machinery = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.36/lu_machinery-0.1.36-py3-none-any.whl" }
+lu-machinery = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.38/lu_machinery-0.1.38-py3-none-any.whl" }
 learn-ukrainian-v4-runtime = { path = "packages/v4-runtime" }
 ipa-uk = { git = "https://github.com/lang-uk/ipa-uk.git", rev = "e7fc944faca090ca985d5ca09a24c59154d9dea1" }
 # The CPU builds the host and nightly CI run: no CUDA dependency closure.
