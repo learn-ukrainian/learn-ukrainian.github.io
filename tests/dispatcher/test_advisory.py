@@ -8,6 +8,7 @@ from unittest.mock import Mock
 import pytest
 from lu_machinery.agent_runtime import bounded_advisory as advisory
 from lu_machinery.dispatcher import checks, cli, git, store, worker
+from lu_machinery.fleet import credit_lane
 
 
 @pytest.fixture
@@ -18,6 +19,9 @@ def launch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    # Credit-lane admission fails closed without a Monitor routing snapshot (machinery 0.1.38); these
+    # tests assert advisory admission, so the credit lane is out of scope here.
+    monkeypatch.setattr(credit_lane, "dispatch_refusal", lambda *_a, **_k: None)
     monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(
         {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
     )))
