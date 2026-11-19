@@ -46,8 +46,9 @@ CALLER = "harness"
 # lu-machinery 0.1.31 retires gpt-6.1-sol and 0.1.39 leaves gemini-3.8-flash-high only its
 # historical-record role; the dispatcher refuses both before launch. The frozen seat table keeps
 # them (the uk-behaviour freeze pins common.py), so the tests that run the real dispatch CLI use
-# the live seat the catalog assigns to the same role: Sol 6.2, and Neon High (the only AGY
-# review and Ukrainian-review selector).
+# the live seat the catalog admits for the same dispatch: Sol 6.2, and Neon High. These eval
+# dispatches run read-only on the Ukrainian lane, which the dispatcher admits only for a seat with
+# a review role; Neon High is the only AGY selector holding one (Hydrogen is refused).
 _LIVE_SEAT_IDS = {"gpt-6.1-sol": "gpt-6.2-sol", "gemini-3.8-flash-high": "gemini-4-neon-high"}
 LIVE_SEATS = {
     key: replace(seat, seat_id=_LIVE_SEAT_IDS[key], model=_LIVE_SEAT_IDS[key]) if key in _LIVE_SEAT_IDS else seat
@@ -137,7 +138,7 @@ def _calls(state: Path) -> list[list[str]]:
             "gemini-3.8-flash-high",
             "gemini-4-neon-high",
             "Gemini 4 Neon (High)",
-            "gemini-4-neon-high",
+            "gemini-3-flash-preview",
         ),
         (
             "claude-opus-5-5",
@@ -208,8 +209,9 @@ def test_matching_agy_parse_passes_eval_identity_check(
         assert parsed.substitution is None
         assert parsed.model_identity is None
         return
-    if gemini4_pin and reported_form == "display":
-        # A Gemini 4 seat must report its exact selector; a display label is not that identity.
+    if gemini4_pin and reported_form in {"display", "backend"}:
+        # A Gemini 4 seat must report its exact selector; a display label or another model's
+        # backend id is not that identity.
         assert parsed.ok is False
         assert parsed.stderr_excerpt == "agy_model_event_mismatch"
         assert parsed.response == ""

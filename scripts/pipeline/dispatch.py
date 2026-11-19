@@ -176,8 +176,9 @@ def dispatch_gemini_raw(
     # Resolve in this process so incompatibility is visible to the caller;
     # subprocess stderr is intentionally not part of the pipeline result.
     model = resolve_compat_model("agy", model)
+    # The bridge ships in the installed machinery release; the product holds no copy.
     args = [
-        str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-agy",
+        "-m", "lu_machinery.ai_agent_bridge", "ask-agy",
         "-",  # read prompt from stdin
         "--task-id", task_id,
         "--to-model", model,
