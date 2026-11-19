@@ -631,7 +631,7 @@ def test_an_er_word_never_credits_a_word_inside_it(tmp_path, query, decoy, answe
 
 
 @pytest.mark.parametrize('path, readable', [
-    ('scripts/review/closeout_cli.py', True), ('.githooks/pre-push', True), ('AGENTS.md', True),
+    ('scripts/review/record.py', True), ('.githooks/pre-push', True), ('AGENTS.md', True),
     ('scripts/config/model_catalog.yaml', True), ('agents_extensions/shared/rules/core.md', True),
     ('scripts/private/tool.py', False), ('scripts/cache/x.py', False), ('docs/guide/x.py', False),
     ('tests/test_x.py', False), ('scripts/data.json', False), ('curriculum/a1/x.yaml', False),

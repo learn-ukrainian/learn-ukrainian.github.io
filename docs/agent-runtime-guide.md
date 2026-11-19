@@ -1,6 +1,6 @@
 # Agent Runtime Guide
 
-> **Read this before touching `scripts/agent_runtime/`.** It's the 200-line
+> **Read this before touching `lu_machinery/agent_runtime/`.** It's the 200-line
 > mental model you need to avoid repeating the dispatch.py mess we built
 > the runtime to replace.
 >
@@ -8,7 +8,7 @@
 
 ## What it is (30 seconds)
 
-One package — `scripts/agent_runtime/` — that every path invoking an agent
+One package — `lu_machinery/agent_runtime/` — that every path invoking an agent
 CLI routes through. Replaces four duplicated subprocess + flag-building
 copies across `_codex.py`, `_claude.py`, `_gemini.py`, and `dispatch.py`.
 Adding a new agent = one new adapter file + one new registry entry.

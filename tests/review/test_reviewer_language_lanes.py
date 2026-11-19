@@ -43,7 +43,7 @@ GROK_CANDIDATE = ReviewerCandidate(
         "scripts/pipeline/stress_annotator.py",
         "scripts/lexicon/store.py",
         "site/src/lib/lexicon/entry.ts",
-        "scripts/review/prompts/lesson.md",
+        "scripts/review/prompts/lesson-review.md.j2",
         "scripts/build/phases/lesson.py",
         "scripts/build/fresh/prompt_writer.py",
         "docs/epics/fresh-build-plan.md",
@@ -61,7 +61,7 @@ def isolated_live_snapshot(monkeypatch):
 
 def test_unrelated_paths_do_not_match_content_patterns():
     assert not is_ukrainian_content_change(
-        ResolverInputs(author_model="codex", changed_paths=("scripts/review/reviewer_resolver.py", "docs/infra.md"), claude_account=HOST_ACCOUNT)
+        ResolverInputs(author_model="codex", changed_paths=("lu_machinery/review/reviewer_resolver.py", "docs/infra.md"), claude_account=HOST_ACCOUNT)
     )
 
 

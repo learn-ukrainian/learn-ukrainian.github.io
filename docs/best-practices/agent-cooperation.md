@@ -11,7 +11,7 @@
 > Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
 > Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
 >
-> **Runtime layer:** All agent CLI invocations route through `scripts/agent_runtime/`.
+> **Runtime layer:** All agent CLI invocations route through `lu_machinery/agent_runtime/`.
 > If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.
 >
 > **Seat onboarding (canonical ownership matrix):**
@@ -421,7 +421,7 @@ change.
 ### Runtime layer — single source of truth for agent CLI calls
 
 As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
-invoked through `scripts/agent_runtime/runner.invoke()`. This applies to:
+invoked through `invoke()` in `lu_machinery/agent_runtime/runner.py`. This applies to:
 
 - `scripts/ai_agent_bridge/` — bridge messaging (`ask-agy`, `ask-codex`, `process-claude`, etc.)
 - `scripts/build/dispatch.py` — pipeline phase dispatch (`skeleton`, `write`, `review`, etc.)

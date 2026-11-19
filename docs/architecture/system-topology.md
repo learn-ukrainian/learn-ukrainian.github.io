@@ -12,7 +12,7 @@ graph TB
         Codex[Codex CLI]
     end
 
-    subgraph Runtime["scripts/agent_runtime/"]
+    subgraph Runtime["lu_machinery/agent_runtime/"]
         Runner[runner.invoke<br/>+ watchdog]
         Registry[adapter registry]
         Usage[usage.jsonl<br/>+ has_headroom]
@@ -181,7 +181,7 @@ user → compile.py --track hist --slug kyivan-rus
 | Path | Purpose |
 | --- | --- |
 | `scripts/build/v7_build.py` | The one pipeline entry point |
-| `scripts/agent_runtime/runner.py` | The one LLM dispatch function |
+| `lu_machinery/agent_runtime/runner.py` | The one LLM dispatch function |
 | `lu_machinery/api/main.py` | The one API server |
 | `scripts/wiki/compile.py` | The one wiki compiler |
 | `lu_machinery/ai_agent_bridge/__main__.py` | The one bridge CLI |

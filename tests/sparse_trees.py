@@ -1,6 +1,6 @@
 """Shared sparse-worktree tree-absence predicate (issue #8581).
 
-Dispatch worktrees sparse-checkout away the trees in ``scripts/dispatcher/git.py``
+Dispatch worktrees sparse-checkout away the trees in ``lu_machinery/dispatcher/git.py``
 ``SPARSE_EXCLUDE_DEFAULT`` (``curriculum/``, ``wiki/``,
 ``data/projects/``, ``site/src/data/`` and others). Test modules and
 ``tests/conftest.py`` share this predicate so a skip happens only when the

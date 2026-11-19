@@ -8,7 +8,7 @@ pins:
     source: host
     owner: Infra
     review_by: "2026-10-30"
-    note: No exact install pin. Minimums only, in scripts/review/isolation.py (2.1.116) and acpx.py (2.1.280 for Opus).
+    note: No exact install pin. Minimums only, in lu_machinery/review/isolation.py (2.1.116) and lu_machinery/agent_runtime/adapters/acpx.py (2.1.280 for Opus).
   - name: codex
     pinned: unknown
     source: host
@@ -20,7 +20,7 @@ pins:
     source: host
     owner: Infra
     review_by: "2026-10-30"
-    note: No CLI version pin. Admitted model grok-4.7 is in scripts/agent_runtime/adapters/grok_build.py.
+    note: No CLI version pin. Admitted model grok-4.7 is in lu_machinery/agent_runtime/adapters/grok_build.py.
   - name: cursor-agent
     pinned: unknown
     source: host
@@ -32,7 +32,7 @@ pins:
     source: host
     owner: Infra
     review_by: "2026-10-30"
-    note: No install pin. Background-wait floor is 1.2.9 in scripts/agent_runtime/adapters/agy.py.
+    note: No install pin. Background-wait floor is 1.2.9 in lu_machinery/agent_runtime/adapters/agy.py.
   - name: gh
     pinned: unknown
     source: host

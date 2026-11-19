@@ -244,7 +244,7 @@ docs/damage-report-*.csv
 
 # Batch runner state (generated at runtime). Allow schema-capped atlas-job
 # git receipts only — registry/result/pull trees stay ignored. Review budget
-# extension requests are committed decisions (scripts/review/budget_extension.py).
+# extension requests are committed decisions.
 batch_state/*
 !batch_state/atlas-jobs/
 batch_state/atlas-jobs/*

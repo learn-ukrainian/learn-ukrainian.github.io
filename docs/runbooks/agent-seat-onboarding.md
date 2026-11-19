@@ -694,7 +694,7 @@ counts and outcomes.
 
 1. Disable the ACPX feature flag (default-off posture).
 2. Continue on native agent runtime transport
-   (`scripts/agent_runtime/` via `runner.invoke`, bridge, `dispatch.py`) —
+   (`lu_machinery/agent_runtime/` via `runner.invoke`, bridge, `dispatch.py`) —
    native Codex remains available. Grok detached dispatch uses Cursor at
    `grok-4.7-high`; native Grok dispatch is retired.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
