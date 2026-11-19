@@ -45,45 +45,62 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
+
 class GeminiSeatUnavailable(RuntimeError):
-    """The installed lu-machinery catalog assigns no executable Gemini seat for a role."""
+    """The installed lu-machinery catalog assigns no executable Gemini seat for one or more roles."""
 
-    def __init__(self, role: str, reason: str) -> None:
+    def __init__(self, roles: tuple[str, ...], reason: str) -> None:
         super().__init__(
-            f"no Gemini seat for role {role!r} in the installed lu-machinery catalog ({reason}); "
-            "install a lu-machinery release that assigns one"
+            f"no Gemini seat for role {', '.join(map(repr, roles))} in the installed lu-machinery "
+            f"catalog ({reason}); install a lu-machinery release that assigns one"
         )
-        self.role = role
+        self.roles = roles
 
 
-def _gemini_seat(role: str) -> str:
-    """Return the AGY wire id the installed catalog assigns to ``role``, or raise ``GeminiSeatUnavailable``.
+GEMINI_ROLES = ("review", "routine")
+
+
+def _gemini_seat(role: str, catalog: dict) -> str:
+    """Return the AGY wire id the validated ``catalog`` assigns to ``role``, or raise ``GeminiSeatUnavailable``.
 
     ``review``: the AGY ACP participant pin, the only model ``ask-agy``/``ask-gemini`` admit
     (review, judge and every caller that dispatches through the bridge).
     ``routine``: the catalog's AGY orchestrator seat as its AGY wire id (native ``agy`` generation).
-    Either seat must be an active catalog model with the AGY transport. This runs at import, so every
-    caller fails at import with the missing role named; there is no placeholder and no default.
+    Either seat must be an active catalog model with the AGY transport.
     """
     try:
         if role == "review":
             wire_id = acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
         elif role == "routine":
-            seat_model = model_catalog.routing_model("orchestrator_seats", "agy")
-            wire_id = model_catalog.load_model_catalog()["models"][seat_model]["routing_wire_ids"]["agy"]
+            seat_model = catalog["orchestrator_seats"]["agy"]["model_id"]
+            wire_id = catalog["models"][seat_model]["routing_wire_ids"]["agy"]
         else:
-            raise GeminiSeatUnavailable(role, "unknown role")
+            raise GeminiSeatUnavailable((role,), "unknown role")
         if not isinstance(wire_id, str) or not wire_id:
-            raise GeminiSeatUnavailable(role, f"seat is {wire_id!r}")
-        model_catalog.require_execution_model(wire_id, transport="agy")
+            raise GeminiSeatUnavailable((role,), f"seat is {wire_id!r}")
+        model_catalog.require_execution_model(wire_id, transport="agy", catalog=catalog)
     except (KeyError, TypeError, model_catalog.ModelCatalogError) as exc:
-        raise GeminiSeatUnavailable(role, f"{type(exc).__name__}: {exc}") from exc
+        raise GeminiSeatUnavailable((role,), f"{type(exc).__name__}: {exc}") from exc
     return wire_id
 
 
+def _gemini_seats() -> tuple[str, str]:
+    """Resolve both roles at import, so every caller fails at import; no placeholder and no default.
+
+    The catalog is loaded and validated once, before either role, so a role never inherits an
+    error that belongs to the catalog as a whole. An invalid catalog yields no seat for any role,
+    and the validator's message names the bad entry.
+    """
+    try:
+        catalog = model_catalog.load_model_catalog()
+    except model_catalog.ModelCatalogError as exc:
+        raise GeminiSeatUnavailable(GEMINI_ROLES, f"the catalog is invalid: {exc}") from exc
+    review, routine = (_gemini_seat(role, catalog) for role in GEMINI_ROLES)
+    return review, routine
+
+
 # The two Gemini roles, resolved from the installed catalog at import (no model literals).
-GEMINI_REVIEW_MODEL = _gemini_seat("review")
-GEMINI_ROUTINE_MODEL = _gemini_seat("routine")
+GEMINI_REVIEW_MODEL, GEMINI_ROUTINE_MODEL = _gemini_seats()
 # Tier names are compatibility aliases. Their callers dispatch through the AGY ACP bridge,
 # which admits only the review seat.
 PRO_MODEL = GEMINI_REVIEW_MODEL

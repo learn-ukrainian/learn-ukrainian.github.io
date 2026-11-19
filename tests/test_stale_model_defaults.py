@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import ast
 import asyncio
 import importlib.util
 import linecache
 import sys
 import traceback
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 from lu_machinery.agent_runtime.adapters import acpx
 from lu_machinery.lib.readonly_sqlite import import_named_module
 from lu_machinery.review import model_catalog
@@ -119,48 +122,120 @@ _GEMINI_SEAT_CALLERS = (
     "scripts.tools.upgrade_activity_hints",
     "scripts.review.integration_check",
 )
+_SEAT_FREE_MODULES = ("scripts.curriculum.pedagogy_config",)
 _SEAT_CONFIG_MODULES = (
     "batch_gemini_config",
     "batch.batch_gemini_config",
     "scripts.batch_gemini_config",
     "scripts.batch.batch_gemini_config",
 )
+_SENTINEL_SEATS = {"review": "sentinel-review-seat", "routine": "sentinel-routine-seat"}
 
 
-def _catalog_without_routine_seat():
-    catalog = dict(model_catalog.load_model_catalog())
-    catalog["orchestrator_seats"] = {k: v for k, v in catalog["orchestrator_seats"].items() if k != "agy"}
-    return catalog
+def _catalog_copy(**changes):
+    raw = yaml.safe_load(model_catalog.CATALOG_PATH.read_text(encoding="utf-8"))
+    for path, value in changes.items():
+        *parents, leaf = path.split(".")
+        node = raw
+        for key in parents:
+            node = node[key]
+        if value is None:
+            del node[leaf]
+        else:
+            node[leaf] = value
+    return raw
 
 
-@pytest.mark.parametrize("role", ["review", "routine"])
-@pytest.mark.parametrize("module", [*_GEMINI_SEAT_CALLERS, "scripts.curriculum.pedagogy_config"])
-def test_missing_catalog_gemini_seat_fails_every_caller_at_import(module, role, monkeypatch):
-    """Defect class: a caller binds a Gemini seat lazily, to a placeholder name or to a literal,
-    so a catalog that lacks the seat imports cleanly and fails later or dispatches a refused name.
+def _forget(names, monkeypatch):
+    """Drop modules so they import afresh; teardown restores the registry entry and the parent attribute."""
+    for name in names:
+        monkeypatch.delitem(sys.modules, name, raising=False)
+        parent, _, child = name.rpartition(".")
+        if parent in sys.modules:
+            monkeypatch.delattr(sys.modules[parent], child, raising=False)
 
-    The caller's own failing statement must be its seat binding, so a transitive import that
-    happens to load the resolver first cannot hide a caller that went back to a literal.
+
+def _bound_strings(module):
+    """Strings the module binds at import: globals and its own functions' and classes' defaults."""
+    seen, found, stack = set(), [], [*vars(module).values()]
+    while stack:
+        value = stack.pop()
+        if id(value) in seen:
+            continue
+        seen.add(id(value))
+        if isinstance(value, str):
+            found.append(value)
+        elif isinstance(value, dict):
+            stack.extend([*value.keys(), *value.values()])
+        elif isinstance(value, (list, tuple, set, frozenset)):
+            stack.extend(value)
+        elif isinstance(value, type) and value.__module__ == module.__name__:
+            stack.extend(vars(value).values())
+        elif callable(value) and getattr(value, "__module__", None) == module.__name__:
+            stack.extend(getattr(value, "__defaults__", None) or ())
+            stack.extend((getattr(value, "__kwdefaults__", None) or {}).values())
+    return found
+
+
+def _source_strings(path):
+    """Every string literal in the module's source, including code that runs only under __main__."""
+    tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+    return [node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str)]
+
+
+@pytest.mark.parametrize("case", ["review", "routine", "invalid_catalog", "wiring"])
+@pytest.mark.parametrize("module", [*_GEMINI_SEAT_CALLERS, *_SEAT_FREE_MODULES])
+def test_every_gemini_caller_binds_the_catalog_seat_at_import(module, case, monkeypatch):
+    """Defect class: a caller binds a Gemini seat lazily, to a placeholder name or to a literal, so a
+    catalog that lacks the seat imports cleanly and fails later or dispatches a refused name.
+
+    Missing-seat cases: a fresh import raises GeminiSeatUnavailable naming the roles, and the caller's
+    own failing statement is its seat binding, so a transitive import cannot hide a caller that went
+    back to a literal. The wiring case swaps in sentinel seats: the caller must bind them, and neither
+    its bound values nor any string literal in its source may name a Gemini catalog model.
     """
-    origin = importlib.util.find_spec(module).origin
-    if role == "review":
+    catalog = model_catalog.load_model_catalog()
+    if case == "review":
         participants = {k: v for k, v in acpx.ACPX_SUPPORTED_PARTICIPANTS.items() if k != "agy"}
         monkeypatch.setattr(acpx, "ACPX_SUPPORTED_PARTICIPANTS", participants)
+        expected_roles = ("review",)
+    elif case == "routine":  # a valid catalog without an AGY orchestrator seat
+        valid = model_catalog.validate_catalog(_catalog_copy(**{"orchestrator_seats.agy": None}))
+        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: valid)
+        expected_roles = ("routine",)
+    elif case == "invalid_catalog":  # the real validator rejects the catalog, so no role has a seat
+        invalid = _catalog_copy(**{"orchestrator_seats.agy.model_id": "no-such-model"})
+        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: model_catalog.validate_catalog(invalid))
+        expected_roles = ("review", "routine")
     else:
-        missing = _catalog_without_routine_seat()
-        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: missing)
-    for name in (*_SEAT_CONFIG_MODULES, module):
-        monkeypatch.delitem(sys.modules, name, raising=False)
+        routine_id = catalog["orchestrator_seats"]["agy"]["model_id"]
+        swapped = _catalog_copy(**{f"models.{routine_id}.routing_wire_ids.agy": _SENTINEL_SEATS["routine"]})
+        participants = {**acpx.ACPX_SUPPORTED_PARTICIPANTS, "agy": {**acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"], "model": _SENTINEL_SEATS["review"]}}
+        monkeypatch.setattr(acpx, "ACPX_SUPPORTED_PARTICIPANTS", participants)
+        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: swapped)
+        monkeypatch.setattr(model_catalog, "require_execution_model", lambda model, **kwargs: model)
+    origin = importlib.util.find_spec(module).origin
+    _forget((*_SEAT_CONFIG_MODULES, module), monkeypatch)
 
-    if module not in _GEMINI_SEAT_CALLERS:
+    if case == "wiring":
+        bound = _bound_strings(import_named_module(module))
+        gemini_literals = sorted({
+            text for text in (*bound, *_source_strings(origin))
+            if "gemini" in text.lower()
+            and (catalog["models"].get(model_catalog.canonical_model_id(text, catalog) or "", {}).get("family") == "google")
+        })
+        assert gemini_literals == [], f"{module} still names Gemini models: {gemini_literals}"
+        if module in _GEMINI_SEAT_CALLERS:
+            assert set(_SENTINEL_SEATS.values()) & set(bound), f"{module} binds no catalog seat"
+        return
+    if module in _SEAT_FREE_MODULES:
         import_named_module(module)  # binds no seat, so a missing seat cannot break it
         return
     with pytest.raises(RuntimeError) as raised:
         import_named_module(module)
     assert type(raised.value).__name__ == "GeminiSeatUnavailable"
-    assert raised.value.role == role
-    assert repr(role) in str(raised.value)
+    assert raised.value.roles == expected_roles
     own_frames = [frame for frame in traceback.extract_tb(raised.tb) if frame.filename == origin]
     assert own_frames, f"{module} did not reach a seat binding of its own"
     failing_line = linecache.getline(origin, own_frames[0].lineno)  # the module-level statement
-    assert "batch_gemini_config import" in failing_line or "_gemini_seat(" in failing_line, failing_line
+    assert "batch_gemini_config import" in failing_line or "_gemini_seats()" in failing_line, failing_line
