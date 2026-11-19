@@ -68,33 +68,33 @@ def _gemini_seat(role: str, catalog: dict) -> str:
     ``routine``: the catalog's AGY orchestrator seat as its AGY wire id (native ``agy`` generation).
     Either seat must be an active catalog model with the AGY transport.
     """
+    if role not in GEMINI_ROLES:
+        raise GeminiSeatUnavailable((role,), "unknown role")
     try:
         if role == "review":
             wire_id = acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
-        elif role == "routine":
-            seat_model = catalog["orchestrator_seats"]["agy"]["model_id"]
-            wire_id = catalog["models"][seat_model]["routing_wire_ids"]["agy"]
         else:
-            raise GeminiSeatUnavailable((role,), "unknown role")
-        if not isinstance(wire_id, str) or not wire_id:
-            raise GeminiSeatUnavailable((role,), f"seat is {wire_id!r}")
-        model_catalog.require_execution_model(wire_id, transport="agy", catalog=catalog)
-    except (KeyError, TypeError, model_catalog.ModelCatalogError) as exc:
+            wire_id = catalog["models"][catalog["orchestrator_seats"]["agy"]["model_id"]]["routing_wire_ids"]["agy"]
+        if isinstance(wire_id, str) and wire_id:
+            model_catalog.require_execution_model(wire_id, transport="agy", catalog=catalog)
+            return wire_id
+    except Exception as exc:  # any lookup or admission failure means this role has no seat; the cause is chained
         raise GeminiSeatUnavailable((role,), f"{type(exc).__name__}: {exc}") from exc
-    return wire_id
+    raise GeminiSeatUnavailable((role,), f"seat is {wire_id!r}")
 
 
 def _gemini_seats() -> tuple[str, str]:
     """Resolve both roles at import, so every caller fails at import; no placeholder and no default.
 
     The catalog is loaded and validated once, before either role, so a role never inherits an
-    error that belongs to the catalog as a whole. An invalid catalog yields no seat for any role,
-    and the validator's message names the bad entry.
+    error that belongs to the catalog as a whole. A catalog that cannot be loaded or validated,
+    whatever the validator raises, yields no seat for any role; the cause is chained and its
+    message names the bad entry where the validator does.
     """
     try:
         catalog = model_catalog.load_model_catalog()
-    except model_catalog.ModelCatalogError as exc:
-        raise GeminiSeatUnavailable(GEMINI_ROLES, f"the catalog is invalid: {exc}") from exc
+    except Exception as exc:
+        raise GeminiSeatUnavailable(GEMINI_ROLES, f"the catalog is invalid: {type(exc).__name__}: {exc}") from exc
     review, routine = (_gemini_seat(role, catalog) for role in GEMINI_ROLES)
     return review, routine
 

@@ -5,16 +5,13 @@ from __future__ import annotations
 import ast
 import asyncio
 import importlib.util
-import linecache
+import json
+import subprocess
 import sys
-import traceback
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import yaml
-from lu_machinery.agent_runtime.adapters import acpx
-from lu_machinery.lib.readonly_sqlite import import_named_module
 from lu_machinery.review import model_catalog
 from lu_machinery.review.model_catalog import (
     ModelCatalogError,  # the refusing subjects run the installed release
@@ -132,110 +129,187 @@ _SEAT_CONFIG_MODULES = (
 _SENTINEL_SEATS = {"review": "sentinel-review-seat", "routine": "sentinel-routine-seat"}
 
 
-def _catalog_copy(**changes):
-    raw = yaml.safe_load(model_catalog.CATALOG_PATH.read_text(encoding="utf-8"))
-    for path, value in changes.items():
-        *parents, leaf = path.split(".")
-        node = raw
-        for key in parents:
-            node = node[key]
-        if value is None:
-            del node[leaf]
-        else:
-            node[leaf] = value
-    return raw
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+# Runs one case in a fresh interpreter, so modules imported under patched seats never reach another
+# test: no registry surgery, nothing to restore. It prints one JSON object on its last line.
+_CASE_DRIVER = r"""
+import copy, json, sys, traceback
+root, module, case, paths = sys.argv[1], sys.argv[2], sys.argv[3], json.loads(sys.argv[4])
+sys.path[:0] = [root, root + "/scripts"]
+import yaml
+from lu_machinery.agent_runtime.adapters import acpx
+from lu_machinery.lib.readonly_sqlite import import_named_module
+from lu_machinery.review import model_catalog
+
+sentinels = {"review": "sentinel-review-seat", "routine": "sentinel-routine-seat"}
+raw = yaml.safe_load(model_catalog.CATALOG_PATH.read_text(encoding="utf-8"))
+if case == "review":
+    acpx.ACPX_SUPPORTED_PARTICIPANTS = {k: v for k, v in acpx.ACPX_SUPPORTED_PARTICIPANTS.items() if k != "agy"}
+elif case == "routine":  # a valid catalog without an AGY orchestrator seat
+    del raw["orchestrator_seats"]["agy"]
+    valid = model_catalog.validate_catalog(raw)
+    model_catalog.load_model_catalog = lambda *args, **kwargs: valid
+elif case == "invalid_catalog":  # the real validator rejects it, so no role has a seat
+    raw["orchestrator_seats"]["agy"]["model_id"] = "no-such-model"
+    model_catalog.load_model_catalog = lambda *args, **kwargs: model_catalog.validate_catalog(copy.deepcopy(raw))
+else:  # wiring: sentinel seats, set after validation
+    swapped = model_catalog.validate_catalog(raw)
+    routine_id = swapped["orchestrator_seats"]["agy"]["model_id"]
+    swapped["models"][routine_id]["routing_wire_ids"]["agy"] = sentinels["routine"]
+    agy = {**acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"], "model": sentinels["review"]}
+    acpx.ACPX_SUPPORTED_PARTICIPANTS = {**acpx.ACPX_SUPPORTED_PARTICIPANTS, "agy": agy}
+    model_catalog.load_model_catalog = lambda *args, **kwargs: swapped
+    model_catalog.require_execution_model = lambda model, **kwargs: model
 
 
-def _forget(names, monkeypatch):
-    """Drop modules so they import afresh; teardown restores the registry entry and the parent attribute."""
-    for name in names:
-        monkeypatch.delitem(sys.modules, name, raising=False)
-        parent, _, child = name.rpartition(".")
-        if parent in sys.modules:
-            monkeypatch.delattr(sys.modules[parent], child, raising=False)
+def effective(imported, path):
+    if path.startswith("in "):
+        return getattr(imported, path[3:]).split(",")
+    if path.endswith(")"):
+        import inspect
+        target, param = path[:-1].split("(")
+        obj = imported
+        for part in target.split("."):
+            obj = getattr(obj, part)
+        return inspect.signature(obj).parameters[param].default
+    head, *keys = path.split(".")
+    value = getattr(imported, head)
+    for key in keys:
+        value = value[int(key)] if isinstance(value, tuple) else value[key]
+    return value
 
 
-def _bound_strings(module):
-    """Strings the module binds at import: globals and its own functions' and classes' defaults."""
-    seen, found, stack = set(), [], [*vars(module).values()]
-    while stack:
-        value = stack.pop()
-        if id(value) in seen:
-            continue
-        seen.add(id(value))
-        if isinstance(value, str):
-            found.append(value)
-        elif isinstance(value, dict):
-            stack.extend([*value.keys(), *value.values()])
-        elif isinstance(value, (list, tuple, set, frozenset)):
-            stack.extend(value)
-        elif isinstance(value, type) and value.__module__ == module.__name__:
-            stack.extend(vars(value).values())
-        elif callable(value) and getattr(value, "__module__", None) == module.__name__:
-            stack.extend(getattr(value, "__defaults__", None) or ())
-            stack.extend((getattr(value, "__kwdefaults__", None) or {}).values())
-    return found
+try:
+    imported = import_named_module(module)
+except Exception as exc:
+    frames = [[f.filename, f.lineno, f.line] for f in traceback.extract_tb(exc.__traceback__)]
+    result = {"error": type(exc).__name__, "roles": list(getattr(exc, "roles", ()) or ()), "message": str(exc), "frames": frames}
+else:
+    result = {"error": None, "values": {path: effective(imported, path) for path in paths}}
+print(json.dumps(result))
+"""
 
 
-def _source_strings(path):
-    """Every string literal in the module's source, including code that runs only under __main__."""
+def _run_case(module, case, paths):
+    done = subprocess.run(
+        [sys.executable, "-c", _CASE_DRIVER, str(_REPO_ROOT), module, case, json.dumps(paths)],
+        cwd=_REPO_ROOT, capture_output=True, text=True, timeout=300, check=False,
+    )
+    assert done.returncode == 0, f"{module} {case} driver failed: {done.stderr[-2000:]}"
+    return json.loads(done.stdout.strip().splitlines()[-1])
+
+
+_RESOLVER_SEATS = {
+    "GEMINI_REVIEW_MODEL": "review",
+    "GEMINI_ROUTINE_MODEL": "routine",
+    "PRO_MODEL": "review",
+    "FLASH_MODEL": "review",
+    "FLASH_LITE_MODEL": "review",
+}
+# Every effective model default each caller binds, and the role it must carry. A path is a global,
+# then dict keys or tuple indexes; ``name(param)`` is a function's default (``Class.method(param)``
+# for a method). ``in`` marks a comma-joined model list that must contain the seat.
+_EFFECTIVE_DEFAULTS = {
+    "scripts.batch.batch_gemini_config": _RESOLVER_SEATS,
+    "batch_gemini_config": _RESOLVER_SEATS,
+    "scripts.pipeline.prompt_preflight": {"GEMINI_REVIEW_MODEL": "review"},
+    "scripts.build.linear_pipeline": {
+        "WRITER_DEFAULTS.gemini-tools.model": "routine",
+        "WRITER_DEFAULTS.agy-tools.model": "routine",
+        "REVIEWER_DEFAULTS.gemini-tools.model": "review",
+        "REVIEWER_DEFAULTS.agy-tools.model": "review",
+    },
+    "scripts.batch.batch_otaman": {"dispatch_otaman(model)": "review", "BatchOtaman.__init__(model)": "review"},
+    "scripts.batch.batch_fix_review": {},
+    "scripts.audit.naturalness_check": {"call_agy(model)": "review", "check_naturalness(model)": "review"},
+    "scripts.audit.russianism_eval": {"in DEFAULT_MODELS": "review"},
+    "scripts.audit.layerb_judge_bridge": {"DEFAULT_MODELS.gemini": "review"},
+    "scripts.project_api.hramatka_generator": {
+        "PRIMARY_MODEL": "routine",
+        "SECONDARY_MODEL": "review",
+        "generate_qualified_lesson(primary_model)": "routine",
+        "generate_qualified_lesson(secondary_model)": "review",
+    },
+    "scripts.tools.upgrade_activity_hints": {"call_agy(model)": "review", "upgrade_plan(model)": "review"},
+    "scripts.review.integration_check": {"SECOND_SEAT_MODEL.1": "review"},
+}
+# CLI ``--model`` defaults are checked in the source: each must name this resolver constant.
+_PARSER_MODEL_DEFAULT = "GEMINI_REVIEW_MODEL"
+
+
+def _gemini_identifiers(catalog):
+    """Every exact string that names a Gemini catalog model: ids, aliases and wire ids."""
+    google = {model_id for model_id, entry in catalog["models"].items() if entry.get("family") == "google"}
+    names = set(google)
+    names |= {alias for alias, model_id in model_catalog.model_aliases(catalog).items() if model_id in google}
+    for model_id in google:
+        names |= set((catalog["models"][model_id].get("routing_wire_ids") or {}).values())
+    return names
+
+
+def _source_literals_and_parser_defaults(path):
+    """String literals in the source (including ``__main__`` code) and each ``--model`` default node."""
     tree = ast.parse(Path(path).read_text(encoding="utf-8"))
-    return [node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str)]
+    literals = [node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str)]
+    defaults = [
+        keyword.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "add_argument"
+        and node.args and isinstance(node.args[0], ast.Constant) and node.args[0].value == "--model"
+        for keyword in node.keywords
+        if keyword.arg == "default"
+    ]
+    return literals, defaults
 
 
-@pytest.mark.parametrize("case", ["review", "routine", "invalid_catalog", "wiring"])
-@pytest.mark.parametrize("module", [*_GEMINI_SEAT_CALLERS, *_SEAT_FREE_MODULES])
-def test_every_gemini_caller_binds_the_catalog_seat_at_import(module, case, monkeypatch):
+# An invalid catalog breaks machinery's own catalog readers at import too, so that case runs on the
+# resolver modules, where the attribution under test happens.
+_CASES = [
+    (module, case)
+    for module in (*_GEMINI_SEAT_CALLERS, *_SEAT_FREE_MODULES)
+    for case in ("review", "routine", "invalid_catalog", "wiring")
+    if case != "invalid_catalog" or module in _SEAT_CONFIG_MODULES
+]
+
+
+@pytest.mark.parametrize(("module", "case"), _CASES)
+def test_every_gemini_caller_binds_the_catalog_seat_at_import(module, case):
     """Defect class: a caller binds a Gemini seat lazily, to a placeholder name or to a literal, so a
     catalog that lacks the seat imports cleanly and fails later or dispatches a refused name.
 
-    Missing-seat cases: a fresh import raises GeminiSeatUnavailable naming the roles, and the caller's
-    own failing statement is its seat binding, so a transitive import cannot hide a caller that went
-    back to a literal. The wiring case swaps in sentinel seats: the caller must bind them, and neither
-    its bound values nor any string literal in its source may name a Gemini catalog model.
+    Each case imports the caller in a fresh interpreter. Missing-seat cases: the import raises
+    GeminiSeatUnavailable naming the roles, and the caller's own failing statement is its seat
+    binding, so a transitive import cannot hide a caller that went back to a literal. The wiring case
+    swaps in sentinel seats: every effective model default must carry its role's seat, every CLI
+    --model default must name the review constant, and no string literal in the caller's source may
+    name a Gemini catalog model.
     """
-    catalog = model_catalog.load_model_catalog()
-    if case == "review":
-        participants = {k: v for k, v in acpx.ACPX_SUPPORTED_PARTICIPANTS.items() if k != "agy"}
-        monkeypatch.setattr(acpx, "ACPX_SUPPORTED_PARTICIPANTS", participants)
-        expected_roles = ("review",)
-    elif case == "routine":  # a valid catalog without an AGY orchestrator seat
-        valid = model_catalog.validate_catalog(_catalog_copy(**{"orchestrator_seats.agy": None}))
-        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: valid)
-        expected_roles = ("routine",)
-    elif case == "invalid_catalog":  # the real validator rejects the catalog, so no role has a seat
-        invalid = _catalog_copy(**{"orchestrator_seats.agy.model_id": "no-such-model"})
-        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: model_catalog.validate_catalog(invalid))
-        expected_roles = ("review", "routine")
-    else:
-        routine_id = catalog["orchestrator_seats"]["agy"]["model_id"]
-        swapped = _catalog_copy(**{f"models.{routine_id}.routing_wire_ids.agy": _SENTINEL_SEATS["routine"]})
-        participants = {**acpx.ACPX_SUPPORTED_PARTICIPANTS, "agy": {**acpx.ACPX_SUPPORTED_PARTICIPANTS["agy"], "model": _SENTINEL_SEATS["review"]}}
-        monkeypatch.setattr(acpx, "ACPX_SUPPORTED_PARTICIPANTS", participants)
-        monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: swapped)
-        monkeypatch.setattr(model_catalog, "require_execution_model", lambda model, **kwargs: model)
     origin = importlib.util.find_spec(module).origin
-    _forget((*_SEAT_CONFIG_MODULES, module), monkeypatch)
+    paths = _EFFECTIVE_DEFAULTS.get(module, {})
+    result = _run_case(module, case, sorted(paths))
 
     if case == "wiring":
-        bound = _bound_strings(import_named_module(module))
-        gemini_literals = sorted({
-            text for text in (*bound, *_source_strings(origin))
-            if "gemini" in text.lower()
-            and (catalog["models"].get(model_catalog.canonical_model_id(text, catalog) or "", {}).get("family") == "google")
-        })
-        assert gemini_literals == [], f"{module} still names Gemini models: {gemini_literals}"
+        assert result["error"] is None, result
+        literals, parser_defaults = _source_literals_and_parser_defaults(origin)
+        named = sorted(set(literals) & _gemini_identifiers(model_catalog.load_model_catalog()))
+        assert named == [], f"{module} names Gemini models in its source: {named}"
+        assert all(isinstance(node, ast.Name) and node.id == _PARSER_MODEL_DEFAULT for node in parser_defaults), (
+            f"{module} has a --model default that is not {_PARSER_MODEL_DEFAULT}"
+        )
+        for path, role in paths.items():
+            value, seat = result["values"][path], _SENTINEL_SEATS[role]
+            assert seat in value if path.startswith("in ") else value == seat, f"{module} {path} is {value!r}, not the {role} seat"
         if module in _GEMINI_SEAT_CALLERS:
-            assert set(_SENTINEL_SEATS.values()) & set(bound), f"{module} binds no catalog seat"
+            assert paths or parser_defaults, f"{module} has no checked seat binding"
         return
     if module in _SEAT_FREE_MODULES:
-        import_named_module(module)  # binds no seat, so a missing seat cannot break it
+        assert result["error"] is None, result  # binds no seat, so a missing seat cannot break it
         return
-    with pytest.raises(RuntimeError) as raised:
-        import_named_module(module)
-    assert type(raised.value).__name__ == "GeminiSeatUnavailable"
-    assert raised.value.roles == expected_roles
-    own_frames = [frame for frame in traceback.extract_tb(raised.tb) if frame.filename == origin]
+    expected_roles = {"review": ["review"], "routine": ["routine"], "invalid_catalog": ["review", "routine"]}[case]
+    assert result["error"] == "GeminiSeatUnavailable", result
+    assert result["roles"] == expected_roles
+    assert all(repr(role) in result["message"] for role in expected_roles)
+    own_frames = [line for filename, _, line in result["frames"] if filename == origin]
     assert own_frames, f"{module} did not reach a seat binding of its own"
-    failing_line = linecache.getline(origin, own_frames[0].lineno)  # the module-level statement
+    failing_line = own_frames[0]  # the module-level statement
     assert "batch_gemini_config import" in failing_line or "_gemini_seats()" in failing_line, failing_line
