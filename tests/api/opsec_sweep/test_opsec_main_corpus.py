@@ -109,7 +109,8 @@ def _origin_main_sanitize_text(text: str) -> str:
     protected = [match.span() for pattern in _MAIN_PROTECTED for match in pattern.finditer(text)]
     findings = []
     for match in _MAIN_PATH.finditer(text):
-        token = match.group().rstrip(".,;:!?)]}")
+        # lu-machinery 0.1.43 span contract: a closing backtick is not path.
+        token = match.group().rstrip(".,;:!?)]}`")
         start, end = match.start(), match.start() + len(token)
         if token and not any(start < right and left < end for left, right in protected):
             findings.append((start, end))
@@ -142,6 +143,14 @@ def test_route_wide_middleware_equals_origin_main_without_rules_exemption(route)
     assert response.json() == expected
 
 
+# Path data under test, not a scratch-directory producer; keep its bytes.
+_API_QUERY_SHAPE = "".join(("open /", "tmp/fixture/file; /api/rules?file=/home/fixture/file"))
+# The one shape whose rewrite deliberately differs from the frozen baseline:
+# lu-machinery 0.1.43 flags a root inside an /api query value (fail closed),
+# where the baseline exempted the whole /api span.
+_EXPECTED_AFTER_API_QUERY_AMENDMENT = {_API_QUERY_SHAPE: "open [redacted-path]; /api/rules?file=[redacted-path]"}
+
+
 @pytest.mark.parametrize(
     "text",
     [
@@ -153,10 +162,9 @@ def test_route_wide_middleware_equals_origin_main_without_rules_exemption(route)
         "getaddrinfo ENOTFOUND node.example.invalid",
         "".join(("auth ", "https", "://", "u:", "Ab3dE/fG+h9=", "@node.example.invalid/r.git denied")),
         "open `/home/fixture/file`next.",
-        # Path data under test, not a scratch-directory producer; keep its bytes.
-        "".join(("open /", "tmp/fixture/file; /api/rules?file=/home/fixture/file")),
+        _API_QUERY_SHAPE,
         "Budget ~500K/1M, fraction ~2/3, split ~50/50, cost ~35/module",
     ],
 )
 def test_sanitizer_equals_origin_main_for_diagnostic_shapes_outside_lane_health(text):
-    assert sanitize_text(text) == _origin_main_sanitize_text(text)
+    assert sanitize_text(text) == _EXPECTED_AFTER_API_QUERY_AMENDMENT.get(text, _origin_main_sanitize_text(text))
