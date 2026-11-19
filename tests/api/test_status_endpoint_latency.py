@@ -33,9 +33,10 @@ _BURST = 20
 _ATTEMPTS = 10_000
 # Modules whose cold misses go through ``cache_get_or_compute_async``. Since
 # lu-machinery 0.1.31 (machinery #743) GET /api/delegate/tasks is a
-# stale-while-revalidate route: ``state_helpers.cache_read_swr`` makes that
+# stale-while-revalidate route (and GET /api/artifacts/html uses
+# ``cache_read_swr`` too): ``state_helpers.cache_read_swr`` makes that
 # call, so state_helpers' own binding is the one to gate.
-_COLD_ROUTERS = (state_helpers, state_router, product_state_router, artifacts_router, epics_router)
+_COLD_ROUTERS = (state_helpers, state_router, product_state_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
@@ -625,3 +626,104 @@ def test_delegate_list_keeps_one_entry_across_task_generations(
     assert calls["n"] == 1
     keys = [key for key in state_helpers._ttl_cache if ":swr:delegate-tasks:" in key]
     assert len(keys) == 1
+
+
+def test_stale_artifacts_html_returns_stored_while_refresh_runs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fresh and stale /api/artifacts/html must serve off a saturated executor without waiting on refresh."""
+    clock = {"t": 1_000.0}
+    calls = {"n": 0}
+    pool_entered = threading.Event()
+    pool_release = threading.Event()
+    refresh_entered = threading.Event()
+    release_refresh = threading.Event()
+    refresh_finished = threading.Event()
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def collect(**_kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return {"generated_at": "2026-01-01T00:00:00Z", "total": 1, "artifacts": [{"path": "docs/a.md"}]}
+        refresh_entered.set()
+        try:
+            release_refresh.wait()
+        finally:
+            refresh_finished.set()
+        return {
+            "generated_at": "2026-01-01T00:00:20Z",
+            "total": 2,
+            "artifacts": [{"path": "docs/a.md"}, {"path": "docs/b.md"}],
+        }
+
+    monkeypatch.setattr(artifacts_router, "collect_html_artifacts", collect)
+    app = _mount(tmp_path, artifacts_router.router, "/api/artifacts")
+
+    async def scenario() -> None:
+        loop = asyncio.get_running_loop()
+        loop.set_default_executor(concurrent.futures.ThreadPoolExecutor(max_workers=1))
+
+        def blocker() -> None:
+            pool_entered.set()
+            pool_release.wait()
+
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/artifacts/html")
+            assert first.status_code == 200
+            assert first.json()["generated_at"] == "2026-01-01T00:00:00Z"
+            assert first.headers["X-Snapshot-State"] == "fresh"
+            assert calls["n"] == 1
+
+            blocked = loop.run_in_executor(None, blocker)
+            warm_task: asyncio.Task | None = None
+            second_task: asyncio.Task | None = None
+            try:
+                await _until(pool_entered.is_set, "default executor blocker did not start")
+
+                clock["t"] += 1.0
+                warm_task = asyncio.create_task(client.get("/api/artifacts/html"))
+                await _until(warm_task.done, "warm /api/artifacts/html waited on saturated default executor")
+                warm = warm_task.result()
+                assert warm.status_code == 200
+                assert warm.json()["generated_at"] == "2026-01-01T00:00:00Z"
+                assert warm.headers["X-Snapshot-State"] == "fresh"
+                assert warm.headers["X-Snapshot-Age-S"] == "1.000"
+                assert not blocked.done()
+                assert calls["n"] == 1
+
+                clock["t"] += artifacts_router._ARTIFACT_LIST_TTL_S
+                second_task = asyncio.create_task(client.get("/api/artifacts/html"))
+                await _until(refresh_entered.is_set, "stale /api/artifacts/html queued no background refresh")
+                await _until(second_task.done, "stale /api/artifacts/html blocked on refresh or executor")
+                second = second_task.result()
+                assert second.status_code == 200
+                assert second.json()["generated_at"] == "2026-01-01T00:00:00Z"
+                assert second.json()["total"] == 1
+                assert second.headers["X-Snapshot-State"] == "stale"
+                assert second.headers["X-Snapshot-Age-S"] == f"{artifacts_router._ARTIFACT_LIST_TTL_S + 1:.3f}"
+                assert calls["n"] == 2
+                assert not blocked.done()
+                assert not refresh_finished.is_set()
+            finally:
+                pool_release.set()
+                release_refresh.set()
+                await blocked
+                for task in (warm_task, second_task):
+                    if task is not None and not task.done():
+                        task.cancel()
+                await asyncio.gather(*(t for t in (warm_task, second_task) if t is not None), return_exceptions=True)
+
+            await _until(refresh_finished.is_set, "background refresh did not finish after release")
+            await _until(
+                lambda: not state_helpers._swr_refresh_keys,
+                "background refresh did not publish updated snapshot",
+            )
+            third = await client.get("/api/artifacts/html")
+            assert third.status_code == 200
+            assert third.json()["generated_at"] == "2026-01-01T00:00:20Z"
+            assert third.json()["total"] == 2
+            assert third.headers["X-Snapshot-State"] == "fresh"
+
+    asyncio.run(scenario())
+    assert calls["n"] == 2

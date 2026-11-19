@@ -19,16 +19,17 @@ checks. Codex flagged that mixing these would muddy the contract.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 from pathlib import Path
 from typing import Any, cast
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from lu_machinery.api.state_helpers import cache_read_swr, ctx_scoped_ttl_key, reports_failure, snapshot_headers
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -114,6 +115,7 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 
 @router.get("/html")
 async def html_artifacts(
+    response: Response,
     class_: str | None = Query(None, alias="class"),
     date_from: str | None = Query(None),
     status: str | None = Query(None),
@@ -139,27 +141,35 @@ async def html_artifacts(
         types = ("html", "md")
 
     resolved = resolve_context(ctx)
-    # One JSON part, so a colon inside a filter cannot collide with another filter.
-    cache_key = ctx_scoped_ttl_key(
-        resolved,
-        "artifacts-html",
-        json.dumps(
-            [class_ or "", date_from or "", status or "", author or "", list(types)],
-            separators=(",", ":"),
-        ),
-    )
-    return await cache_get_or_compute_async(
-        cache_key,
-        _ARTIFACT_LIST_TTL_S,
-        lambda: collect_html_artifacts(
+    if any(value is not None for value in (class_, date_from, status, author)):
+        return await asyncio.to_thread(
+            collect_html_artifacts,
             class_filter=class_,
             date_from=date_from,
             status=status,
             author=author,
             types=types,
             ctx=resolved,
+        )
+
+    # Resolve the cache key on the event loop so fresh and active-stale reads
+    # never queue behind a saturated default executor before hitting the cache.
+    cache_key = ctx_scoped_ttl_key(resolved, "swr", "artifacts-html", repr(resolved.roots), f"type_={type_!r}")
+    value, age, stored = await cache_read_swr(
+        cache_key,
+        _ARTIFACT_LIST_TTL_S,
+        lambda: collect_html_artifacts(
+            class_filter=None,
+            date_from=None,
+            status=None,
+            author=None,
+            types=types,
+            ctx=resolved,
         ),
+        storable=lambda payload: not reports_failure(payload),
     )
+    response.headers.update(snapshot_headers(age, _ARTIFACT_LIST_TTL_S, unavailable=not stored))
+    return value
 
 
 def _level_cfg(track: str) -> dict | None:
