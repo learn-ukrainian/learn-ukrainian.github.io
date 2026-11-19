@@ -956,7 +956,7 @@ def _reviewer_for_writer(writer: str, reviewer_override: str | None = None) -> s
     if reviewer_override:
         return _normalize_writer(reviewer_override)
     if writer == "claude-tools":
-        return "gemini-tools"
+        return "agy-tools"  # native AGY (Neon); the gemini CLI lane is retired
     if writer == "grok-tools":
         return "claude-tools"
     if writer == "cursor-tools":

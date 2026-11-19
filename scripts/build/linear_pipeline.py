@@ -180,8 +180,7 @@ REVIEWER_CHOICES = (
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    # The gemini runtime ladder routes only the AGY-CLI Hydrogen seat; Neon would select the retired gemini CLI.
-    "gemini-tools": {"model": HYDROGEN_MODEL, "effort": "high"},
+    "gemini-tools": {"model": NEON_MODEL, "effort": "high"},  # review seat; V7 reaches Gemini review via agy-tools
     "codex-tools": {"model": "gpt-6.2-sol", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
