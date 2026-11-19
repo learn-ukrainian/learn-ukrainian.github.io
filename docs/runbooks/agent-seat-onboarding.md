@@ -630,7 +630,7 @@ ChatGPT auth-method selector:
 ```bash
 printf '%s\n' 'Reply with exactly READY.' |
   ACPX_AUTH_CHAT_GPT=1 LU_ACPX_TRANSPORT=shadow \
-  .venv/bin/python -m scripts.agent_runtime.acpx_pilot \
+  .venv/bin/python -m lu_machinery.agent_runtime.acpx_pilot \
   --target codex --cwd . --task-id pilot-6063 \
   --correlation-id pilot-6063-codex-v1 \
   --idempotency-key pilot-6063-codex-v1
