@@ -274,13 +274,11 @@ claim:
        `FastAPI()` with no `lifespan=` argument at all enters and exits a `TestClient` block just as
        cleanly, since there is nothing to fail. Making the positive assertion "additional, for
        stronger evidence" left the test able to pass on a factory that wired no lifespan whatsoever.
-       **Fixed: the positive assertion is mandatory, not optional.** Patch one of `_lifespan`'s own
-       side-effecting calls (e.g. `lu_machinery.api.main.start_periodic_refresh`, or
-       `ensure_broker_db_ready`) with a `Mock`/spy *before* constructing `factory_app`, enter
-       `with TestClient(factory_app) as client:`, and assert the spy **was called** — only a call
-       recorded on the specific function `_lifespan` invokes proves `create_app()` actually wired
-       `_lifespan` in as the app's lifespan; "the block didn't raise" proves nothing on its own and
-       must not be the test's only assertion.
+       The default `_lifespan` calls `start_periodic_refresh()` during startup and
+       `stop_periodic_refresh()` during shutdown. Patch
+       `lu_machinery.api.main.start_periodic_refresh` with a spy before constructing
+       `factory_app`. Enter the `TestClient(factory_app)` context and assert that the spy was
+       called. The assertion verifies that `create_app()` wired the startup hook into the app.
      This sidesteps identity-equality entirely (comparing hardcoded values against real structures,
      not two live objects against each other) and needs no second app construction.
   4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
