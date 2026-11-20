@@ -3651,20 +3651,6 @@
       ]
     },
     {
-      "card_id": "wc_9sx49mn7gh14",
-      "entry_id": 418239,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:чай",
-      "scope_key": "wc_9sx49mn7gh14:vts:чай#article/3:definition_uk",
-      "sense_id": "ws_wwqf7yd6mfsg",
-      "source_sense_key": "vts:чай#article/3",
-      "span": [
-        264,
-        331
-      ]
-    },
-    {
       "card_id": "wc_f1k1r2j836hx",
       "entry_id": 206584,
       "field": "spelling",
@@ -9130,20 +9116,6 @@
             19
           ]
         }
-      ]
-    },
-    {
-      "card_id": "wc_bgkyf53yfr86",
-      "entry_id": 296250,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:помідор",
-      "scope_key": "wc_bgkyf53yfr86:vts:помідор#article/2:definition_uk",
-      "sense_id": "ws_938zczetnamg",
-      "source_sense_key": "vts:помідор#article/2",
-      "span": [
-        126,
-        154
       ]
     },
     {
@@ -43547,9 +43519,11 @@
     "synonyms": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "transliteration": "no_approved_derivation",
     "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/examples": "independent_exact_version_A1_review_pending",
+    "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/definition_uk": "missing_antecedent_for_source_sense",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/cefr": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/definition_uk": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
-    "wc_b8efpmnj944x/wc_b8efpmnj944x/examples": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb"
+    "wc_b8efpmnj944x/wc_b8efpmnj944x/examples": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
+    "wc_bgkyf53yfr86/ws_938zczetnamg/definition_uk": "missing_antecedent_for_source_sense"
   },
   "held_units": [
     {

@@ -17,6 +17,7 @@ from scripts.atlas import a1_slice3_inputs as previous
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas.a1_card_receipts import _payload_text, digest, selected_rows
+from scripts.atlas.a1_card_receipts import is_citation_analysis as _canonical_grammar
 
 SOURCE_SHA = "0398eb5caa1c6a98dccaf9275520ccb2f978a95c"
 JOIN = "remaining_resolved_entry_priority_inventory_order_v1"
@@ -95,7 +96,10 @@ def select(inventory, slice3, snapshot):
 def frozen_selection(root):
     snapshot = cards.load(root / INPUTS)
     cards.require(digest(snapshot) == INPUTS_SHA256, "slice4_snapshot_digest_mismatch")
-    for path, expected in FILE_SHA256.items():
+    # Keep the selection snapshot's historical inputs and verify the repaired
+    # predecessor against its current, independently pinned manifest bytes.
+    file_pins = {**FILE_SHA256, previous.MANIFEST: previous.MANIFEST_FILE_SHA256}
+    for path, expected in file_pins.items():
         cards.require(hashlib.sha256((root / path).read_bytes()).hexdigest() == expected,
                       "slice4_input_file_digest_mismatch")
     inventory = cards.load(root / "registry/atlas/a1-v1-inventory.json")
@@ -163,26 +167,6 @@ def _strings(value):
     elif isinstance(value, list):
         for item in value:
             yield from _strings(item)
-
-
-def _canonical_grammar(analysis, target):
-    """Distinguish citation readings from syncretic forms of the same entry."""
-    if (analysis.get("entry_id"), analysis.get("lemma"), analysis.get("pos"),
-            analysis.get("word_form")) != (target["entry_id"], target["lemma"],
-                                           target["pos"], target["lemma"]):
-        return False
-    tags = analysis["tags"].split(":")
-    if tags[0] != target["pos"]:
-        return False
-    if target["pos"] == "noun":
-        # Plural-only headwords retain p:...:ns; indeclinables use the
-        # singular nominative reading, not an arbitrary identical case form.
-        return "v_naz" in tags and (("p" in tags) == ("ns" in tags))
-    if target["pos"] == "adj":
-        return "m" in tags and "v_naz" in tags
-    if target["pos"] == "verb":
-        return "inf" in tags
-    return target["pos"] == "adv"
 
 
 def _validate_grammar(claim, record, target):

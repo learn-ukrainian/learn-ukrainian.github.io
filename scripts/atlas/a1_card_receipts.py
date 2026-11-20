@@ -45,6 +45,27 @@ def selected_rows(inventory) -> list:
             and row["mapping"].get("pilot", {}).get("card_id") is not None]
 
 
+def is_citation_analysis(analysis, target):
+    """Match the allocated VESUM entry and its citation-form tags."""
+    pos = target["pos"]
+    lemma = target["lemma"]
+    if (analysis.get("entry_id"), analysis.get("lemma"), analysis.get("pos"),
+            analysis.get("word_form")) != (target["entry_id"], lemma, pos, lemma):
+        return False
+    tags = analysis["tags"].split(":")
+    if tags[0] != pos:
+        return False
+    if pos == "noun":
+        # Plural-only nouns have ns. Use the singular reading for indeclinables
+        # whose singular and plural forms are spelled alike.
+        return "v_naz" in tags and ("p" in tags) == ("ns" in tags)
+    if pos == "adj":
+        return "m" in tags and "v_naz" in tags
+    if pos == "verb":
+        return "inf" in tags
+    return pos in {"adv", "part"}
+
+
 def require_lemma_call(call, lemma):
     """Bind a saved lemma lookup to the query it actually made."""
     keys = {"query_ulif_records": "words", "inspect_lemma": "lemma",
