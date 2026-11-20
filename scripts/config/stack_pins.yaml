@@ -46,7 +46,7 @@ pins:
     review_by: "2026-11-16"
     note: version input of astral-sh/setup-uv. The action SHA is Dependabot's.
   - name: python
-    pinned: "3.14.8"
+    pinned: "3.14.10"
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"
