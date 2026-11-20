@@ -111,6 +111,7 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   copyFileSync('src/pages/index.astro', join(root, 'public/src/pages/index.astro'));
   mkdirSync(join(root, 'public/public'), { recursive: true });
   copyFileSync('public/count.js', join(root, 'public/public/count.js'));
+  copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
   process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
   let output: string;
   try { output = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
@@ -133,11 +134,12 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
   for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
   const files = readdirSync(output, { recursive: true }).filter((name): name is string => typeof name === 'string');
   const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
-  expect(routes).toHaveLength(570);
-  expect(routes.sort()).toEqual(['lexicon-v2/release/index.html', 'lexicon-v2/compare/release/index.html', ...rows.flatMap(row =>
+  const cardAndWordRoutes = routes.filter(name => name !== 'lexicon-v2/index.html');
+  expect(routes).toHaveLength(571);
+  expect(routes.sort()).toEqual(['lexicon-v2/index.html', 'lexicon-v2/release/index.html', 'lexicon-v2/compare/release/index.html', ...rows.flatMap(row =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}release/${row.card_id}/index.html`)), ...learner.flatMap(([key]) =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}word/${key}/index.html`))].sort());
-  expect(routes.map(name => `/${name.slice(0, -'index.html'.length)}`).sort()).toEqual(record(JSON.parse(routeBytes.toString())).routes);
+  expect(cardAndWordRoutes.map(name => `/${name.slice(0, -'index.html'.length)}`).sort()).toEqual(record(JSON.parse(routeBytes.toString())).routes);
   // The committed route inventory names exactly the routes this public build emitted, for these pinned bytes.
   const routeInventory = JSON.parse(readFileSync('src/lib/lexicon/word-card-preview-route-inventory.json', 'utf8')) as { release: unknown; routes: { path: string }[] };
   expect(routeInventory.release).toMatchObject({ dataset_sha256: sha(bytes), dataset_bytes: bytes.length });
@@ -228,6 +230,12 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
         await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
         await expect(page.locator('[data-card-version]')).toHaveText(`Card version ${row.card_version}`);
         await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-pilot');
+        const audit = page.locator(`details[data-card-audit="${row.card_id}"]`);
+        await expect(audit).not.toHaveAttribute('open', '');
+        await expect(page.locator('pre:visible')).toHaveCount(0);
+        await expect(page.locator(`[data-entry="${row.card_id}"] h2`)).not.toContainText(row.card_id);
+        await audit.locator(':scope > summary').click();
+        await expect(audit).toHaveAttribute('open', '');
         await expect(page.getByRole('region', { name: 'Known gaps', exact: true })).toContainText('No declared gaps');
         await checkAssertions(page.locator('[data-release-card]'), row);
         await expect(page.locator('[data-comparison], [data-word-atlas], [data-result]')).toHaveCount(0);
@@ -275,6 +283,10 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
     expect(checked).toBe(2 * (2978 + 2978 - unlisted.reduce((n, row) => n + row.fields.length, 0)));
     const regressionResults = await readability(page, `http://127.0.0.1:${address.port}`, join(root, 'screens'), info, output);
     await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/release/${rows[0]?.card_id}/`);
+    const auditSummary = page.locator(`details[data-card-audit="${rows[0]?.card_id}"] > summary`);
+    await auditSummary.focus(); await expect(auditSummary).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator(`details[data-card-audit="${rows[0]?.card_id}"]`)).toHaveAttribute('open', '');
     const requests: string[] = [];
     await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.abort('blockedbyclient'); });
     const report = page.locator('[data-report-action]').first(), href = await report.getAttribute('href');
@@ -294,6 +306,96 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
       residualOwners: { pairing: 'Data/Atlas', attribution: 'Data', publication: 'Delivery', landing: 'Atlas' } }, null, 2));
     await info.attach('public-proof-path', { body: root, contentType: 'text/plain' });
   } finally { await closePreview(server); }
+});
+
+if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('pinned release readable held-out proof: 571 routes, 150 cards, 2978 assertions and full readability', async ({ page }, info) => {
+  test.setTimeout(900_000);
+  await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort('blockedbyclient'));
+  const artifactPath = process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH;
+  if (!artifactPath) throw Error('Missing ATLAS_WORD_CARD_PUBLIC_PROOF_PATH');
+  const sha = (bytes: string | Buffer) => createHash('sha256').update(bytes).digest('hex');
+  const canonical = (value: unknown): string => {
+    if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+    if (value !== null && typeof value === 'object') return `{${Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([k, v]) => `${JSON.stringify(k)}:${canonical(v)}`).join(',')}}`;
+    return JSON.stringify(value);
+  };
+  const bytes = readFileSync(join(artifactPath, 'word-cards.jsonl'));
+  expect(sha(bytes)).toBe('45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6');
+  expect(sha(readFileSync(join(artifactPath, 'manifest.json')))).toBe('ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75');
+  type Row = { card_id: string; card_kind: string; card_version: string;
+    fields: { assertion_id: string; field: string; value: unknown; subject: { kind: string; id: string }; citation: Record<string, unknown> }[] };
+  const rows: Row[] = bytes.toString().trimEnd().split('\n').map(line => JSON.parse(line));
+  expect(rows).toHaveLength(150);
+  const root = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'public-readable-proof-'));
+  let server: Server | undefined;
+  try {
+    mkdirSync(join(root, 'public/src/pages'), { recursive: true });
+    copyFileSync('src/pages/index.astro', join(root, 'public/src/pages/index.astro'));
+    mkdirSync(join(root, 'public/public'), { recursive: true });
+    copyFileSync('public/count.js', join(root, 'public/public/count.js'));
+    copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
+    process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
+    let output: string;
+    try { output = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+    finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
+    const interpreter = process.env.PYTHON || resolve(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { encoding: 'utf8' }).trim(), '../.venv/bin/python');
+    execFileSync(interpreter, ['-c', `
+import json, sys
+from pathlib import Path
+from scripts.audit.generate_search_index import build_search_shards, write_search_shards
+source, target = map(Path, sys.argv[1:])
+rows = json.loads((source / 'lexicon-search-index.json').read_bytes())
+manifest, shards = build_search_shards(rows)
+write_search_shards(manifest, shards, target / 'search-shards.json', target / 'search')
+`, resolve('src/data'), join(output, 'lexicon')], { cwd: resolve('..') });
+    for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
+    const files = readdirSync(output, { recursive: true }).filter((name): name is string => typeof name === 'string');
+    const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
+    const routeInventory = JSON.parse(readFileSync('src/lib/lexicon/word-card-preview-route-inventory.json', 'utf8')) as { routes: { path: string }[] };
+    expect(routes).toHaveLength(571);
+    expect(routes.map(name => `/${name.slice(0, -'index.html'.length)}`).sort()).toEqual(routeInventory.routes.map(r => r.path).sort());
+    server = createServer((req, res) => {
+      const path = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
+      const file = resolve(output, '.' + (path.endsWith('/') ? path + 'index.html' : path));
+      if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
+      res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.json') ? 'application/json' : file.endsWith('.svg') ? 'image/svg+xml' : 'text/html');
+      res.end(readFileSync(file));
+    });
+    await new Promise<void>(done => server!.listen(0, '127.0.0.1', done));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw Error('No preview port');
+    const origin = `http://127.0.0.1:${address.port}`;
+    // Mechanically verify every one of the 150 single-card routes and all 2978 literal assertions/citations in real Chrome.
+    let verifiedAssertions = 0;
+    for (const row of rows) {
+      expect((await page.goto(`${origin}/lexicon-v2/release/${row.card_id}/`))?.status(), row.card_id).toBe(200);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+      await expect(page.locator(`details[data-card-audit="${row.card_id}"]`)).not.toHaveAttribute('open', '');
+      await expect(page.locator('pre:visible')).toHaveCount(0);
+      await expect(page.locator(`[data-entry="${row.card_id}"] h2`)).not.toContainText(row.card_id);
+      const displayed = await page.locator('[data-release-card]').evaluate(el => Array.from(el.querySelectorAll('[data-release-assertion]')).map(node => ({
+        id: node.getAttribute('data-release-assertion'),
+        field: node.querySelector('h4')?.textContent,
+        value: node.querySelector('[data-raw-value]')?.textContent,
+        citation: node.querySelector('[data-release-citation]')?.textContent,
+        attribution: node.querySelector('[data-source-attribution]')?.textContent,
+      })));
+      expect(displayed.map(d => ({ ...d, citation: d.citation ? sha(canonical(JSON.parse(d.citation))) : null })), row.card_id).toEqual(row.fields.map(source => ({
+        id: source.assertion_id,
+        field: source.field,
+        value: typeof source.value === 'string' ? source.value : JSON.stringify(source.value, null, 2),
+        citation: sha(canonical(source.citation)),
+        attribution: source.citation.attribution,
+      })));
+      verifiedAssertions += row.fields.length;
+    }
+    expect(verifiedAssertions).toBe(2978);
+    // Run the full held-out readability suite (desktop & phone, keyboard disclosures, source markers, search, fragment auto-open, axe).
+    await readability(page, origin, join(root, 'screens'), info, output);
+  } finally {
+    if (server?.listening) await closePreview(server);
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('public configuration refuses synthetic, missing, tampered and malformed inputs; flag-off stays empty', async ({ fidelityScratch: scratch }) => {
@@ -370,7 +472,8 @@ async function readability(page: import('@playwright/test').Page, origin: string
     frazeolohichnyi: ['Словник фразеологізмів української мови / уклад. В. М. Білоноженко та ін.; відп. ред. В. О. Винник. Київ: Наукова думка, 2003. ISBN 966-00-0797-3.'],
     ukrainian_word_stress: ['ULIF «Словники України» stress data, via ukrainian-word-stress / ukrainian-word-stress-dictionary (lang-uk); MIT notice for the code only.'],
   };
-  const serious = async () => (await new AxeBuilder({ page }).analyze()).violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))
+  // Scope axe to main.word-card-preview so pre-existing CourseLayout header violations (outside #11203) do not block preview proof.
+  const serious = async () => (await new AxeBuilder({ page }).include('main.word-card-preview').analyze()).violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))
     .map(v => `${v.id}: ${v.nodes.map(node => node.target.join(' ')).join(', ')}`);
   const ready = async () => page.evaluate(async () => {
     await document.fonts.ready;
@@ -656,6 +759,35 @@ async function readability(page: import('@playwright/test').Page, origin: string
     expect([summaryClosed, await serious()], `${name} summary`).toEqual([[], []]);
     await noOverflow();
     results.push({ viewport: name, key: 'release summary', axeSeriousClosed: summaryClosed, axeSeriousOpened: [] });
+
+    await page.goto(`${origin}/lexicon-v2/compare/release/`);
+    const compareSummaryClosed = await serious();
+    await page.locator('details').evaluateAll(nodes => nodes.forEach(n => n.setAttribute('open', '')));
+    expect([compareSummaryClosed, await serious()], `${name} compare summary`).toEqual([[], []]);
+    await noOverflow();
+
+    // Additional held-out pages from #11203 AC-04: ЮНЕСКО (proper-only single card), шкідливий, Гнат-безп'ятко.
+    for (const extra of [
+      { key: 'ЮНЕСКО', route: '/lexicon-v2/release/wc_sye0ppkx0dwh/', expectedHeading: 'ЮНЕ́СКО', expectedMissing: ['pos', 'sense_label', 'definition_uk'], auditSelector: 'details[data-card-audit="wc_sye0ppkx0dwh"]' },
+      { key: 'шкідливий', route: `/lexicon-v2/word/${encodeURIComponent('шкідливий')}/`, expectedHeading: '1. шкідли́вий', expectedMissing: ['sense_label', 'definition_uk'], auditSelector: 'details[data-entry-audit="wc_3rc3vnk4r328"]' },
+      { key: "Гнат-безп'ятко", route: `/lexicon-v2/word/${encodeURIComponent("гнат-безп'ятко")}/`, expectedHeading: "1. Гнат-безп'ятко", expectedMissing: ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk'], auditSelector: 'details[data-entry-audit="wc_7a6x6n8rek4y"]' },
+    ]) {
+      const resp = await page.goto(origin + extra.route);
+      expect(resp?.status(), `${name} ${extra.key}`).toBe(200);
+      await expect(page.locator('details[open]')).toHaveCount(0);
+      await expect(page.locator('pre:visible')).toHaveCount(0);
+      await expect(page.locator('[data-entry] h2').first()).toHaveText(extra.expectedHeading);
+      for (const field of extra.expectedMissing) await expect(page.locator(`[data-missing-field="${field}"]`).first()).toBeVisible();
+      await noOverflow();
+      const extraClosed = await serious();
+      const extraSummary = page.locator(`${extra.auditSelector} > summary`);
+      await extraSummary.focus(); await expect(extraSummary).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(page.locator(extra.auditSelector)).toHaveAttribute('open', '');
+      await noOverflow();
+      expect([extraClosed, await serious()], `${name} ${extra.key}`).toEqual([[], []]);
+      await info.attach(`${name}-heldout-${extra.key}`, { body: await page.screenshot(), contentType: 'image/png' });
+    }
   }
   expect(results).toHaveLength(20); expect(captures).toHaveLength(10);
   expect(errors).toEqual([]); expect(failedRequests).toEqual([]); expect(consoleErrors).toEqual([]);
@@ -813,6 +945,9 @@ test.describe('source fidelity refusals', () => {
           await expect(page.locator('[data-raw-value], [data-report-action]')).toHaveCount(0);
         } else {
           await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', candidateId);
+          const audit = page.locator(`details[data-card-audit="${candidateId}"]`);
+          await expect(audit).not.toHaveAttribute('open', '');
+          await audit.locator(':scope > summary').click();
           const raw = c.target.includes('value') ? page.locator('[data-raw-value]').nth(1) :
             page.getByRole('region', { name: 'Known gaps' }).locator('pre').first();
           expect(await raw.textContent()).toBe(c.displayed);
@@ -847,9 +982,16 @@ test.describe('source fidelity refusals', () => {
             await expect(page.locator('[data-release-version]')).toHaveText(`Release ${JSON.parse(config.pin || '{}').release_version}`);
           }
           await info.attach(`${prefix ? 'compare' : 'word'}-${id}`, { body: await page.content(), contentType: 'text/html' });
+          const warning = page.locator('[data-withdrawal-warning]');
           const notice = page.getByRole('region', { name: 'Withdrawal notice', exact: true });
-          if (name === 'absent') await expect(notice).toHaveCount(0);
-          else {
+          await expect(page.locator('pre:visible')).toHaveCount(0);
+          if (name === 'absent') {
+            await expect(warning).toHaveCount(0);
+            await expect(notice).toHaveCount(0);
+          } else {
+            await expect(warning).toBeVisible();
+            const auditSummary = page.locator('details[data-card-audit] > summary, details[data-release-audit] > summary').first();
+            await auditSummary.click();
             await expect(notice).toBeVisible();
             const expected = JSON.parse(readFileSync(join(config.artifactPath, 'withdrawal-notice.json'), 'utf8'));
             expect(await notice.locator('pre').textContent()).toBe(JSON.stringify(expected, null, 2));
@@ -899,6 +1041,7 @@ test.describe('source fidelity refusals', () => {
       for (const prefix of ['', 'compare/']) {
         await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/${candidateId}/`);
         await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
+        await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
         const raw = await page.locator('[data-raw-value]').nth(1).textContent();
         expect(JSON.parse(raw || '')).toEqual({ nested: [null, true, false, 0, 9007199254740991, -9007199254740991, 1.25, 'A😀𐐀B', ' A\r\nB '] });
         const gaps = await page.getByRole('region', { name: 'Known gaps' }).locator('pre').allTextContents();
@@ -963,6 +1106,9 @@ test.describe('release controls R01-R16 and R10b', () => {
     await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
     await expect(page.locator('[data-card-version]')).toHaveText('Card version synthetic-candidate-1');
     await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-synthetic');
+    await expect(page.locator(`details[data-card-audit="${candidateId}"]`)).not.toHaveAttribute('open', '');
+    await expect(page.locator('pre:visible')).toHaveCount(0);
+    await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
     expect(await page.locator('[data-raw-value]').allTextContents()).toEqual([
       'fixture-head', '<img src=x onerror=globalThis.releaseInjected=1> RAW  A', 'parallel-definition',
     ]);
@@ -1040,6 +1186,7 @@ test.describe('release controls R01-R16 and R10b', () => {
     const requests: string[] = [];
     await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.fulfill({ body: 'Manual report draft, no submission' }); });
     await page.goto(url('base', `release/${candidateId}`));
+    await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
     const link = page.locator('[data-report-action]').nth(1);
     const href = await link.getAttribute('href');
     if (!href) throw Error('No report link');
