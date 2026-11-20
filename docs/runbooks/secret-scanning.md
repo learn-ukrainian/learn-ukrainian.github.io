@@ -185,6 +185,38 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
    false positives" or "handed to the operator"), never the value, its location
    or where a credential is used.
 
+## Reviewed code-scanning dispositions
+
+The `self-repository` alerts below suggest replacing `./` with `$/` for
+the local Python CI action. Each flagged step follows a checkout of the
+same repository at the running commit. The pinned actionlint 1.7.12
+rejects `$/`, so these jobs keep `./` until actionlint supports the new
+syntax. [GitHub Actions workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#example-using-an-action-in-the-same-repository-as-the-workflow-at-the-running-commit-recommended)
+and [actionlint support for the self-repository reference](https://github.com/rhysd/actionlint/issues/711).
+
+| Alert | Rule | Location | Disposition |
+| --- | --- | --- | --- |
+| 562 | `zizmor/self-repository` | `.github/workflows/issue-task-quality.yml:29` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 610 | `zizmor/self-repository` | `.github/workflows/validate-yaml.yml:85` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 611 | `zizmor/self-repository` | `.github/workflows/validate-yaml.yml:203` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 612 | `zizmor/self-repository` | `.github/workflows/rules-deployment-check.yml:65` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 613 | `zizmor/self-repository` | `.github/workflows/actionlint.yml:50` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 615 | `zizmor/self-repository` | `.github/workflows/cache-hygiene.yml:72` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 616 | `zizmor/self-repository` | `.github/workflows/cache-hygiene.yml:115` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 619 | `zizmor/self-repository` | `.github/workflows/model-catalog-freshness.yml:55` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 620 | `zizmor/self-repository` | `.github/workflows/pr-body-guard.yml:71` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 621 | `zizmor/self-repository` | `.github/workflows/pr-publication-scan.yml:47` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 622 | `zizmor/self-repository` | `.github/workflows/pr-size-warning.yml:38` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 625 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:105` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 627 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:240` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 628 | `zizmor/self-repository` | `.github/workflows/stale-branch-cleanup.yml:39` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 632 | `zizmor/self-repository` | `.github/workflows/atlas-grow.yml:68` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 633 | `zizmor/self-repository` | `.github/workflows/deploy-pages.yml:47` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 634 | `zizmor/self-repository` | `.github/workflows/deploy-pages.yml:177` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 635 | `zizmor/self-repository` | `.github/workflows/pytest-slow-nightly.yml:59` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 636 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:57` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+| 637 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:156` | Won't fix. The pinned actionlint rejects the suggested syntax. |
+
 ## Relation to the other secret gates
 
 | Gate | When | Scope |
