@@ -9,15 +9,16 @@ Playwright's bundled browsers, or configures a Playwright MCP server.
 
 This static guard is a good-faith tripwire, not the control of record. It reads
 every tracked text file except prose formats (.md, .txt, .html, .csv, .rst),
-data files under curriculum/ and registry/ (a package.json is never data), and
-npm lockfiles. It cannot see a package name built at runtime. Runtime
-enforcement of the Chromium sandbox at launch is tracked in #12714.
+data files under curriculum/ and registry/ (a package.json is never data).
+Lockfiles have a separate inventory of reviewed browser dependencies. The
+source scan cannot see a program or package name constructed at runtime.
 """
 
 from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 import subprocess
 import tomllib
@@ -37,8 +38,8 @@ JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".mts", ".cts")
 CODE_SUFFIXES = (*JS_SUFFIXES, ".py", ".sh", ".bash", ".yml", ".yaml", ".json", ".toml")
 # Cheap pre-filter; every rule below only looks at files matching it.
 CANDIDATE = (
-    r"playwright|puppeteer|chromium|webkit|firefox|sandbox|connectOverCDP|connect_over_cdp|connectOptions"
-    r"|PW_TEST_CONNECT|mermaid"
+    r"playwright|[Pp]uppeteer|chromium|webkit|firefox|sandbox|connectOverCDP|connect_over_cdp|connectOptions"
+    r"|PW_TEST_CONNECT|_electron|_android|browser_?[tT]ype|chromeLauncher|google-chrome|chrome/chrome"
 )
 
 PLAYWRIGHT_PACKAGE = r"(?:@playwright/test|playwright(?:-core)?)(?:/[^'\"]*)?"
@@ -47,10 +48,21 @@ PLAYWRIGHT_PACKAGE = r"(?:@playwright/test|playwright(?:-core)?)(?:/[^'\"]*)?"
 # reach a browser type.
 JS_IMPORTABLE = {"@playwright/test": {"expect", "devices", "defineConfig"}}
 LAUNCH_CALL = re.compile(
-    r"\b(?:chromium|firefox|webkit|_electron|_android|browser_?[tT]ype)\s*\.\s*"
+    r"\b(?:chromium|firefox|webkit|_electron|_android|browser_?[tT]ype|[Pp]uppeteer|chromeLauncher)\s*\.\s*"
     r"(?:launch\w*|connect\w*)\s*\(|\bconnect(?:OverCDP|_over_cdp)\s*\("
     # A launched browser hands back its browser type: browser.browserType() / browser.browser_type.
     r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
+)
+CHROME_COMMAND = re.compile(
+    r"(?m)(?:^|[;&|])[ \t]*(?:exec[ \t]+)?[\"']?(?:[\w./-]*/)?"
+    r"(?:google-chrome(?:-stable)?|chromium(?:-browser)?|chrome/chrome)[\"']?"
+    r"(?=[ \t;|&]|$)(?![ \t]+--version(?:[ \t]|$))"
+    r"|\b(?:spawn|execFile|Popen)(?:Sync)?\s*\(\s*\[?\s*[\"'](?:[\w./-]*/)?"
+    r"(?:google-chrome(?:-stable)?|chromium(?:-browser)?|chrome/chrome)[\"']"
+)
+PUPPETEER_IMPORT = re.compile(
+    r"(?:\b(?:from|import)\s+|\b(?:require|import)\s*\(\s*)[\"']"
+    r"(?:puppeteer(?:-core)?|@puppeteer/browsers)(?=[\"'/])"
 )
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
 # Outside the launcher, a Playwright package may be named only in these places. The guard
@@ -111,13 +123,40 @@ DATA_TREES = ("curriculum/", "registry/")
 DATA_SUFFIXES = (".json", ".yaml", ".yml", ".toml")
 NPM_MANIFEST_NAME = "package.json"
 
-# Files that name a sandbox flag for a reason other than a browser launch.
-SANDBOX_FLAG_EXEMPT = {
+# npm aliases retain the real package name in the installed entry. Check both
+# names, at every nesting level, and packages declaring browser dependencies.
+BROWSER_PACKAGE = re.compile(
+    r"(?:^|[@/_.-])(?:playwright|puppeteer|chromium|chrome|chromedriver|selenium|webdriver(?:io)?"
+    r"|geckodriver|firefox|webkit|cypress|pyppeteer|splinter|nodriver|browser-use|mermaid-isomorphic"
+    r"|rehype-mermaid)(?=$|[@/_.-])",
+    re.IGNORECASE,
+)
+DEPENDENCY_KEYS = ("dependencies", "devDependencies", "optionalDependencies", "peerDependencies")
+REVIEWED_BROWSER_DEPENDENCIES = {
+    "package-lock.json": {
+        "direct: puppeteer",
+        "node_modules/@puppeteer/browsers",
+        "node_modules/chromium-bidi",
+        "node_modules/puppeteer",
+        "node_modules/puppeteer-core",
+        "node_modules/webdriver-bidi-protocol",
+    },
+    "site/package-lock.json": {
+        "direct: @axe-core/playwright",
+        "direct: @playwright/test",
+        "direct: playwright",
+        "node_modules/@axe-core/playwright",
+        "node_modules/@playwright/test",
+        "node_modules/playwright",
+        "node_modules/playwright-core",
+        "node_modules/vitest",
+    },
+    "uv.lock": set(),
 }
 
 
 @cache
-def _candidates() -> tuple[str, ...]:
+def _browser_files() -> tuple[str, ...]:
     result = subprocess.run(
         ["git", "grep", "-lIz", "-E", CANDIDATE, "--", "."],
         cwd=ROOT,
@@ -127,7 +166,7 @@ def _candidates() -> tuple[str, ...]:
         timeout=60,
     )
     assert result.returncode in (0, 1), result.stderr
-    return tuple(sorted(p for p in result.stdout.split("\0") if p.endswith(CODE_SUFFIXES) and p != SELF))
+    return tuple(sorted(p for p in result.stdout.split("\0") if p and p != SELF))
 
 
 @cache
@@ -182,7 +221,13 @@ def _read_code(path: str) -> str:
 
 
 def _files(suffixes: tuple[str, ...]) -> list[str]:
-    return [p for p in _candidates() if p.endswith(suffixes)]
+    return [p for p in _browser_files() if p.endswith(suffixes)]
+
+
+def _is_dependency_data(path: str) -> bool:
+    return path.endswith(LOCKFILE_NAMES) or (
+        path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES) and Path(path).name != NPM_MANIFEST_NAME
+    )
 
 
 def _json_strings(node: object) -> list[str]:
@@ -221,10 +266,7 @@ def _code_strings(path: str) -> list[str]:
 
 def _playwright_mentions(path: str) -> list[str]:
     """Each place `path` names a Playwright package outside the allowed places."""
-    if path == NODE_LAUNCHER or path.endswith(LOCKFILE_NAMES):
-        return []
-    is_npm_manifest = path.rsplit("/", 1)[-1] == NPM_MANIFEST_NAME
-    if path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES) and not is_npm_manifest:
+    if path == NODE_LAUNCHER or _is_dependency_data(path):
         return []
     mentions = []
     for code in _code_strings(path):
@@ -266,13 +308,63 @@ def test_the_launcher_pins_installed_chrome_sandbox_and_allowlist() -> None:
     assert "'args'" not in node.split("const CALLER_OPTIONS = new Set(")[1].split(")")[0]
 
 
+@pytest.mark.site_toolchain
+@pytest.mark.parametrize(
+    ("argument", "diagnostic"),
+    [
+        pytest.param("--disable-seccomp-filter-sandbox", "Seccomp-BPF sandbox", id="seccomp-disabled"),
+        pytest.param("-disable-gpu-sandbox=1", "forbidden switch --disable-gpu-sandbox", id="forbidden-switch"),
+    ],
+)
+def test_launcher_rejects_and_closes_chrome_when_sandbox_proof_fails(
+    argument: str, diagnostic: str, tmp_path: Path
+) -> None:
+    """Inject a switch only at the Playwright launch seam and exercise real Chrome."""
+    result = subprocess.run(
+        ["node", "--input-type=module", "-", argument, diagnostic],
+        input="""
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { launchHardenedChromium } from './e2e/support/hardened-browser.mjs';
+
+const [argument, diagnostic] = process.argv.slice(2);
+const launch = chromium.launch.bind(chromium);
+let launched;
+chromium.launch = async (options) => {
+  launched = await launch({ ...options, args: [...options.args, argument] });
+  return launched;
+};
+try {
+  await assert.rejects(launchHardenedChromium(), (error) => error.message.includes(diagnostic));
+  assert.ok(launched, 'Chrome must start before the proof can refuse it');
+  assert.equal(launched.isConnected(), false, 'The refused browser must be closed');
+} finally {
+  await launched?.close();
+}
+""",
+        cwd=ROOT / "site",
+        # Chrome generates unique directories and puts a Unix socket inside one of them.
+        env={"PATH": os.environ["PATH"], "HOME": str(tmp_path), "TMPDIR": str(tmp_path.parent)},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 def test_only_the_shared_launcher_launches_a_playwright_browser() -> None:
     offenders = []
-    for path in _files((*JS_SUFFIXES, ".py")):
-        if path == NODE_LAUNCHER:
+    for path in _browser_files():
+        if path == NODE_LAUNCHER or path.endswith(PROSE_SUFFIXES) or _is_dependency_data(path):
             continue
         text = _read_code(path)
-        offenders += [f"{path}: {m.group(0)}" for m in LAUNCH_CALL.finditer(text)]
+        code_parts = _code_strings(path) if path.endswith((".json", ".toml", ".yaml", ".yml")) else [text]
+        for code in code_parts:
+            offenders += [f"{path}: {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
+            offenders += [f"{path}: {m.group(0)}" for m in CHROME_COMMAND.finditer(code)]
+            offenders += [f"{path}: {m.group(0)}" for m in PUPPETEER_IMPORT.finditer(code)]
+        offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(text)]
         if path.endswith(JS_SUFFIXES):
             for match in JS_NAMED_IMPORT.finditer(text):
                 allowed = JS_IMPORTABLE.get(match.group(2), set()) | {"test"}  # `test` has its own rule
@@ -280,13 +372,6 @@ def test_only_the_shared_launcher_launches_a_playwright_browser() -> None:
                     offenders.append(f"{path}: imports {sorted(bad)} from {match.group(2)}")
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
-    for path in _files(CODE_SUFFIXES):
-        if path == NODE_LAUNCHER:
-            continue
-        if not path.endswith((*JS_SUFFIXES, ".py")):
-            for code in _code_strings(path):
-                offenders += [f"{path}: embedded {m.group(0)}" for m in LAUNCH_CALL.finditer(code)]
-        offenders += [f"{path}: {m.group(0)}" for m in REMOTE_BROWSER.finditer(_read_code(path))]
     for path in _token_files():
         mentions = _playwright_mentions(path)
         expected = PLAYWRIGHT_TOKEN_EXEMPT.get(path, (0, ""))[0]
@@ -294,6 +379,59 @@ def test_only_the_shared_launcher_launches_a_playwright_browser() -> None:
             offenders += [f"{path}: names a Playwright package outside an allowed import: {m}" for m in mentions]
             offenders += [f"{path}: expected {expected} exempt mentions, found {len(mentions)}"] if expected else []
     assert not offenders, "launch browsers through the shared hardened launcher:\n" + "\n".join(offenders)
+
+
+def _browser_dependencies(path: str, text: str) -> set[str]:
+    if path.endswith("uv.lock"):
+        return {
+            package["name"] for package in tomllib.loads(text)["package"] if BROWSER_PACKAGE.search(package["name"])
+        }
+
+    packages = json.loads(text)["packages"]
+    browser_locations = set()
+    for location, package in packages.items():
+        declarations = _npm_browser_declarations(package)
+        installed_name = location.rsplit("node_modules/", 1)[-1]
+        actual_name = package.get("name", installed_name)
+        if not location:
+            browser_locations.update(declarations)
+        elif declarations or BROWSER_PACKAGE.search(installed_name) or BROWSER_PACKAGE.search(actual_name):
+            browser_locations.add(location if actual_name == installed_name else f"{location} ({actual_name})")
+    return browser_locations
+
+
+def _npm_browser_declarations(package: dict) -> set[str]:
+    declarations = set()
+    for key in DEPENDENCY_KEYS:
+        for name, spec in package.get(key, {}).items():
+            if spec.startswith("npm:"):
+                target = spec.removeprefix("npm:")
+                if "@" in target[1:]:
+                    target = target.rsplit("@", 1)[0]
+                if BROWSER_PACKAGE.search(name) or BROWSER_PACKAGE.search(target):
+                    declarations.add(f"direct: {name} ({target})")
+            elif BROWSER_PACKAGE.search(name):
+                declarations.add(f"direct: {name}")
+    return declarations
+
+
+def test_lockfiles_require_review_of_browser_dependencies() -> None:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/package-lock.json", ":(glob)**/uv.lock"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
+    )
+    paths = set(filter(None, result.stdout.split("\0")))
+    missing = REVIEWED_BROWSER_DEPENDENCIES.keys() - paths
+    assert not missing, f"missing tracked lockfiles: {sorted(missing)}"
+    offenders = []
+    for path in sorted(paths):
+        unreviewed = _browser_dependencies(path, _read(path)) - REVIEWED_BROWSER_DEPENDENCIES.get(path, set())
+        offenders.extend(f"{path}: {entry}" for entry in sorted(unreviewed))
+    assert not offenders, "review these browser dependencies before adding them:\n" + "\n".join(offenders)
 
 
 def test_playwright_test_files_use_the_hardened_fixture() -> None:
@@ -323,33 +461,38 @@ def test_playwright_configs_use_the_hardened_launch_options() -> None:
     assert not offenders, "\n".join(offenders)
 
 
-def test_libraries_that_launch_chrome_get_the_hardened_browser_type() -> None:
-    offenders = [
-        path
-        for path in _files(JS_SUFFIXES)
-        if re.search(r"from\s*['\"](?:rehype-mermaid|mermaid-isomorphic)['\"]", text := _read_code(path))
-        and "browserType: hardenedChromium" not in text
-    ]
-    assert not offenders, "pass { browserType: hardenedChromium } to rehype-mermaid: " + ", ".join(offenders)
+def test_manifests_require_review_of_browser_dependencies() -> None:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/package.json"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
+    )
+    offenders = []
+    for path in sorted(filter(None, result.stdout.split("\0"))):
+        approved = REVIEWED_BROWSER_DEPENDENCIES.get(path.removesuffix(".json") + "-lock.json", set())
+        unreviewed = _npm_browser_declarations(json.loads(_read(path))) - approved
+        offenders.extend(f"{path}: {entry}" for entry in sorted(unreviewed))
+    assert not offenders, "review these browser dependencies before adding them:\n" + "\n".join(offenders)
 
 
 def test_no_file_disables_a_browser_sandbox() -> None:
     offenders = []
-    for path in _candidates():
+    for path in _files(CODE_SUFFIXES):
+        if path == NODE_LAUNCHER:
+            continue
         text = _read(path)
-        hits = [m.group(0) for m in SANDBOX_FLAG.finditer(text)] if path not in SANDBOX_FLAG_EXEMPT else []
-        if path != NODE_LAUNCHER:
-            hits += [m.group(0) for m in SANDBOX_OPTION.finditer(text)]
+        hits = [m.group(0) for pattern in (SANDBOX_FLAG, SANDBOX_OPTION) for m in pattern.finditer(text)]
         if hits:
             offenders.append(f"{path}: {sorted(set(hits))}")
     assert not offenders, "the browser sandbox stays on everywhere:\n" + "\n".join(offenders)
-    stale = [p for p in SANDBOX_FLAG_EXEMPT if not SANDBOX_FLAG.search(_read(p))]
-    assert not stale, f"drop stale exemptions: {stale}"
 
 
 def test_nothing_downloads_playwright_browsers_or_configures_playwright_mcp() -> None:
     offenders = []
-    for path in _candidates():
+    for path in _files(CODE_SUFFIXES):
         text = _read(path)
         offenders += [f"{path}: {m.group(0)}" for m in BROWSER_DOWNLOAD.finditer(text)]
         offenders += [f"{path}: {m.group(0)}" for m in PLAYWRIGHT_MCP.finditer(text)]

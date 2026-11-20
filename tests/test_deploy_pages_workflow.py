@@ -22,7 +22,7 @@ WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
 def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     """#5274: deploy must not run build:full; size gate before artifact upload."""
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
-    steps = workflow["jobs"]["deploy"]["steps"]
+    steps = workflow["jobs"]["build"]["steps"]
     by_name = {step.get("name"): step for step in steps}
 
     build_site = by_name["Build Site"]
@@ -34,8 +34,14 @@ def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     assert "scripts/deploy/check_site_size.py" in size_gate["run"]
 
     upload = by_name["Upload artifact"]
+    sandbox_proof = by_name["Verify the installed Chrome sandbox"]
     assert steps.index(size_gate) < steps.index(upload)
     assert steps.index(build_site) < steps.index(size_gate)
+    assert steps.index(build_site) < steps.index(sandbox_proof) < steps.index(upload)
+    assert "await launchHardenedChromium()" in sandbox_proof["run"]
+    assert "await browser.close()" in sandbox_proof["run"]
+    assert "if" not in sandbox_proof
+    assert "continue-on-error" not in sandbox_proof
 
 
 def test_auto_deploy_accepts_only_site_code_since_last_successful_deployment(tmp_path: Path) -> None:
@@ -177,7 +183,7 @@ def test_pages_marker_is_audited_then_uploaded_with_hidden_files() -> None:
     include hidden files — explicitly, never by action default.
     """
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
-    steps = workflow["jobs"]["deploy"]["steps"]
+    steps = workflow["jobs"]["build"]["steps"]
     by_name = {step.get("name"): step for step in steps}
 
     emit = by_name["Emit immutable deployment marker"]
@@ -209,15 +215,23 @@ def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() 
     """#11194: the test-only controls flag never reaches publication; no token or input drives the preview."""
     workflow_text = WORKFLOW.read_text(encoding="utf-8")
     workflow = yaml.safe_load(workflow_text)
+    build = workflow["jobs"]["build"]
     deploy = workflow["jobs"]["deploy"]
-    steps = deploy["steps"]
+    steps = build["steps"]
     by_name = {step.get("name"): step for step in steps}
 
-    for scope in (workflow, deploy, *steps):
+    for scope in (workflow, build, deploy, *steps, *deploy["steps"]):
         assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS" not in (scope.get("env") or {})
     assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS:" not in workflow_text
     # PyYAML reads the bare ``on`` key as boolean True.
     assert workflow[True]["workflow_dispatch"] is None
+    assert build["permissions"] == {"contents": "read"}
+    assert "environment" not in build
+    assert deploy["needs"] == "build"
+    assert deploy["if"] == (
+        "!cancelled() && needs.build.result == 'success' && github.ref == 'refs/heads/main'"
+    )
+    assert deploy["environment"]["name"] == "github-pages"
     assert deploy["permissions"] == {"contents": "read", "pages": "write", "id-token": "write"}
 
     for name in ("Prepare pinned word-card preview release", "Build Site", "Verify word-card preview routes"):

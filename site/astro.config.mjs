@@ -7,7 +7,6 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import rehypeMermaid from 'rehype-mermaid';
 import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import {
@@ -16,15 +15,10 @@ import {
 } from './src/lib/lexicon/atlas-artifact-selection.mjs';
 import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import { rawAtlasShardTransport } from './plugins/raw-atlas-shard-transport.mjs';
-import { hardenedChromium } from './e2e/support/hardened-browser.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
-const markdownProcessor = unified({
-  remarkPlugins,
-  // Mermaid renders in installed Chrome, sandbox on, own origins only (#12689).
-  rehypePlugins: [[rehypeMermaid, { browserType: hardenedChromium }]],
-});
+const markdownProcessor = unified({ remarkPlugins });
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
 
