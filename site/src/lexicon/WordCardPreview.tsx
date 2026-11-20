@@ -42,10 +42,31 @@ function AssertionRecord({ card, field, learner = false }: { card: ReleaseCard; 
 }
 
 const FIELD_LABELS: Record<string, string> = { spelling: 'Spelling', mwe_form: 'Expression', stress: 'Stress', pos: 'Part of speech',
-  gender: 'Gender', aspect: 'Aspect', grammatical_label: 'Grammar', cefr: 'CEFR level', sense_label: 'Sense', synonyms: 'Synonyms', antonyms: 'Antonyms' };
-const UKRAINIAN_FIELDS = new Set(['spelling', 'mwe_form', 'stress', 'grammatical_label', 'sense_label', 'synonyms', 'antonyms']);
+  gender: 'Gender', aspect: 'Aspect', grammatical_label: 'Grammar', cefr: 'CEFR level', sense_label: 'Sense',
+  definition_uk: 'Meaning (ВТС/СУМ-20)', synonyms: 'Synonyms', antonyms: 'Antonyms' };
+const UKRAINIAN_FIELDS = new Set(['spelling', 'mwe_form', 'stress', 'grammatical_label', 'sense_label', 'definition_uk', 'synonyms', 'antonyms']);
+const CORE_FACT_ORDER = ['spelling', 'mwe_form', 'stress', 'pos', 'gender', 'aspect', 'grammatical_label', 'cefr'] as const;
+const SENSE_FIELD_ORDER = ['sense_label', 'definition_uk', 'synonyms', 'antonyms'];
 const KIND_LABELS: Record<string, string> = { lexeme: 'Word', mwe: 'Multi-word expression', proper_name: 'Proper name' };
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+function missingCoreFields(entry: ReadableEntry): string[] {
+  const present = new Set(entry.facts.map(group => group.field));
+  const posTokens = new Set(
+    (entry.facts.find(group => group.field === 'pos')?.facts ?? [])
+      .flatMap(fact => fact.value.toLowerCase().split(',').map(token => token.trim()))
+      .filter(Boolean),
+  );
+  const expected = [
+    entry.row.card_kind === 'mwe' ? 'mwe_form' : 'spelling',
+    'stress',
+    'pos',
+    ...(posTokens.has('noun') ? ['gender'] : []),
+    ...(posTokens.has('verb') ? ['aspect'] : []),
+    'cefr',
+  ];
+  return expected.filter(field => !present.has(field));
+}
 
 function Credits({ credits }: { credits: Credit[] }) {
   return <span className="wc-credits" data-credits>Source: {[...new Set(credits.map(c => c.sourceId))].map((sourceId, i) =>
@@ -63,14 +84,33 @@ function PageCredits({ rows, pin }: Pick<LoadedRelease, 'rows' | 'pin'>) {
   </section>;
 }
 
-function Facts({ groups }: { groups: FactGroup[] }) {
-  return <dl className="wc-facts">{groups.map(group => <div key={group.field} data-fact={group.field}>
-    <dt>{FIELD_LABELS[group.field] ?? group.field}</dt>
-    {group.facts.map((fact, i) => <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
-      <span data-fact-value lang={UKRAINIAN_FIELDS.has(group.field) ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
-    </dd>)}
-    {group.facts.length > 1 && <dd className="wc-note" data-sources-differ>Sources differ. Each value is shown with its own source; no value is chosen.</dd>}
-  </div>)}</dl>;
+function Facts({ groups, missing = [] }: { groups: FactGroup[]; missing?: string[] }) {
+  const byField = new Map(groups.map(group => [group.field, group]));
+  const missingSet = new Set(missing);
+  const core = new Set<string>(CORE_FACT_ORDER);
+  const orderedFields = [
+    ...CORE_FACT_ORDER.filter(field => byField.has(field) || missingSet.has(field)),
+    ...groups.map(group => group.field).filter(field => !core.has(field)),
+    ...missing.filter(field => !core.has(field) && !byField.has(field)),
+  ];
+  if (orderedFields.length === 0) return null;
+  return <dl className="wc-facts">{orderedFields.map(field => {
+    const group = byField.get(field);
+    if (!group) {
+      return <div key={`missing-${field}`} data-missing-field={field}>
+        <dt>{FIELD_LABELS[field] ?? field}</dt>
+        <dd className="wc-missing" data-missing-value>Missing — not supplied in this release</dd>
+      </div>;
+    }
+    return <div key={group.field} data-fact={group.field}>
+      <dt>{FIELD_LABELS[group.field] ?? group.field}</dt>
+      {group.facts.map((fact, i) => <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
+        <span data-fact-value className={group.field === 'cefr' ? 'wc-cefr-badge' : undefined}
+          lang={UKRAINIAN_FIELDS.has(group.field) ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
+      </dd>)}
+      {group.facts.length > 1 && <dd className="wc-note" data-sources-differ>Sources differ. Each value is shown with its own source; no value is chosen.</dd>}
+    </div>;
+  })}</dl>;
 }
 
 function Label({ label }: { label: SlotLabel }) {
@@ -102,6 +142,43 @@ function Paradigm({ table }: { table: ParadigmTable }) {
   </section>;
 }
 
+function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffix?: string }) {
+  const cardDefinitions = entry.other.filter(group => group.field === 'definition_uk');
+  const otherFacts = entry.other.filter(group => group.field !== 'definition_uk');
+  const hasSenseLabel = entry.senses.some(sense => sense.groups.some(group => group.field === 'sense_label'));
+  const hasDefinition = cardDefinitions.length > 0 || entry.senses.some(sense => sense.groups.some(group => group.field === 'definition_uk'));
+  const missing = missingCoreFields(entry);
+  const orderedSenses = entry.senses.map(sense => ({
+    ...sense,
+    groups: [...sense.groups].sort((a, b) => {
+      const ai = SENSE_FIELD_ORDER.indexOf(a.field);
+      const bi = SENSE_FIELD_ORDER.indexOf(b.field);
+      return (ai < 0 ? SENSE_FIELD_ORDER.length : ai) - (bi < 0 ? SENSE_FIELD_ORDER.length : bi);
+    }),
+  }));
+  return <>
+    <Facts groups={entry.facts} missing={missing} />
+    <section aria-label={labelSuffix ? `Senses of ${labelSuffix}` : 'Senses and meaning'}>
+      <h3>Senses and meaning</h3>
+      {orderedSenses.length > 0 && <ol className="wc-senses">
+        {orderedSenses.map(sense => <li key={sense.id} data-sense={sense.id}><Facts groups={sense.groups} /></li>)}
+      </ol>}
+      {cardDefinitions.length > 0 && <Facts groups={cardDefinitions} />}
+      {!hasSenseLabel && <p className="wc-missing" data-missing-field="sense_label">Sense labels: Missing — not supplied in this release.</p>}
+      {!hasDefinition && <p className="wc-missing" data-missing-field="definition_uk">Meaning (ВТС/СУМ-20): Missing — not supplied in this release.</p>}
+    </section>
+    <section aria-label={labelSuffix ? `Forms of ${labelSuffix}` : 'Forms'}>
+      <h3>Forms</h3>
+      {entry.paradigms.length ? entry.paradigms.map(t => <Paradigm key={t.sourceId} table={t} />) :
+        <p className="wc-missing" data-missing-paradigm>No paradigm is supplied for this entry in this release. Forms are not borrowed from other entries.</p>}
+    </section>
+    {otherFacts.length > 0 && <section aria-label={labelSuffix ? `Other source facts of ${labelSuffix}` : 'Other source facts'}>
+      <h3>Other source facts</h3>
+      <p>Shown literally. This preview has no readable layout for these fields yet.</p><Facts groups={otherFacts} />
+    </section>}
+  </>;
+}
+
 function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }) {
   const { row, ordinal } = entry;
   const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label').flatMap(g => g.facts.map(f => f.value)));
@@ -110,17 +187,7 @@ function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }
     <p className="wc-kind" data-entry-label>{KIND_LABELS[row.card_kind] ?? row.card_kind}
       {entry.proper && <> — {senseLabels.length ? <span lang="uk">{senseLabels.join('; ')}</span> : 'no sense label supplied'}. Listed after common entries.</>}
       {' '}<span className="wc-status" data-entry-status>{row.status}</span></p>
-    <Facts groups={entry.facts} />
-    {entry.senses.length > 0 && <section aria-label={`Senses of entry ${ordinal}`}><h3>Senses</h3>
-      <ol className="wc-senses">{entry.senses.map(sense => <li key={sense.id} data-sense={sense.id}><Facts groups={sense.groups} /></li>)}</ol>
-    </section>}
-    <section aria-label={`Forms of entry ${ordinal}`}><h3>Forms</h3>
-      {entry.paradigms.length ? entry.paradigms.map(t => <Paradigm key={t.sourceId} table={t} />) :
-        <p data-missing-paradigm>No paradigm is supplied for this entry in this release. Forms are not borrowed from other entries.</p>}
-    </section>
-    {entry.other.length > 0 && <section aria-label={`Other source facts of entry ${ordinal}`}><h3>Other source facts</h3>
-      <p>Shown literally. This preview has no readable layout for these fields yet.</p><Facts groups={entry.other} />
-    </section>}
+    <EntryContent entry={entry} labelSuffix={`entry ${ordinal}`} />
     <details className="wc-audit" data-entry-audit={row.card_id}><summary>Sources and audit details for entry {ordinal}</summary>
       <p>Card <code>{row.card_id}</code>, card version <code data-card-version>{row.card_version}</code>, producer status {row.status}.</p>
       <section aria-label={`Known gaps of entry ${ordinal}`}><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
@@ -218,29 +285,43 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
       <Accounting rows={card.page.entries.map(e => e.row)} scope="this page" learner />
     </details>
   </div>;
-  if (card.kind === 'release-card') return <div data-release-card={card.row.card_id}>
-    <h2>{card.row.status} {card.row.card_id}</h2>
-    <p data-release-version>Release {card.pin.release_version}</p>
-    <p data-card-version>Card version {card.row.card_version}</p>
-    <p data-release-status>{card.row.status}</p>
-    <p>{card.pin.provenance === 'synthetic-fixture' ?
-      'Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.' :
-      'Producer-declared status. No publication approval is implied.'}</p>
-    <WithdrawalNotice notice={card.withdrawalNotice} />
-    <section aria-label="Known gaps"><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
-      {card.row.known_gaps.length ? card.row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
-    </section>
-    <Accounting rows={[card.row]} scope="this card" />
-    <section aria-label="Parallel cited assertions"><h3>Parallel cited assertions</h3>
-      <p>Assertions remain separate. No field resolution or semantic verdict is inferred.</p>
-      {card.row.fields.map(field => <AssertionRecord key={field.assertion_id} card={card} field={field} />)}
-    </section>
-    {compare && <section aria-label="Field comparison"><h2>Field comparison</h2>
-      <p>Unresolved pairing. This release has no assembled-card identity keys. No comparison rows.</p>
-      <p>Better/worse unavailable pending independently accepted comparison evidence.</p>
-      <p>Data owns the authoritative identity relation; Atlas owns current-page integration. No actual comparison is claimed.</p>
-    </section>}
-  </div>;
+  if (card.kind === 'release-card') {
+    const entry = readableEntry(card.row, 1);
+    const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label').flatMap(g => g.facts.map(f => f.value)));
+    const synthetic = card.pin.provenance === 'synthetic-fixture';
+    return <div data-release-card={card.row.card_id}>
+      <p className="wc-page-meta">
+        <span data-release-version>Release {card.pin.release_version}</span> · <span data-card-version>Card version {card.row.card_version}</span>
+      </p>
+      {synthetic && <p>Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.</p>}
+      <WithdrawalNotice notice={card.withdrawalNotice} />
+      <article className="wc-entry" data-entry={card.row.card_id} data-entry-kind={card.row.card_kind} aria-labelledby={`entry-${card.row.card_id}`}>
+        <h2 id={`entry-${card.row.card_id}`}><span lang="uk">{entry.heading}</span></h2>
+        <p className="wc-kind" data-entry-label>{KIND_LABELS[card.row.card_kind] ?? card.row.card_kind}
+          {entry.proper && <> — {senseLabels.length ? <span lang="uk">{senseLabels.join('; ')}</span> : 'no sense label supplied'}.</>}
+          {' '}<span className="wc-status" data-release-status data-entry-status>{card.row.status}</span></p>
+        <EntryContent entry={entry} />
+      </article>
+      {compare && <section aria-label="Field comparison"><h2>Field comparison</h2>
+        <p>Unresolved pairing. This release has no assembled-card identity keys. No comparison rows.</p>
+        <p>Better/worse unavailable pending independently accepted comparison evidence.</p>
+        <p>Data owns the authoritative identity relation; Atlas owns current-page integration. No actual comparison is claimed.</p>
+      </section>}
+      <details className="wc-audit" data-card-audit={card.row.card_id}><summary>Sources and audit</summary>
+        <p>Card <code>{card.row.card_id}</code>, card version <code>{card.row.card_version}</code>, producer status {card.row.status}.</p>
+        {!synthetic && <p>Producer-declared status. No publication approval is implied.</p>}
+        <PageCredits rows={[card.row]} pin={card.pin} />
+        <section aria-label="Known gaps"><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
+          {card.row.known_gaps.length ? card.row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
+        </section>
+        <Accounting rows={[card.row]} scope="this card" />
+        <section aria-label="Parallel cited assertions"><h3>Parallel cited assertions</h3>
+          <p>Assertions remain separate. No field resolution or semantic verdict is inferred.</p>
+          {card.row.fields.map(field => <AssertionRecord key={field.assertion_id} card={card} field={field} />)}
+        </section>
+      </details>
+    </div>;
+  }
   if (card.kind === 'unavailable') return <p role="status">Unavailable: {card.reason}</p>;
   if (card.kind === 'suppressed') return <p role="status">Suppressed. No card body.</p>;
   if (card.kind === 'successors') return <section aria-label="Successors"><p>{card.state}</p><ul>{card.ids.map(id => <li key={id}>{id}</li>)}</ul></section>;

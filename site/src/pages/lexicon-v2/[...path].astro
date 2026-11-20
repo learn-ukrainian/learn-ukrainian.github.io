@@ -6,7 +6,7 @@ import WordCardPreview, { candidateSearchVisible } from '../../lexicon/WordCardP
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 import type { LoadedRelease, ReleaseCard, ReleaseIndex } from '../../lib/lexicon/word-card-release';
-import type { ReleasePage } from '../../lib/lexicon/word-card-readable';
+import { readableEntry, type ReleasePage } from '../../lib/lexicon/word-card-readable';
 import '../../styles/word-card-preview.css';
 import { previewIndexPaths, previewStaticPaths, releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
 
@@ -29,16 +29,24 @@ interface Props {
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
 const page = card.kind === 'release-page' ? card.page : null;
+const singleEntry = card.kind === 'release-card' ? readableEntry(card.row, 1) : null;
 const index = card.kind === 'release-index';
 const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
 const pinned = card.kind === 'release-card' || card.kind === 'release' || index;
+const readableTitle = page ? page.title : singleEntry ? singleEntry.display : null;
 ---
-<CourseLayout title={page ? `${page.title} — word-card preview` : index ? 'Word cards' : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
+<CourseLayout title={readableTitle ? `${readableTitle} — word-card preview` : index ? 'Word cards' : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
   <main class="word-card-preview">
     {page ? <>
       <aside role="note" data-preview-banner class="compact">CANDIDATE preview, not certified learner cards.</aside>
       <h1 lang="uk">{page.title}</h1>
+      {compare && <p>Current / candidate comparison</p>}
+    </> : singleEntry && card.kind === 'release-card' ? <>
+      <aside role="note" data-preview-banner class="compact">
+        {card.row.status === 'CANDIDATE' ? 'CANDIDATE preview, not certified learner cards.' : 'Optional noindex preview, not certified learner cards.'}
+      </aside>
+      <h1 lang="uk">{singleEntry.display}</h1>
       {compare && <p>Current / candidate comparison</p>}
     </> : <>
       <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>
@@ -59,25 +67,46 @@ const pinned = card.kind === 'release-card' || card.kind === 'release' || index;
         <WordCardPreview card={card} current={current} compare={compare} />
       </section>
     </div>
-    {page && <p class="input-line">Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code>. Producer status is not linguistic certification or switch approval.</p>}
+    {readableTitle && <p class="input-line">Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code>. Producer status is not linguistic certification or switch approval.</p>}
   </main>
 </CourseLayout>
 <script>
   function initCreditMarkers() {
-    document.querySelectorAll('[data-release-page]').forEach(root => {
+    document.querySelectorAll('[data-release-page], [data-release-card]').forEach(root => {
       root.querySelectorAll<HTMLAnchorElement>('a[data-credit-ref]').forEach(marker => {
         if (marker.dataset.creditBound === 'true') return;
         const target = Array.from(root.querySelectorAll('[data-source-credit]'))
           .find(credit => `#${credit.id}` === marker.getAttribute('href'));
-        const details = target?.closest('details[data-page-audit]');
+        const details = target?.closest('details[data-page-audit], details[data-card-audit]');
         if (!(details instanceof HTMLDetailsElement)) return;
         marker.addEventListener('click', () => { details.open = true; });
         marker.dataset.creditBound = 'true';
       });
     });
   }
+  function openHashTarget() {
+    if (location.hash.length <= 1) return;
+    const rawId = location.hash.slice(1);
+    let target = document.getElementById(rawId);
+    if (!target) {
+      try {
+        const decoded = decodeURIComponent(rawId);
+        if (decoded !== rawId) target = document.getElementById(decoded);
+      } catch { return; }
+    }
+    if (!target || !target.closest('.word-card-preview')) return;
+    let opened = false;
+    let current: Element | null = target.closest('details');
+    while (current instanceof HTMLDetailsElement) {
+      if (!current.open) { current.open = true; opened = true; }
+      current = current.parentElement?.closest('details') ?? null;
+    }
+    if (opened) target.scrollIntoView();
+  }
   initCreditMarkers();
-  document.addEventListener('astro:page-load', initCreditMarkers);
+  openHashTarget();
+  document.addEventListener('astro:page-load', () => { initCreditMarkers(); openHashTarget(); });
+  window.addEventListener('hashchange', openHashTarget);
 </script>
 <style>
   .word-card-preview { padding: 1.5rem; }
@@ -88,5 +117,7 @@ const pinned = card.kind === 'release-card' || card.kind === 'release' || index;
   .preview-columns > section { min-width: 0; overflow: auto; }
   .word-card-preview :global(pre) { white-space: pre-wrap; overflow-wrap: anywhere; }
   .word-card-preview :global(td), .word-card-preview :global(th) { vertical-align: top; padding: .5rem; border: 1px solid currentColor; }
+  .word-card-preview :global(.wc-missing) { font-style: italic; }
+  .word-card-preview :global(.wc-cefr-badge) { display: inline-block; border: 1px solid currentColor; border-radius: .25rem; padding: 0 .4rem; font-weight: 600; }
   @media (max-width: 60rem) { .comparison { grid-template-columns: minmax(0, 1fr); } }
 </style>

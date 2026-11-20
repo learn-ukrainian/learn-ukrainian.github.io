@@ -228,6 +228,12 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
         await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
         await expect(page.locator('[data-card-version]')).toHaveText(`Card version ${row.card_version}`);
         await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-pilot');
+        const audit = page.locator(`details[data-card-audit="${row.card_id}"]`);
+        await expect(audit).not.toHaveAttribute('open', '');
+        await expect(page.locator('pre:visible')).toHaveCount(0);
+        await expect(page.locator(`[data-entry="${row.card_id}"] h2`)).not.toContainText(row.card_id);
+        await audit.locator(':scope > summary').click();
+        await expect(audit).toHaveAttribute('open', '');
         await expect(page.getByRole('region', { name: 'Known gaps', exact: true })).toContainText('No declared gaps');
         await checkAssertions(page.locator('[data-release-card]'), row);
         await expect(page.locator('[data-comparison], [data-word-atlas], [data-result]')).toHaveCount(0);
@@ -275,6 +281,10 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
     expect(checked).toBe(2 * (2978 + 2978 - unlisted.reduce((n, row) => n + row.fields.length, 0)));
     const regressionResults = await readability(page, `http://127.0.0.1:${address.port}`, join(root, 'screens'), info, output);
     await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/release/${rows[0]?.card_id}/`);
+    const auditSummary = page.locator(`details[data-card-audit="${rows[0]?.card_id}"] > summary`);
+    await auditSummary.focus(); await expect(auditSummary).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator(`details[data-card-audit="${rows[0]?.card_id}"]`)).toHaveAttribute('open', '');
     const requests: string[] = [];
     await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.abort('blockedbyclient'); });
     const report = page.locator('[data-report-action]').first(), href = await report.getAttribute('href');
@@ -656,6 +666,35 @@ async function readability(page: import('@playwright/test').Page, origin: string
     expect([summaryClosed, await serious()], `${name} summary`).toEqual([[], []]);
     await noOverflow();
     results.push({ viewport: name, key: 'release summary', axeSeriousClosed: summaryClosed, axeSeriousOpened: [] });
+
+    await page.goto(`${origin}/lexicon-v2/compare/release/`);
+    const compareSummaryClosed = await serious();
+    await page.locator('details').evaluateAll(nodes => nodes.forEach(n => n.setAttribute('open', '')));
+    expect([compareSummaryClosed, await serious()], `${name} compare summary`).toEqual([[], []]);
+    await noOverflow();
+
+    // Additional held-out pages from #11203 AC-04: ЮНЕСКО (proper-only single card), шкідливий, Гнат-безп'ятко.
+    for (const extra of [
+      { key: 'ЮНЕСКО', route: '/lexicon-v2/release/wc_sye0ppkx0dwh/', expectedHeading: 'ЮНЕ́СКО', expectedMissing: ['pos', 'sense_label', 'definition_uk'], auditSelector: 'details[data-card-audit="wc_sye0ppkx0dwh"]' },
+      { key: 'шкідливий', route: `/lexicon-v2/word/${encodeURIComponent('шкідливий')}/`, expectedHeading: '1. шкідли́вий', expectedMissing: ['sense_label', 'definition_uk'], auditSelector: 'details[data-entry-audit="wc_3rc3vnk4r328"]' },
+      { key: "Гнат-безп'ятко", route: `/lexicon-v2/word/${encodeURIComponent("гнат-безп'ятко")}/`, expectedHeading: "1. Гнат-безп'ятко", expectedMissing: ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk'], auditSelector: 'details[data-entry-audit="wc_7a6x6n8rek4y"]' },
+    ]) {
+      const resp = await page.goto(origin + extra.route);
+      expect(resp?.status(), `${name} ${extra.key}`).toBe(200);
+      await expect(page.locator('details[open]')).toHaveCount(0);
+      await expect(page.locator('pre:visible')).toHaveCount(0);
+      await expect(page.locator('[data-entry] h2').first()).toHaveText(extra.expectedHeading);
+      for (const field of extra.expectedMissing) await expect(page.locator(`[data-missing-field="${field}"]`).first()).toBeVisible();
+      await noOverflow();
+      const extraClosed = await serious();
+      const extraSummary = page.locator(`${extra.auditSelector} > summary`);
+      await extraSummary.focus(); await expect(extraSummary).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(page.locator(extra.auditSelector)).toHaveAttribute('open', '');
+      await noOverflow();
+      expect([extraClosed, await serious()], `${name} ${extra.key}`).toEqual([[], []]);
+      await info.attach(`${name}-heldout-${extra.key}`, { body: await page.screenshot(), contentType: 'image/png' });
+    }
   }
   expect(results).toHaveLength(20); expect(captures).toHaveLength(10);
   expect(errors).toEqual([]); expect(failedRequests).toEqual([]); expect(consoleErrors).toEqual([]);
@@ -813,6 +852,9 @@ test.describe('source fidelity refusals', () => {
           await expect(page.locator('[data-raw-value], [data-report-action]')).toHaveCount(0);
         } else {
           await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', candidateId);
+          const audit = page.locator(`details[data-card-audit="${candidateId}"]`);
+          await expect(audit).not.toHaveAttribute('open', '');
+          await audit.locator(':scope > summary').click();
           const raw = c.target.includes('value') ? page.locator('[data-raw-value]').nth(1) :
             page.getByRole('region', { name: 'Known gaps' }).locator('pre').first();
           expect(await raw.textContent()).toBe(c.displayed);
@@ -899,6 +941,7 @@ test.describe('source fidelity refusals', () => {
       for (const prefix of ['', 'compare/']) {
         await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/${candidateId}/`);
         await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
+        await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
         const raw = await page.locator('[data-raw-value]').nth(1).textContent();
         expect(JSON.parse(raw || '')).toEqual({ nested: [null, true, false, 0, 9007199254740991, -9007199254740991, 1.25, 'A😀𐐀B', ' A\r\nB '] });
         const gaps = await page.getByRole('region', { name: 'Known gaps' }).locator('pre').allTextContents();
@@ -963,6 +1006,9 @@ test.describe('release controls R01-R16 and R10b', () => {
     await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
     await expect(page.locator('[data-card-version]')).toHaveText('Card version synthetic-candidate-1');
     await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-synthetic');
+    await expect(page.locator(`details[data-card-audit="${candidateId}"]`)).not.toHaveAttribute('open', '');
+    await expect(page.locator('pre:visible')).toHaveCount(0);
+    await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
     expect(await page.locator('[data-raw-value]').allTextContents()).toEqual([
       'fixture-head', '<img src=x onerror=globalThis.releaseInjected=1> RAW  A', 'parallel-definition',
     ]);
@@ -1040,6 +1086,7 @@ test.describe('release controls R01-R16 and R10b', () => {
     const requests: string[] = [];
     await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.fulfill({ body: 'Manual report draft, no submission' }); });
     await page.goto(url('base', `release/${candidateId}`));
+    await page.locator(`details[data-card-audit="${candidateId}"] > summary`).click();
     const link = page.locator('[data-report-action]').nth(1);
     const href = await link.getAttribute('href');
     if (!href) throw Error('No report link');
