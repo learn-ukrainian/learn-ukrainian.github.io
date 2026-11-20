@@ -2,7 +2,7 @@
 import CourseLayout from '../../layouts/CourseLayout.astro';
 import WordAtlasPageShell from '../../lexicon/WordAtlasPageShell.astro';
 import AtlasTypeahead from '../../lexicon/AtlasTypeahead.astro';
-import WordCardPreview, { candidateSearchVisible } from '../../lexicon/WordCardPreview';
+import WordCardPreview, { candidateSearchVisible, cardHeading } from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 import type { LoadedRelease, ReleaseCard, ReleaseIndex } from '../../lib/lexicon/word-card-release';
@@ -29,11 +29,11 @@ interface Props {
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
 const page = card.kind === 'release-page' ? card.page : null;
-const singleEntry = card.kind === 'release-card' ? readableEntry(card.row, 1) : null;
+const singleHead = card.kind === 'release-card' ? cardHeading(readableEntry(card.row, 1)) : null;
 const index = card.kind === 'release-index';
 const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
 const pinned = card.kind === 'release-card' || card.kind === 'release' || index;
-const readableTitle = page ? page.title : singleEntry ? singleEntry.display : null;
+const readableTitle = page ? page.title : singleHead ? singleHead.title : null;
 ---
 <CourseLayout title={readableTitle ? `${readableTitle} — word-card preview` : index ? 'Word cards' : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
@@ -42,11 +42,11 @@ const readableTitle = page ? page.title : singleEntry ? singleEntry.display : nu
       <aside role="note" data-preview-banner class="compact">CANDIDATE preview, not certified learner cards.</aside>
       <h1 lang="uk">{page.title}</h1>
       {compare && <p>Current / candidate comparison</p>}
-    </> : singleEntry && card.kind === 'release-card' ? <>
+    </> : singleHead && card.kind === 'release-card' ? <>
       <aside role="note" data-preview-banner class="compact">
         {card.row.status === 'CANDIDATE' ? 'CANDIDATE preview, not certified learner cards.' : 'Optional noindex preview, not certified learner cards.'}
       </aside>
-      <h1 lang="uk">{singleEntry.display}</h1>
+      <h1 lang={singleHead.hasText ? 'uk' : undefined}>{singleHead.title}</h1>
       {compare && <p>Current / candidate comparison</p>}
     </> : <>
       <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>

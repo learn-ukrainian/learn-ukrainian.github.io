@@ -13,6 +13,15 @@ function Accounting({ rows, scope, learner = false }: Pick<LoadedRelease, 'rows'
   </section>;
 }
 
+function WithdrawalBanner({ notice }: { notice: LoadedRelease['withdrawalNotice'] }) {
+  if (notice === undefined) return null;
+  const removed = typeof notice === 'object' && notice !== null && !Array.isArray(notice) && typeof notice.removed_field_citations === 'number'
+    ? notice.removed_field_citations : null;
+  return <aside role="note" className="wc-withdrawal-banner" data-withdrawal-warning>
+    Withdrawal notice active{removed !== null ? ` (${removed} field citations removed)` : ''}. Full notice is in Sources and audit.
+  </aside>;
+}
+
 function WithdrawalNotice({ notice }: { notice: LoadedRelease['withdrawalNotice'] }) {
   return notice === undefined ? null : <section aria-label="Withdrawal notice"><h3>Withdrawal notice</h3>
     <pre>{JSON.stringify(notice, null, 2)}</pre>
@@ -43,17 +52,61 @@ function AssertionRecord({ card, field, learner = false }: { card: ReleaseCard; 
 
 const FIELD_LABELS: Record<string, string> = { spelling: 'Spelling', mwe_form: 'Expression', stress: 'Stress', pos: 'Part of speech',
   gender: 'Gender', aspect: 'Aspect', grammatical_label: 'Grammar', cefr: 'CEFR level', sense_label: 'Sense',
-  definition_uk: 'Meaning (ВТС/СУМ-20)', synonyms: 'Synonyms', antonyms: 'Antonyms' };
+  definition_uk: 'Meaning', synonyms: 'Synonyms', antonyms: 'Antonyms' };
 const UKRAINIAN_FIELDS = new Set(['spelling', 'mwe_form', 'stress', 'grammatical_label', 'sense_label', 'definition_uk', 'synonyms', 'antonyms']);
 const CORE_FACT_ORDER = ['spelling', 'mwe_form', 'stress', 'pos', 'gender', 'aspect', 'grammatical_label', 'cefr'] as const;
 const SENSE_FIELD_ORDER = ['sense_label', 'definition_uk', 'synonyms', 'antonyms'];
 const KIND_LABELS: Record<string, string> = { lexeme: 'Word', mwe: 'Multi-word expression', proper_name: 'Proper name' };
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
-function missingCoreFields(entry: ReadableEntry): string[] {
-  const present = new Set(entry.facts.map(group => group.field));
+export function isUsableFieldValue(value: ReleaseRow['fields'][number]['value']): boolean {
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0 && value.every(item => typeof item === 'string' && item.trim().length > 0);
+  if (value && typeof value === 'object' && !Array.isArray(value) && typeof value.members === 'string') return value.members.trim().length > 0;
+  return false;
+}
+
+export function cardHeading(entry: ReadableEntry): { title: string; heading: string; hasText: boolean } {
+  const { row } = entry;
+  const nameField = row.card_kind === 'mwe' ? 'mwe_form' : 'spelling';
+  const onCard = (field: ReleaseRow['fields'][number]) => field.subject.kind === 'card' && field.subject.id === row.card_id;
+  const usableStrings = (fieldName: string) => [...new Set(
+    row.fields
+      .filter(field => onCard(field) && field.field === fieldName && (typeof field.value === 'string' || Array.isArray(field.value)) && isUsableFieldValue(field.value))
+      .map(field => Array.isArray(field.value) ? (field.value as string[]).join(', ') : (field.value as string)),
+  )];
+  const names = usableStrings(nameField);
+  const stresses = usableStrings('stress');
+  if (names.length > 1) {
+    const joined = names.join(' / ');
+    return { title: joined, heading: joined, hasText: true };
+  }
+  if (stresses.length === 1) {
+    return { title: names[0] ?? stresses[0]!, heading: stresses[0]!, hasText: true };
+  }
+  if (names.length === 1) {
+    return { title: names[0]!, heading: names[0]!, hasText: true };
+  }
+  if (stresses.length > 1) {
+    const joined = stresses.join(' / ');
+    return { title: joined, heading: joined, hasText: true };
+  }
+  return { title: 'Headword missing', heading: 'Headword missing', hasText: false };
+}
+
+function usableAssertionIds(row: ReleaseRow): Set<string> {
+  return new Set(row.fields.filter(field => isUsableFieldValue(field.value)).map(field => field.assertion_id));
+}
+
+function hasUsableFact(group: FactGroup, usableIds: Set<string>): boolean {
+  return group.facts.some(fact => fact.assertionIds.some(id => usableIds.has(id)));
+}
+
+function missingCoreFields(entry: ReadableEntry, usableIds: Set<string>): string[] {
+  const usableFields = new Set(entry.facts.filter(group => hasUsableFact(group, usableIds)).map(group => group.field));
   const posTokens = new Set(
     (entry.facts.find(group => group.field === 'pos')?.facts ?? [])
+      .filter(fact => fact.assertionIds.some(id => usableIds.has(id)))
       .flatMap(fact => fact.value.toLowerCase().split(',').map(token => token.trim()))
       .filter(Boolean),
   );
@@ -65,7 +118,7 @@ function missingCoreFields(entry: ReadableEntry): string[] {
     ...(posTokens.has('verb') ? ['aspect'] : []),
     'cefr',
   ];
-  return expected.filter(field => !present.has(field));
+  return expected.filter(field => !usableFields.has(field));
 }
 
 function Credits({ credits }: { credits: Credit[] }) {
@@ -84,7 +137,7 @@ function PageCredits({ rows, pin }: Pick<LoadedRelease, 'rows' | 'pin'>) {
   </section>;
 }
 
-function Facts({ groups, missing = [] }: { groups: FactGroup[]; missing?: string[] }) {
+function Facts({ groups, missing = [], usableIds }: { groups: FactGroup[]; missing?: string[]; usableIds?: Set<string> }) {
   const byField = new Map(groups.map(group => [group.field, group]));
   const missingSet = new Set(missing);
   const core = new Set<string>(CORE_FACT_ORDER);
@@ -94,22 +147,32 @@ function Facts({ groups, missing = [] }: { groups: FactGroup[]; missing?: string
     ...missing.filter(field => !core.has(field) && !byField.has(field)),
   ];
   if (orderedFields.length === 0) return null;
-  return <dl className="wc-facts">{orderedFields.map(field => {
+  return <dl className="wc-facts">{orderedFields.flatMap(field => {
     const group = byField.get(field);
     if (!group) {
-      return <div key={`missing-${field}`} data-missing-field={field}>
+      return [<div key={`missing-${field}`} data-missing-field={field}>
         <dt>{FIELD_LABELS[field] ?? field}</dt>
         <dd className="wc-missing" data-missing-value>Missing — not supplied in this release</dd>
-      </div>;
+      </div>];
     }
-    return <div key={group.field} data-fact={group.field}>
+    const items = [<div key={group.field} data-fact={group.field}>
       <dt>{FIELD_LABELS[group.field] ?? group.field}</dt>
-      {group.facts.map((fact, i) => <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
-        <span data-fact-value className={group.field === 'cefr' ? 'wc-cefr-badge' : undefined}
-          lang={UKRAINIAN_FIELDS.has(group.field) ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
-      </dd>)}
+      {group.facts.map((fact, i) => {
+        const usable = !usableIds || fact.assertionIds.some(id => usableIds.has(id));
+        return <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
+          <span data-fact-value className={group.field === 'cefr' && usable ? 'wc-cefr-badge' : undefined}
+            lang={UKRAINIAN_FIELDS.has(group.field) && usable ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
+        </dd>;
+      })}
       {group.facts.length > 1 && <dd className="wc-note" data-sources-differ>Sources differ. Each value is shown with its own source; no value is chosen.</dd>}
-    </div>;
+    </div>];
+    if (missingSet.has(group.field)) {
+      items.push(<div key={`missing-${field}`} data-missing-field={field}>
+        <dt>{FIELD_LABELS[field] ?? field} (status)</dt>
+        <dd className="wc-missing" data-missing-value>Missing — no usable value supplied in this release</dd>
+      </div>);
+    }
+    return items;
   })}</dl>;
 }
 
@@ -143,11 +206,14 @@ function Paradigm({ table }: { table: ParadigmTable }) {
 }
 
 function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffix?: string }) {
+  const usableIds = usableAssertionIds(entry.row);
   const cardDefinitions = entry.other.filter(group => group.field === 'definition_uk');
   const otherFacts = entry.other.filter(group => group.field !== 'definition_uk');
-  const hasSenseLabel = entry.senses.some(sense => sense.groups.some(group => group.field === 'sense_label'));
-  const hasDefinition = cardDefinitions.length > 0 || entry.senses.some(sense => sense.groups.some(group => group.field === 'definition_uk'));
-  const missing = missingCoreFields(entry);
+  const senseLabelGroups = entry.senses.flatMap(sense => sense.groups.filter(group => group.field === 'sense_label'));
+  const definitionGroups = [...cardDefinitions, ...entry.senses.flatMap(sense => sense.groups.filter(group => group.field === 'definition_uk'))];
+  const hasSenseLabel = senseLabelGroups.some(group => hasUsableFact(group, usableIds));
+  const hasDefinition = definitionGroups.some(group => hasUsableFact(group, usableIds));
+  const missing = missingCoreFields(entry, usableIds);
   const orderedSenses = entry.senses.map(sense => ({
     ...sense,
     groups: [...sense.groups].sort((a, b) => {
@@ -157,15 +223,19 @@ function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffi
     }),
   }));
   return <>
-    <Facts groups={entry.facts} missing={missing} />
+    <Facts groups={entry.facts} missing={missing} usableIds={usableIds} />
     <section aria-label={labelSuffix ? `Senses of ${labelSuffix}` : 'Senses and meaning'}>
       <h3>Senses and meaning</h3>
       {orderedSenses.length > 0 && <ol className="wc-senses">
-        {orderedSenses.map(sense => <li key={sense.id} data-sense={sense.id}><Facts groups={sense.groups} /></li>)}
+        {orderedSenses.map(sense => <li key={sense.id} data-sense={sense.id}><Facts groups={sense.groups} usableIds={usableIds} /></li>)}
       </ol>}
-      {cardDefinitions.length > 0 && <Facts groups={cardDefinitions} />}
-      {!hasSenseLabel && <p className="wc-missing" data-missing-field="sense_label">Sense labels: Missing — not supplied in this release.</p>}
-      {!hasDefinition && <p className="wc-missing" data-missing-field="definition_uk">Meaning (ВТС/СУМ-20): Missing — not supplied in this release.</p>}
+      {cardDefinitions.length > 0 && <Facts groups={cardDefinitions} usableIds={usableIds} />}
+      {!hasSenseLabel && <p className="wc-missing" data-missing-field="sense_label">
+        Sense labels: Missing — {senseLabelGroups.length > 0 ? 'no usable value supplied in this release.' : 'not supplied in this release.'}
+      </p>}
+      {!hasDefinition && <p className="wc-missing" data-missing-field="definition_uk">
+        Meaning: Missing — {definitionGroups.length > 0 ? 'no usable value supplied in this release.' : 'not supplied in this release.'}
+      </p>}
     </section>
     <section aria-label={labelSuffix ? `Forms of ${labelSuffix}` : 'Forms'}>
       <h3>Forms</h3>
@@ -174,16 +244,19 @@ function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffi
     </section>
     {otherFacts.length > 0 && <section aria-label={labelSuffix ? `Other source facts of ${labelSuffix}` : 'Other source facts'}>
       <h3>Other source facts</h3>
-      <p>Shown literally. This preview has no readable layout for these fields yet.</p><Facts groups={otherFacts} />
+      <p>Shown literally. This preview has no readable layout for these fields yet.</p><Facts groups={otherFacts} usableIds={usableIds} />
     </section>}
   </>;
 }
 
 function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }) {
   const { row, ordinal } = entry;
-  const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label').flatMap(g => g.facts.map(f => f.value)));
+  const head = cardHeading(entry);
+  const usableIds = usableAssertionIds(row);
+  const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label')
+    .flatMap(g => g.facts.filter(f => f.assertionIds.some(id => usableIds.has(id))).map(f => f.value)));
   return <article className="wc-entry" data-entry={row.card_id} data-entry-kind={row.card_kind} aria-labelledby={`entry-${row.card_id}`}>
-    <h2 id={`entry-${row.card_id}`}><span className="wc-ordinal">{ordinal}.</span> <span lang="uk">{entry.heading}</span></h2>
+    <h2 id={`entry-${row.card_id}`}><span className="wc-ordinal">{ordinal}.</span> <span lang={head.hasText ? 'uk' : undefined}>{head.heading}</span></h2>
     <p className="wc-kind" data-entry-label>{KIND_LABELS[row.card_kind] ?? row.card_kind}
       {entry.proper && <> — {senseLabels.length ? <span lang="uk">{senseLabels.join('; ')}</span> : 'no sense label supplied'}. Listed after common entries.</>}
       {' '}<span className="wc-status" data-entry-status>{row.status}</span></p>
@@ -241,13 +314,14 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
       <p data-release-version>Release {card.pin.release_version}</p>
       <p data-release-count>{card.rows.length} cards</p>
       <p data-page-count>{pages.length} word pages with {entries} numbered entries. {dispositions.filter(d => !d.listed).length} source cards have no learner page; they stay in the audit details.</p>
-      <WithdrawalNotice notice={card.withdrawalNotice} />
+      <WithdrawalBanner notice={card.withdrawalNotice} />
       <nav aria-label="Word pages"><ul className="wc-page-list">{pages.map(page => <li key={page.key}>
         <a data-page-link href={pagePath(page.key)}><span lang="uk">{page.title}</span></a>{' '}
         <span>{page.entries.length === 1 ? '1 entry' : `${page.entries.length} entries`}</span>{' '}
         <a data-compare-link href={pagePath(page.key, true)}>Comparison view</a>
       </li>)}</ul></nav>
       <details className="wc-audit" data-release-audit><summary>Sources and audit details</summary>
+        <WithdrawalNotice notice={card.withdrawalNotice} />
         <p>Dataset SHA-256: {card.pin.dataset_sha256}. Manifest SHA-256: {card.pin.manifest_sha256}.</p>
         <p>Pages group source cards by exact lowercased spelling. That is page correspondence only, not card identity: no accepted entry-level comparison exists.</p>
         <Accounting rows={card.rows} scope="the whole release" />
@@ -271,13 +345,14 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
   if (card.kind === 'release-page') return <div data-release-page={card.page.key}>
     <p data-local-artifact-version className="wc-artifact-version">Local candidate renderer v0.1.1</p>
     <p className="wc-page-meta">{card.page.entries.length === 1 ? '1 entry' : `${card.page.entries.length} numbered entries`} · Release {card.pin.release_version}</p>
-    <WithdrawalNotice notice={card.withdrawalNotice} />
+    <WithdrawalBanner notice={card.withdrawalNotice} />
     {card.page.entries.map(entry => <Entry key={entry.row.card_id} entry={entry} pin={card.pin} />)}
     {compare && <section aria-label="Field comparison"><h2>Field comparison</h2>
       <p>Unresolved pairing. This page groups release cards by exact lowercased spelling; that is page correspondence, not card identity.</p>
       <p>No accepted entry-level comparison exists. 0 actual comparisons. Better/worse unavailable.</p>
     </section>}
     <details className="wc-audit" data-page-audit><summary>Sources and audit details for this page</summary>
+      <WithdrawalNotice notice={card.withdrawalNotice} />
       <p>{card.pin.provenance === 'synthetic-fixture' ? 'Synthetic fixture. No linguistic or publication approval.' : 'Producer-declared status. No publication approval is implied.'}</p>
       <PageCredits rows={card.page.entries.map(e => e.row)} pin={card.pin} />
       <p>Dataset SHA-256: {card.pin.dataset_sha256}. Manifest SHA-256: {card.pin.manifest_sha256}.</p>
@@ -287,16 +362,19 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
   </div>;
   if (card.kind === 'release-card') {
     const entry = readableEntry(card.row, 1);
-    const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label').flatMap(g => g.facts.map(f => f.value)));
+    const head = cardHeading(entry);
+    const usableIds = usableAssertionIds(card.row);
+    const senseLabels = entry.senses.flatMap(s => s.groups.filter(g => g.field === 'sense_label')
+      .flatMap(g => g.facts.filter(f => f.assertionIds.some(id => usableIds.has(id))).map(f => f.value)));
     const synthetic = card.pin.provenance === 'synthetic-fixture';
     return <div data-release-card={card.row.card_id}>
       <p className="wc-page-meta">
         <span data-release-version>Release {card.pin.release_version}</span> · <span data-card-version>Card version {card.row.card_version}</span>
       </p>
       {synthetic && <p>Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.</p>}
-      <WithdrawalNotice notice={card.withdrawalNotice} />
+      <WithdrawalBanner notice={card.withdrawalNotice} />
       <article className="wc-entry" data-entry={card.row.card_id} data-entry-kind={card.row.card_kind} aria-labelledby={`entry-${card.row.card_id}`}>
-        <h2 id={`entry-${card.row.card_id}`}><span lang="uk">{entry.heading}</span></h2>
+        <h2 id={`entry-${card.row.card_id}`}><span lang={head.hasText ? 'uk' : undefined}>{head.heading}</span></h2>
         <p className="wc-kind" data-entry-label>{KIND_LABELS[card.row.card_kind] ?? card.row.card_kind}
           {entry.proper && <> — {senseLabels.length ? <span lang="uk">{senseLabels.join('; ')}</span> : 'no sense label supplied'}.</>}
           {' '}<span className="wc-status" data-release-status data-entry-status>{card.row.status}</span></p>
@@ -308,6 +386,7 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
         <p>Data owns the authoritative identity relation; Atlas owns current-page integration. No actual comparison is claimed.</p>
       </section>}
       <details className="wc-audit" data-card-audit={card.row.card_id}><summary>Sources and audit</summary>
+        <WithdrawalNotice notice={card.withdrawalNotice} />
         <p>Card <code>{card.row.card_id}</code>, card version <code>{card.row.card_version}</code>, producer status {card.row.status}.</p>
         {!synthetic && <p>Producer-declared status. No publication approval is implied.</p>}
         <PageCredits rows={[card.row]} pin={card.pin} />

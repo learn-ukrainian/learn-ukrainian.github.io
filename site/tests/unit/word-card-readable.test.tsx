@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import WordCardPreview from '../../src/lexicon/WordCardPreview';
+import WordCardPreview, { cardHeading } from '../../src/lexicon/WordCardPreview';
 import { groupReleasePages, readableEntry, type ReleasePage } from '../../src/lib/lexicon/word-card-readable';
 import { loadWordCardRelease, type ReleaseCard, type ReleaseRow } from '../../src/lib/lexicon/word-card-release';
 import { publicReleasePin } from '../../src/lib/lexicon/word-card-preview-inputs';
@@ -146,7 +146,7 @@ describe('readable candidate word cards and missing-field visibility', () => {
     expect(advDom.querySelector('[data-missing-field="cefr"]')).toBeNull();
   });
 
-  it('renders ВТС/СУМ-20 definition_uk with Ukrainian lang and source credit on sense and card subjects', () => {
+  it('renders definition_uk with source-neutral Meaning label, Ukrainian lang and actual source credits', () => {
     const row: ReleaseRow = {
       card_id: 'wc_def000000001',
       card_kind: 'lexeme',
@@ -169,15 +169,112 @@ describe('readable candidate word cards and missing-field visibility', () => {
 
     const defGroup = dom.querySelector('[data-sense="ws_1"] [data-fact="definition_uk"]');
     expect(defGroup).not.toBeNull();
-    expect(defGroup?.querySelector('dt')?.textContent).toBe('Meaning (ВТС/СУМ-20)');
+    // F1: source-neutral label; actual provenance stays on each citation credit.
+    expect(defGroup?.querySelector('dt')?.textContent).toBe('Meaning');
+    expect(dom.textContent).not.toContain('ВТС/СУМ-20');
     expect(Array.from(defGroup?.querySelectorAll('[data-fact-value]') ?? []).map(el => [el.getAttribute('lang'), el.textContent])).toEqual([
       ['uk', 'Водне джерело, що б’є із землі.'],
       ['uk', 'Потік води з-під землі.'],
     ]);
+    expect(Array.from(defGroup?.querySelectorAll('[data-credit-ref]') ?? []).map(el => el.textContent)).toEqual(['sum20', 'vts']);
     expect(defGroup?.querySelector('[data-sources-differ]')).not.toBeNull();
     expect(dom.querySelector('[data-missing-field="definition_uk"]')).toBeNull();
     expect(dom.querySelector('[data-missing-field="sense_label"]')).toBeNull();
     expect(dom.querySelector('[aria-label^="Other source facts"]')).toBeNull();
+  });
+
+  it('shows competing spellings or MWE forms together instead of picking by assertion order (F2)', () => {
+    const competingSpelling: ReleaseRow = {
+      card_id: 'wc_amb000000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_amb',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_amb000000001', 'spelling', 'варіант1', 'ulif'),
+        mkField('wc_amb000000001', 'spelling', 'варіант2', 'vesum'),
+      ],
+    };
+    const competingMwe: ReleaseRow = {
+      card_id: 'wc_amb000000002',
+      card_kind: 'mwe',
+      card_version: 'cv_amb2',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_amb000000002', 'mwe_form', 'вираз А', 'ulif'),
+        mkField('wc_amb000000002', 'mwe_form', 'вираз Б', 'frazeolohichnyi'),
+      ],
+    };
+    for (const [row, expected] of [[competingSpelling, 'варіант1 / варіант2'], [competingMwe, 'вираз А / вираз Б']] as const) {
+      expect(cardHeading(readableEntry(row, 1))).toEqual({ title: expected, heading: expected, hasText: true });
+      const dom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />));
+      expect(dom.querySelector('[data-entry] h2')?.textContent).toBe(expected);
+      expect(dom.querySelector('[data-sources-differ]')).not.toBeNull();
+    }
+  });
+
+  it('flags empty or null core, sense and definition values as missing and never badges null CEFR (F3)', () => {
+    const row: ReleaseRow = {
+      card_id: 'wc_emp000000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_emp',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_emp000000001', 'spelling', 'замок'),
+        mkField('wc_emp000000001', 'stress', '   '),
+        mkField('wc_emp000000001', 'pos', null),
+        mkField('wc_emp000000001', 'cefr', null),
+        mkField('wc_emp000000001', 'sense_label', null, 'ulif', { kind: 'sense', id: 'ws_1' }),
+        mkField('wc_emp000000001', 'definition_uk', null, 'ulif', { kind: 'sense', id: 'ws_1' }),
+      ],
+    };
+    const dom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />));
+    // Empty stress falls back to spelling instead of blank heading.
+    expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('замок');
+    expect(dom.querySelector('.wc-cefr-badge')).toBeNull();
+    for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
+      expect(dom.querySelector(`[data-missing-field="${field}"]`), field).not.toBeNull();
+    }
+    // Every raw assertion remains verbatim in the collapsed audit.
+    expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(6);
+  });
+
+  it('keeps withdrawal warning visible while placing verbatim withdrawal JSON inside collapsed audit (F4)', () => {
+    const row: ReleaseRow = {
+      card_id: 'wc_wdr000000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_wdr',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [mkField('wc_wdr000000001', 'spelling', 'замок')],
+    };
+    const withdrawalNotice = {
+      schema_version: 'word-card-withdrawal.v1',
+      previous_release_version: 'v0',
+      previous_dataset_sha256: '1'.repeat(64),
+      replacement_release_version: 'v-test',
+      replacement_dataset_sha256: 'a'.repeat(64),
+      withdrawal: { selector: { source_id: 'ulif' }, justification: 'Test withdrawal' },
+      removed_field_citations: 2,
+    };
+    const singleDom = parseDom(renderToStaticMarkup(
+      <WordCardPreview card={{ kind: 'release-card', row, pin, withdrawalNotice }} current={null} compare={false} />,
+    ));
+    expect(singleDom.querySelector('[data-withdrawal-warning]')?.textContent).toContain('2 field citations removed');
+    expect(Array.from(singleDom.querySelectorAll('pre')).filter(pre => !pre.closest('details'))).toEqual([]);
+    expect(singleDom.querySelector('details[data-card-audit] [aria-label="Withdrawal notice"] pre')?.textContent)
+      .toBe(JSON.stringify(withdrawalNotice, null, 2));
+
+    const page = groupReleasePages([row]).pages[0]!;
+    const groupedDom = parseDom(renderToStaticMarkup(
+      <WordCardPreview card={{ kind: 'release-page', page, pin, withdrawalNotice }} current={null} compare={false} />,
+    ));
+    expect(groupedDom.querySelector('[data-withdrawal-warning]')?.textContent).toContain('2 field citations removed');
+    expect(Array.from(groupedDom.querySelectorAll('pre')).filter(pre => !pre.closest('details'))).toEqual([]);
+    expect(groupedDom.querySelector('details[data-page-audit] [aria-label="Withdrawal notice"] pre')?.textContent)
+      .toBe(JSON.stringify(withdrawalNotice, null, 2));
   });
 
   it('shows all missing fields explicitly on minimal MWE cards like Гнат-безп\'ятко', () => {
