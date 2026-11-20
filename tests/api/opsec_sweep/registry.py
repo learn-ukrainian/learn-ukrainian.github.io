@@ -47,16 +47,14 @@ class FrozenDenominator:
 
 
 # Measured from the live app. The count and the digest are one snapshot:
-# a tree matches only when all three fields match. This is the installed
-# release, lu-machinery 0.1.33 (unchanged since 0.1.32): machinery #756 (0.1.31) removed 47 unused
-# operations (the agent-monitor, comms legacy, fleet facade/observer, runtime,
-# rollovers, git hygiene, route-contract and session-streams drift/dual-write
-# routes) and machinery #768 (0.1.32) removed the four epic rollover-bundle routes.
+# a tree matches only when all three fields match. This is lu-machinery 0.1.45,
+# which adds GET /api/fleet/model-stats/planning (machinery PR 1026) over the
+# 0.1.33-0.1.44 snapshot (168 HTTP routes).
 ACCEPTED_DENOMINATORS = (
     FrozenDenominator(
-        http_count=168,
+        http_count=169,
         websocket_count=1,
-        sha256="b948f1ba48b2e16172146d3a975b855e7f181a9cc53d036d50d977037a6f39db",
+        sha256="39aed22bf3472069dc8030835051c6f90ab2825ad8c9922ba8cd760c1d1df224",
     ),
 )
 
