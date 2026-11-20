@@ -227,8 +227,8 @@ def pr(**updates):
     return data
 
 
-def test_p3_only_changes_requested_marker_is_approval():
-    """A standing CHANGES_REQUESTED marker whose reply is one all-P3 findings object reads as APPROVED."""
+def test_p3_only_changes_requested_stays_changes_requested():
+    """A standing CHANGES_REQUESTED marker stays blocking even when its reply has only P3 findings."""
     reply = json.dumps({
         "schema_version": "code-review-findings.v1",
         "overall": {"correctness": "incorrect", "explanation": "One P3 residual.", "confidence": 0.9},
@@ -249,7 +249,7 @@ def test_p3_only_changes_requested_marker_is_approval():
         "created_at": "2026-09-23T13:00:00Z", "updated_at": "2026-09-23T13:00:00Z",
     }
     assert sweep.parse_marker(body)["verdict"] == "CHANGES_REQUESTED"
-    assert sweep.lookup_verdict([item], SHA, "fleet").state == "APPROVED"
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "CHANGES_REQUESTED"
 
 
 def test_latest_started_rejects_approval_then_rejection():
