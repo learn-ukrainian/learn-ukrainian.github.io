@@ -10,9 +10,4 @@
 #
 # Unsuppressed Critical or High vulnerabilities will fail the blocking gate.
 
-vulnerabilities:
-  - id: PYSEC-2026-3804
-    package: accelerate
-    version: 1.14.0
-    status: upstream-unpatched
-    reason: "Path traversal in load_checkpoint_in_model; upstream 1.14.0 has no released patch yet. Model weights are not loaded from untrusted user inputs in this repository."
+vulnerabilities: []
