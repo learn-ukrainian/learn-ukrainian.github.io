@@ -281,29 +281,42 @@ describe('readable candidate word cards and missing-field visibility', () => {
         mkField('wc_obj000000001', 'paradigm', { slot: 'v_naz.s', forms: [] }),
         mkField('wc_obj000000001', 'paradigm', { slot: 'v_rod.s', forms: ['   '] }),
         mkField('wc_obj000000001', 'paradigm', { slot: 'v_dav.s', forms: 'not-a-list' }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_dav.s', forms: ['test-form', null] }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_oru.s', forms: ['num-form', 123] }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_naz.s', forms: ['sense-form'] }, 'ulif', { kind: 'sense', id: 'ws_1' }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_naz.s', forms: ['link-form'] }, 'ulif', { kind: 'link', id: 'wl_1' }),
       ],
     };
-    const dom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />));
-    expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('замок');
-    expect(dom.querySelector('.wc-cefr-badge')).toBeNull();
-    // No unusable value or raw JSON leaks into readable facts outside the closed audit.
-    const readableText = dom.querySelector('[data-entry]')?.textContent ?? '';
-    for (const leaked of ['за́мок', 'noun', 'B1', 'будівля', 'споруда', 'not-a-list', '{"slot"']) {
-      expect(readableText, leaked).not.toContain(leaked);
+    const objPage = groupReleasePages([row]).pages[0]!;
+    for (const [label, html] of [
+      ['release-card', renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />)],
+      ['release-page', renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-page', page: objPage, pin }} current={null} compare={false} />)],
+    ] as const) {
+      const dom = parseDom(html);
+      expect(dom.querySelector('[data-entry] h2')?.textContent, label).toBe(label === 'release-page' ? '1. замок' : 'замок');
+      expect(dom.querySelector('.wc-cefr-badge'), label).toBeNull();
+      // No unusable value or raw JSON leaks into readable facts outside the closed audit.
+      const readableClone = dom.querySelector('[data-entry]')?.cloneNode(true) as HTMLElement | null;
+      readableClone?.querySelectorAll('details').forEach(el => el.remove());
+      const readableText = readableClone?.textContent ?? '';
+      for (const leaked of ['за́мок', 'noun', 'B1', 'будівля', 'споруда', 'not-a-list', 'test-form', 'num-form', 'sense-form', 'link-form', '{"slot"']) {
+        expect(readableText, `${label}: ${leaked}`).not.toContain(leaked);
+      }
+      expect(dom.querySelector('[data-fact="paradigm"]'), label).toBeNull();
+      for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
+        expect(dom.querySelector(`[data-missing-field="${field}"]`), `${label}: ${field}`).not.toBeNull();
+      }
+      expect(dom.querySelector('[data-missing-paradigm]')?.textContent, label).toContain('No usable paradigm forms');
+      expect(dom.querySelector('[data-paradigm-source="ulif"] td')?.textContent, label).toContain('no usable form supplied');
+      // Exhaustive assertion coverage and raw audit records remain intact.
+      const cited = Array.from(dom.querySelectorAll('[data-assertions]'))
+        .filter(el => !el.closest('details'))
+        .flatMap(el => (el.getAttribute('data-assertions') ?? '').split(' '))
+        .filter(Boolean)
+        .sort();
+      expect(cited, label).toEqual(row.fields.map(f => f.assertion_id).sort());
+      expect(dom.querySelectorAll('details [data-release-assertion]'), label).toHaveLength(13);
     }
-    for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
-      expect(dom.querySelector(`[data-missing-field="${field}"]`), field).not.toBeNull();
-    }
-    expect(dom.querySelector('[data-missing-paradigm]')?.textContent).toContain('No usable paradigm forms');
-    expect(dom.querySelector('[data-paradigm-source="ulif"] td')?.textContent).toContain('no usable form supplied');
-    // Exhaustive assertion coverage and raw audit records remain intact.
-    const cited = Array.from(dom.querySelectorAll('[data-assertions]'))
-      .filter(el => !el.closest('details'))
-      .flatMap(el => (el.getAttribute('data-assertions') ?? '').split(' '))
-      .filter(Boolean)
-      .sort();
-    expect(cited).toEqual(row.fields.map(f => f.assertion_id).sort());
-    expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(9);
 
     // Mixed usable + unusable assertions on the same field must neither render the unusable value
     // nor trigger a false "Sources differ." conflict marker on either release-card or release-page.

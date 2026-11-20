@@ -85,6 +85,7 @@ export function isUsableFieldValue(field: string, value: ReleaseRow['fields'][nu
       return value !== null && typeof value === 'object' && !Array.isArray(value)
         && isNonEmptyString(value.slot)
         && Array.isArray(value.forms)
+        && value.forms.every(form => typeof form === 'string')
         && value.forms.some(isNonEmptyString);
     default:
       return isNonEmptyString(value) || isNonEmptyStringArray(value);
@@ -180,7 +181,8 @@ function Facts({ groups, missing = [], usableIds }: { groups: FactGroup[]; missi
         <dd className="wc-missing" data-missing-value>Missing — not supplied in this release</dd>
       </div>];
     }
-    const isUsable = (fact: FactGroup['facts'][number]) => !usableIds || fact.assertionIds.some(id => usableIds.has(id));
+    const isUsable = (fact: FactGroup['facts'][number]) =>
+      group.field !== 'paradigm' && (!usableIds || fact.assertionIds.some(id => usableIds.has(id)));
     const usableFacts = group.facts.filter(isUsable);
     const unusableFacts = group.facts.filter(fact => !isUsable(fact));
     const unusableIds = unusableFacts.flatMap(fact => fact.assertionIds);

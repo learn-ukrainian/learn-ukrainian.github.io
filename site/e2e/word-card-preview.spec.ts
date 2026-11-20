@@ -113,7 +113,7 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   copyFileSync('public/count.js', join(root, 'public/public/count.js'));
   copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
   process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
-  const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT?.trim();
+  const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
   const builtRoot = rawBuiltRoot ? resolve(rawBuiltRoot) : undefined;
   let output: string;
   try { output = builtRoot || resolve(buildPreview(join(root, 'public'), { enabled: true, artifactPath })); }
@@ -340,7 +340,7 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('pinned release readable
     copyFileSync('public/count.js', join(root, 'public/public/count.js'));
     copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
     process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
-    const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT?.trim();
+    const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
     const builtRoot = rawBuiltRoot ? resolve(rawBuiltRoot) : undefined;
     let output: string;
     try { output = builtRoot || resolve(buildPreview(join(root, 'public'), { enabled: true, artifactPath })); }
