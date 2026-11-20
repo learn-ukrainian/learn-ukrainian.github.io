@@ -228,7 +228,9 @@ def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() 
     assert build["permissions"] == {"contents": "read"}
     assert "environment" not in build
     assert deploy["needs"] == "build"
-    assert deploy["if"] == "github.ref == 'refs/heads/main'"
+    assert deploy["if"] == (
+        "!cancelled() && needs.build.result == 'success' && github.ref == 'refs/heads/main'"
+    )
     assert deploy["environment"]["name"] == "github-pages"
     assert deploy["permissions"] == {"contents": "read", "pages": "write", "id-token": "write"}
 

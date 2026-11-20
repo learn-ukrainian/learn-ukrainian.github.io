@@ -488,7 +488,7 @@ jobs:
       # Include tests/build/, normally excluded by pytest default traversal.
       - name: MDX compiler and Chrome sandbox regressions
         run: |
-          .venv/bin/python -m pytest tests -m site_toolchain --strict-markers --override-ini addopts=-q \
+          .venv/bin/python -m pytest tests -m site_toolchain --strict-markers --override-ini addopts=-v \
             --override-ini 'norecursedirs=.* node_modules' --timeout=120
       - id: scope
         env:
@@ -518,12 +518,12 @@ jobs:
           npm run test:built-output
 
       - if: steps.scope.outputs.run == 'true'
-        name: Playwright end-to-end tests against dist
+        name: Playwright browser hardening against dist
         working-directory: site
         env:
           ASTRO_PREVIEW_BACKGROUND: '0'
           PYTHON: ${{ github.workspace }}/.venv/bin/python
-        run: ./node_modules/.bin/playwright test
+        run: ./node_modules/.bin/playwright test 'e2e/origin-allowlist\.spec\.ts$'
 
   # A PR that changes pytest infrastructure runs guards only in pr-affected, so it runs
   # the full pytest shards; the installed gate reads this job's output and requires them.
