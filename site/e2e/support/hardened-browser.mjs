@@ -11,8 +11,7 @@
 //    requests a route never sees (redirect hops, service workers, a test's own
 //    `route.continue()`) still cannot leave the host. Its failures are logged too.
 //
-// Python has the same contract in scripts/validate/browser_launcher.py; the
-// guard in tests/test_browser_hardening_guard.py keeps every launch on these two.
+// tests/test_browser_hardening_guard.py checks for launches outside this module.
 import { chromium } from 'playwright';
 import { test as base, expect } from '@playwright/test';
 

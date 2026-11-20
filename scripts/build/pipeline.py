@@ -3,11 +3,11 @@
 Learn Ukrainian Pipeline
 
 Unified command for the full module processing workflow:
+0. Validate plans (check plan structure and config)
 1. Lint MD (audit for format issues)
 2. Generate MDX (convert to Site format)
 3. Validate MDX (ensure no content loss)
-4. Validate HTML (headless browser check - requires dev server)
-5. Sync Landing (update website landing pages with stats) - opt-in
+4. Sync Landing (update website landing pages with stats) - opt-in
 
 Note: Grammar validation is available on-demand via /grammar-validate command.
 
@@ -200,40 +200,9 @@ def step_validate_mdx(lang_pair: str, level: str | None, module_num: int | None)
     else:
         return StepResult("validate_mdx", False, "MDX validation failed", details=(stderr or "")[:500])
 
-# NOTE: Grammar queue step removed (Issue #352)
-# Grammar validation now available on-demand via /grammar-validate command
-
-def step_validate_html(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
-    """Validate HTML rendering with headless browser."""
-    print("\n" + "="*60)
-    print("🌐 Step 4: Validate HTML")
-    print("="*60)
-
-    # Check if dev server is running
-    import urllib.request
-    try:
-        urllib.request.urlopen("http://localhost:3000/", timeout=5)  # nosec B310 — hardcoded localhost URL
-    except OSError:
-        print("  ⚠️ Site dev server not running")
-        print("  Start with: cd site && pnpm dev")
-        return StepResult("validate_html", False, "Dev server not running")
-
-    cmd = [str(VENV_PYTHON), "scripts/validate_html.py", lang_pair]
-    if level:
-        cmd.append(level)
-    if module_num:
-        cmd.append(str(module_num))
-
-    code, _stdout, stderr = run_command(cmd, capture=False)
-
-    if code == 0:
-        return StepResult("validate_html", True, "HTML validation passed")
-    else:
-        return StepResult("validate_html", False, "HTML validation failed", details=(stderr or "")[:500])
-
 def step_sync_landing(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
-    """Step 6: Sync landing pages with current stats."""
-    print("\n📊 Step 6: Sync Landing Pages")
+    """Sync landing pages with current stats."""
+    print("\n📊 Step 4: Sync Landing Pages")
     print("-" * 40)
 
     cmd = [str(VENV_PYTHON), "scripts/sync_landing_pages.py"]
@@ -268,19 +237,19 @@ def run_pipeline(
         "lint": step_lint,
         "generate": step_generate,
         "validate_mdx": step_validate_mdx,
-        "validate_html": step_validate_html,
         "sync_landing": step_sync_landing,
     }
 
-    for step_name in steps:
-        if step_name not in step_functions:
-            print(f"\n❌ Unknown step: {step_name}")
-            continue
+    unknown_steps = [step for step in steps if step not in step_functions]
+    if unknown_steps:
+        print(f"\n❌ Unknown pipeline steps: {', '.join(unknown_steps)}")
+        return False
 
+    for step_name in steps:
         result = step_functions[step_name](lang_pair, level, module_num)
         results.append(result)
 
-        if not result.success and step_name != "validate_html":
+        if not result.success:
             print(f"\n⛔ Pipeline stopped at {step_name}: {result.message}")
             if result.details:
                 print(f"   Details: {result.details}")
@@ -316,8 +285,8 @@ def main():
                        help="CEFR level (a1, a2, b1, b2, c1, c2)")
     parser.add_argument("module_num", nargs="?", type=int, default=None,
                        help="Module number")
-    parser.add_argument("--steps", default="validate_plans,lint,generate,validate_mdx,validate_html",
-                       help="Comma-separated steps to run (default: all)")
+    parser.add_argument("--steps", default="validate_plans,lint,generate,validate_mdx",
+                       help="Comma-separated steps to run (default: %(default)s)")
 
     args = parser.parse_args()
 

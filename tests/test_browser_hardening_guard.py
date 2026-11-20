@@ -1,7 +1,7 @@
 """Every browser launch stays hardened (#12689, AC-05).
 
 Operator decision 2026-11-03: Playwright runs only against our own trusted
-content, through one shared launcher per language. Each launcher starts the
+content, through one shared Node launcher. It starts the
 system's installed Google Chrome with its sandbox on and blocks every origin
 except the loopback host and learn-ukrainian.github.io. This guard fails when a
 file launches Playwright any other way, disables a browser sandbox, downloads
@@ -27,14 +27,10 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.validate import browser_launcher
-
 pytestmark = pytest.mark.repo_wide
 
 ROOT = Path(__file__).resolve().parents[1]
 NODE_LAUNCHER = "site/e2e/support/hardened-browser.mjs"
-PY_LAUNCHER = "scripts/validate/browser_launcher.py"
-LAUNCHERS = {NODE_LAUNCHER, PY_LAUNCHER}
 SELF = "tests/test_browser_hardening_guard.py"
 
 JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".mts", ".cts")
@@ -57,7 +53,7 @@ LAUNCH_CALL = re.compile(
     r"|\.\s*browserType\s*\(|\.\s*browser_type\b"
 )
 JS_NAMED_IMPORT = re.compile(rf"import\s*\{{([^}}]*)\}}\s*from\s*['\"]({PLAYWRIGHT_PACKAGE})['\"]")
-# Outside the launchers, a Playwright package may be named only in these places. The guard
+# Outside the launcher, a Playwright package may be named only in these places. The guard
 # keys on the package name itself, wherever it appears in code: in an import, a require(),
 # a string, an embedded command or another language's snippet, in any quoting. A new call
 # shape or quoting cannot get past it; only a package name built at runtime could.
@@ -81,24 +77,13 @@ JS_ALLOWED_PACKAGE_USE = re.compile(
 # Test fixtures that hand a spec a browser type it could launch itself.
 JS_BROWSER_FIXTURE = re.compile(r"async\s*\(\s*\{[^}]*\b(?:browserType|playwright)\b[^}]*\}")
 JS_PLAYWRIGHT_BROWSER_TYPE = re.compile(r"\bplaywright\s*\.\s*(?:chromium|firefox|webkit|_electron|_android)\b")
-PY_USES_PLAYWRIGHT = re.compile(
-    r"^\s*(?:from|import)\s+playwright\b|(?:import_module|__import__)\(\s*['\"]playwright", re.M
-)
-# In a Python file that uses Playwright: any browser-type reference (attribute, getattr or
-# subscript string) and any launch or connect call belong in the launcher.
-PY_BROWSER_ACCESS = re.compile(
-    r"\.\s*(?:chromium|firefox|webkit)\b|['\"][^'\"\n]*\b(?:chromium|firefox|webkit)\b"
-    r"|\.\s*(?:launch|launch_persistent_context|launch_server|connect|connect_over_cdp)\s*\("
-)
 # Chrome accepts a switch with one or two leading dashes.
 SANDBOX_FLAG = re.compile(
     r"(?<![\w-])--?(?:no-sandbox|disable-(?:setuid|namespace|seccomp-filter|gpu)-sandbox|no-zygote-sandbox)\b"
 )
-# Only the launchers set the Chromium sandbox option, so its name appears nowhere else,
+# Only the launcher sets the Chromium sandbox option, so its name appears nowhere else,
 # whatever the value or spelling.
 SANDBOX_OPTION = re.compile(r"chromium_?[sS]andbox")
-# Runtime Playwright entry points a Python module could launch a browser from.
-PY_RUNTIME_ENTRY = {"async_playwright", "sync_playwright", "async_api", "sync_api", "_impl", "*"}
 BROWSER_DOWNLOAD = re.compile(r"\bplaywright(?:-core)?\s+install\b")
 # A browser Playwright Test connects to was started elsewhere, unhardened.
 REMOTE_BROWSER = re.compile(r"\bconnectOptions\b|\bPW_TEST_CONNECT_WS_ENDPOINT\b")
@@ -111,7 +96,6 @@ PLAYWRIGHT_TOKEN_EXEMPT = {
     "tests/fixtures/ci_timings/sample_ci_runs.json": (13, "recorded CI job names"),
     "docs/l2-uk-en/v4-seminar-section-templates.yaml": (1, "the English word playwright in seminar prose"),
     "site/.gitignore": (1, "the ignore pattern for Playwright's cache directory"),
-    "pyproject.toml": (1, "the playwright dependency declaration"),
 }
 # The token rule reads every tracked text file, whatever its type: code also lives in .jsx,
 # .astro frontmatter, .mdx, .vue, extensionless scripts and more. Only prose formats, which
@@ -237,7 +221,7 @@ def _code_strings(path: str) -> list[str]:
 
 def _playwright_mentions(path: str) -> list[str]:
     """Each place `path` names a Playwright package outside the allowed places."""
-    if path in LAUNCHERS or path.endswith(LOCKFILE_NAMES):
+    if path == NODE_LAUNCHER or path.endswith(LOCKFILE_NAMES):
         return []
     is_npm_manifest = path.rsplit("/", 1)[-1] == NPM_MANIFEST_NAME
     if path.startswith(DATA_TREES) and path.endswith(DATA_SUFFIXES) and not is_npm_manifest:
@@ -267,29 +251,25 @@ def _imported_names(clause: str) -> set[str]:
     return names
 
 
-def test_the_launchers_pin_installed_chrome_sandbox_and_allowlist() -> None:
+def test_the_launcher_pins_installed_chrome_sandbox_and_allowlist() -> None:
     node = _read(NODE_LAUNCHER)
     for needle in ("channel: 'chrome'", "chromiumSandbox: true", "serviceWorkers: 'block'", "'MAP * ~NOTFOUND'"):
         assert needle in node, f"{NODE_LAUNCHER} lost {needle!r}"
     node_hosts = re.search(r"ALLOWED_HOSTS = Object\.freeze\(\[([^\]]*)\]\)", node)
     assert node_hosts, f"{NODE_LAUNCHER} must define ALLOWED_HOSTS"
-    assert tuple(re.findall(r"'([^']+)'", node_hosts.group(1))) == browser_launcher.ALLOWED_HOSTS
-    assert browser_launcher.ALLOWED_HOSTS == ("localhost", "127.0.0.1", "::1", "learn-ukrainian.github.io")
-
-    options = browser_launcher.hardened_launch_options()
-    assert options["channel"] == "chrome"
-    assert options["chromium_sandbox"] is True
-    assert options["args"] == [f"--host-resolver-rules={browser_launcher.HOST_RESOLVER_RULES}"]
-    # Callers cannot pass Chrome flags at all.
-    with pytest.raises(TypeError):
-        browser_launcher.hardened_launch_options(args=["-no-sandbox"])  # type: ignore[call-arg]
+    assert tuple(re.findall(r"'([^']+)'", node_hosts.group(1))) == (
+        "localhost",
+        "127.0.0.1",
+        "::1",
+        "learn-ukrainian.github.io",
+    )
     assert "'args'" not in node.split("const CALLER_OPTIONS = new Set(")[1].split(")")[0]
 
 
-def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
+def test_only_the_shared_launcher_launches_a_playwright_browser() -> None:
     offenders = []
     for path in _files((*JS_SUFFIXES, ".py")):
-        if path in LAUNCHERS:
+        if path == NODE_LAUNCHER:
             continue
         text = _read_code(path)
         offenders += [f"{path}: {m.group(0)}" for m in LAUNCH_CALL.finditer(text)]
@@ -300,10 +280,8 @@ def test_only_the_shared_launchers_launch_a_playwright_browser() -> None:
                     offenders.append(f"{path}: imports {sorted(bad)} from {match.group(2)}")
             offenders += [f"{path}: {m.group(0)}" for m in JS_BROWSER_FIXTURE.finditer(text)]
             offenders += [f"{path}: {m.group(0)}" for m in JS_PLAYWRIGHT_BROWSER_TYPE.finditer(text)]
-        elif PY_USES_PLAYWRIGHT.search(text):
-            offenders += [f"{path}: {m.group(0)}" for m in PY_BROWSER_ACCESS.finditer(text)]
     for path in _files(CODE_SUFFIXES):
-        if path in LAUNCHERS:
+        if path == NODE_LAUNCHER:
             continue
         if not path.endswith((*JS_SUFFIXES, ".py")):
             for code in _code_strings(path):
@@ -360,7 +338,7 @@ def test_no_file_disables_a_browser_sandbox() -> None:
     for path in _candidates():
         text = _read(path)
         hits = [m.group(0) for m in SANDBOX_FLAG.finditer(text)] if path not in SANDBOX_FLAG_EXEMPT else []
-        if path not in LAUNCHERS:
+        if path != NODE_LAUNCHER:
             hits += [m.group(0) for m in SANDBOX_OPTION.finditer(text)]
         if hits:
             offenders.append(f"{path}: {sorted(set(hits))}")
@@ -384,19 +362,15 @@ def _is_playwright(module: str) -> bool:
     return module == "playwright" or module.startswith("playwright.")
 
 
-def test_python_modules_reach_playwright_only_through_the_launcher() -> None:
-    """Outside the launcher, Python imports Playwright types only, never its driver."""
+def test_python_modules_do_not_import_playwright() -> None:
     offenders = []
     for path in _files((".py",)):
-        if path in LAUNCHERS:
-            continue
         for node in ast.walk(ast.parse(_read(path), filename=path)):
             if isinstance(node, ast.Import):
                 offenders += [f"{path}:{node.lineno}: import {a.name}" for a in node.names if _is_playwright(a.name)]
             elif isinstance(node, ast.ImportFrom) and node.module and _is_playwright(node.module):
-                entry = {a.name for a in node.names} & PY_RUNTIME_ENTRY
-                offenders += [f"{path}:{node.lineno}: from {node.module} import {sorted(entry)}"] if entry else []
+                offenders.append(f"{path}:{node.lineno}: imports from {node.module}")
             elif isinstance(node, ast.Call):
                 strings = [a.value for a in node.args if isinstance(a, ast.Constant) and isinstance(a.value, str)]
                 offenders += [f"{path}:{node.lineno}: dynamic import of {v}" for v in strings if _is_playwright(v)]
-    assert not offenders, f"Python reaches Playwright's driver only through {PY_LAUNCHER}:\n" + "\n".join(offenders)
+    assert not offenders, "Python modules must not import Playwright:\n" + "\n".join(offenders)

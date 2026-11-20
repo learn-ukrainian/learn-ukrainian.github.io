@@ -19,9 +19,8 @@ document them as current fallback, review, dispatch, or restoration paths.
 
 Operator decision 2026-11-03 (#12689): Playwright runs only against our own
 trusted content (the local site build on the loopback host, or
-`learn-ukrainian.github.io`), and only through the hardened launcher:
-`site/e2e/support/hardened-browser.mjs` for Node and
-`scripts/validate/browser_launcher.py` for Python. The launcher starts the
+`learn-ukrainian.github.io`) and runs through
+`site/e2e/support/hardened-browser.mjs`. The launcher starts the
 system's installed, auto-updated Google Chrome with its sandbox on and aborts,
 with a logged reason, every request to any other origin.
 
@@ -29,7 +28,8 @@ with a logged reason, every request to any other origin.
 - Do not use a Playwright MCP server.
 - Do not download Playwright's bundled browsers or turn the browser sandbox off.
 
-`tests/test_browser_hardening_guard.py` enforces this for every launch site.
+`tests/test_browser_hardening_guard.py` checks the launcher and scans tracked
+files for unsupported launch paths and settings.
 
 ## Stream Orchestration Model
 
