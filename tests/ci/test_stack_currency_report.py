@@ -43,7 +43,7 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     assert rows["python"] == ["python", "3.14.8", "9.8.7", "withheld"]
     assert rows["node"] == ["node", "22.23.4", "9.8.7", "withheld"]
     assert rows["postgresql"][1] == "16"
-    assert rows["uv"][1] == "0.13.1"
+    assert rows["uv"][1] == "0.13.9"
     assert rows["uv"][3] == "withheld"
     assert rows["ci-literals"] == ["ci-literals", "withheld", "9.8.7", "withheld"]
     assert rows["pinned-model-ids"][0] == "pinned-model-ids"
