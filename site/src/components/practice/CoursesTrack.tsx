@@ -163,7 +163,7 @@ export default function CoursesTrack({
             {CHROME_STRINGS[chromeLocale]['practice.courses.badgeCulture']}
           </span>
           <span className="k3-mode-title">
-            {CULTURE_DECK_META.title}
+            {chromeLocale === 'uk' ? CULTURE_DECK_META.title : CULTURE_DECK_META.en}
           </span>
           {chromeLocale === 'en' ? (
             <span
