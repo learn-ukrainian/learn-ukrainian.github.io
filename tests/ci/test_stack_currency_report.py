@@ -40,7 +40,7 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     body = report.render_body(report.build_report(_PINS, lambda _name: "9.8.7"))
     rows = _table(body)
 
-    assert rows["python"] == ["python", "3.14.8", "9.8.7", "withheld"]
+    assert rows["python"] == ["python", "3.14.10", "9.8.7", "withheld"]
     assert rows["node"] == ["node", "22.23.4", "9.8.7", "withheld"]
     assert rows["postgresql"][1] == "16"
     assert rows["uv"][1] == "0.13.9"
