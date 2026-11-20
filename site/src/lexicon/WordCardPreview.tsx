@@ -66,13 +66,13 @@ export function isUsableFieldValue(field: string, value: ReleaseRow['fields'][nu
   switch (field) {
     case 'spelling':
     case 'mwe_form':
-    case 'pos':
     case 'aspect':
     case 'grammatical_label':
     case 'cefr':
     case 'sense_label':
     case 'definition_uk':
       return isNonEmptyString(value);
+    case 'pos':
     case 'stress':
     case 'gender':
       return isNonEmptyString(value) || isNonEmptyStringArray(value);
@@ -219,6 +219,8 @@ function Scroll({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function Paradigm({ table }: { table: ParadigmTable }) {
+  const formRows = table.formRows.filter(row => isNonEmptyString(row.slot));
+  if (table.caseRows.length === 0 && formRows.length === 0) return null;
   return <section className="wc-paradigm" data-paradigm-source={table.sourceId} aria-label={`Forms from ${table.sourceId}`}>
     <h4><Credits credits={table.credits} /></h4>
     {table.caseRows.length > 0 && <Scroll label={`Case forms from ${table.sourceId}`}><table>
@@ -226,9 +228,9 @@ function Paradigm({ table }: { table: ParadigmTable }) {
       <tbody>{table.caseRows.map(row => <tr key={row.label}><th scope="row" lang="uk">{row.label}</th>
         {row.cells.map((cell, i) => <Cell key={i} cell={cell} />)}</tr>)}</tbody>
     </table></Scroll>}
-    {table.formRows.length > 0 && <Scroll label={`Other forms from ${table.sourceId}`}><table>
+    {formRows.length > 0 && <Scroll label={`Other forms from ${table.sourceId}`}><table>
       <thead><tr><th scope="col">Grammatical form</th><th scope="col">Supplied forms</th></tr></thead>
-      <tbody>{table.formRows.map(row => <tr key={row.slot}><th scope="row"><Label label={row.label} /></th><Cell cell={row.cell} /></tr>)}</tbody>
+      <tbody>{formRows.map(row => <tr key={row.slot}><th scope="row"><Label label={row.label} /></th><Cell cell={row.cell} /></tr>)}</tbody>
     </table></Scroll>}
   </section>;
 }
@@ -252,7 +254,7 @@ function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffi
   }));
   const hasUsableParadigm = entry.paradigms.some(table =>
     table.caseRows.some(row => row.cells.some(cell => cell !== null && cell.forms.some(isNonEmptyString)))
-    || table.formRows.some(row => row.cell.forms.some(isNonEmptyString)),
+    || table.formRows.some(row => isNonEmptyString(row.slot) && row.cell.forms.some(isNonEmptyString)),
   );
   return <>
     <Facts groups={entry.facts} missing={missing} usableIds={usableIds} />

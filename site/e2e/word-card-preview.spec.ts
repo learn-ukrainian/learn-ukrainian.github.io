@@ -113,14 +113,16 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   copyFileSync('public/count.js', join(root, 'public/public/count.js'));
   copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
   process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
+  const builtRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
   let output: string;
-  try { output = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+  try { output = builtRoot || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
   finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
-  // The isolated preview build omits ordinary Atlas routes. Package their real
-  // generated search assets using the existing pure generator, without a database.
-  const interpreter = process.env.PYTHON;
-  if (!interpreter) throw Error('Public proof requires the task-prescribed PYTHON interpreter');
-  execFileSync(interpreter, ['-c', `
+  if (!builtRoot) {
+    // The isolated preview build omits ordinary Atlas routes. Package their real
+    // generated search assets using the existing pure generator, without a database.
+    const interpreter = process.env.PYTHON;
+    if (!interpreter) throw Error('Public proof requires the task-prescribed PYTHON interpreter');
+    execFileSync(interpreter, ['-c', `
 import json, sys
 from pathlib import Path
 from scripts.audit.generate_search_index import build_search_shards, write_search_shards
@@ -131,7 +133,8 @@ expected = json.loads((source / 'lexicon-search-shards.json').read_bytes())
 assert manifest == expected, 'Search inputs do not match their generated manifest'
 write_search_shards(manifest, shards, target / 'search-shards.json', target / 'search')
 `, resolve('src/data'), join(output, 'lexicon')], { cwd: resolve('..') });
-  for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
+    for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
+  }
   const files = readdirSync(output, { recursive: true }).filter((name): name is string => typeof name === 'string');
   const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
   const cardAndWordRoutes = routes.filter(name => name !== 'lexicon-v2/index.html');
@@ -335,20 +338,25 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('pinned release readable
     copyFileSync('public/count.js', join(root, 'public/public/count.js'));
     copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
     process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
+    const builtRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
     let output: string;
-    try { output = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+    try { output = builtRoot || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
     finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
-    const interpreter = process.env.PYTHON || resolve(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { encoding: 'utf8' }).trim(), '../.venv/bin/python');
-    execFileSync(interpreter, ['-c', `
+    if (!builtRoot) {
+      const interpreter = process.env.PYTHON || resolve(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { encoding: 'utf8' }).trim(), '../.venv/bin/python');
+      execFileSync(interpreter, ['-c', `
 import json, sys
 from pathlib import Path
 from scripts.audit.generate_search_index import build_search_shards, write_search_shards
 source, target = map(Path, sys.argv[1:])
 rows = json.loads((source / 'lexicon-search-index.json').read_bytes())
 manifest, shards = build_search_shards(rows)
+expected = json.loads((source / 'lexicon-search-shards.json').read_bytes())
+assert manifest == expected, 'Search inputs do not match their generated manifest'
 write_search_shards(manifest, shards, target / 'search-shards.json', target / 'search')
 `, resolve('src/data'), join(output, 'lexicon')], { cwd: resolve('..') });
-    for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
+      for (const name of ['index', 'aliases']) copyFileSync(`src/data/lexicon-search-${name}.json`, join(output, `lexicon/search-${name}.json`));
+    }
     const files = readdirSync(output, { recursive: true }).filter((name): name is string => typeof name === 'string');
     const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
     const routeInventory = JSON.parse(readFileSync('src/lib/lexicon/word-card-preview-route-inventory.json', 'utf8')) as { routes: { path: string }[] };
@@ -554,6 +562,16 @@ async function readability(page: import('@playwright/test').Page, origin: string
       for (const target of [page.locator('h1'), first.locator('h2'), first.locator('[data-entry-label]'), first.locator(':scope > .wc-facts dd').last()]) await expect(target).toBeInViewport();
       await expect(page.locator('pre:visible')).toHaveCount(0);
       await expect(page.locator('[data-credit-attribution]:visible')).toHaveCount(0);
+      if (key === 'замок') {
+        await expect(first.locator('h2')).toHaveText('1. замо́к');
+        await expect(page.locator('[data-entry="wc_bgr5q9c06wxg"] [data-missing-field="cefr"]')).toBeVisible();
+        await expect(page.locator('[data-entry="wc_bgr5q9c06wxg"] [data-missing-field="definition_uk"]')).toBeVisible();
+      }
+      if (key === 'ключ') {
+        await expect(first.locator('h2')).toHaveText('1. ключ');
+        await expect(page.locator('[data-entry="wc_h509ejs613sy"] [data-missing-field="cefr"]')).toBeVisible();
+        await expect(page.locator('[data-entry="wc_h509ejs613sy"] [data-missing-field="definition_uk"]')).toBeVisible();
+      }
       await noPlaceholders(); await noOverflow();
       const facts = await page.locator('[data-fact] dd:not([data-sources-differ])').count();
       await expect(page.locator('[data-fact] dd:not([data-sources-differ]) [data-credits]')).toHaveCount(facts);
@@ -753,18 +771,42 @@ async function readability(page: import('@playwright/test').Page, origin: string
         url: page.url(), citationVisible: true });
       results.push({ viewport: name, key, kind, axeSeriousClosed: closed, axeSeriousOpened: opened, axeSeriousCreditsOpened: creditsOpenedAxe, creditedFacts: facts });
     }
-    await page.goto(`${origin}/lexicon-v2/release/`);
-    const summaryClosed = await serious();
-    await page.locator('details').evaluateAll(nodes => nodes.forEach(n => n.setAttribute('open', '')));
-    expect([summaryClosed, await serious()], `${name} summary`).toEqual([[], []]);
+    const indexResp = await page.goto(`${origin}/lexicon-v2/`);
+    expect(indexResp?.status(), `${name} index`).toBe(200);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('details[open]')).toHaveCount(0);
+    await expect(page.locator('pre:visible')).toHaveCount(0);
     await noOverflow();
+    expect(await serious(), `${name} index`).toEqual([]);
+
+    const releaseResp = await page.goto(`${origin}/lexicon-v2/release/`);
+    expect(releaseResp?.status(), `${name} summary`).toBe(200);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('details[open]')).toHaveCount(0);
+    await expect(page.locator('pre:visible')).toHaveCount(0);
+    await noOverflow();
+    const summaryClosed = await serious();
+    const releaseAuditSummary = page.locator('details[data-release-audit] > summary');
+    await releaseAuditSummary.focus(); await expect(releaseAuditSummary).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('details[data-release-audit]')).toHaveAttribute('open', '');
+    await noOverflow();
+    expect([summaryClosed, await serious()], `${name} summary`).toEqual([[], []]);
     results.push({ viewport: name, key: 'release summary', axeSeriousClosed: summaryClosed, axeSeriousOpened: [] });
 
-    await page.goto(`${origin}/lexicon-v2/compare/release/`);
-    const compareSummaryClosed = await serious();
-    await page.locator('details').evaluateAll(nodes => nodes.forEach(n => n.setAttribute('open', '')));
-    expect([compareSummaryClosed, await serious()], `${name} compare summary`).toEqual([[], []]);
+    const compareResp = await page.goto(`${origin}/lexicon-v2/compare/release/`);
+    expect(compareResp?.status(), `${name} compare summary`).toBe(200);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('details[open]')).toHaveCount(0);
+    await expect(page.locator('pre:visible')).toHaveCount(0);
     await noOverflow();
+    const compareSummaryClosed = await serious();
+    const compareAuditSummary = page.locator('details[data-release-audit] > summary');
+    await compareAuditSummary.focus(); await expect(compareAuditSummary).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('details[data-release-audit]')).toHaveAttribute('open', '');
+    await noOverflow();
+    expect([compareSummaryClosed, await serious()], `${name} compare summary`).toEqual([[], []]);
 
     // Additional held-out pages from #11203 AC-04: ЮНЕСКО (proper-only single card), шкідливий, Гнат-безп'ятко.
     for (const extra of [

@@ -144,6 +144,25 @@ describe('readable candidate word cards and missing-field visibility', () => {
     expect(advDom.querySelector('[data-missing-field="gender"]')).toBeNull();
     expect(advDom.querySelector('[data-missing-field="aspect"]')).toBeNull();
     expect(advDom.querySelector('[data-missing-field="cefr"]')).toBeNull();
+
+    // F6: array-valued POS such as ["noun", "verb"] stays usable and triggers both noun/verb gap checks.
+    const multiPos: ReleaseRow = {
+      card_id: 'wc_mpos0000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_4',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_mpos0000001', 'spelling', 'мати'),
+        mkField('wc_mpos0000001', 'stress', 'ма́ти'),
+        mkField('wc_mpos0000001', 'pos', ['noun', 'verb']),
+      ],
+    };
+    const multiPosDom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row: multiPos, pin }} current={null} compare={false} />));
+    expect(multiPosDom.querySelector('[data-fact="pos"] [data-fact-value]')?.textContent).toBe('noun, verb');
+    expect(multiPosDom.querySelector('[data-missing-field="pos"]')).toBeNull();
+    expect(multiPosDom.querySelector('[data-missing-field="gender"]')).not.toBeNull();
+    expect(multiPosDom.querySelector('[data-missing-field="aspect"]')).not.toBeNull();
   });
 
   it('renders definition_uk with source-neutral Meaning label, Ukrainian lang and actual source credits', () => {
@@ -275,6 +294,27 @@ describe('readable candidate word cards and missing-field visibility', () => {
       .sort();
     expect(cited).toEqual(row.fields.map(f => f.assertion_id).sort());
     expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(8);
+
+    // F3: blank or whitespace paradigm slots with non-empty forms must not render in any table
+    // and must not suppress the missing-paradigm marker, while preserving raw assertions in audit.
+    for (const blankSlot of ['', '   ']) {
+      const blankSlotRow: ReleaseRow = {
+        card_id: 'wc_bslot000001',
+        card_kind: 'lexeme',
+        card_version: 'cv_bslot',
+        status: 'CANDIDATE',
+        known_gaps: [],
+        fields: [
+          mkField('wc_bslot000001', 'spelling', 'ключ'),
+          mkField('wc_bslot000001', 'paradigm', { slot: blankSlot, forms: ['ключ'] }),
+        ],
+      };
+      const blankDom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row: blankSlotRow, pin }} current={null} compare={false} />));
+      expect(blankDom.querySelector('[data-paradigm-source]'), JSON.stringify(blankSlot)).toBeNull();
+      expect(blankDom.querySelector('table'), JSON.stringify(blankSlot)).toBeNull();
+      expect(blankDom.querySelector('[data-missing-paradigm]')?.textContent, JSON.stringify(blankSlot)).toContain('No usable paradigm forms');
+      expect(blankDom.querySelectorAll('details[data-card-audit] [data-release-assertion]'), JSON.stringify(blankSlot)).toHaveLength(2);
+    }
   });
 
   it('keeps withdrawal warning visible while placing verbatim withdrawal JSON inside collapsed audit (F4)', () => {
