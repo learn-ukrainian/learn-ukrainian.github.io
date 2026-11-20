@@ -59,11 +59,36 @@ const SENSE_FIELD_ORDER = ['sense_label', 'definition_uk', 'synonyms', 'antonyms
 const KIND_LABELS: Record<string, string> = { lexeme: 'Word', mwe: 'Multi-word expression', proper_name: 'Proper name' };
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
-export function isUsableFieldValue(value: ReleaseRow['fields'][number]['value']): boolean {
-  if (typeof value === 'string') return value.trim().length > 0;
-  if (Array.isArray(value)) return value.length > 0 && value.every(item => typeof item === 'string' && item.trim().length > 0);
-  if (value && typeof value === 'object' && !Array.isArray(value) && typeof value.members === 'string') return value.members.trim().length > 0;
-  return false;
+const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+const isNonEmptyStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.length > 0 && value.every(isNonEmptyString);
+
+export function isUsableFieldValue(field: string, value: ReleaseRow['fields'][number]['value']): boolean {
+  switch (field) {
+    case 'spelling':
+    case 'mwe_form':
+    case 'pos':
+    case 'aspect':
+    case 'grammatical_label':
+    case 'cefr':
+    case 'sense_label':
+    case 'definition_uk':
+      return isNonEmptyString(value);
+    case 'stress':
+    case 'gender':
+      return isNonEmptyString(value) || isNonEmptyStringArray(value);
+    case 'synonyms':
+    case 'antonyms':
+      return isNonEmptyString(value)
+        || isNonEmptyStringArray(value)
+        || (value !== null && typeof value === 'object' && !Array.isArray(value) && isNonEmptyString(value.members));
+    case 'paradigm':
+      return value !== null && typeof value === 'object' && !Array.isArray(value)
+        && isNonEmptyString(value.slot)
+        && Array.isArray(value.forms)
+        && value.forms.some(isNonEmptyString);
+    default:
+      return isNonEmptyString(value) || isNonEmptyStringArray(value);
+  }
 }
 
 export function cardHeading(entry: ReadableEntry): { title: string; heading: string; hasText: boolean } {
@@ -72,7 +97,7 @@ export function cardHeading(entry: ReadableEntry): { title: string; heading: str
   const onCard = (field: ReleaseRow['fields'][number]) => field.subject.kind === 'card' && field.subject.id === row.card_id;
   const usableStrings = (fieldName: string) => [...new Set(
     row.fields
-      .filter(field => onCard(field) && field.field === fieldName && (typeof field.value === 'string' || Array.isArray(field.value)) && isUsableFieldValue(field.value))
+      .filter(field => onCard(field) && field.field === fieldName && isUsableFieldValue(fieldName, field.value))
       .map(field => Array.isArray(field.value) ? (field.value as string[]).join(', ') : (field.value as string)),
   )];
   const names = usableStrings(nameField);
@@ -95,7 +120,7 @@ export function cardHeading(entry: ReadableEntry): { title: string; heading: str
 }
 
 function usableAssertionIds(row: ReleaseRow): Set<string> {
-  return new Set(row.fields.filter(field => isUsableFieldValue(field.value)).map(field => field.assertion_id));
+  return new Set(row.fields.filter(field => isUsableFieldValue(field.field, field.value)).map(field => field.assertion_id));
 }
 
 function hasUsableFact(group: FactGroup, usableIds: Set<string>): boolean {
@@ -181,8 +206,11 @@ function Label({ label }: { label: SlotLabel }) {
 }
 
 function Cell({ cell }: { cell: ParadigmCell | null }) {
-  return cell ? <td lang="uk" data-assertions={cell.assertionIds.join(' ')}>{cell.forms.join(', ')}</td> :
-    <td><span aria-hidden="true">—</span><span className="wc-sr-only">not supplied</span></td>;
+  if (!cell) return <td><span aria-hidden="true">—</span><span className="wc-sr-only">not supplied</span></td>;
+  const forms = cell.forms.filter(isNonEmptyString);
+  return forms.length > 0
+    ? <td lang="uk" data-assertions={cell.assertionIds.join(' ')}>{forms.join(', ')}</td>
+    : <td data-assertions={cell.assertionIds.join(' ')}><span aria-hidden="true">—</span><span className="wc-sr-only">no usable form supplied</span></td>;
 }
 
 /** Focusable labelled scroll region, so a wide table stays keyboard-reachable on narrow screens. */
@@ -222,6 +250,10 @@ function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffi
       return (ai < 0 ? SENSE_FIELD_ORDER.length : ai) - (bi < 0 ? SENSE_FIELD_ORDER.length : bi);
     }),
   }));
+  const hasUsableParadigm = entry.paradigms.some(table =>
+    table.caseRows.some(row => row.cells.some(cell => cell !== null && cell.forms.some(isNonEmptyString)))
+    || table.formRows.some(row => row.cell.forms.some(isNonEmptyString)),
+  );
   return <>
     <Facts groups={entry.facts} missing={missing} usableIds={usableIds} />
     <section aria-label={labelSuffix ? `Senses of ${labelSuffix}` : 'Senses and meaning'}>
@@ -239,8 +271,12 @@ function EntryContent({ entry, labelSuffix }: { entry: ReadableEntry; labelSuffi
     </section>
     <section aria-label={labelSuffix ? `Forms of ${labelSuffix}` : 'Forms'}>
       <h3>Forms</h3>
-      {entry.paradigms.length ? entry.paradigms.map(t => <Paradigm key={t.sourceId} table={t} />) :
-        <p className="wc-missing" data-missing-paradigm>No paradigm is supplied for this entry in this release. Forms are not borrowed from other entries.</p>}
+      {entry.paradigms.map(t => <Paradigm key={t.sourceId} table={t} />)}
+      {!hasUsableParadigm && <p className="wc-missing" data-missing-paradigm>
+        {entry.paradigms.length > 0
+          ? 'No usable paradigm forms are supplied for this entry in this release. Forms are not borrowed from other entries.'
+          : 'No paradigm is supplied for this entry in this release. Forms are not borrowed from other entries.'}
+      </p>}
     </section>
     {otherFacts.length > 0 && <section aria-label={labelSuffix ? `Other source facts of ${labelSuffix}` : 'Other source facts'}>
       <h3>Other source facts</h3>

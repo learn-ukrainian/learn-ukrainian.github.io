@@ -241,6 +241,42 @@ describe('readable candidate word cards and missing-field visibility', () => {
     expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(6);
   });
 
+  it('rejects synonym-style objects on non-synonym fields and flags empty-form paradigms as missing (F3)', () => {
+    const row: ReleaseRow = {
+      card_id: 'wc_obj000000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_obj',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_obj000000001', 'spelling', 'замок'),
+        mkField('wc_obj000000001', 'stress', { members: 'за́мок' }),
+        mkField('wc_obj000000001', 'pos', { members: 'noun' }),
+        mkField('wc_obj000000001', 'cefr', { members: 'B1' }, 'puls'),
+        mkField('wc_obj000000001', 'sense_label', { members: 'будівля' }, 'ulif', { kind: 'sense', id: 'ws_1' }),
+        mkField('wc_obj000000001', 'definition_uk', { members: 'споруда' }, 'ulif', { kind: 'sense', id: 'ws_1' }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_naz.s', forms: [] }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_rod.s', forms: ['   '] }),
+      ],
+    };
+    const dom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />));
+    expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('замок');
+    expect(dom.querySelector('.wc-cefr-badge')).toBeNull();
+    for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
+      expect(dom.querySelector(`[data-missing-field="${field}"]`), field).not.toBeNull();
+    }
+    expect(dom.querySelector('[data-missing-paradigm]')?.textContent).toContain('No usable paradigm forms');
+    expect(dom.querySelector('[data-paradigm-source="ulif"] td')?.textContent).toContain('no usable form supplied');
+    // Exhaustive assertion coverage and raw audit records remain intact.
+    const cited = Array.from(dom.querySelectorAll('[data-assertions]'))
+      .filter(el => !el.closest('details'))
+      .flatMap(el => (el.getAttribute('data-assertions') ?? '').split(' '))
+      .filter(Boolean)
+      .sort();
+    expect(cited).toEqual(row.fields.map(f => f.assertion_id).sort());
+    expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(8);
+  });
+
   it('keeps withdrawal warning visible while placing verbatim withdrawal JSON inside collapsed audit (F4)', () => {
     const row: ReleaseRow = {
       card_id: 'wc_wdr000000001',
