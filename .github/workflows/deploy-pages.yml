@@ -18,7 +18,7 @@ permissions:
   deployments: read
 
 concurrency:
-  group: "pages"
+  group: ${{ github.ref == 'refs/heads/main' && 'pages' || format('pages-proof-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
@@ -139,18 +139,14 @@ jobs:
             --github-output "$GITHUB_OUTPUT" \
             --github-step-summary "$GITHUB_STEP_SUMMARY"
 
-  deploy:
+  build:
+    name: Build Pages artifact
     permissions:
       contents: read
-      pages: write
-      id-token: write
     needs: auto-deploy-eligibility
     if: >-
-      always() && (github.event_name == 'workflow_dispatch' ||
-      needs.auto-deploy-eligibility.outputs.deploy == 'true')
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      !cancelled() && (github.event_name == 'workflow_dispatch' ||
+      (needs.auto-deploy-eligibility.result == 'success' && needs.auto-deploy-eligibility.outputs.deploy == 'true'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
@@ -160,10 +156,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # This job builds + deploys via actions/deploy-pages (OIDC) and never
-          # git-pushes, so the checkout token must not persist into .git/config
-          # where it could leak through the uploaded Pages artifact (zizmor
-          # artipacked / CodeQL #249).
+          # Keep the checkout credential out of the workspace and its artifact.
           persist-credentials: false
 
       - name: Setup Node.js
@@ -314,6 +307,14 @@ jobs:
           fi
           npm run build
 
+      - name: Verify the installed Chrome sandbox
+        run: |
+          node --input-type=module <<'EOF'
+          import { launchHardenedChromium } from './e2e/support/hardened-browser.mjs';
+          const browser = await launchHardenedChromium();
+          await browser.close();
+          EOF
+
       - name: Save Atlas practice and teacher decks
         if: github.ref == 'refs/heads/main' && steps.atlas-decks-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -361,9 +362,6 @@ jobs:
           DEPLOY_PROFILE: github-pages
         run: .venv/bin/python scripts/deploy/check_site_size.py site/dist
 
-      - name: Setup Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-
       # #11194: the pinned upload action drops every dot-named path unless
       # include-hidden-files is true, which silently removed the .well-known
       # marker. Turning it on would publish ANY hidden path, so this final audit
@@ -379,6 +377,24 @@ jobs:
           path: './site/dist'
           # Explicit, never the action default: publishes the audited marker.
           include-hidden-files: true
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: >-
+      !cancelled() && needs.build.result == 'success' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Deploy to GitHub Pages
         id: deployment

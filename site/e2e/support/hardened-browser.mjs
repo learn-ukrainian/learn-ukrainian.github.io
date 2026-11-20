@@ -28,10 +28,30 @@ const LOCAL_SCHEMES = new Set(['data:', 'blob:', 'about:', 'file:']);
 export const HOST_RESOLVER_RULES = ['MAP * ~NOTFOUND', ...ALLOWED_HOSTS.map((host) => `EXCLUDE ${host}`)].join(', ');
 
 // Launch options a caller may set. Everything else (channel, executablePath, chromiumSandbox,
-// args, ignoreDefaultArgs, proxy, env, ...) stays under our control. Callers pass no Chrome
-// flags at all: Chrome accepts several spellings of each switch, so a denylist cannot hold.
+// args, ignoreDefaultArgs, proxy, env, ...) stays under our control.
 const CALLER_OPTIONS = new Set(['headless', 'timeout', 'slowMo']);
-const RESOLVER_ARG = `--host-resolver-rules=${HOST_RESOLVER_RULES}`;
+const CHROME_ARGS = ['--enable-automation', `--host-resolver-rules=${HOST_RESOLVER_RULES}`];
+const SANDBOX_URL = 'chrome://sandbox/';
+const SANDBOX_ROWS = new Map([
+  ['Layer 1 Sandbox', 'Namespace'],
+  ['PID namespaces', 'Yes'],
+  ['Network namespaces', 'Yes'],
+  ['Seccomp-BPF sandbox', 'Yes'],
+]);
+const FORBIDDEN_SWITCHES = new Set([
+  'no-sandbox',
+  'disable-namespace-sandbox',
+  'disable-setuid-sandbox',
+  'disable-seccomp-filter-sandbox',
+  'disable-gpu-sandbox',
+  'disable-webnn-compiler-sandbox',
+  'allow-sandbox-debugging',
+  'no-zygote',
+  // Chrome only adds this to its unsandboxed zygote child. CDP reports the main process.
+  'no-zygote-sandbox',
+  'single-process',
+  'in-process-gpu',
+]);
 
 /** True when a request to `url` may proceed. */
 export function isAllowedUrl(url) {
@@ -49,11 +69,12 @@ export function isAllowedUrl(url) {
 
 /** Launch options for installed Chrome with the sandbox on; refuses any other option. */
 export function hardenedLaunchOptions(overrides = {}) {
-  for (const key of Object.keys(overrides)) {
+  const callerOptions = { ...overrides };
+  for (const key of Object.keys(callerOptions)) {
     if (!CALLER_OPTIONS.has(key)) throw new Error(`hardened launcher: launch option "${key}" is not allowed`);
   }
   // headless stays unset unless given: Playwright defaults to headless and `--headed` keeps working.
-  return { ...overrides, channel: 'chrome', chromiumSandbox: true, args: [RESOLVER_ARG] };
+  return { ...callerOptions, channel: 'chrome', chromiumSandbox: true, args: [...CHROME_ARGS] };
 }
 
 /** Context options every hardened context uses; service workers would bypass routes. */
@@ -132,15 +153,57 @@ function hardenBrowser(browser, { log = console.warn } = {}) {
   return browser;
 }
 
-/** Launch installed Chrome, sandbox on, with every context and page hardened. */
-export async function launchHardenedChromium(overrides = {}, { log = console.warn } = {}) {
-  return hardenBrowser(await chromium.launch(hardenedLaunchOptions(overrides)), { log });
+async function verifySandbox(browser) {
+  const context = await browser.newContext(HARDENED_CONTEXT_OPTIONS);
+  try {
+    const page = await context.newPage();
+    await page.goto(SANDBOX_URL, { timeout: 15_000 });
+    if (page.url() !== SANDBOX_URL) throw new Error('Chrome did not load chrome://sandbox');
+
+    const rows = await page.locator('#sandbox-status tr').evaluateAll(
+      (elements) => elements.map((row) => Array.from(row.cells, (cell) => cell.textContent.trim())),
+    );
+    for (const [label, expected] of SANDBOX_ROWS) {
+      const matches = rows.filter(([name]) => name === label);
+      if (matches.length !== 1 || matches[0].length !== 2 || matches[0][1] !== expected) {
+        throw new Error(`chrome://sandbox did not report "${label}" = "${expected}" exactly once`);
+      }
+    }
+  } finally {
+    await context.close();
+  }
 }
 
-/** A `browserType` for libraries that launch their own browser (rehype-mermaid). */
-export const hardenedChromium = Object.freeze({
-  launch: (options = {}) => launchHardenedChromium(options),
-});
+async function verifyBrowserCommandLine(browser) {
+  const session = await browser.newBrowserCDPSession();
+  try {
+    const { arguments: argv } = await session.send('Browser.getBrowserCommandLine');
+    if (!Array.isArray(argv) || !argv[0] || argv.some((arg) => typeof arg !== 'string')) {
+      throw new Error('Chrome did not return a valid browser command line');
+    }
+    const switches = new Set(argv.slice(1).map((arg) => /^--?([^=]+)/.exec(arg)?.[1]));
+    if (!switches.has('enable-automation')) throw new Error('Chrome command line lacks enable-automation');
+    for (const name of FORBIDDEN_SWITCHES) {
+      if (switches.has(name)) throw new Error(`Chrome command line contains forbidden switch --${name}`);
+    }
+  } finally {
+    await session.detach();
+  }
+}
+
+/** Launch installed Chrome and verify its sandbox before giving it to the caller. */
+export async function launchHardenedChromium(overrides = {}, { log = console.warn } = {}) {
+  const browser = await chromium.launch(hardenedLaunchOptions(overrides));
+  try {
+    await verifySandbox(browser);
+    await verifyBrowserCommandLine(browser);
+    console.info('[chrome-sandbox] Namespace, PID namespaces, network namespaces, Seccomp-BPF and command line verified');
+    return hardenBrowser(browser, { log });
+  } catch (error) {
+    await browser.close();
+    throw new Error(`hardened launcher: ${error.message}`, { cause: error });
+  }
+}
 
 // What the Playwright configs set; a spec's test.use() must not change it.
 function assertHardenedRun({ browserName, channel, launchOptions, connectOptions }) {
@@ -153,7 +216,8 @@ function assertHardenedRun({ browserName, channel, launchOptions, connectOptions
   const args = launchOptions?.args ?? [];
   const unknown = Object.keys(launchOptions ?? {}).filter((key) => !CALLER_OPTIONS.has(key) && !['channel', 'chromiumSandbox', 'args'].includes(key));
   if (unknown.length || browserName !== 'chromium' || channel !== 'chrome' || launchOptions?.channel !== 'chrome'
-    || launchOptions?.chromiumSandbox !== true || args.length !== 1 || args[0] !== RESOLVER_ARG) {
+    || launchOptions?.chromiumSandbox !== true || args.length !== CHROME_ARGS.length
+    || CHROME_ARGS.some((arg, index) => args[index] !== arg)) {
     throw new Error('hardened launcher: this run must use installed Chrome with hardenedLaunchOptions() (see playwright.config.ts)');
   }
 }

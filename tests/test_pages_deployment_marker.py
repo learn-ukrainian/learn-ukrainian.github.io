@@ -58,7 +58,7 @@ def test_valid_marker_with_visible_assets_is_the_only_hidden_output(tmp_path: Pa
 def test_workflow_emit_step_output_passes_the_audit(tmp_path: Path) -> None:
     """Contract drift: the verifier must accept exactly what the workflow's emit step writes."""
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
-    emit = next(s for s in workflow["jobs"]["deploy"]["steps"] if s.get("name") == "Emit immutable deployment marker")
+    emit = next(s for s in workflow["jobs"]["build"]["steps"] if s.get("name") == "Emit immutable deployment marker")
     site = tmp_path / "site"
     (site / "dist").mkdir(parents=True)
     bash = shutil.which("bash")

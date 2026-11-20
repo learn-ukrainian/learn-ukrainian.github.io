@@ -66,6 +66,14 @@ def validation_cache():
 
     evaluate = cert.evaluate_certification
     evaluations = {}
+    runtime_fingerprint = universe.runtime_fingerprint
+
+    def universe_runtime():
+        # Certification fixtures use a synthetic project root; the universe
+        # inventory continues to refer to the actual implementation checkout.
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(cert, "PROJECT_ROOT", universe.PROJECT_ROOT)
+            return runtime_fingerprint()
 
     def evaluate_once(spec_path, spec_sha256, evaluation_path, evaluation_sha256):
         # These synthetic packets keep all certification dependencies under these roots.
@@ -87,6 +95,7 @@ def validation_cache():
         patch.setattr(gold.accounting, "_validate", cached(gold.accounting._validate))
         patch.setattr(gold.accounting, "account", account_once)
         patch.setattr(cert, "evaluate_certification", evaluate_once)
+        patch.setattr(universe, "runtime_fingerprint", universe_runtime)
         yield
 
 
@@ -614,14 +623,20 @@ def test_resource_trial_can_measure_harness_but_cannot_claim_acceptance(packet):
 def test_changed_implementation_invalidates_resource_proof(packet, monkeypatch, tmp_path, changed_file):
     packet.build(max_units=1)
     root = tmp_path / "runtime"
+    machinery_root = cert.machinery_root()
+    relocated_machinery = root / "installed" / "lu_machinery"
     paths = []
     for source in universe.IMPLEMENTATION_PATHS:
-        target = root / source.relative_to(universe.PROJECT_ROOT)
+        if source.is_relative_to(machinery_root):
+            target = relocated_machinery / source.relative_to(machinery_root)
+        else:
+            target = root / source.relative_to(universe.PROJECT_ROOT)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(source.read_bytes())
         paths.append(target)
     monkeypatch.setattr(universe, "PROJECT_ROOT", root)
     monkeypatch.setattr(universe, "IMPLEMENTATION_PATHS", tuple(paths))
+    monkeypatch.setattr(cert, "machinery_root", lambda: relocated_machinery)
     assert universe.runtime_fingerprint() == packet.spec["runtime_sha256"]
     changed = root / changed_file
     changed.write_bytes(changed.read_bytes() + b"\n# changed implementation\n")

@@ -242,7 +242,8 @@ Controls have separate class denominators. Controls never increase the number
 of genuine gold cases or compensate for a failed ordinary case.
 
 `frozen_artifact(authority, cards)` recomputes the implementation and rules
-fingerprints using the existing repository-relative file inventories. The
+fingerprints using repository-relative names for checkout files and stable
+`lu_machinery/` package-relative names for installed machinery dependencies. The
 implementation inventory includes parsers, extraction and export helpers, the
 certification evaluator, and the VESUM lock. Rules include word-card schemas,
 identity, export invariants, the acceptance-path census, and the Phase 4 and

@@ -18,7 +18,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from lu_machinery.common.jsonl import jsonl_lines
-from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.common.repo_root import machinery_path, machinery_root
 
 from scripts.atlas import word_card_golden_set as gold
 
@@ -104,7 +104,15 @@ class CertificationAuthority:
         return self.hashes[path]
 
     def fingerprint(self, paths: tuple[Path, ...]) -> str:
-        return digest({p.relative_to(PROJECT_ROOT).as_posix(): self.file_hash(p) for p in paths})
+        package_root = machinery_root()
+        hashes = {}
+        for path in paths:
+            if path.is_relative_to(package_root):
+                key = Path("lu_machinery") / path.relative_to(package_root)
+            else:
+                key = path.relative_to(PROJECT_ROOT)
+            hashes[key.as_posix()] = self.file_hash(path)
+        return digest(hashes)
 
     def snapshot(self, category: str, name: str) -> str:
         if (category, name) in self.snapshots:

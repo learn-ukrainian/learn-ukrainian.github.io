@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import type { PracticeSessionSnapshot } from '../src/lib/lexicon/srs';
 import { expect, test } from './support/hardened-browser.mjs';
 
 function trackConsoleErrors(page: Page): string[] {
@@ -82,6 +83,25 @@ test('practice cloze mode never dead-ends for a fresh learner', async ({ page })
 
 
 
+
+test('practice mode switch starts the selected mode without inheriting the unfinished one', async ({ page }) => {
+  await page.goto('/practice/');
+
+  await page.locator('button[data-mode="stress"]').click();
+  await expect(page.locator('[data-testid="practice-stress"]')).toBeVisible();
+  await page.locator('.stress-vowel').first().click();
+  await page.getByTestId('practice-advance-button').click();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
+  await page.getByRole('button', { name: /Додому|Home/ }).click();
+
+  // The K3 dashboard preserves mode snapshots but exposes only the primary mixed resume CTA.
+  // Switching to a different mode starts fresh instead of inheriting the unfinished session.
+  await page.locator('button[data-mode="cloze"]').click();
+
+  await expect(page.getByTestId('practice-cloze')).toBeVisible();
+  await expect(page.locator('[data-testid="practice-stress"]')).toBeHidden();
+  await expect(page.locator('[data-testid="practice-session-progress"]')).toContainText('0/');
+});
 
 for (const [path, label] of [
   ['/practice/', 'plain practice page'],
@@ -332,16 +352,6 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
 
 // --- Practice UX batch — design delta 2026-07-26 (A1-A7) ---
 
-/** Complete one flashcard round (flip + rate) so the caller can advance or inspect progress. */
-async function completeOneFlashcard(page: Page, rating: 'good' | 'easy' | 'hard' | 'again' = 'good'): Promise<void> {
-  const card = page.locator('[data-activity="flashcard"]');
-  await expect(card).toBeVisible();
-  await card.click();
-  await expect(card).toHaveAttribute('data-flipped', 'true');
-  await page.locator(`[data-rate="${rating}"]`).click();
-  await expect(page.getByTestId('practice-advance-button')).toBeVisible();
-}
-
 /**
  * `Mixed` mode opens on any of the 11 exercise types (D3: session-seeded, not fixed).
  * Flashcards and every "pick one option" mode (choice/classify/synonym/paradigm/
@@ -432,6 +442,30 @@ test('A1b: the Words-of-the-Day preview card renders a real word and gloss on re
 
 
 
+test('A2: starting two sessions back-to-back yields different item sequences', async ({ page, context }) => {
+  await context.clearCookies();
+
+  async function captureFirstThreeStressItems(): Promise<string[]> {
+    await page.goto('/practice/');
+    await page.locator('button[data-mode="stress"]').click();
+    const words: string[] = [];
+    for (let i = 0; i < 3; i += 1) {
+      const card = page.getByTestId('practice-stress');
+      await expect(card).toBeVisible();
+      words.push((await card.locator('.practice-stress-word').textContent()) ?? '');
+      await card.locator('.stress-vowel').first().click();
+      await page.getByTestId('practice-advance-button').click();
+    }
+    await page.getByRole('button', { name: /Додому|Home/ }).click();
+    return words;
+  }
+
+  const first = await captureFirstThreeStressItems();
+  const second = await captureFirstThreeStressItems();
+
+  expect(second).not.toEqual(first);
+});
+
 test('A3: a stored in-progress session shows Продовжити + Почати наново; Почати наново clears it and starts fresh', async ({ page, context }) => {
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
@@ -454,8 +488,36 @@ test('A3: a stored in-progress session shows Продовжити + Почати
 
 
 
+test('A4: Далі sits in the top status row next to the counter and is clickable without scrolling at 1366x768', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/practice/');
+
+  await page.locator('button[data-mode="stress"]').click();
+  await page.locator('.stress-vowel').first().click();
+
+  // Exactly one Next control, living in the status bar next to the n/N pill.
+  await expect(page.getByTestId('practice-advance-button')).toHaveCount(1);
+  const statusBarNext = page.locator('.lexicon-practice-stage-bar').getByTestId('practice-advance-button');
+  await expect(statusBarNext).toBeVisible();
+
+  // The status bar (with Далі) sits at the very top of the exercise stage, so it is
+  // reachable without scrolling. The scroll-to-top reset (on answering) settles
+  // asynchronously (a browser reflow/scroll-anchoring tick after the result
+  // renders), so poll rather than reading the geometry the instant the button
+  // appears.
+  await expect.poll(async () => (await statusBarNext.boundingBox())?.y).toBeGreaterThanOrEqual(0);
+  const box = await statusBarNext.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.y + box!.height).toBeLessThanOrEqual(768);
+
+  await statusBarNext.press('Enter');
+  await expect(statusBarNext).toBeHidden();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
+});
+
 /**
- * F1/F2 (PR #5837 review): route disjoint, single-item fixture decks for the A1/A2 core
+ * F1/F2 (PR #5837 review): route disjoint fixture decks for the A1/A2 core
  * shards so "the accepted level drives the session" is provable from ITEM CONTENT, not
  * merely from a request having fired for the right URL — a same-tick closure bug could
  * silently replay the stale level's pool while the request log still looks correct.
@@ -463,15 +525,18 @@ test('A3: a stored in-progress session shows Продовжити + Почати
  * background lower-level merge a higher level kicks off can never dilute the accepted
  * level's pool back into ambiguous territory.
  */
-async function mockDisjointLevelFixtures(page: Page): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
+async function mockDisjointLevelFixtures(
+  page: Page,
+  a1Lemmas: readonly string[] = ['вода'],
+): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
   const depleted = new Set<'A1' | 'A2'>();
   for (const level of ['A1', 'A2'] as const) {
-    const lemmaId = level === 'A1' ? 'вода' : 'абетка';
+    const lemmas = level === 'A1' ? a1Lemmas : ['абетка'];
     for (const [kind, key] of [['index', 'items'], ['lexemes', 'lexemes'], ['stress', 'stress']] as const) {
       await page.route(`**/lexicon/practice-${kind}.${level}.json`, async (route) => {
         const response = await route.fetch();
         const shard = await response.json();
-        shard[key] = depleted.has(level) ? [] : shard[key].filter((item: { lemmaId: string }) => item.lemmaId === lemmaId);
+        shard[key] = depleted.has(level) ? [] : shard[key].filter((item: { lemmaId: string }) => lemmas.includes(item.lemmaId));
         if (kind === 'index') shard[key] = shard[key].map((item: object) => ({ ...item, modes: ['stress'] }));
         await route.fulfill({ response, json: shard });
       });
@@ -482,7 +547,7 @@ async function mockDisjointLevelFixtures(page: Page): Promise<{ depleteLowerLeve
 
 async function readMixedSessionSnapshot(
   page: Page,
-): Promise<{ level?: string; deckId?: string; dateSeed?: number } | null> {
+): Promise<Pick<PracticeSessionSnapshot, 'level' | 'deckId' | 'dateSeed' | 'plannedTotal'> | null> {
   return page.evaluate(() => {
     const raw = window.localStorage.getItem('lu-practice-session');
     return raw ? JSON.parse(raw).byMode?.mixed ?? null : null;
@@ -518,6 +583,8 @@ test('A5: switching level with a session in progress offers a fresh session; acc
 
 test('A5c: choosing a deck from the custom-deck manager while a session is active also offers a fresh session (finding 2 bypass)', async ({ page, context }) => {
   await context.clearCookies();
+  // The All Words pool is larger than the one-word deck even in this controlled build.
+  await mockDisjointLevelFixtures(page, ['вода', 'або', 'мама', 'автобус']);
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'learn_ukrainian_custom_sets_v1',
@@ -536,6 +603,9 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
     );
   });
   await prepareResumableMixedSession(page);
+  const allWords = await readMixedSessionSnapshot(page);
+  expect(allWords?.deckId).toBe('all');
+  expect(allWords?.plannedTotal).toBeGreaterThan(2);
   await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
@@ -551,7 +621,8 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
   await page.getByTestId('practice-switch-session-accept').click();
 
   await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
-  await expect(page.getByTestId('practice-session-progress')).toContainText('0/');
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/2');
+  await expect(page.locator('.lexicon-practice-stage')).toContainText('вода');
 
   const snapshot = await readMixedSessionSnapshot(page);
   expect(snapshot?.deckId).toBe('e2e-custom-deck');
@@ -1039,6 +1110,8 @@ test('saved learning progress (SRS reviews and in-progress session) survives leg
 // #10706 binds the WAV's declared або / або́ identity, not pronunciation quality.
 const AUDIO_FILE = 'f451ecae99efb39c3af48fd70b23edfa00d22ce483cc9f0c525200f286f6b7fb.wav';
 const AUDIO_FIXTURE = new URL('../../tests/fixtures/audio/pronunciation.wav', import.meta.url).pathname;
+// The comparison's current article uses WordAtlasPageShell and remounts on pageshow.
+const STATIC_ATLAS_AUDIO_PATH = '/lexicon-v2/compare/kliuch-1/';
 type AudioObservation = { element: HTMLMediaElement; events: string[]; promises: string[]; times: number[] };
 declare global {
   interface Window {
@@ -1087,25 +1160,93 @@ async function observePracticeAudio(page: Page, loop = false): Promise<void> {
   // Specific fixture routes override this refusal before any navigation.
   await page.route('**/*', (route) => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
 }
-async function audioPracticeFixture(page: Page, second = false): Promise<void> {
-  for (const level of ['A1', 'A2', 'B1', 'B2', 'C1']) {
-    const lexemes = level === 'A1' ? [
-      { lemmaId: 'або', lemma: 'або́', lemmaPlain: 'або', cefr: level, gloss: 'fixture identity', pos: 'conj', ipa: null, heritage: null, severity: null, paradigm: { cases: {} } },
-    ] : level === 'A2' && second ? [
-      { lemmaId: 'audio-next-control', lemma: 'audio-next-control', lemmaPlain: 'audio-next-control', cefr: level, gloss: 'next control', pos: 'noun', ipa: null, heritage: null, severity: null, paradigm: { cases: {} } },
-    ] : [];
-    await page.route(`**/lexicon/practice-index.${level}.json`, (route) => route.fulfill({ json: {
-      deckVersion: '10706-audio-native-v1', level,
-      items: lexemes.map((word, newOrder) => ({ lemmaId: word.lemmaId, lemma: word.lemma, cefr: level, modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder })),
-    } }));
-    await page.route(`**/lexicon/practice-lexemes.${level}.json`, (route) => route.fulfill({ json: { deckVersion: '10706-audio-native-v1', level, lexemes } }));
-    await page.route(`**/lexicon/practice-cloze.${level}.json`, (route) => route.fulfill({ json: { cloze: [] } }));
-  }
-}
 async function routeGoodAudio(page: Page): Promise<void> {
-  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } } } }));
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } } } }));
   await page.route(`**/${AUDIO_FILE}`, (route) => route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } }));
 }
+function audioButton(page: Page) { return page.locator('[data-pronunciation-lemma] button'); }
+async function audioLearningState(page: Page) {
+  return page.evaluate(() => ({ srs: localStorage.getItem('lu-lexicon-srs'), session: localStorage.getItem('lu-practice-session') }));
+}
+async function nativePlaying(page: Page): Promise<void> {
+  await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media.some((record) =>
+    record.events.includes('playing') && record.promises.includes('fulfilled') && !record.element.paused && record.element.currentTime > 0,
+  ))).toBe(true);
+  await expect(audioButton(page)).toHaveText('Stop pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+}
+async function oldAudioStopped(page: Page): Promise<void> {
+  await expect.poll(() => page.evaluate(() => {
+    const record = window.practiceAudioProbe.media[0];
+    return { paused: record.element.paused, time: record.element.currentTime, pauseCalled: record.events.includes('pause()') };
+  })).toEqual({ paused: true, time: 0, pauseCalled: true });
+}
+
+async function observedAudioVoices(page: Page) {
+  return page.evaluate(async () => {
+    if (!window.speechSynthesis) return { supported: false, voices: [] };
+    let previous = '';
+    let stable = 0;
+    for (let i = 0; i < 20; i++) {
+      const inventory = speechSynthesis.getVoices().map((voice) => ({ lang: voice.lang, name: voice.name, local: voice.localService }));
+      const fingerprint = JSON.stringify(inventory);
+      stable = fingerprint === previous ? stable + 1 : 0;
+      previous = fingerprint;
+      if (stable >= 5) return { supported: true, voices: inventory };
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error('Native speech inventory kept changing during observation');
+  });
+}
+
+async function assertNativeFallback(page: Page) {
+  const inventory = await observedAudioVoices(page);
+  await test.info().attach('native-voice-inventory.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+  const localUkrainian = inventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'));
+  const before = await audioLearningState(page);
+  await audioButton(page).click();
+  if (localUkrainian) {
+    await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.speech.some((entry) => entry.local && entry.lang === 'uk-UA' && entry.events.includes('start')))).toBe(true);
+  } else if (inventory.supported && inventory.voices.length === 0) {
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+    test.info().annotations.push({ type: 'native-empty-catalog', description: 'UNKNOWN native Ukrainian capability: empty inventory is not absence proof; finite attempt expiry is observed separately' });
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
+    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  } else {
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+  }
+  expect(await audioLearningState(page)).toEqual(before);
+  return inventory;
+}
+
+async function lateNativeFailure(page: Page) {
+  const previousErrors = await page.evaluate(() => window.practiceAudioProbe.media[0].events.filter((event) => event === 'error').length);
+  await page.evaluate(async () => {
+    const old = window.practiceAudioProbe.media[0].element;
+    old.src = '/audio/pronunciation/prior-attempt-invalid.wav';
+    old.load();
+    await old.play().catch(() => {});
+  });
+  await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].events.filter((event) => event === 'error').length)).toBe(previousErrors + 1);
+  await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('NotSupportedError');
+  await nativePlaying(page);
+}
+
+async function openAtlasAudio(page: Page, path = '/lexicon/або/'): Promise<void> {
+  const manifest = page.waitForResponse((response) => response.url().endsWith('/audio/pronunciation/manifest.json'));
+  await page.goto(path);
+  await expect(page.locator('[data-pronunciation-lemma]')).toBeVisible();
+  await manifest;
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+}
+
 test.describe('#10706 audio:', () => {
   test.afterEach(async ({ page }, info) => {
     const observation = await page.evaluate(() => ({
@@ -1120,29 +1261,569 @@ test.describe('#10706 audio:', () => {
     await info.attach('native-observation.json', { body: JSON.stringify(observation), contentType: 'application/json' });
   });
 
-  test('P04 idle immediate switches, unchanged no-ops, unpublished-level refusal and unconfigured refresh', async ({ page }) => {
-    await observePracticeAudio(page);
+  for (const activation of ['pointer', 'Enter', 'Space'] as const) {
+    test(`P01 playback and completion / ${activation}`, async ({ page }) => {
+      await observePracticeAudio(page);
+      await routeGoodAudio(page);
+      await openAtlasAudio(page);
+      expect(await page.evaluate(() => window.practiceAudioProbe.media)).toEqual([]);
+      const before = await audioLearningState(page);
+      if (activation === 'pointer') await audioButton(page).click();
+      else { await audioButton(page).focus(); await page.keyboard.press(activation); }
+      await nativePlaying(page);
+      const decoded = await page.evaluate(() => {
+        const record = window.practiceAudioProbe.media[0];
+        return { resource: new URL(record.element.currentSrc).pathname, duration: record.element.duration };
+      });
+      expect(decoded.resource).toBe(`/audio/pronunciation/${AUDIO_FILE}`);
+      expect(decoded.duration).toBeCloseTo(9728 / 22050, 5);
+      expect(await audioLearningState(page)).toEqual(before);
+      await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].events)).toContain('ended');
+      await expect(audioButton(page)).toHaveText('Play pronunciation');
+      expect(await audioLearningState(page)).toEqual(before);
+    });
+  }
+
+  test('P02 explicit native stop resets playback', async ({ page }) => {
+    await observePracticeAudio(page, true);
     await routeGoodAudio(page);
-    await audioPracticeFixture(page, true);
-    await page.goto('/practice/');
-    await page.getByTestId('practice-active-deck-chip').click();
-    await page.getByTestId('practice-deck-option-all').click();
-    await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A1', exact: true }).click();
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await expect(page.getByTestId('practice-dashboard-hero').getByRole('button', { name: /C2/, exact: false })).toBeDisabled();
-    await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
-    expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A2');
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await page.getByTestId('practice-active-deck-chip').click();
-    await page.getByTestId('practice-deck-option-virtual_teacher_lesson').click();
-    await expect(page.getByTestId('practice-active-deck-chip')).toContainText('Curated');
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await page.getByTestId('practice-settings-toggle').click();
-    await expect(page.getByTestId('practice-drive-sync-section')).toHaveCount(0);
-    await test.info().attach('refresh-applicability.json', { body: JSON.stringify({ customSetRefresh: 'N/A in this unconfigured artifact: actual Drive sync control absent; no fabricated storage event', pendingRefreshStarted: false }), contentType: 'application/json' });
+    await openAtlasAudio(page);
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await nativePlaying(page);
+    await audioButton(page).click();
+    await oldAudioStopped(page);
+    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    expect(await audioLearningState(page)).toEqual(before);
   });
 
+  for (const fault of ['404', 'network', '500'] as const) {
+    test(`P05 manifest ${fault} and subsequent-mount ${fault === '404' ? 'permanent cache' : 'retry'}`, async ({ page }) => {
+      await observePracticeAudio(page, true);
+      await page.route(`**/${AUDIO_FILE}`, (route) => route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' }));
+      let requests = 0;
+      await page.route('**/audio/pronunciation/manifest.json', (route) => {
+        requests++;
+        if (requests > 1) return route.fulfill({ json: { schemaVersion: 1, entries: { 'ключ': { file: AUDIO_FILE } } } });
+        return fault === 'network' ? route.abort('failed') : route.fulfill({ status: Number(fault), body: '' });
+      });
+      // A failed request has no response; the mounted fallback itself is the settle oracle.
+      await page.goto(STATIC_ATLAS_AUDIO_PATH);
+      await expect(page.locator('[data-word-atlas] [data-pronunciation-lemma="ключ"]')).toBeVisible();
+      await expect.poll(() => requests).toBe(1);
+      await assertNativeFallback(page);
+      const refreshed = fault === '404' ? undefined : page.waitForResponse((response) =>
+        response.url().endsWith('/audio/pronunciation/manifest.json') && response.ok());
+      await page.evaluate(() => {
+        window.dispatchEvent(new PageTransitionEvent('pagehide'));
+        window.dispatchEvent(new PageTransitionEvent('pageshow'));
+      });
+      await expect(page.locator('[data-pronunciation-lemma]')).toBeVisible();
+      if (fault === '404') {
+        await assertNativeFallback(page);
+        expect(requests).toBe(1);
+      } else {
+        await (await refreshed)?.finished();
+        await expect.poll(() => requests).toBe(2);
+        await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+        await audioButton(page).click();
+        await nativePlaying(page);
+      }
+    });
+  }
+
+  for (const [parent, name, body] of [
+    ['P06', 'malformed JSON', '{'],
+    ['P06', 'invalid schema', JSON.stringify({ schemaVersion: 2, entries: {} })],
+    ['P07', 'empty manifest', JSON.stringify({ schemaVersion: 1, entries: {} })],
+    ['P07', 'uncovered manifest', JSON.stringify({ schemaVersion: 1, entries: { unrelated: { file: AUDIO_FILE } } })],
+    ['P07', 'unsafe entry', JSON.stringify({ schemaVersion: 1, entries: { 'або': { file: '../unsafe.wav' } } })],
+  ]) {
+    test(`${parent} ${name} preserves truthful fallback and learning state`, async ({ page }) => {
+      await observePracticeAudio(page);
+      const mediaRequests: string[] = [];
+      await page.route('**/audio/pronunciation/**', (route) => {
+        if (route.request().url().endsWith('/manifest.json')) return route.fulfill({ body, contentType: 'application/json' });
+        mediaRequests.push(route.request().url());
+        return route.abort();
+      });
+      await openAtlasAudio(page);
+      await assertNativeFallback(page);
+      expect(mediaRequests).toEqual([]);
+      expect(await page.evaluate(() => window.practiceAudioProbe.media)).toEqual([]);
+    });
+  }
+
+  for (const fault of ['P08 clip404', 'P09 undecodable bytes']) {
+    test(`${fault} then SAME-mounted native retry ignores late old native failure`, async ({ page }) => {
+      await observePracticeAudio(page, true);
+      await routeGoodAudio(page);
+      let requests = 0;
+      await page.route(`**/${AUDIO_FILE}`, (route) => {
+        requests++;
+        if (requests === 1) return route.fulfill(fault.startsWith('P08')
+          ? { status: 404, body: '' }
+          : { status: 200, body: 'not a decodable WAV', contentType: 'audio/wav' });
+        return route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } });
+      });
+      await page.route('**/prior-attempt-invalid.wav', (route) => route.fulfill({ body: 'invalid prior attempt', contentType: 'audio/wav' }));
+      await openAtlasAudio(page);
+      const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
+      const before = await audioLearningState(page);
+      await audioButton(page).click();
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+      await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].events)).toContain('error');
+      expect(await audioLearningState(page)).toEqual(before);
+      await audioButton(page).click();
+      await nativePlaying(page);
+      expect(await root!.evaluate((element) => element.isConnected)).toBe(true);
+      await lateNativeFailure(page);
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+      expect(await audioLearningState(page)).toEqual(before);
+      expect(requests).toBeGreaterThanOrEqual(2);
+    });
+  }
+
+  test('P11 observed native inventory, language and controlled empty availability retry', async ({ page }) => {
+    await observePracticeAudio(page);
+    await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+    await openAtlasAudio(page);
+    test.setTimeout(60000);
+    const nativeInventory = await assertNativeFallback(page);
+    if (!nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
+      test.info().annotations.push({ type: 'native-local-positive', description: 'N/A: observed device inventory offers no local Ukrainian voice; empty catalog capability remains UNKNOWN; no remote speech requested' });
+    }
+    await page.evaluate(() => {
+      const nativeGetVoices = speechSynthesis.getVoices.bind(speechSynthesis);
+      Reflect.set(window, 'restoreNativeVoices', () => { speechSynthesis.getVoices = nativeGetVoices; });
+      speechSynthesis.getVoices = () => [];
+    });
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    await page.evaluate(() => {
+      Reflect.get(window, 'restoreNativeVoices')();
+      speechSynthesis.dispatchEvent(new Event('voiceschanged'));
+    });
+    if (nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
+      await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.speech.some((entry) => entry.events.includes('start')))).toBe(true);
+      await audioButton(page).click();
+    } else if (!nativeInventory.supported || nativeInventory.voices.length > 0) {
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+    } else {
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+    }
+    await assertNativeFallback(page);
+    expect(await audioLearningState(page)).toEqual(before);
+  });
+
+  test('P11 controlled non-Ukrainian inventory never substitutes a voice', async ({ page }) => {
+    await observePracticeAudio(page);
+    await page.addInitScript(() => {
+      // A boundary fixture only; it makes no claim about device voice availability.
+      speechSynthesis.getVoices = () => [{ lang: 'en-US', localService: true, name: 'boundary English' } as SpeechSynthesisVoice];
+    });
+    await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+    await openAtlasAudio(page);
+    await assertNativeFallback(page);
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+  });
+
+  test('P11 late native catalog observation after cancel cannot resurrect a cancelled request', async ({ page }) => {
+    await observePracticeAudio(page);
+    await page.addInitScript(() => {
+      const native = speechSynthesis.getVoices.bind(speechSynthesis);
+      Reflect.set(window, 'restoreNativeVoices', () => { speechSynthesis.getVoices = native; });
+      speechSynthesis.getVoices = () => [];
+    });
+    await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+    await openAtlasAudio(page);
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    await audioButton(page).click();
+    await page.evaluate(() => {
+      Reflect.get(window, 'restoreNativeVoices')();
+      speechSynthesis.dispatchEvent(new Event('voiceschanged'));
+    });
+    const inventory = await observedAudioVoices(page);
+    await test.info().attach('late-native-catalog.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+    expect(await audioLearningState(page)).toEqual(before);
+    await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  });
+
+  test('P10 held native play / native abort then SAME-mounted retry', async ({ page }) => {
+    await observePracticeAudio(page, true);
+    await routeGoodAudio(page);
+    await page.route('**/prior-attempt-invalid.wav', (route) => route.fulfill({ body: 'invalid prior attempt', contentType: 'audio/wav' }));
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let requests = 0;
+    await page.route(`**/${AUDIO_FILE}`, async (route) => {
+      requests++;
+      if (requests === 1) await held;
+      await route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } });
+    });
+    await openAtlasAudio(page);
+    const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await expect.poll(() => requests).toBe(1);
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await page.evaluate(() => window.practiceAudioProbe.media[0].element.load());
+    await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('AbortError');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+    await audioButton(page).click();
+    await nativePlaying(page);
+    expect(await root!.evaluate((element) => element.isConnected)).toBe(true);
+    release();
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    await nativePlaying(page);
+    await lateNativeFailure(page);
+    expect(await audioLearningState(page)).toEqual(before);
+    await audioButton(page).click();
+    await expect.poll(() => page.evaluate(() => {
+      const current = window.practiceAudioProbe.media.at(-1)!;
+      return { paused: current.element.paused, time: current.element.currentTime, pauseCalled: current.events.includes('pause()') };
+    })).toEqual({ paused: true, time: 0, pauseCalled: true });
+  });
+
+  test('P10 held play / explicit pending stop and same-mounted retry', async ({ page }) => {
+    await observePracticeAudio(page, true);
+    await routeGoodAudio(page);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let requests = 0;
+    await page.route(`**/${AUDIO_FILE}`, async (route) => {
+      if (++requests === 1) await held;
+      await route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
+    });
+    await openAtlasAudio(page);
+    const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await expect.poll(() => requests).toBe(1);
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await audioButton(page).click();
+    await oldAudioStopped(page);
+    await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+    await audioButton(page).click();
+    await nativePlaying(page);
+    release();
+    await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('AbortError');
+    await nativePlaying(page);
+    expect(await root!.evaluate((element) => element.isConnected)).toBe(true);
+    expect(await audioLearningState(page)).toEqual(before);
+  });
+  test('P04 actual rendered route departure cancels native audio', async ({ page }) => {
+    await observePracticeAudio(page, true);
+    await routeGoodAudio(page);
+    await openAtlasAudio(page);
+    await audioButton(page).click();
+    await nativePlaying(page);
+    await page.evaluate(() => {
+      // Register after the real controller so its departure cleanup runs first.
+      window.addEventListener('pagehide', () => {
+        const record = window.practiceAudioProbe.media[0];
+        sessionStorage.setItem('audio-departure', JSON.stringify({
+          pauseCalled: record.events.includes('pause()'),
+          paused: record.element.paused,
+          time: record.element.currentTime,
+        }));
+      });
+    });
+    await page.locator('a[href="/lexicon/"]:visible').first().click();
+    await expect(page).toHaveURL(/\/lexicon\/$/);
+    const departure = await page.evaluate(() => JSON.parse(sessionStorage.getItem('audio-departure') ?? 'null'));
+    await test.info().attach('departure.json', { body: JSON.stringify(departure), contentType: 'application/json' });
+    expect(departure).toEqual({ pauseCalled: true, paused: true, time: 0 });
+  });
 });
+
+test('P04 idle immediate switches, unchanged no-ops, unpublished-level refusal and unconfigured refresh', async ({ page }) => {
+  await page.goto('/practice/');
+  await page.getByTestId('practice-active-deck-chip').click();
+  await page.getByTestId('practice-deck-option-all').click();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A1', exact: true }).click();
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await expect(page.getByTestId('practice-dashboard-hero').getByRole('button', { name: /C2/, exact: false })).toBeDisabled();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
+  expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A2');
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await page.getByTestId('practice-active-deck-chip').click();
+  await page.getByTestId('practice-deck-option-virtual_teacher_lesson').click();
+  await expect(page.getByTestId('practice-active-deck-chip')).toContainText('Curated');
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await page.getByTestId('practice-settings-toggle').click();
+  await expect(page.getByTestId('practice-drive-sync-section')).toHaveCount(0);
+  await test.info().attach('refresh-applicability.json', { body: JSON.stringify({ customSetRefresh: 'N/A in this unconfigured artifact: actual Drive sync control absent; no fabricated storage event', pendingRefreshStarted: false }), contentType: 'application/json' });
+});
+
+test('#10706 A3 D01 actual native empty catalog expires and permits retry', async ({ page }) => {
+  await observePracticeAudio(page);
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  await openAtlasAudio(page);
+  const inventory = await observedAudioVoices(page);
+  await test.info().attach('actual-native-inventory.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+  // This host-path check must expose its applicability, never inject native availability.
+  test.skip(!inventory.supported || inventory.voices.length !== 0, 'Requires actual empty native inventory');
+  const before = await audioLearningState(page);
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  expect(await audioLearningState(page)).toEqual(before);
+});
+
+// A3 controls exercise the built consumer. Injected availability is never native speech proof.
+async function a3SpeechControl(page: Page, preloaded = false, media = false, path?: string) {
+  await observePracticeAudio(page);
+  await page.addInitScript(({ preloaded, media }) => {
+    if (media) {
+      const attempts: { element: HTMLMediaElement; resolve: () => void; reject: () => void; error: () => void }[] = [];
+      HTMLMediaElement.prototype.play = function () {
+        const error = this.onerror;
+        return new Promise<void>((resolve, reject) => {
+          attempts.push({ element: this, resolve, reject: () => reject(new Error('injected media failure')), error: () => error?.call(this, new Event('error')) });
+        });
+      };
+      Reflect.set(window, 'a3Media', {
+        signal: (action: 'resolve' | 'reject' | 'error', index = 0) => attempts[index][action](),
+        snapshot: () => attempts.map(({ element }) => ({ paused: element.paused, time: element.currentTime })),
+      });
+    }
+    let available = preloaded;
+    let cancels = 0;
+    const submitted: SpeechSynthesisUtterance[] = [];
+    const voice = { default: false, lang: 'uk-UA', localService: true, name: 'A3 injected Ukrainian', voiceURI: 'a3-control' };
+    class ControlledUtterance {
+      lang = '';
+      voice: SpeechSynthesisVoice | null = null;
+      onstart: (() => void) | null = null;
+      onend: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      constructor(public text: string) {}
+    }
+    Reflect.set(window, 'SpeechSynthesisUtterance', ControlledUtterance);
+    speechSynthesis.getVoices = () => available ? [voice] : [];
+    speechSynthesis.speak = (utterance) => {
+      submitted.push(utterance);
+      // Capture the actual submitted callback too, to challenge invalidation after detachment.
+      Reflect.set(utterance, 'savedStart', utterance.onstart);
+    };
+    speechSynthesis.cancel = () => { cancels++; };
+    Reflect.set(window, 'a3Control', {
+      voices: (value = true) => { available = value; speechSynthesis.dispatchEvent(new Event('voiceschanged')); },
+      start: (index = submitted.length - 1) => Reflect.get(submitted[index], 'savedStart')?.(),
+      error: () => Reflect.apply(submitted.at(-1)!.onerror!, submitted.at(-1)!, []),
+      snapshot: () => ({ count: submitted.length, cancels, selected: submitted.map((utterance) => ({ text: utterance.text, lang: utterance.lang, voice: utterance.voice?.name })) }),
+    });
+  }, { preloaded, media });
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  if (media) await routeGoodAudio(page);
+  await openAtlasAudio(page, path);
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(0);
+}
+async function a3Signal(page: Page, signal: 'voices' | 'start' | 'error', index?: number) {
+  await page.evaluate(({ signal, index }) => Reflect.get(window, 'a3Control')[signal](index), { signal, index });
+}
+async function a3Snapshot(page: Page) {
+  return page.evaluate(() => Reflect.get(window, 'a3Control').snapshot());
+}
+async function a3Expired(page: Page) {
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.');
+}
+
+test.describe('#10706 A3 injected startup controls:', () => {
+  for (const scenario of ['D02 preactivation empty', 'D03 repeated empty', 'D04 voice before boundary', 'D05 voice after boundary', 'D06 cancel', 'D07 supersession', 'D08 stale retry', 'D09 speech never starts', 'D10 start at 9999', 'D11 duplicate voices', 'D12 error and retry']) {
+    test(scenario, async ({ page }) => {
+      const supersession = scenario.startsWith('D07');
+      await a3SpeechControl(
+        page,
+        ['D08', 'D09', 'D10', 'D12'].some((id) => scenario.startsWith(id)),
+        false,
+        supersession ? STATIC_ATLAS_AUDIO_PATH : undefined,
+      );
+      const before = await audioLearningState(page);
+      if (scenario.startsWith('D02')) {
+        await page.evaluate(() => speechSynthesis.dispatchEvent(new Event('voiceschanged')));
+        await page.clock.runFor(20000);
+        expect((await a3Snapshot(page)).count).toBe(0);
+      }
+      await audioButton(page).click();
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      if (scenario.startsWith('D03')) {
+        for (const elapsed of [3000, 4000, 2999]) {
+          await page.clock.runFor(elapsed);
+          await page.evaluate(() => speechSynthesis.dispatchEvent(new Event('voiceschanged')));
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        }
+      } else await page.clock.runFor(9999);
+      if (scenario.startsWith('D04') || scenario.startsWith('D11')) {
+        await a3Signal(page, 'voices');
+        if (scenario.startsWith('D11')) await a3Signal(page, 'voices');
+        expect((await a3Snapshot(page)).count).toBe(1);
+      }
+      if (scenario.startsWith('D04') || scenario.startsWith('D10')) {
+        await a3Signal(page, 'start');
+        expect((await a3Snapshot(page)).selected).toEqual([{ text: 'або́', lang: 'uk-UA', voice: 'A3 injected Ukrainian' }]);
+        await page.clock.runFor(20000);
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+        await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+      } else if (scenario.startsWith('D06') || supersession) {
+        if (supersession) {
+          await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
+          // The server-rendered button stays in the DOM while its controller is detached.
+          await audioButton(page).dispatchEvent('click');
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+          await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pageshow')));
+        } else {
+          await audioButton(page).click();
+        }
+        await page.clock.runFor(20000);
+        await a3Signal(page, 'voices');
+        expect((await a3Snapshot(page)).count).toBe(0);
+        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+        if (supersession) {
+          await audioButton(page).click();
+          expect((await a3Snapshot(page)).count).toBe(1);
+        }
+      } else if (scenario.startsWith('D12')) {
+        await a3Signal(page, 'error');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+        await audioButton(page).click();
+        await page.clock.runFor(9999);
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        await page.clock.runFor(1);
+        await a3Expired(page);
+      } else {
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        await page.clock.runFor(1);
+        await a3Expired(page);
+        if (scenario.startsWith('D05')) {
+          await a3Signal(page, 'voices');
+          expect((await a3Snapshot(page)).count).toBe(0);
+        }
+        if (scenario.startsWith('D08')) {
+          await audioButton(page).click();
+          await a3Signal(page, 'start', 0);
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+          await page.clock.runFor(9999);
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+          await page.clock.runFor(1);
+          await a3Expired(page);
+          expect((await a3Snapshot(page)).cancels).toBe(2);
+        }
+        if (scenario.startsWith('D09')) expect((await a3Snapshot(page)).cancels).toBe(1);
+        if (scenario.startsWith('D11')) expect((await a3Snapshot(page)).count).toBe(1);
+      }
+      expect(await audioLearningState(page)).toEqual(before);
+    });
+  }
+});
+
+async function a3MediaSignal(page: Page, action: 'resolve' | 'reject' | 'error', index = 0) {
+  await page.evaluate(({ action, index }) => Reflect.get(window, 'a3Media').signal(action, index), { action, index });
+}
+test.describe('#10706 A3 injected media controls:', () => {
+  for (const settlement of ['resolve', 'reject'] as const) {
+    test(`D13 stalled media expiry and late ${settlement} cannot affect retry`, async ({ page }) => {
+      await a3SpeechControl(page, true, true);
+      const before = await audioLearningState(page);
+      await audioButton(page).click();
+      await page.clock.runFor(9999);
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      await page.clock.runFor(1);
+      await a3Expired(page);
+      expect(await page.evaluate(() => Reflect.get(window, 'a3Media').snapshot())).toEqual([{ paused: true, time: 0 }]);
+      await audioButton(page).click();
+      await a3MediaSignal(page, settlement);
+      await page.clock.runFor(9999);
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      expect((await a3Snapshot(page)).count).toBe(0);
+      await page.clock.runFor(1);
+      await a3Expired(page);
+      expect(await audioLearningState(page)).toEqual(before);
+    });
+  }
+  test('D13 media resolved at 9999 survives startup boundary', async ({ page }) => {
+    await a3SpeechControl(page, true, true);
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await page.clock.runFor(9999);
+    await a3MediaSignal(page, 'resolve');
+    await page.clock.runFor(20000);
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    expect(await audioLearningState(page)).toEqual(before);
+  });
+});
+
+// F1 fault injection proves error handling in the built consumer, not native speech quality.
+test('F1 CDN media failure plus throwing speech fallback reports error promptly and preserves learning state', async ({ page }) => {
+  const uncaught: string[] = [];
+  page.on('pageerror', (error) => uncaught.push(error.message));
+  await observePracticeAudio(page, true);
+  await page.addInitScript(() => {
+    let faults = 0;
+    Reflect.set(window, 'f1SpeechFaults', () => faults);
+    speechSynthesis.getVoices = () => { faults++; throw new Error('F1 injected catalog failure'); };
+  });
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: {
+    schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } },
+  } }));
+  let requests = 0;
+  await page.route(`**/${AUDIO_FILE}`, (route) => {
+    requests++;
+    return requests === 1 ? route.fulfill({ status: 404, body: '' })
+      : route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
+  });
+  await openAtlasAudio(page);
+  const before = await audioLearningState(page);
+  await audioButton(page).click();
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.', { timeout: 3000 });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  expect(await audioLearningState(page)).toEqual(before);
+  expect(uncaught).toEqual([]);
+  // The locked build selects CDN fallback only when this build input is nonempty.
+  expect(await page.evaluate(() => Reflect.get(window, 'f1SpeechFaults')())).toBe(process.env.PUBLIC_AUDIO_CDN_URL ? 1 : 0);
+  await audioButton(page).click();
+  await nativePlaying(page);
+  await audioButton(page).click();
+  await expect.poll(() => page.evaluate(() => {
+    const record = window.practiceAudioProbe.media.at(-1)!;
+    return { paused: record.element.paused, time: record.element.currentTime, stopped: record.events.includes('pause()') };
+  })).toEqual({ paused: true, time: 0, stopped: true });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  expect(await audioLearningState(page)).toEqual(before);
+  expect(uncaught).toEqual([]);
+  await test.info().attach('f1-browser-control.json', { body: JSON.stringify({ requests, uncaught, media: await page.evaluate(() => window.practiceAudioProbe.media.map((record) => ({ src: record.element.src, events: record.events, promises: record.promises }))) }), contentType: 'application/json' });
+});
+
+
 
 for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
   test(`item report keeps its public identity through grading at ${viewport.width}px (#10704)`, async ({ page }) => {

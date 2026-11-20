@@ -486,9 +486,9 @@ jobs:
           /opt/google/chrome/chrome --version
       # Required even when the full frontend build is outside the changed-path scope.
       # Include tests/build/, normally excluded by pytest default traversal.
-      - name: Real MDX compiler regressions
+      - name: MDX compiler and Chrome sandbox regressions
         run: |
-          .venv/bin/python -m pytest tests -m site_toolchain --strict-markers --override-ini addopts=-q \
+          .venv/bin/python -m pytest tests -m site_toolchain --strict-markers --override-ini addopts=-v \
             --override-ini 'norecursedirs=.* node_modules' --timeout=120
       - id: scope
         env:
@@ -516,6 +516,14 @@ jobs:
           npm run test:unit:ci
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
+
+      - if: steps.scope.outputs.run == 'true'
+        name: Playwright browser hardening against dist
+        working-directory: site
+        env:
+          ASTRO_PREVIEW_BACKGROUND: '0'
+          PYTHON: ${{ github.workspace }}/.venv/bin/python
+        run: ./node_modules/.bin/playwright test 'e2e/origin-allowlist\.spec\.ts$'
 
   # A PR that changes pytest infrastructure runs guards only in pr-affected, so it runs
   # the full pytest shards; the installed gate reads this job's output and requires them.
