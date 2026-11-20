@@ -17,7 +17,6 @@
     "generate:json": ".venv/bin/python scripts/generate_json.py",
     "pipeline": ".venv/bin/python scripts/pipeline.py",
     "validate:mdx": ".venv/bin/python scripts/validate_mdx.py",
-    "validate:html": ".venv/bin/python scripts/validate_html.py",
     "validate:yaml": ".venv/bin/python scripts/validate_yaml.py",
     "validate:plans": ".venv/bin/python scripts/validate_plans.py",
     "convert:md-to-yaml": ".venv/bin/python scripts/md_to_yaml.py",

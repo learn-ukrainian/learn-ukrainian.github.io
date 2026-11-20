@@ -301,9 +301,6 @@ modules:
   validate_direct.py:
     reason: Shim for scripts/validate, which is product.
     role: product
-  validate_html.py:
-    reason: Shim for scripts/validate, which is product.
-    role: product
   validate_mdx.py:
     reason: Shim for scripts/validate, which is product.
     role: product

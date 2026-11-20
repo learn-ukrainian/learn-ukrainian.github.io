@@ -1168,7 +1168,6 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/generate_mdx.py` | Generate Starlight MDX | `npm run generate l2-uk-en a1 5` |
 | `scripts/generate_json.py` | Generate app JSON | `npm run generate:json l2-uk-en a1 5` |
 | `scripts/validate_mdx.py` | Validate MDX integrity | `npm run validate:mdx l2-uk-en a1 5` |
-| `scripts/validate_html.py` | Validate rendered HTML | `npm run validate:html l2-uk-en a1 5` |
 | `scripts/generate_level_status.py` | Build status reports | `npm run status:b1` |
 | `scripts/manifest_utils.py` | Manifest validation and lookup | `.venv/bin/python scripts/manifest_utils.py validate` |
 | `scripts/validate_plan_config.py` | Validate plan config alignment | `.venv/bin/python scripts/validate_plan_config.py b1` |
@@ -1408,14 +1407,14 @@ npm run pipeline l2-uk-en a1
 npm run pipeline l2-uk-en a1 5
 ```
 
-Stages:
+Default stages
 
-1. lint
-2. MDX generation
-3. MDX validation
-4. HTML validation
+1. Plan validation
+2. Markdown lint
+3. MDX generation
+4. MDX validation
 
-Requires `npm run dev:starlight` for HTML validation.
+Run the site browser tests from `site/` with `npm exec -- playwright test`.
 
 ### `generate_mdx.py`
 
@@ -1450,22 +1449,6 @@ Checks MDX conversion integrity:
 npm run validate:mdx l2-uk-en a1
 npm run validate:mdx l2-uk-en a1 5
 ```
-
-### `validate_html.py`
-
-Checks rendered HTML with a headless browser:
-
-- page loads without HTTP errors
-- interactive components render
-- serious JS console errors are absent
-- Ukrainian text is present
-
-```bash
-npm run validate:html l2-uk-en a1
-npm run validate:html l2-uk-en a1 5
-```
-
-If the Starlight dev server is not running, this step skips gracefully.
 
 ### `sync_landing_pages.py`
 

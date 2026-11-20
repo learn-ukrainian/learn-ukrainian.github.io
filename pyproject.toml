@@ -74,9 +74,6 @@ dependencies = [
     "python-docx>=1.2.0",  # scripts/ingest/owned_books_ingest.py
     "pillow>=13.0.0",  # scripts/rag/embed.py (image input), tests/test_scrape_diasporiana.py
 
-    # Rendered-page validation in a real browser
-    "playwright>=1.64.1",  # scripts/validate/{validate_html,browser_launcher}.py
-
     # IPA transcription (not on PyPI; [tool.uv.sources] pins the commit)
     "ipa-uk",  # scripts/generate_mdx/generate_ipa.py
 

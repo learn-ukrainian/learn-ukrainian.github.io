@@ -20498,11 +20498,6 @@
       "message": "Returning Any from function declared to return \"dict[Any, Any]\""
     },
     {
-      "path": "scripts/validate/validate_html.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"results\" (hint: \"results: list[<type>] = ...\")"
-    },
-    {
       "path": "scripts/validate/validate_mdx.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"vocab\" (hint: \"vocab: set[<type>] = ...\")"
@@ -20579,21 +20574,6 @@
     },
     {
       "path": "scripts/validate_direct.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/validate_html.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/validate_html.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/validate_html.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
