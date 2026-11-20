@@ -253,6 +253,10 @@ describe('readable candidate word cards and missing-field visibility', () => {
     // Empty stress falls back to spelling instead of blank heading.
     expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('замок');
     expect(dom.querySelector('.wc-cefr-badge')).toBeNull();
+    // Unusable null/blank values must not render as readable fact values outside collapsed audit.
+    const visibleText = Array.from(dom.querySelectorAll('[data-entry] [data-fact-value]')).map(el => el.textContent);
+    expect(visibleText).toEqual(['замок']);
+    expect(dom.querySelector('[data-entry]')?.textContent).not.toContain('null');
     for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
       expect(dom.querySelector(`[data-missing-field="${field}"]`), field).not.toBeNull();
     }
@@ -276,11 +280,17 @@ describe('readable candidate word cards and missing-field visibility', () => {
         mkField('wc_obj000000001', 'definition_uk', { members: 'споруда' }, 'ulif', { kind: 'sense', id: 'ws_1' }),
         mkField('wc_obj000000001', 'paradigm', { slot: 'v_naz.s', forms: [] }),
         mkField('wc_obj000000001', 'paradigm', { slot: 'v_rod.s', forms: ['   '] }),
+        mkField('wc_obj000000001', 'paradigm', { slot: 'v_dav.s', forms: 'not-a-list' }),
       ],
     };
     const dom = parseDom(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row, pin }} current={null} compare={false} />));
     expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('замок');
     expect(dom.querySelector('.wc-cefr-badge')).toBeNull();
+    // No unusable value or raw JSON leaks into readable facts outside the closed audit.
+    const readableText = dom.querySelector('[data-entry]')?.textContent ?? '';
+    for (const leaked of ['за́мок', 'noun', 'B1', 'будівля', 'споруда', 'not-a-list', '{"slot"']) {
+      expect(readableText, leaked).not.toContain(leaked);
+    }
     for (const field of ['stress', 'pos', 'cefr', 'sense_label', 'definition_uk']) {
       expect(dom.querySelector(`[data-missing-field="${field}"]`), field).not.toBeNull();
     }
@@ -293,7 +303,35 @@ describe('readable candidate word cards and missing-field visibility', () => {
       .filter(Boolean)
       .sort();
     expect(cited).toEqual(row.fields.map(f => f.assertion_id).sort());
-    expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(8);
+    expect(dom.querySelectorAll('details[data-card-audit] [data-release-assertion]')).toHaveLength(9);
+
+    // Mixed usable + unusable assertions on the same field must neither render the unusable value
+    // nor trigger a false "Sources differ." conflict marker on either release-card or release-page.
+    const mixedPosRow: ReleaseRow = {
+      card_id: 'wc_mix000000001',
+      card_kind: 'lexeme',
+      card_version: 'cv_mix',
+      status: 'CANDIDATE',
+      known_gaps: [],
+      fields: [
+        mkField('wc_mix000000001', 'spelling', 'читати'),
+        mkField('wc_mix000000001', 'pos', 'verb', 'ulif'),
+        mkField('wc_mix000000001', 'pos', { members: 'noun' }, 'vesum'),
+      ],
+    };
+    const mixedPage = groupReleasePages([mixedPosRow]).pages[0]!;
+    for (const html of [
+      renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row: mixedPosRow, pin }} current={null} compare={false} />),
+      renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-page', page: mixedPage, pin }} current={null} compare={false} />),
+    ]) {
+      const mixedDom = parseDom(html);
+      expect(Array.from(mixedDom.querySelectorAll('[data-fact="pos"] [data-fact-value]')).map(el => el.textContent)).toEqual(['verb']);
+      expect(mixedDom.querySelector('[data-fact="pos"] [data-sources-differ]')).toBeNull();
+      expect(mixedDom.querySelector('[data-fact="pos"]')?.textContent).not.toContain('noun');
+      expect(mixedDom.querySelector('[data-missing-field="aspect"]')).not.toBeNull();
+      expect(mixedDom.querySelector('[data-missing-field="gender"]')).toBeNull();
+      expect(mixedDom.querySelectorAll('details [data-release-assertion]')).toHaveLength(3);
+    }
 
     // F3: blank or whitespace paradigm slots with non-empty forms must not render in any table
     // and must not suppress the missing-paradigm marker, while preserving raw assertions in audit.

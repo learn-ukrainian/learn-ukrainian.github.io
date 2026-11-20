@@ -52,7 +52,7 @@ function AssertionRecord({ card, field, learner = false }: { card: ReleaseCard; 
 
 const FIELD_LABELS: Record<string, string> = { spelling: 'Spelling', mwe_form: 'Expression', stress: 'Stress', pos: 'Part of speech',
   gender: 'Gender', aspect: 'Aspect', grammatical_label: 'Grammar', cefr: 'CEFR level', sense_label: 'Sense',
-  definition_uk: 'Meaning', synonyms: 'Synonyms', antonyms: 'Antonyms' };
+  definition_uk: 'Meaning', synonyms: 'Synonyms', antonyms: 'Antonyms', paradigm: 'Paradigm' };
 const UKRAINIAN_FIELDS = new Set(['spelling', 'mwe_form', 'stress', 'grammatical_label', 'sense_label', 'definition_uk', 'synonyms', 'antonyms']);
 const CORE_FACT_ORDER = ['spelling', 'mwe_form', 'stress', 'pos', 'gender', 'aspect', 'grammatical_label', 'cefr'] as const;
 const SENSE_FIELD_ORDER = ['sense_label', 'definition_uk', 'synonyms', 'antonyms'];
@@ -180,24 +180,38 @@ function Facts({ groups, missing = [], usableIds }: { groups: FactGroup[]; missi
         <dd className="wc-missing" data-missing-value>Missing — not supplied in this release</dd>
       </div>];
     }
-    const items = [<div key={group.field} data-fact={group.field}>
-      <dt>{FIELD_LABELS[group.field] ?? group.field}</dt>
-      {group.facts.map((fact, i) => {
-        const usable = !usableIds || fact.assertionIds.some(id => usableIds.has(id));
-        return <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
-          <span data-fact-value className={group.field === 'cefr' && usable ? 'wc-cefr-badge' : undefined}
-            lang={UKRAINIAN_FIELDS.has(group.field) && usable ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
-        </dd>;
-      })}
-      {group.facts.length > 1 && <dd className="wc-note" data-sources-differ>Sources differ. Each value is shown with its own source; no value is chosen.</dd>}
-    </div>];
-    if (missingSet.has(group.field)) {
-      items.push(<div key={`missing-${field}`} data-missing-field={field}>
-        <dt>{FIELD_LABELS[field] ?? field} (status)</dt>
-        <dd className="wc-missing" data-missing-value>Missing — no usable value supplied in this release</dd>
-      </div>);
+    const isUsable = (fact: FactGroup['facts'][number]) => !usableIds || fact.assertionIds.some(id => usableIds.has(id));
+    const usableFacts = group.facts.filter(isUsable);
+    const unusableFacts = group.facts.filter(fact => !isUsable(fact));
+    const unusableIds = unusableFacts.flatMap(fact => fact.assertionIds);
+    const unusableCredits = unusableFacts.flatMap(fact => fact.credits);
+    if (usableFacts.length === 0) {
+      if (missingSet.has(field)) {
+        return [<div key={`missing-${field}`} data-missing-field={field}>
+          <dt>{FIELD_LABELS[field] ?? field}</dt>
+          <dd className="wc-missing" data-missing-value data-assertions={unusableIds.length ? unusableIds.join(' ') : undefined}>
+            Missing — no usable value supplied in this release (see Sources and audit){unusableCredits.length > 0 && <> <Credits credits={unusableCredits} /></>}
+          </dd>
+        </div>];
+      }
+      return [<div key={`unusable-${field}`} data-unusable-field={field}>
+        <dt>{FIELD_LABELS[field] ?? field}</dt>
+        <dd className="wc-missing" data-unusable-value data-assertions={unusableIds.length ? unusableIds.join(' ') : undefined}>
+          No usable value supplied — see Sources and audit{unusableCredits.length > 0 && <> <Credits credits={unusableCredits} /></>}
+        </dd>
+      </div>];
     }
-    return items;
+    return [<div key={group.field} data-fact={group.field}>
+      <dt>{FIELD_LABELS[group.field] ?? group.field}</dt>
+      {usableFacts.map((fact, i) => <dd key={i} data-assertions={fact.assertionIds.join(' ')}>
+        <span data-fact-value className={group.field === 'cefr' ? 'wc-cefr-badge' : undefined}
+          lang={UKRAINIAN_FIELDS.has(group.field) ? 'uk' : undefined}>{fact.value}</span> <Credits credits={fact.credits} />
+      </dd>)}
+      {usableFacts.length > 1 && <dd className="wc-note" data-sources-differ>Sources differ. Each value is shown with its own source; no value is chosen.</dd>}
+      {unusableFacts.length > 0 && <dd className="wc-missing" data-unusable-value data-assertions={unusableIds.join(' ')}>
+        Unusable source assertion omitted — see Sources and audit <Credits credits={unusableCredits} />
+      </dd>}
+    </div>];
   })}</dl>;
 }
 
@@ -321,12 +335,17 @@ function ReleaseIndexList({ card }: { card: ReleaseIndex }) {
   const listed = new Map(groupReleasePages(card.rows).dispositions.map(item => [item.cardId, item]));
   const items = card.rows.map(row => {
     const entry = readableEntry(row, 1);
+    const usableIds = usableAssertionIds(row);
     const place = listed.get(row.card_id);
-    const pos = entry.facts.find(group => group.field === 'pos')?.facts.map(fact => fact.value).join('; ') || 'not supplied';
+    const pos = entry.facts
+      .find(group => group.field === 'pos')
+      ?.facts.filter(fact => fact.assertionIds.some(id => usableIds.has(id)))
+      .map(fact => fact.value)
+      .join('; ') || 'not supplied';
     const href = place?.listed && place.key
       ? `${pagePath(place.key)}#entry-${row.card_id}`
       : `/lexicon-v2/release/${encodeURIComponent(row.card_id)}/`;
-    return { id: row.card_id, headword: entry.display, pos, status: row.status, href };
+    return { id: row.card_id, headword: cardHeading(entry).title, pos, status: row.status, href };
   }).sort((a, b) => collator.compare(a.headword, b.headword) || (a.id < b.id ? -1 : 1));
   return <div data-release-index>
     <p data-release-version>Release {card.pin.release_version}</p>

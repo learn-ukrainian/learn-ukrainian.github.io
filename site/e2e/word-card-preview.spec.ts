@@ -113,9 +113,10 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   copyFileSync('public/count.js', join(root, 'public/public/count.js'));
   copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
   process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
-  const builtRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
+  const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT?.trim();
+  const builtRoot = rawBuiltRoot ? resolve(rawBuiltRoot) : undefined;
   let output: string;
-  try { output = builtRoot || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+  try { output = builtRoot || resolve(buildPreview(join(root, 'public'), { enabled: true, artifactPath })); }
   finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
   if (!builtRoot) {
     // The isolated preview build omits ordinary Atlas routes. Package their real
@@ -156,10 +157,11 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
     for (const marker of sentinels.filter(marker => !overlap.includes(marker))) expect(text, `${file}: ${marker}`).not.toContain(marker);
     if (file.endsWith('.xml')) expect(text).not.toContain('/lexicon-v2/');
   }
+  const outputPrefix = output.endsWith(sep) ? output : output + sep;
   const server = createServer((req, res) => {
     const path = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
     const file = resolve(output, '.' + (path.endsWith('/') ? path + 'index.html' : path));
-    if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
+    if (!file.startsWith(outputPrefix) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
     res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.json') ? 'application/json' : 'text/html');
     res.end(readFileSync(file));
   });
@@ -338,9 +340,10 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('pinned release readable
     copyFileSync('public/count.js', join(root, 'public/public/count.js'));
     copyFileSync('public/favicon.svg', join(root, 'public/public/favicon.svg'));
     process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
-    const builtRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT;
+    const rawBuiltRoot = process.env.ATLAS_WORD_CARD_PUBLIC_BUILT_ROOT?.trim();
+    const builtRoot = rawBuiltRoot ? resolve(rawBuiltRoot) : undefined;
     let output: string;
-    try { output = builtRoot || buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+    try { output = builtRoot || resolve(buildPreview(join(root, 'public'), { enabled: true, artifactPath })); }
     finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
     if (!builtRoot) {
       const interpreter = process.env.PYTHON || resolve(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { encoding: 'utf8' }).trim(), '../.venv/bin/python');
@@ -362,10 +365,11 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
     const routeInventory = JSON.parse(readFileSync('src/lib/lexicon/word-card-preview-route-inventory.json', 'utf8')) as { routes: { path: string }[] };
     expect(routes).toHaveLength(571);
     expect(routes.map(name => `/${name.slice(0, -'index.html'.length)}`).sort()).toEqual(routeInventory.routes.map(r => r.path).sort());
+    const outputPrefix = output.endsWith(sep) ? output : output + sep;
     server = createServer((req, res) => {
       const path = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
       const file = resolve(output, '.' + (path.endsWith('/') ? path + 'index.html' : path));
-      if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
+      if (!file.startsWith(outputPrefix) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.json') ? 'application/json' : file.endsWith('.svg') ? 'image/svg+xml' : 'text/html');
       res.end(readFileSync(file));
     });
@@ -940,10 +944,12 @@ test.describe('source fidelity refusals', () => {
   // Missing files get a 404 with a body, as GitHub Pages sends: installed Chrome turns an
   // empty error response into a navigation error (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
   async function serve(root: string): Promise<Server> {
+    const rootDir = resolve(root);
+    const rootPrefix = rootDir.endsWith(sep) ? rootDir : rootDir + sep;
     const server = createServer((req, res) => {
       const path = new URL(req.url || '/', 'http://localhost').pathname;
-      const file = resolve(root, '.' + (path.endsWith('/') ? path + 'index.html' : path));
-      if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
+      const file = resolve(rootDir, '.' + (path.endsWith('/') ? path + 'index.html' : path));
+      if (!file.startsWith(rootPrefix) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
       res.end(readFileSync(file));
     });
