@@ -26,7 +26,7 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 ### Prerequisites
 
 - macOS (primary dev platform)
-- [uv](https://docs.astral.sh/uv/) 0.13.1 (`pyproject.toml` `[tool.uv] required-version`); it installs the Python in `.python-version`
+- [uv](https://docs.astral.sh/uv/) 0.13.9 (`pyproject.toml` `[tool.uv] required-version`); it installs the Python in `.python-version`
 - Node.js 20+ (for Starlight frontend)
 
 ### Installation

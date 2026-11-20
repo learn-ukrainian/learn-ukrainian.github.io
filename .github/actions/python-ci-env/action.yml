@@ -64,8 +64,8 @@ runs:
       uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
         # pyproject.toml [tool.uv] required-version: the one uv that writes and
-        # reads uv.lock (machinery .github/workflows/pins.txt UV_VERSION).
-        version: '0.13.1'
+        # reads uv.lock.
+        version: '0.13.9'
         # Read the same pin as setup-python; avoid uv's interpreter inference
         # producing an unknown cache key before a matching environment exists.
         python-version: ${{ steps.python-pin.outputs.version }}

@@ -161,9 +161,9 @@ atlas = [
 ]
 
 [tool.uv]
-# One uv release writes and reads uv.lock: the one machinery pins
-# (machinery .github/workflows/pins.txt UV_VERSION) and python-ci-env installs.
-required-version = "==0.13.1"
+# One uv release writes and reads uv.lock. python-ci-env installs this
+# required-version.
+required-version = "==0.13.9"
 # `uv sync` builds the whole environment; CI excludes packages by name.
 default-groups = ["ml", "dev"]
 
