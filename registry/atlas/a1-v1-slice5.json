@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "13cd90b85d48ef7e56a438040edb733e99059b43d68e732ea8e0811d92ad2736",
-    "companion_sha256": "a9c7f383a82356afc98f97e1889017c2e4358b4be348b4cee19fb6d8fe123239",
+    "combined_sha256": "e315c412a503dd5e23027d86bb81a333efe14c29120798dea34589b95662a8b6",
+    "companion_sha256": "7d08cb610685adf0a9326a24f646fbb8a873cec7ba155e699484b15e07701571",
     "consumed_sha256": "df5ad7da0e67434b0abb5b08e65f1ddf0f3fac2840e72c3aeb7b110b90c8cd9f",
     "slice2_companion_sha256": "66f526000bd436912719f30a7bbb7389825336b5972c6599157e01078852ca9b",
     "slice3_companion_sha256": "c71995614a7dfcf0a785c80ae149da4ac701f0d51357091707e9538870159a4e",
@@ -38755,20 +38755,20 @@
       "entry_id": 307328,
       "field": "gloss_en",
       "pointer": "/hits/0/word",
-      "record_key": "balla-gloss2-en-uk-row-15824",
+      "record_key": "balla-gloss2-en-uk-row-2297",
       "scope_key": "wc_yx5tjedf0xte/ws_cd47mmbnv00f/bilingual-gloss",
       "sense_id": "ws_cd47mmbnv00f",
       "source_sense_key": "vts:походження#article/1",
       "span": [
         0,
-        7
+        8
       ],
       "supporting_spans": [
         {
           "pointer": "/hits/0/definition",
           "span": [
-            125,
-            196
+            2,
+            29
           ]
         }
       ],
@@ -38776,8 +38776,8 @@
       "usage_pair": {
         "pointer": "/hits/0/definition",
         "span": [
-          125,
-          196
+          2,
+          29
         ]
       }
     },
@@ -41616,12 +41616,12 @@
     "wc_yx5tjedf0xte/ws_cd47mmbnv00f/bilingual-gloss": {
       "card_id": "wc_yx5tjedf0xte",
       "pointer": "/hits/0/word",
-      "record_key": "balla-gloss2-en-uk-row-15824",
+      "record_key": "balla-gloss2-en-uk-row-2297",
       "sense_id": "ws_cd47mmbnv00f",
       "source_sense_key": "vts:походження#article/1",
       "span": [
         0,
-        7
+        8
       ]
     },
     "wc_33qv20nmgm94/ws_byas06qy605q/bilingual-gloss": {
@@ -43141,7 +43141,7 @@
     "balla:ukreng:піти": "sr_4b0xs708rvmn",
     "balla:ukreng:гривня": "sr_0861jpgvmgw4",
     "balla-gloss2-en-uk-row-68893": "sr_5z3a4xmn5349",
-    "balla-gloss2-en-uk-row-15824": "sr_nb1yg3re7n91",
+    "balla-gloss2-en-uk-row-2297": "sr_wsr0n2zb4qx6",
     "balla-gloss2-en-uk-row-77120": "sr_qqfnvw76n8m9"
   },
   "source_record_reuses": {
@@ -43178,7 +43178,7 @@
       "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
     }
   },
-  "sources_sha256": "72be7d66cdead3ca600db8268d0b0f5f6e8bccd2dce6fadf9501b3837ee70849",
+  "sources_sha256": "85969948fb54d0249b8e1d08056033c3f394c256a3df84ef84753b136e6f310d",
   "stress_attempts": {
     "wc_043h3npd7ed4": [
       {

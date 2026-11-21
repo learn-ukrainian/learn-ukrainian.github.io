@@ -4342,10 +4342,10 @@
     {
       "build_id": "a1-gloss2-allocation-12638",
       "event_id": "ie_2507",
-      "evidence": "{\"locator\":\"balla:balla_en_uk:id:15824\",\"snapshot_id\":\"balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54\",\"source_id\":\"balla\"}",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:2297\",\"snapshot_id\":\"balla@sha256:1462fa2f7656273d8646e81c1ae198679e0f000dc16ac600e5656a4cf853c5ac\",\"source_id\":\"balla\"}",
       "kind": "source_record_mint",
       "to": [
-        "sr_nb1yg3re7n91"
+        "sr_wsr0n2zb4qx6"
       ]
     },
     {
@@ -10632,21 +10632,21 @@
     {
       "aliases": [
         {
-          "key": "balla:balla_en_uk:id:15824",
+          "key": "balla:balla_en_uk:id:2297",
           "kind": "uid",
-          "snapshot_id": "balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54"
+          "snapshot_id": "balla@sha256:1462fa2f7656273d8646e81c1ae198679e0f000dc16ac600e5656a4cf853c5ac"
         }
       ],
       "correspondence": [
         {
-          "locator": "balla:balla_en_uk:id:15824",
+          "locator": "balla:balla_en_uk:id:2297",
           "matched_by": "actual_Sources_tool_response",
-          "snapshot_id": "balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54",
+          "snapshot_id": "balla@sha256:1462fa2f7656273d8646e81c1ae198679e0f000dc16ac600e5656a4cf853c5ac",
           "status": "unique"
         }
       ],
       "source_id": "balla",
-      "source_record_id": "sr_nb1yg3re7n91"
+      "source_record_id": "sr_wsr0n2zb4qx6"
     },
     {
       "aliases": [

@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "c07c3fd1000472d419e6a6e56c330dac93e34dc86ce6c8b894489f508e495529",
-    "companion_sha256": "ff96abc52e51857df3ba690f3754aab750e46b135681d76cc3d8a47de9a312e1",
-    "consumed_sha256": "13cd90b85d48ef7e56a438040edb733e99059b43d68e732ea8e0811d92ad2736",
+    "combined_sha256": "291611ace2ca43be585b47624267d8008e92b79f08ae2b75b07289f4d2215a50",
+    "companion_sha256": "f951fbb49fb223ae074f97187c85f0e16d182e7639ec6e952eeb89193aa82c72",
+    "consumed_sha256": "e315c412a503dd5e23027d86bb81a333efe14c29120798dea34589b95662a8b6",
     "slice2_companion_sha256": "66f526000bd436912719f30a7bbb7389825336b5972c6599157e01078852ca9b",
     "slice3_companion_sha256": "c71995614a7dfcf0a785c80ae149da4ac701f0d51357091707e9538870159a4e",
-    "slice5_companion_sha256": "a9c7f383a82356afc98f97e1889017c2e4358b4be348b4cee19fb6d8fe123239"
+    "slice5_companion_sha256": "7d08cb610685adf0a9326a24f646fbb8a873cec7ba155e699484b15e07701571"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [

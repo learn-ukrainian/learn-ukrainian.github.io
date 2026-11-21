@@ -26129,15 +26129,15 @@
       "sense_id": "ws_ybwy56wnt29h",
       "source_sense_key": "vts:праворуч#1",
       "span": [
-        245,
-        257
+        339,
+        351
       ],
       "supporting_spans": [
         {
           "pointer": "/text",
           "span": [
-            217,
-            257
+            258,
+            358
           ]
         }
       ],
@@ -26145,8 +26145,8 @@
       "usage_pair": {
         "pointer": "/text",
         "span": [
-          217,
-          257
+          258,
+          358
         ]
       }
     },
@@ -28962,8 +28962,8 @@
       "sense_id": "ws_ybwy56wnt29h",
       "source_sense_key": "vts:праворуч#1",
       "span": [
-        245,
-        257
+        339,
+        351
       ]
     },
     "wc_wan2nqn6vk04/ws_31ygee7xmjha/bilingual-gloss": {
