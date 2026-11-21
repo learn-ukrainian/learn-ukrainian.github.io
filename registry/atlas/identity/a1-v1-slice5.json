@@ -1,5 +1,5 @@
 {
-  "base_sha256": "39834ef08dde1735f9310701da788711cda3125d36b24d52ea7510a0797a48c7",
+  "base_sha256": "20f03fed388347fbd8198d49fe47849611777d7be1305e41f8d835a1c169ea7f",
   "entries": [
     {
       "card_id": "wc_3xqwne5jgn63",
@@ -4023,6 +4023,276 @@
       "to": [
         "sr_vpzy9a9bpdby"
       ]
+    },
+    {
+      "event_id": "ie_2415",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_xzmcvn9fppvh"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0047\",\"snapshot_id\":\"textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2416",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_k8ej9pzx0hyw"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0089\",\"snapshot_id\":\"textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2417",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0kg7gkgkmfvx"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122\",\"snapshot_id\":\"textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2418",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4m766nrzfpbz"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054\",\"snapshot_id\":\"textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2419",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_j79rvsfkzkx3"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138\",\"snapshot_id\":\"textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2420",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_m4dsskayr8zv"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-2_s0084\",\"snapshot_id\":\"textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2421",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_2g1xmbe95swg"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043\",\"snapshot_id\":\"textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2422",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_7hfmqxey0f0w"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0050\",\"snapshot_id\":\"textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2423",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_651kg1tfd5jp"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0065\",\"snapshot_id\":\"textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2424",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_8ap0ghn651s1"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0051\",\"snapshot_id\":\"textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2425",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_whtqsj99bevg"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008\",\"snapshot_id\":\"textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2426",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_714skah9mnf7"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055\",\"snapshot_id\":\"textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2427",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_n9nfq473adgf"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0004\",\"snapshot_id\":\"textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2428",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_byh3mmevwtrr"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064\",\"snapshot_id\":\"textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2429",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_cdq4k5jq7vg1"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000\",\"snapshot_id\":\"textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2430",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_1h622w2g5j0e"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0014\",\"snapshot_id\":\"textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2431",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_c988asybxgr4"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0022\",\"snapshot_id\":\"textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2432",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_bjsc059tewnp"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061\",\"snapshot_id\":\"textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2433",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_21sscdrvtznx"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137\",\"snapshot_id\":\"textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2434",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_j324rb1kdjz7"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043\",\"snapshot_id\":\"textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2435",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_39akq9jwnen2"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055\",\"snapshot_id\":\"textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2436",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_cr8s7egfhd96"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0081\",\"snapshot_id\":\"textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2437",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0e0f4cn67asy"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060\",\"snapshot_id\":\"textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2438",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_a1b9qe6sn576"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-2_s0004\",\"snapshot_id\":\"textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2439",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_6x3ynvwx5kf5"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0082\",\"snapshot_id\":\"textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2440",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4kgca0k3jecd"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0106\",\"snapshot_id\":\"textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2441",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_8nkg84qwc2t1"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141\",\"snapshot_id\":\"textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2442",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_mh9s3pqb2hzg"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0008\",\"snapshot_id\":\"textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2472",
+      "build_id": "a1-slice5-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_s0fh5capw23q"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0055\",\"snapshot_id\":\"textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2473",
+      "build_id": "a1-slice5-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_nr6h7shteqbn"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003\",\"snapshot_id\":\"textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice5-allocation.v1",
@@ -9630,6 +9900,576 @@
       ],
       "source_id": "balla",
       "source_record_id": "sr_vpzy9a9bpdby"
+    },
+    {
+      "source_record_id": "sr_xzmcvn9fppvh",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0047",
+          "snapshot_id": "textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0047",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_k8ej9pzx0hyw",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0089",
+          "snapshot_id": "textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0089",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_0kg7gkgkmfvx",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+          "snapshot_id": "textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_4m766nrzfpbz",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+          "snapshot_id": "textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_j79rvsfkzkx3",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+          "snapshot_id": "textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_m4dsskayr8zv",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0084",
+          "snapshot_id": "textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0084",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_2g1xmbe95swg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+          "snapshot_id": "textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_7hfmqxey0f0w",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050",
+          "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_651kg1tfd5jp",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0065",
+          "snapshot_id": "textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0065",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_8ap0ghn651s1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0051",
+          "snapshot_id": "textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0051",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_whtqsj99bevg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+          "snapshot_id": "textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_714skah9mnf7",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+          "snapshot_id": "textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_n9nfq473adgf",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0004",
+          "snapshot_id": "textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0004",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_byh3mmevwtrr",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+          "snapshot_id": "textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_cdq4k5jq7vg1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+          "snapshot_id": "textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_1h622w2g5j0e",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0014",
+          "snapshot_id": "textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0014",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_c988asybxgr4",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0022",
+          "snapshot_id": "textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0022",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_bjsc059tewnp",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+          "snapshot_id": "textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_21sscdrvtznx",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+          "snapshot_id": "textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_j324rb1kdjz7",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+          "snapshot_id": "textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_39akq9jwnen2",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+          "snapshot_id": "textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_cr8s7egfhd96",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0081",
+          "snapshot_id": "textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0081",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_0e0f4cn67asy",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+          "snapshot_id": "textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_a1b9qe6sn576",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0004",
+          "snapshot_id": "textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0004",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_6x3ynvwx5kf5",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0082",
+          "snapshot_id": "textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0082",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_4kgca0k3jecd",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0106",
+          "snapshot_id": "textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0106",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_8nkg84qwc2t1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+          "snapshot_id": "textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_mh9s3pqb2hzg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008",
+          "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_s0fh5capw23q",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0055",
+          "snapshot_id": "textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_nr6h7shteqbn",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+          "snapshot_id": "textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
     }
   ]
 }
