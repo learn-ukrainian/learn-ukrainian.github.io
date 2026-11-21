@@ -4438,6 +4438,15 @@
         "sr_dgn7hfwfht8n"
       ],
       "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0131\",\"snapshot_id\":\"textbooks@sha256:b70363fdc894094c4f349e24bf340cfb207e2cb241045ad2e61f2e8bda9eddad\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2471",
+      "build_id": "a1-slice4-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_zercaezshydx"
+      ],
+      "evidence": "{\"locator\":\"textbook:1-klas-bukvar-zaharijchuk-2025-1_s0015\",\"snapshot_id\":\"textbooks@sha256:6e76c2085b256e65a3995dd670180b74af0d65876ffa7aecd4b84f0f04f3571c\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice4-allocation.v1",
@@ -11109,6 +11118,25 @@
           "snapshot_id": "textbooks@sha256:b70363fdc894094c4f349e24bf340cfb207e2cb241045ad2e61f2e8bda9eddad",
           "status": "unique",
           "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0131",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_zercaezshydx",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:1-klas-bukvar-zaharijchuk-2025-1_s0015",
+          "snapshot_id": "textbooks@sha256:6e76c2085b256e65a3995dd670180b74af0d65876ffa7aecd4b84f0f04f3571c"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:6e76c2085b256e65a3995dd670180b74af0d65876ffa7aecd4b84f0f04f3571c",
+          "status": "unique",
+          "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-1_s0015",
           "matched_by": "actual_Sources_tool_response"
         }
       ]

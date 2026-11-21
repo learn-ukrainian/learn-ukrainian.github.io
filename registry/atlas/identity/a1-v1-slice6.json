@@ -1,5 +1,5 @@
 {
-  "base_sha256": "1b379b04dfd705c0660c9f562671911e06dee8e546fc588b050675618664c005",
+  "base_sha256": "ecfbd4f369f1d3cce16650019b57255f8691976bae886c794031ad509faa5ec2",
   "entries": [
     {
       "card_id": "wc_v3w185cm66rw",
@@ -4188,6 +4188,24 @@
         "sr_4bk386pzt0mt"
       ],
       "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0088\",\"snapshot_id\":\"textbooks@sha256:0ed0f93d37a789753414d5fca4768343e48cd1007a5b0ad694364566b7c8ab23\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2474",
+      "build_id": "a1-slice6-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_1mytm64pn77a"
+      ],
+      "evidence": "{\"locator\":\"textbook:1-klas-bukvar-zaharijchuk-2025-1_s0062\",\"snapshot_id\":\"textbooks@sha256:d06b2ed2af16c3d6cc69e90a9edee25a5feb80d4b58a853f8dcf0653563c9a73\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2475",
+      "build_id": "a1-slice6-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_nwvvwj33kh07"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121\",\"snapshot_id\":\"textbooks@sha256:6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice6-allocation.v1",
@@ -10369,6 +10387,44 @@
           "snapshot_id": "textbooks@sha256:0ed0f93d37a789753414d5fca4768343e48cd1007a5b0ad694364566b7c8ab23",
           "status": "unique",
           "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0088",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_1mytm64pn77a",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:1-klas-bukvar-zaharijchuk-2025-1_s0062",
+          "snapshot_id": "textbooks@sha256:d06b2ed2af16c3d6cc69e90a9edee25a5feb80d4b58a853f8dcf0653563c9a73"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:d06b2ed2af16c3d6cc69e90a9edee25a5feb80d4b58a853f8dcf0653563c9a73",
+          "status": "unique",
+          "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-1_s0062",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_nwvvwj33kh07",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
+          "snapshot_id": "textbooks@sha256:6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
           "matched_by": "actual_Sources_tool_response"
         }
       ]
