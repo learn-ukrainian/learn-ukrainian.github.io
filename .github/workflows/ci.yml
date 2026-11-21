@@ -435,7 +435,11 @@ jobs:
     needs: [hydrate-release-assets]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    # Hydrate, the Astro build, unit tests, shard export and the full Playwright
+    # suite. A 2-worker Chromium run of that suite took 16.1 minutes on the
+    # shared host (2026-11-21). The old 25 minute budget covered only
+    # e2e/origin-allowlist.spec.ts.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -502,6 +506,8 @@ jobs:
       # dist/ to the hydrated inputs; test:unit:ci, the verify below and build-renders
       # fail closed unless that exact build and those inputs are still current.
       # The drift check stays directly after the build (#7673).
+      # The two preview variables are the same ones site/package.json build:e2e sets.
+      # They only affect the Astro child; hydrate still builds data/atlas.db.
       - if: steps.scope.outputs.run == 'true'
         name: Build, drift check, unit and built-output tests
         working-directory: site
@@ -510,20 +516,37 @@ jobs:
         run: |
           set -euo pipefail
           npm run hydrate
-          node --experimental-strip-types tests/helpers/ci-build-artifact.ts \
-            record --record "$FRONTEND_BUILD_RECORD" -- npm run astro -- build
+          ATLAS_WORD_CARD_PREVIEW=1 PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS=1 \
+            node --experimental-strip-types tests/helpers/ci-build-artifact.ts \
+              record --record "$FRONTEND_BUILD_RECORD" -- npm run astro -- build
           git diff --exit-code -- src/data/lexicon-teacher-lesson-keys.json src/data/practice-zno-meta.json
           npm run test:unit:ci
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
 
+      # Shard export writes under dist/atlas only. It does not replace HTML or the
+      # build-record nonce, so the verify above still describes this build.
+      # data/atlas.db is the database the hydrate in the previous step just built.
       - if: steps.scope.outputs.run == 'true'
-        name: Playwright browser hardening against dist
+        name: Export Atlas runtime shards into dist
+        env:
+          PYTHON: ${{ github.workspace }}/.venv/bin/python
+        run: |
+          set -euo pipefail
+          "$PYTHON" -m scripts.atlas.export_runtime_shards \
+            --db data/atlas.db \
+            --out-dir site/dist \
+            --base-path atlas \
+            --deck-dir site/public/lexicon \
+            --verify
+
+      - if: steps.scope.outputs.run == 'true'
+        name: Playwright suite against dist
         working-directory: site
         env:
           ASTRO_PREVIEW_BACKGROUND: '0'
           PYTHON: ${{ github.workspace }}/.venv/bin/python
-        run: ./node_modules/.bin/playwright test 'e2e/origin-allowlist\.spec\.ts$'
+        run: ./node_modules/.bin/playwright test --workers=2 --forbid-only
 
   # A PR that changes pytest infrastructure runs guards only in pr-affected, so it runs
   # the full pytest shards; the installed gate reads this job's output and requires them.
