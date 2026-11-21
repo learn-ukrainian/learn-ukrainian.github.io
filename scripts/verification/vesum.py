@@ -26,10 +26,11 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 from scripts.rag import config as _rag_config
+from scripts.wiki.sources_db import _open_conn, observe_vesum_read_failure
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None
@@ -52,6 +53,10 @@ class InspectionStatus(StrEnum):
     MIXED = "MIXED"
     NOT_FOUND = "NOT_FOUND"
     UNAVAILABLE = "UNAVAILABLE"
+
+
+class VesumStoreMissing(FileNotFoundError):
+    """The configured VESUM store does not exist."""
 
 
 @dataclass(frozen=True)
@@ -113,7 +118,7 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     result = resolve_store("vesum", PROJECT_ROOT, binding=binding)
     if isinstance(result, StoreRefusal):
         if result.reason == "store_missing":
-            raise FileNotFoundError("VESUM database not found: store_missing") from None
+            raise VesumStoreMissing("VESUM database not found: store_missing") from None
         raise FileNotFoundError(result.reason) from None
     return result.path
 
@@ -128,8 +133,7 @@ def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int
         or _vesum_conn_stat != current_stat
     ):
         # VESUM is a reference dictionary: every reader opens it read-only.
-        new_conn = open_readonly(resolved_path.resolve(), check_same_thread=False)
-        new_conn.row_factory = sqlite3.Row
+        new_conn = _open_conn(resolved_path, read_only=True)
 
         old_conn = _vesum_conn
         _vesum_conn = new_conn
@@ -161,29 +165,25 @@ def _release_conn(conn: SQLiteConnection) -> None:
 @contextlib.contextmanager
 def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[SQLiteConnection]:
     """Context manager guaranteeing connection retention across the reader's lifetime."""
-    resolved_path = _resolve_vesum_db_path(db_path)
-    if not resolved_path.exists():
-        raise FileNotFoundError(
-            f"VESUM database not found at {resolved_path}. "
-            "Step 1 builds an explicit shadow database only; run "
-            ".venv/bin/python scripts/rag/build_vesum_shadow.py --help "
-            "and pass its explicit path with db_path after approved activation."
-        )
-
     try:
-        st = resolved_path.stat()
-        current_stat = (st.st_ino, st.st_mtime_ns)
-    except OSError:
-        current_stat = None
+        resolved_path = _resolve_vesum_db_path(db_path)
+        try:
+            st = resolved_path.stat()
+            current_stat = (st.st_ino, st.st_mtime_ns)
+        except OSError:
+            current_stat = None
 
-    with _CONN_LOCK:
-        conn = _get_or_create_conn_locked(resolved_path, current_stat)
-        _ACTIVE_CONNS[conn] = _ACTIVE_CONNS.get(conn, 0) + 1
+        with _CONN_LOCK:
+            conn = _get_or_create_conn_locked(resolved_path, current_stat)
+            _ACTIVE_CONNS[conn] = _ACTIVE_CONNS.get(conn, 0) + 1
 
-    try:
-        yield conn
-    finally:
-        _release_conn(conn)
+        try:
+            yield conn
+        finally:
+            _release_conn(conn)
+    except (OSError, sqlite3.Error) as exc:
+        observe_vesum_read_failure(exc)
+        raise
 
 
 def get_vesum_conn(db_path: str | Path | None = None) -> SQLiteConnection:
@@ -302,41 +302,35 @@ _REQUIRED_FORM_MARKERS_COLS = frozenset({"form_id", "marker", "origin", "marker_
 
 def _has_inspection_schema(conn: SQLiteConnection) -> bool:
     """Check if connection has the marker-preserving forms_all and form_markers schema with required columns."""
-    try:
-        tables = {
-            row[0]
-            for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('forms_all', 'form_markers')"
-            )
-        }
-        if len(tables) < 2:
-            return False
-
-        forms_all_cols = {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
-        if not _REQUIRED_FORMS_ALL_COLS.issubset(forms_all_cols):
-            return False
-
-        marker_cols = {row[1] for row in conn.execute("PRAGMA table_info(form_markers)")}
-        return _REQUIRED_FORM_MARKERS_COLS.issubset(marker_cols)
-    except sqlite3.Error:
+    tables = {
+        row[0]
+        for row in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('forms_all', 'form_markers')"
+        )
+    }
+    if len(tables) < 2:
         return False
+
+    forms_all_cols = {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
+    if not _REQUIRED_FORMS_ALL_COLS.issubset(forms_all_cols):
+        return False
+
+    marker_cols = {row[1] for row in conn.execute("PRAGMA table_info(form_markers)")}
+    return _REQUIRED_FORM_MARKERS_COLS.issubset(marker_cols)
 
 
 def _get_metadata_and_version(conn: SQLiteConnection) -> tuple[str, dict[str, Any]]:
     """Retrieve build metadata and version identifier if present."""
-    try:
-        has_meta = conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='vesum_build_metadata'"
-        ).fetchone()
-        if not has_meta:
-            return "v6.8.0", {}
-        meta = {
-            str(row[0]): str(row[1]) for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
-        }
-        version = meta.get("canonical_jsonl_sha256") or meta.get("schema_version") or "v6.8.0"
-        return version, meta
-    except sqlite3.Error:
+    has_meta = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='vesum_build_metadata'"
+    ).fetchone()
+    if not has_meta:
         return "v6.8.0", {}
+    meta = {
+        str(row[0]): str(row[1]) for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
+    }
+    version = meta.get("canonical_jsonl_sha256") or meta.get("schema_version") or "v6.8.0"
+    return version, meta
 
 
 def _resolve_inspection_status(

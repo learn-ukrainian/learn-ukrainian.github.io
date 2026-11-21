@@ -19,6 +19,7 @@ imports + fires on a token that is unambiguously Russian.
 from __future__ import annotations
 
 import os
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -26,6 +27,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+pytestmark = pytest.mark.usefixtures("empty_vesum_db")
 
 
 def _has_pymorphy3() -> bool:
@@ -38,7 +40,7 @@ def _has_pymorphy3() -> bool:
     not _has_pymorphy3(),
     reason="pymorphy3 not installed; russian_shadow channel cannot be tested at all",
 )
-def test_russian_shadow_channel_alive_in_process() -> None:
+def test_russian_shadow_channel_alive_in_process(tmp_path, monkeypatch) -> None:
     """In-process import — the module-level sys.path shim makes the absolute
     `scripts.verification.check_ru_morph` import resolve."""
     from scripts.audit._judge_eval_lib import _russian_shadow_check
@@ -54,6 +56,12 @@ def test_russian_shadow_channel_alive_in_process() -> None:
         "russian_shadow channel imported but did not fire on `спасибо`; "
         "expected at least one triggered token. Got: " + repr(result)
     )
+
+    broken_vesum = tmp_path / "broken-vesum.sqlite"
+    broken_vesum.write_bytes(b"not a SQLite database")
+    monkeypatch.setenv("LU_VESUM_DB", str(broken_vesum))
+    with pytest.raises(sqlite3.DatabaseError):
+        _russian_shadow_check("спасибо")
 
 
 @pytest.mark.skipif(

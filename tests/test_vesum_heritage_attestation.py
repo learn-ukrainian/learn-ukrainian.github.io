@@ -208,6 +208,7 @@ def test_folk_vesum_gate_accepts_productive_noun_diminutives() -> None:
     assert gate["heritage_attested"] == 4
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_russian_shadow_diminutive_surface_guard_blocks_derivational_rescue(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

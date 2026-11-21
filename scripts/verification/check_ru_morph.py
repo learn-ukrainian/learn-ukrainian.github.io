@@ -202,20 +202,12 @@ def is_russian_pattern(
 
     from scripts.verification.vesum import verify_word
 
-    is_in_vesum = False
-    try:
-        vesum_results = (
-            verify_word(norm_word)
-            if vesum_db_path is None
-            else verify_word(norm_word, db_path=vesum_db_path)
-        )
-        is_in_vesum = bool(vesum_results)
-    except Exception:
-        # If DB connection fails / DB is not provisioned (e.g. CI fastlane),
-        # fall back to the built-in Ukrainian MorphAnalyzer dictionary.
-        is_in_vesum = _morph_uk.word_is_known(norm_word)
-
-    return _analyze_word(norm_word, is_in_vesum=is_in_vesum, threshold=threshold)
+    vesum_results = (
+        verify_word(norm_word)
+        if vesum_db_path is None
+        else verify_word(norm_word, db_path=vesum_db_path)
+    )
+    return _analyze_word(norm_word, is_in_vesum=bool(vesum_results), threshold=threshold)
 
 
 def check_russian_patterns_batch(

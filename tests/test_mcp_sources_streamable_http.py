@@ -162,29 +162,16 @@ def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
     assert body["jsonrpc"] == "2.0"
     assert body["id"] == 2
     assert "result" in body, f"tool call missing result: {body}"
-    content = body["result"].get("content", [])
+    result = body["result"]
+    content = result.get("content", [])
     assert content, f"verify_word returned empty content: {body}"
     text_blob = content[0].get("text", "")
-    # Acceptance: any one of these shapes proves the streamable-HTTP transport
-    # round-tripped a real tools/call (the test's actual subject).
-    #   (a) `lemma` / `v_naz` — VESUM data present (local / cached-db path).
-    #   (b) fail-closed MCP-wire envelope ``Tool call failed: verify_word.`` —
-    #       the real `_on_call_tool` path (Cycle007 fixes v3 / c28df06).
-    #       Handler exceptions (VESUM db missing on the runner, KeyError on
-    #       a bad argument, …) are isError=True with a privacy-safe generic
-    #       text; the raw exception never leaves the process. This is the
-    #       merge_group CI path. The legacy ``Error in verify_word:`` prose
-    #       stays on the in-process `call_tool()` helper only — see
-    #       test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path.
-    # If none of these shapes appear, the transport itself is broken (was
-    # the original symptom of the ASGI bug we fixed at 8174ea3f52).
-    has_vesum_data = "v_naz" in text_blob or "lemma" in text_blob
-    has_fail_closed_envelope = "Tool call failed: verify_word" in text_blob
-    has_legacy_inprocess_envelope = "Error in verify_word" in text_blob
-    assert has_vesum_data or has_fail_closed_envelope or has_legacy_inprocess_envelope, (
-        f"verify_word response is neither VESUM data nor structured error envelope; "
-        f"transport likely broken. text_blob (truncated): {text_blob[:300]}"
-    )
+    if result.get("isError"):
+        # GitHub runners without VESUM receive the typed failure over HTTP.
+        assert result["structuredContent"]["error_code"] == "database_unavailable"
+        assert result["structuredContent"]["database"] == "vesum.db"
+    else:
+        assert "v_naz" in text_blob or "lemma" in text_blob
 
 
 def test_legacy_sse_paths_are_not_advertised(sources_http_url):

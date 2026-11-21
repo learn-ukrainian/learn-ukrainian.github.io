@@ -146,6 +146,7 @@ def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db, requi
 # ── M2: Existing Tool Output Keys Preserved ──────────────────────────────────
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_is_russian_pattern_output_keys_unchanged():
     expected_keys = {"matches_russian", "russian_lemma", "ukrainian_alternative", "confidence"}
 
@@ -214,6 +215,7 @@ def test_input_errors_invalid_max_findings():
 # ── Synthetic Tests: Dedup & Locations ───────────────────────────────────────
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_synthetic_dedup_and_locations():
     text = "Немає води тут, і немає води там, без води знову."
     res = check_text(text=text, checks=["stress"])
@@ -228,6 +230,7 @@ def test_synthetic_dedup_and_locations():
         assert text[loc[1] : loc[2]] == "води"
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_synthetic_item_id_path():
     items = [
         {"id": "exercise-1", "text": "Тут замок."},
@@ -248,6 +251,7 @@ def test_synthetic_item_id_path():
 # ── Synthetic Tests: Truncation Order & Uncut Count ──────────────────────────
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_synthetic_truncation_order_and_uncut_count():
     items = [
         {"id": "item-A", "text": "Ось замок і атлас."},
@@ -273,6 +277,7 @@ def test_synthetic_truncation_order_and_uncut_count():
 # ── Stress: Forms Case-Insensitivity & Ambiguity Resolution (Minor 4) ────────
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_stress_forms_case_insensitive_and_ambiguity_resolution():
     text = "Води немає тут."
     res_ambig = check_text(text=text, checks=["stress"])
@@ -1051,6 +1056,7 @@ def test_synthetic_shadow_curated_and_suspicion_split(requires_vesum_db):
 
 def test_synthetic_ua_gec_source_unavailable_when_db_missing(monkeypatch):
     monkeypatch.setenv("LU_SOURCES_DB", "/nonexistent/sources.db")
+    monkeypatch.setattr("scripts.wiki.sources_db._conn", None)
     monkeypatch.setattr(
         "scripts.verification.check_text._sources_path_resolved",
         lambda: Path("/nonexistent/sources.db"),

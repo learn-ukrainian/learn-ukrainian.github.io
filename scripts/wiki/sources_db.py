@@ -1873,12 +1873,24 @@ def _read_db_path() -> Path:
 # The Sources MCP server installs a subclass that also reports database errors
 # the helpers below swallow (#11115).
 _connection_factory: type[sqlite3.Connection] | None = None
+_vesum_failure_observer: Callable[[OSError | sqlite3.Error], None] | None = None
 
 
-def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
-    """Open every later ``_open_conn`` connection as ``factory`` (``None``: unobserved)."""
-    global _connection_factory
+def set_connection_factory(
+    factory: type[sqlite3.Connection] | None,
+    *,
+    observe_vesum_failure: Callable[[OSError | sqlite3.Error], None] | None = None,
+) -> None:
+    """Use ``factory`` for later Sources connections (``None``: unobserved)."""
+    global _connection_factory, _vesum_failure_observer
     _connection_factory = factory
+    _vesum_failure_observer = observe_vesum_failure
+
+
+def observe_vesum_read_failure(exc: OSError | sqlite3.Error) -> None:
+    """Report VESUM failures that the cursor observer cannot see, including open errors."""
+    if _vesum_failure_observer is not None:
+        _vesum_failure_observer(exc)
 
 
 def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:

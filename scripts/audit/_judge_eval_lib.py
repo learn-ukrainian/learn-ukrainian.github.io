@@ -282,10 +282,7 @@ def _russian_shadow_check(text: str) -> dict[str, Any]:
     for token in _text_tokens(text):
         if token in proper_nouns:
             continue
-        try:
-            result = is_russian_pattern(token)
-        except Exception:
-            continue
+        result = is_russian_pattern(token)
         if result.get("matches_russian"):
             triggered.append(
                 {

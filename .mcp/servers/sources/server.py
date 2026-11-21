@@ -1953,6 +1953,8 @@ def _review_before_handler(
 # failed. A missing table alone on the first attempt is only an optional table
 # and never starts a heal; on the retry the reopened connection must answer
 # every query, so a missing table (a schema change) fails it too.
+# A failed VESUM read is always reported, including store resolution and open
+# failures before the cursor exists and errors from queries on required tables.
 
 _STALE_CONNECTION_MARKERS = (
     "malformed",
@@ -1980,7 +1982,7 @@ class _AttemptDamage:
 
     def __init__(self, markers: tuple[str, ...]) -> None:
         self.markers = markers
-        self.errors: list[sqlite3.DatabaseError] = []
+        self.errors: list[OSError | sqlite3.Error] = []
         self.lock = threading.Lock()
 
 
@@ -1989,9 +1991,9 @@ _ATTEMPT_DAMAGE: contextvars.ContextVar[_AttemptDamage | None] = contextvars.Con
 )
 
 
-def _note_database_damage(exc: sqlite3.DatabaseError) -> None:
+def _note_database_damage(exc: OSError | sqlite3.Error, *, required: bool = False) -> None:
     attempt = _ATTEMPT_DAMAGE.get()
-    if attempt is not None and _has_marker(exc, attempt.markers):
+    if attempt is not None and (required or _has_marker(exc, attempt.markers)):
         with attempt.lock:
             attempt.errors.append(exc)
 
@@ -2100,9 +2102,12 @@ _SQLITE_CONNECTION_CACHES: dict[str, tuple[tuple[str, ...], Any]] = {
 
 
 def _install_observed_connections() -> None:
-    """Make every connection ``wiki.sources_db`` opens, in either import name, an observed one."""
+    """Share the Sources cursor observer and report failures at the VESUM read boundary."""
     for module in (sources_db_short_name, sources_db_full_name):
-        module.set_connection_factory(_ObservedConnection)
+        module.set_connection_factory(
+            _ObservedConnection,
+            observe_vesum_failure=functools.partial(_note_database_damage, required=True),
+        )
 
 
 _install_observed_connections()
@@ -2123,19 +2128,15 @@ def _has_marker(exc: BaseException, markers: tuple[str, ...]) -> bool:
     return any(marker in text for marker in markers)
 
 
-def _is_stale_connection_error(exc: BaseException) -> bool:
-    return isinstance(exc, sqlite3.DatabaseError) and _has_marker(exc, _STALE_CONNECTION_MARKERS)
-
-
 def _failing_database(exc: BaseException) -> str | None:
-    """Name the database whose store module raised ``exc``, from its traceback."""
+    """Find the logical store in the traceback before its shared connection opener."""
     owner_by_module = {module: db for db, (modules, _) in _SQLITE_CONNECTION_CACHES.items() for module in modules}
-    found: str | None = None
     tb = exc.__traceback__
     while tb is not None:
-        found = owner_by_module.get(tb.tb_frame.f_globals.get("__name__", ""), found)
+        if database := owner_by_module.get(tb.tb_frame.f_globals.get("__name__", "")):
+            return database
         tb = tb.tb_next
-    return found
+    return None
 
 
 def _connection_generations() -> dict[str, int]:
@@ -2171,7 +2172,7 @@ def _discard_cached_connections(database: str | None, seen: dict[str, int] | Non
 
 
 async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
-    """Run ``handler`` once; an error in ``markers`` a helper swallowed fails the attempt."""
+    """Run ``handler`` once and fail on any reported database read error."""
     attempt = _AttemptDamage(markers)
     token = _ATTEMPT_DAMAGE.set(attempt)
     try:
@@ -2181,7 +2182,7 @@ async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
         with one_sources_generation():
             result = await handler()
     except Exception as exc:
-        if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):
+        if attempt.errors and exc is not attempt.errors[0] and not isinstance(exc, sqlite3.DatabaseError):
             raise attempt.errors[0] from exc  # the swallowed damage is the cause of whatever broke next
         raise
     finally:
@@ -2202,10 +2203,12 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
     seen = _connection_generations()
     try:
         return await _run_attempt(handler, _FIRST_ATTEMPT_MARKERS)
-    except sqlite3.DatabaseError as first:
-        if not _is_stale_connection_error(first):
-            raise
+    except (OSError, sqlite3.Error) as first:
         database = _failing_database(first)
+        if database != "vesum.db" and not (
+            isinstance(first, sqlite3.DatabaseError) and _has_marker(first, _STALE_CONNECTION_MARKERS)
+        ):
+            raise
         reopened = _discard_cached_connections(database, seen)
         heal.update(
             database=database or _UNATTRIBUTED_DATABASE,
@@ -2215,8 +2218,11 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
         )
         try:
             result = await _run_attempt(handler, _STALE_CONNECTION_MARKERS)
-        except sqlite3.DatabaseError as second:
-            database = _failing_database(second) or database
+        except (OSError, sqlite3.Error) as second:
+            second_database = _failing_database(second)
+            if second_database != "vesum.db" and not isinstance(second, sqlite3.DatabaseError):
+                raise
+            database = second_database or database
             heal["database"] = database or _UNATTRIBUTED_DATABASE
             raise SourcesDatabaseUnavailable(
                 database or _UNATTRIBUTED_DATABASE, type(second).__name__, reopened
