@@ -4889,25 +4889,14 @@ CONTENT_TABLES = [
 
 def source_count(table: str | None = None) -> int:
     """Return entry count for a table, or total across all tables."""
+    if not table:
+        # Same tables, same missing-database 0, without a second copy of the scan.
+        return sum(list_tables().values())
     try:
         conn = _get_conn()
     except FileNotFoundError:
         return 0
-
-    if table:
-        return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-
-    existing = {
-        r[0]
-        for r in conn.execute(
-            "SELECT name FROM sqlite_master WHERE type in ('table', 'view')"
-        ).fetchall()
-    }
-    return sum(
-        conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        for t in CONTENT_TABLES
-        if t in existing
-    )
+    return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
 
 
 def list_tables() -> dict[str, int]:

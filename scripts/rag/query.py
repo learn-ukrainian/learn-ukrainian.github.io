@@ -309,13 +309,13 @@ def search_dictionary(
 def collection_stats() -> dict[str, dict[str, Any]]:
     """Return SQLite source database status."""
     try:
-        total = sources_db.source_count()
+        # One pass: source_count() repeats these COUNT(*) queries.
         tables = sources_db.list_tables()
     except FileNotFoundError:
         return {"sources_db": {"error": "data/sources.db not found"}}
     return {
         "sources_db": {
-            "points_count": total,
+            "points_count": sum(tables.values()),
             "tables": tables,
             "status": "ok",
         }
