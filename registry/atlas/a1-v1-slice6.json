@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "5949d49e40f49df8a1f1360f901d449b6f2f096219ce783910640462941e8132",
-    "companion_sha256": "3345a361e4468c1bdb76b71a9fc67d8f94c22acab6f43efaf2f6ccf29d7ab18e",
-    "consumed_sha256": "c808de273887310a153d1726b8548bce9c8c08c4b2d815ea90aad5690148fe57",
-    "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
-    "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c",
-    "slice5_companion_sha256": "bffccab5f9d85943e660641b72e2baf9782b05e5fe6c881ea2846987757e3738"
+    "combined_sha256": "1758bb6e1172cf79b44803ffa7c9e77140cd3cd1b93884d7c6eba282e1e504e8",
+    "companion_sha256": "2bd18c51860aeca963898a2259f45557a51efa0480ad8956af31371d0b346b57",
+    "consumed_sha256": "b6385ab3e982a49451f44898d894d5f514847db7c95ef07f595675015a1101f1",
+    "slice2_companion_sha256": "bf73c57185515c57b7852f462f731bb73a935b58cc8c69a25e897cb29d012e3a",
+    "slice3_companion_sha256": "e0232f66a42aa8e82953ad0830e6e8639f6438bba9af9f49f97f5344534c3d15",
+    "slice5_companion_sha256": "21a473258c11f20a4666aabc769754299e4f1b2b3d192e25bc070fc0a53a4b13"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -2566,20 +2566,6 @@
       ]
     },
     {
-      "card_id": "wc_0se7zg3rf6v7",
-      "entry_id": 64056,
-      "field": "examples",
-      "pointer": "/text",
-      "record_key": "textbook:water",
-      "scope_key": "wc_0se7zg3rf6v7:water-example",
-      "sense_id": "ws_xhjmhfprktd9",
-      "source_sense_key": "vts:вода#article/1",
-      "span": [
-        465,
-        502
-      ]
-    },
-    {
       "card_id": "wc_py0epqn7swtw",
       "entry_id": 157965,
       "field": "spelling",
@@ -3648,20 +3634,6 @@
             19
           ]
         }
-      ]
-    },
-    {
-      "card_id": "wc_9sx49mn7gh14",
-      "entry_id": 418239,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:чай",
-      "scope_key": "wc_9sx49mn7gh14:vts:чай#article/3:definition_uk",
-      "sense_id": "ws_wwqf7yd6mfsg",
-      "source_sense_key": "vts:чай#article/3",
-      "span": [
-        264,
-        331
       ]
     },
     {
@@ -9133,20 +9105,6 @@
       ]
     },
     {
-      "card_id": "wc_bgkyf53yfr86",
-      "entry_id": 296250,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:помідор",
-      "scope_key": "wc_bgkyf53yfr86:vts:помідор#article/2:definition_uk",
-      "sense_id": "ws_938zczetnamg",
-      "source_sense_key": "vts:помідор#article/2",
-      "span": [
-        126,
-        154
-      ]
-    },
-    {
       "card_id": "wc_q9n7n6hp9z1q",
       "entry_id": 374681,
       "field": "spelling",
@@ -9698,40 +9656,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_zqdf8ank7bq3",
-      "entry_id": 364016,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:смачний",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -10727,40 +10651,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_2v18q0e9cqh3",
-      "entry_id": 353491,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:свіжий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -12043,40 +11933,6 @@
       ]
     },
     {
-      "card_id": "wc_v4vzfzx2bhhc",
-      "entry_id": 73671,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:гарячий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_v4vzfzx2bhhc",
       "entry_id": 73671,
@@ -13307,40 +13163,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_0mqxj7dc1h56",
-      "entry_id": 413786,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:холодний",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -28083,40 +27905,6 @@
       ]
     },
     {
-      "card_id": "wc_16se443s25m6",
-      "entry_id": 416048,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:цей",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_16se443s25m6",
       "entry_id": 416048,
@@ -29144,40 +28932,6 @@
       "span": [
         0,
         20
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_hqegd3tewbkh",
-      "entry_id": 387967,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:той",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -30326,40 +30080,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_cq6yxvj1gjb3",
-      "entry_id": 37661,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:великий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -31642,40 +31362,6 @@
       ]
     },
     {
-      "card_id": "wc_cxjtr6481e7t",
-      "entry_id": 239967,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:новий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_cxjtr6481e7t",
       "entry_id": 239967,
@@ -32906,40 +32592,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_cyspr2xscsd8",
-      "entry_id": 420579,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:чистий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -34222,40 +33874,6 @@
       ]
     },
     {
-      "card_id": "wc_2qd2qv9v6nsg",
-      "entry_id": 419237,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:червоний",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_2qd2qv9v6nsg",
       "entry_id": 419237,
@@ -35486,40 +35104,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_fpqf4tvz9y1a",
-      "entry_id": 357936,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:синій",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -36802,40 +36386,6 @@
       ]
     },
     {
-      "card_id": "wc_basa8zkw7f82",
-      "entry_id": 25726,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:блакитний",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            9
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            9
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_basa8zkw7f82",
       "entry_id": 25726,
@@ -37805,40 +37355,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_vz8hdnedkd66",
-      "entry_id": 23833,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:білий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -39095,40 +38611,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/15/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/15/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/15/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_jrycyzsy17qk",
-      "entry_id": 421202,
-      "field": "gender",
-      "pointer": "/clean_analyses/15/tags",
-      "record_key": "vesum:чорний",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -40498,40 +39980,6 @@
       ]
     },
     {
-      "card_id": "wc_av1fw54h16cw",
-      "entry_id": 116808,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:жовтий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_av1fw54h16cw",
       "entry_id": 116808,
@@ -41501,40 +40949,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_nb47def20y51",
-      "entry_id": 371988,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:старий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -43478,6 +42892,2015 @@
         48,
         91
       ]
+    },
+    {
+      "card_id": "wc_04tmbj6y1v3y",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:50605",
+      "sense_id": "ws_g744f7jcbwym",
+      "source_sense_key": "vts:тарілка#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 381931,
+      "field": "gloss_en",
+      "scope_key": "wc_04tmbj6y1v3y:ws_g744f7jcbwym:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            68
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          68
+        ]
+      }
+    },
+    {
+      "card_id": "wc_0mqxj7dc1h56",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11615",
+      "sense_id": "ws_e5q86rjhb9dc",
+      "source_sense_key": "vts:холодний#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 413786,
+      "field": "gloss_en",
+      "scope_key": "wc_0mqxj7dc1h56:ws_e5q86rjhb9dc:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            197,
+            221
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          197,
+          221
+        ]
+      }
+    },
+    {
+      "card_id": "wc_0se7zg3rf6v7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:76105",
+      "sense_id": "ws_xhjmhfprktd9",
+      "source_sense_key": "vts:вода#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 64056,
+      "field": "gloss_en",
+      "scope_key": "wc_0se7zg3rf6v7:ws_xhjmhfprktd9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            53
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          53
+        ]
+      }
+    },
+    {
+      "card_id": "wc_16se443s25m6",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68514",
+      "sense_id": "ws_1fdmndkna7gw",
+      "source_sense_key": "vts:цей#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 416048,
+      "field": "gloss_en",
+      "scope_key": "wc_16se443s25m6:ws_1fdmndkna7gw:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            34,
+            81
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          34,
+          81
+        ]
+      }
+    },
+    {
+      "card_id": "wc_2f5c5rwqcdkq",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:75717",
+      "sense_id": "ws_qgsjzf69m9ts",
+      "source_sense_key": "vts:чекати#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 418931,
+      "field": "gloss_en",
+      "scope_key": "wc_2f5c5rwqcdkq:ws_qgsjzf69m9ts:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            253,
+            280
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          253,
+          280
+        ]
+      }
+    },
+    {
+      "card_id": "wc_2pz4fz2mf1ye",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:7797",
+      "sense_id": "ws_a97e8v62tej4",
+      "source_sense_key": "vts:хліб#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 412841,
+      "field": "gloss_en",
+      "scope_key": "wc_2pz4fz2mf1ye:ws_a97e8v62tej4:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            37
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          37
+        ]
+      }
+    },
+    {
+      "card_id": "wc_2qd2qv9v6nsg",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:55114",
+      "sense_id": "ws_07dk2fhrnr8t",
+      "source_sense_key": "vts:червоний#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 419237,
+      "field": "gloss_en",
+      "scope_key": "wc_2qd2qv9v6nsg:ws_07dk2fhrnr8t:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            544,
+            559
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          544,
+          559
+        ]
+      }
+    },
+    {
+      "card_id": "wc_2v18q0e9cqh3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:25288",
+      "sense_id": "ws_phbxbhs2ypwr",
+      "source_sense_key": "vts:свіжий#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 353491,
+      "field": "gloss_en",
+      "scope_key": "wc_2v18q0e9cqh3:ws_phbxbhs2ypwr:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            233,
+            253
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          233,
+          253
+        ]
+      }
+    },
+    {
+      "card_id": "wc_3yy18dm7bfjn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:35741",
+      "sense_id": "ws_msczwzfvcy4s",
+      "source_sense_key": "vts:сік#article/1-drink",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 358937,
+      "field": "gloss_en",
+      "scope_key": "wc_3yy18dm7bfjn:ws_msczwzfvcy4s:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            43
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          43
+        ]
+      }
+    },
+    {
+      "card_id": "wc_55zc7ex1jc2j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:36525",
+      "sense_id": "ws_wyk76q95wxr1",
+      "source_sense_key": "vts:знати#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 147610,
+      "field": "gloss_en",
+      "scope_key": "wc_55zc7ex1jc2j:ws_wyk76q95wxr1:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            108,
+            131
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          108,
+          131
+        ]
+      }
+    },
+    {
+      "card_id": "wc_66q1zkhz0n37",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:51413",
+      "sense_id": "ws_068k30t2gv3z",
+      "source_sense_key": "vts:каша#article/1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 162776,
+      "field": "gloss_en",
+      "scope_key": "wc_66q1zkhz0n37:ws_068k30t2gv3z:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            15,
+            29
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          15,
+          29
+        ]
+      }
+    },
+    {
+      "card_id": "wc_6qh6expdm912",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:8678",
+      "sense_id": "ws_2tcmrwbn1sdc",
+      "source_sense_key": "vts:купувати#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 182124,
+      "field": "gloss_en",
+      "scope_key": "wc_6qh6expdm912:ws_2tcmrwbn1sdc:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            124,
+            147
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          124,
+          147
+        ]
+      }
+    },
+    {
+      "card_id": "wc_7dbh05d8eafd",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:13135",
+      "sense_id": "ws_fgbm48a7dc4m",
+      "source_sense_key": "vts:коштувати#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 177290,
+      "field": "gloss_en",
+      "scope_key": "wc_7dbh05d8eafd:ws_fgbm48a7dc4m:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            285,
+            309
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          285,
+          309
+        ]
+      }
+    },
+    {
+      "card_id": "wc_80w8202kdfmp",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:44570",
+      "sense_id": "ws_b02bq7jmx65r",
+      "source_sense_key": "vts:зошит#article/1",
+      "span": [
+        0,
+        9
+      ],
+      "entry_id": 149755,
+      "field": "gloss_en",
+      "scope_key": "wc_80w8202kdfmp:ws_b02bq7jmx65r:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            32
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          32
+        ]
+      }
+    },
+    {
+      "card_id": "wc_8k2pbxvtp3k0",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:71139",
+      "sense_id": "ws_fmfcqf67ryy1",
+      "source_sense_key": "vts:двадцять#article/0",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 88214,
+      "field": "gloss_en",
+      "scope_key": "wc_8k2pbxvtp3k0:ws_fmfcqf67ryy1:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            26
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          26
+        ]
+      }
+    },
+    {
+      "card_id": "wc_9vpv6mqryvp2",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:3530",
+      "sense_id": "ws_r8s4qz21686k",
+      "source_sense_key": "vts:крісло#article/1",
+      "span": [
+        0,
+        9
+      ],
+      "entry_id": 179563,
+      "field": "gloss_en",
+      "scope_key": "wc_9vpv6mqryvp2:ws_r8s4qz21686k:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            34
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          34
+        ]
+      }
+    },
+    {
+      "card_id": "wc_afgr7kxhd4kb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:36207",
+      "sense_id": "ws_2kc1ce5sa4d9",
+      "source_sense_key": "vts:кілограм#article/0",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 165701,
+      "field": "gloss_en",
+      "scope_key": "wc_afgr7kxhd4kb:ws_2kc1ce5sa4d9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            16
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          16
+        ]
+      }
+    },
+    {
+      "card_id": "wc_av1fw54h16cw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:78327",
+      "sense_id": "ws_nrfwcp7p48m5",
+      "source_sense_key": "vts:жовтий#article/1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 116808,
+      "field": "gloss_en",
+      "scope_key": "wc_av1fw54h16cw:ws_nrfwcp7p48m5:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            236,
+            249
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          236,
+          249
+        ]
+      }
+    },
+    {
+      "card_id": "wc_c6s46sgs336y",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:18844",
+      "sense_id": "ws_d554k8w7czxw",
+      "source_sense_key": "vts:їсти#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 157343,
+      "field": "gloss_en",
+      "scope_key": "wc_c6s46sgs336y:ws_d554k8w7czxw:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            25,
+            52
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          25,
+          52
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cahfacc2r044",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:18222",
+      "sense_id": "ws_n6z6wmyzpa24",
+      "source_sense_key": "vts:пити#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 275992,
+      "field": "gloss_en",
+      "scope_key": "wc_cahfacc2r044:ws_n6z6wmyzpa24:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            369,
+            403
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          369,
+          403
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ccskdp7tg7fr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:24449",
+      "sense_id": "ws_f23m3dr6fwfr",
+      "source_sense_key": "vts:їжа#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 157273,
+      "field": "gloss_en",
+      "scope_key": "wc_ccskdp7tg7fr:ws_f23m3dr6fwfr:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            26
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          26
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cq6yxvj1gjb3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6360",
+      "sense_id": "ws_2zvrrv0czj60",
+      "source_sense_key": "vts:великий#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 37661,
+      "field": "gloss_en",
+      "scope_key": "wc_cq6yxvj1gjb3:ws_2zvrrv0czj60:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            7,
+            30
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          7,
+          30
+        ]
+      }
+    },
+    {
+      "card_id": "wc_crtdb1jnzqmw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:52288",
+      "sense_id": "ws_9bqqzachsz34",
+      "source_sense_key": "vts:ціна#I/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 417466,
+      "field": "gloss_en",
+      "scope_key": "wc_crtdb1jnzqmw:ws_9bqqzachsz34:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            44
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          44
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cxjtr6481e7t",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43704",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 239967,
+      "field": "gloss_en",
+      "scope_key": "wc_cxjtr6481e7t:ws_v2e8s53d12wq:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            130,
+            164
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          130,
+          164
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cyspr2xscsd8",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11059",
+      "sense_id": "ws_bf2nzwh7mtcp",
+      "source_sense_key": "vts:чистий#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 420579,
+      "field": "gloss_en",
+      "scope_key": "wc_cyspr2xscsd8:ws_bf2nzwh7mtcp:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            7,
+            29
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          7,
+          29
+        ]
+      }
+    },
+    {
+      "card_id": "wc_d0ks22prnwg0",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:57128",
+      "sense_id": "ws_eqayc6bmek1j",
+      "source_sense_key": "vts:кімната#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 165902,
+      "field": "gloss_en",
+      "scope_key": "wc_d0ks22prnwg0:ws_eqayc6bmek1j:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            36
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          36
+        ]
+      }
+    },
+    {
+      "card_id": "wc_f1k1r2j836hx",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:41402",
+      "sense_id": "ws_bpw0ph14cq93",
+      "source_sense_key": "vts:молоко#article/2",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 206584,
+      "field": "gloss_en",
+      "scope_key": "wc_f1k1r2j836hx:ws_bpw0ph14cq93:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            18
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          18
+        ]
+      }
+    },
+    {
+      "card_id": "wc_fgmd4vag1zry",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10311",
+      "sense_id": "ws_5zkdvca1t3bj",
+      "source_sense_key": "vts:сир#article/2",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 358379,
+      "field": "gloss_en",
+      "scope_key": "wc_fgmd4vag1zry:ws_5zkdvca1t3bj:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            15
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          15
+        ]
+      }
+    },
+    {
+      "card_id": "wc_fpqf4tvz9y1a",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6962",
+      "sense_id": "ws_zc6h97fz7v5v",
+      "source_sense_key": "vts:синій#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 357936,
+      "field": "gloss_en",
+      "scope_key": "wc_fpqf4tvz9y1a:ws_zc6h97fz7v5v:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            658,
+            690
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          658,
+          690
+        ]
+      }
+    },
+    {
+      "card_id": "wc_hqegd3tewbkh",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68175",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 387967,
+      "field": "gloss_en",
+      "scope_key": "wc_hqegd3tewbkh:ws_v0r72qwhbz8r:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            85,
+            156
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          85,
+          156
+        ]
+      }
+    },
+    {
+      "card_id": "wc_jqew4381q230",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:20154",
+      "sense_id": "ws_jq8zh4vv8xw9",
+      "source_sense_key": "vts:інженер#article/0",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 154301,
+      "field": "gloss_en",
+      "scope_key": "wc_jqew4381q230:ws_jq8zh4vv8xw9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            32
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          32
+        ]
+      }
+    },
+    {
+      "card_id": "wc_jrycyzsy17qk",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6637",
+      "sense_id": "ws_rqprkzr4qt41",
+      "source_sense_key": "vts:чорний#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 421202,
+      "field": "gloss_en",
+      "scope_key": "wc_jrycyzsy17qk:ws_rqprkzr4qt41:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            363,
+            398
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          363,
+          398
+        ]
+      }
+    },
+    {
+      "card_id": "wc_m1c9b97e30xw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:7308",
+      "sense_id": "ws_tt8qhs72c8qg",
+      "source_sense_key": "vts:книга#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 168631,
+      "field": "gloss_en",
+      "scope_key": "wc_m1c9b97e30xw:ws_tt8qhs72c8qg:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            25
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          25
+        ]
+      }
+    },
+    {
+      "card_id": "wc_nb47def20y51",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:45496",
+      "sense_id": "ws_tr93m3gfd3qg",
+      "source_sense_key": "vts:старий#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 371988,
+      "field": "gloss_en",
+      "scope_key": "wc_nb47def20y51:ws_tr93m3gfd3qg:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            240,
+            275
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          240,
+          275
+        ]
+      }
+    },
+    {
+      "card_id": "wc_nb47def20y51",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:45496",
+      "sense_id": "ws_3tsxwrtrg1c1",
+      "source_sense_key": "vts:старий#article/3",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 371988,
+      "field": "gloss_en",
+      "scope_key": "wc_nb47def20y51:ws_3tsxwrtrg1c1:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            506,
+            539
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          506,
+          539
+        ]
+      }
+    },
+    {
+      "card_id": "wc_p41ag4cb6be8",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:3099",
+      "sense_id": "ws_57v0kdgk52fv",
+      "source_sense_key": "vts:яблуко#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 436589,
+      "field": "gloss_en",
+      "scope_key": "wc_p41ag4cb6be8:ws_57v0kdgk52fv:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            18
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          18
+        ]
+      }
+    },
+    {
+      "card_id": "wc_pqaqagyk9vh7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:48402",
+      "sense_id": "ws_4hxydfgef3j8",
+      "source_sense_key": "vts:платити#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 284187,
+      "field": "gloss_en",
+      "scope_key": "wc_pqaqagyk9vh7:ws_4hxydfgef3j8:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            746,
+            767
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          746,
+          767
+        ]
+      }
+    },
+    {
+      "card_id": "wc_py0epqn7swtw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11533",
+      "sense_id": "ws_sanbarh801y0",
+      "source_sense_key": "vts:кава#I/3",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 157965,
+      "field": "gloss_en",
+      "scope_key": "wc_py0epqn7swtw:ws_sanbarh801y0:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            15
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          15
+        ]
+      }
+    },
+    {
+      "card_id": "wc_q5nda40qxatn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:26980",
+      "sense_id": "ws_eb9qmfbqnm52",
+      "source_sense_key": "vts:склянка#I/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 361099,
+      "field": "gloss_en",
+      "scope_key": "wc_q5nda40qxatn:ws_eb9qmfbqnm52:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            95,
+            105
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          95,
+          105
+        ]
+      }
+    },
+    {
+      "card_id": "wc_q60sbpjxcy9n",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:57866",
+      "sense_id": "ws_9ann5n924zmc",
+      "source_sense_key": "vts:салат#I/3",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 349411,
+      "field": "gloss_en",
+      "scope_key": "wc_q60sbpjxcy9n:ws_9ann5n924zmc:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            50
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          50
+        ]
+      }
+    },
+    {
+      "card_id": "wc_q9n7n6hp9z1q",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:16899",
+      "sense_id": "ws_ntxjryfh6sg6",
+      "source_sense_key": "vts:страва#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 374681,
+      "field": "gloss_en",
+      "scope_key": "wc_q9n7n6hp9z1q:ws_ntxjryfh6sg6:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            82,
+            141
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          82,
+          141
+        ]
+      }
+    },
+    {
+      "card_id": "wc_r721w0bts5q3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68617",
+      "sense_id": "ws_rh2p0cg44sh4",
+      "source_sense_key": "vts:три#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 390896,
+      "field": "gloss_en",
+      "scope_key": "wc_r721w0bts5q3:ws_rh2p0cg44sh4:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            61
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          61
+        ]
+      }
+    },
+    {
+      "card_id": "wc_rcxyyvh7qtww",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:4835",
+      "sense_id": "ws_m3cbpb9xp3ba",
+      "source_sense_key": "vts:сумка#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 377643,
+      "field": "gloss_en",
+      "scope_key": "wc_rcxyyvh7qtww:ws_m3cbpb9xp3ba:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            32
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          32
+        ]
+      }
+    },
+    {
+      "card_id": "wc_v3nzetykq0v7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43383",
+      "sense_id": "ws_k9vs2m5m7f34",
+      "source_sense_key": "vts:намисто#article/0",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 220208,
+      "field": "gloss_en",
+      "scope_key": "wc_v3nzetykq0v7:ws_k9vs2m5m7f34:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            26
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          26
+        ]
+      }
+    },
+    {
+      "card_id": "wc_v4vzfzx2bhhc",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:31200",
+      "sense_id": "ws_5mavrnxp83k2",
+      "source_sense_key": "vts:гарячий#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 73671,
+      "field": "gloss_en",
+      "scope_key": "wc_v4vzfzx2bhhc:ws_5mavrnxp83k2:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            58,
+            102
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          58,
+          102
+        ]
+      }
+    },
+    {
+      "card_id": "wc_vz8hdnedkd66",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:77051",
+      "sense_id": "ws_28k425w5yks4",
+      "source_sense_key": "vts:білий#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 23833,
+      "field": "gloss_en",
+      "scope_key": "wc_vz8hdnedkd66:ws_28k425w5yks4:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            781,
+            793
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          781,
+          793
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ypzn1h33by3s",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:59297",
+      "sense_id": "ws_ft7y8t0t9qfx",
+      "source_sense_key": "vts:бачити#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 18381,
+      "field": "gloss_en",
+      "scope_key": "wc_ypzn1h33by3s:ws_ft7y8t0t9qfx:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            189,
+            231
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          189,
+          231
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ypzn1h33by3s",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:59297",
+      "sense_id": "ws_3f4zrg016vrx",
+      "source_sense_key": "vts:бачити#article/2",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 18381,
+      "field": "gloss_en",
+      "scope_key": "wc_ypzn1h33by3s:ws_3f4zrg016vrx:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            169,
+            188
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          169,
+          188
+        ]
+      }
+    },
+    {
+      "card_id": "wc_zqdf8ank7bq3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:67341",
+      "sense_id": "ws_75y1vpmcs07g",
+      "source_sense_key": "vts:смачний#article/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 364016,
+      "field": "gloss_en",
+      "scope_key": "wc_zqdf8ank7bq3:ws_75y1vpmcs07g:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            10,
+            43
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          10,
+          43
+        ]
+      }
+    },
+    {
+      "card_id": "wc_vz8hdnedkd66",
+      "entry_id": 23833,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0093",
+      "pointer": "/text",
+      "span": [
+        385,
+        408
+      ],
+      "sense_id": "ws_28k425w5yks4",
+      "source_sense_key": "vts:білий#article/1",
+      "scope_key": "wc_vz8hdnedkd66/ws_28k425w5yks4/textbook-example"
+    },
+    {
+      "card_id": "wc_svje3e69sc54",
+      "entry_id": 35012,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0057",
+      "pointer": "/text",
+      "span": [
+        141,
+        168
+      ],
+      "sense_id": "ws_vgmcce7hewcd",
+      "source_sense_key": "vts:вареник#article/0",
+      "scope_key": "wc_svje3e69sc54/ws_vgmcce7hewcd/textbook-example"
+    },
+    {
+      "card_id": "wc_cq6yxvj1gjb3",
+      "entry_id": 37661,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ],
+      "sense_id": "ws_2zvrrv0czj60",
+      "source_sense_key": "vts:великий#article/1",
+      "scope_key": "wc_cq6yxvj1gjb3/ws_2zvrrv0czj60/textbook-example"
+    },
+    {
+      "card_id": "wc_8k2pbxvtp3k0",
+      "entry_id": 88214,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0094",
+      "pointer": "/text",
+      "span": [
+        766,
+        792
+      ],
+      "sense_id": "ws_fmfcqf67ryy1",
+      "source_sense_key": "vts:двадцять#article/0",
+      "scope_key": "wc_8k2pbxvtp3k0/ws_fmfcqf67ryy1/textbook-example"
+    },
+    {
+      "card_id": "wc_av1fw54h16cw",
+      "entry_id": 116808,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0094",
+      "pointer": "/text",
+      "span": [
+        856,
+        888
+      ],
+      "sense_id": "ws_nrfwcp7p48m5",
+      "source_sense_key": "vts:жовтий#article/1",
+      "scope_key": "wc_av1fw54h16cw/ws_nrfwcp7p48m5/textbook-example"
+    },
+    {
+      "card_id": "wc_55zc7ex1jc2j",
+      "entry_id": 147610,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0099",
+      "pointer": "/text",
+      "span": [
+        163,
+        184
+      ],
+      "sense_id": "ws_wyk76q95wxr1",
+      "source_sense_key": "vts:знати#article/1",
+      "scope_key": "wc_55zc7ex1jc2j/ws_wyk76q95wxr1/textbook-example"
+    },
+    {
+      "card_id": "wc_80w8202kdfmp",
+      "entry_id": 149755,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        899,
+        930
+      ],
+      "sense_id": "ws_b02bq7jmx65r",
+      "source_sense_key": "vts:зошит#article/1",
+      "scope_key": "wc_80w8202kdfmp/ws_b02bq7jmx65r/textbook-example"
+    },
+    {
+      "card_id": "wc_66q1zkhz0n37",
+      "entry_id": 162776,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0041",
+      "pointer": "/text",
+      "span": [
+        316,
+        339
+      ],
+      "sense_id": "ws_068k30t2gv3z",
+      "source_sense_key": "vts:каша#article/1",
+      "scope_key": "wc_66q1zkhz0n37/ws_068k30t2gv3z/textbook-example"
+    },
+    {
+      "card_id": "wc_m1c9b97e30xw",
+      "entry_id": 168631,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005",
+      "pointer": "/text",
+      "span": [
+        377,
+        394
+      ],
+      "sense_id": "ws_tt8qhs72c8qg",
+      "source_sense_key": "vts:книга#article/1",
+      "scope_key": "wc_m1c9b97e30xw/ws_tt8qhs72c8qg/textbook-example"
+    },
+    {
+      "card_id": "wc_7dbh05d8eafd",
+      "entry_id": 177290,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0134",
+      "pointer": "/text",
+      "span": [
+        718,
+        745
+      ],
+      "sense_id": "ws_fgbm48a7dc4m",
+      "source_sense_key": "vts:коштувати#article/1",
+      "scope_key": "wc_7dbh05d8eafd/ws_fgbm48a7dc4m/textbook-example"
+    },
+    {
+      "card_id": "wc_afgr7kxhd4kb",
+      "entry_id": 165701,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0142",
+      "pointer": "/text",
+      "span": [
+        834,
+        859
+      ],
+      "sense_id": "ws_2kc1ce5sa4d9",
+      "source_sense_key": "vts:кілограм#article/0",
+      "scope_key": "wc_afgr7kxhd4kb/ws_2kc1ce5sa4d9/textbook-example"
+    },
+    {
+      "card_id": "wc_d0ks22prnwg0",
+      "entry_id": 165902,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        16,
+        38
+      ],
+      "sense_id": "ws_eqayc6bmek1j",
+      "source_sense_key": "vts:кімната#article/1",
+      "scope_key": "wc_d0ks22prnwg0/ws_eqayc6bmek1j/textbook-example"
+    },
+    {
+      "card_id": "wc_f1k1r2j836hx",
+      "entry_id": 206584,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ],
+      "sense_id": "ws_bpw0ph14cq93",
+      "source_sense_key": "vts:молоко#article/2",
+      "scope_key": "wc_f1k1r2j836hx/ws_bpw0ph14cq93/textbook-example"
+    },
+    {
+      "card_id": "wc_cahfacc2r044",
+      "entry_id": 275992,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060",
+      "pointer": "/text",
+      "span": [
+        210,
+        233
+      ],
+      "sense_id": "ws_n6z6wmyzpa24",
+      "source_sense_key": "vts:пити#article/1",
+      "scope_key": "wc_cahfacc2r044/ws_n6z6wmyzpa24/textbook-example"
+    },
+    {
+      "card_id": "wc_fpqf4tvz9y1a",
+      "entry_id": 357936,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0023",
+      "pointer": "/text",
+      "span": [
+        775,
+        793
+      ],
+      "sense_id": "ws_zc6h97fz7v5v",
+      "source_sense_key": "vts:синій#article/1",
+      "scope_key": "wc_fpqf4tvz9y1a/ws_zc6h97fz7v5v/textbook-example"
+    },
+    {
+      "card_id": "wc_zqdf8ank7bq3",
+      "entry_id": 364016,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037",
+      "pointer": "/text",
+      "span": [
+        831,
+        852
+      ],
+      "sense_id": "ws_75y1vpmcs07g",
+      "source_sense_key": "vts:смачний#article/1",
+      "scope_key": "wc_zqdf8ank7bq3/ws_75y1vpmcs07g/textbook-example"
+    },
+    {
+      "card_id": "wc_nb47def20y51",
+      "entry_id": 371988,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0080",
+      "pointer": "/text",
+      "span": [
+        248,
+        275
+      ],
+      "sense_id": "ws_tr93m3gfd3qg",
+      "source_sense_key": "vts:старий#article/1",
+      "scope_key": "wc_nb47def20y51/ws_tr93m3gfd3qg/textbook-example"
+    },
+    {
+      "card_id": "wc_q9n7n6hp9z1q",
+      "entry_id": 374681,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0089",
+      "pointer": "/text",
+      "span": [
+        637,
+        658
+      ],
+      "sense_id": "ws_ntxjryfh6sg6",
+      "source_sense_key": "vts:страва#article/1",
+      "scope_key": "wc_q9n7n6hp9z1q/ws_ntxjryfh6sg6/textbook-example"
+    },
+    {
+      "card_id": "wc_r721w0bts5q3",
+      "entry_id": 390896,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0039",
+      "pointer": "/text",
+      "span": [
+        412,
+        437
+      ],
+      "sense_id": "ws_rh2p0cg44sh4",
+      "source_sense_key": "vts:три#article/1",
+      "scope_key": "wc_r721w0bts5q3/ws_rh2p0cg44sh4/textbook-example"
+    },
+    {
+      "card_id": "wc_2pz4fz2mf1ye",
+      "entry_id": 412841,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037",
+      "pointer": "/text",
+      "span": [
+        160,
+        180
+      ],
+      "sense_id": "ws_a97e8v62tej4",
+      "source_sense_key": "vts:хліб#article/1",
+      "scope_key": "wc_2pz4fz2mf1ye/ws_a97e8v62tej4/textbook-example"
+    },
+    {
+      "card_id": "wc_0mqxj7dc1h56",
+      "entry_id": 413786,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0135",
+      "pointer": "/text",
+      "span": [
+        1177,
+        1204
+      ],
+      "sense_id": "ws_e5q86rjhb9dc",
+      "source_sense_key": "vts:холодний#article/1",
+      "scope_key": "wc_0mqxj7dc1h56/ws_e5q86rjhb9dc/textbook-example"
+    },
+    {
+      "card_id": "wc_16se443s25m6",
+      "entry_id": 416048,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005",
+      "pointer": "/text",
+      "span": [
+        377,
+        394
+      ],
+      "sense_id": "ws_1fdmndkna7gw",
+      "source_sense_key": "vts:цей#article/1",
+      "scope_key": "wc_16se443s25m6/ws_1fdmndkna7gw/textbook-example"
+    },
+    {
+      "card_id": "wc_2f5c5rwqcdkq",
+      "entry_id": 418931,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0135",
+      "pointer": "/text",
+      "span": [
+        328,
+        351
+      ],
+      "sense_id": "ws_qgsjzf69m9ts",
+      "source_sense_key": "vts:чекати#article/1",
+      "scope_key": "wc_2f5c5rwqcdkq/ws_qgsjzf69m9ts/textbook-example"
+    },
+    {
+      "card_id": "wc_2qd2qv9v6nsg",
+      "entry_id": 419237,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021",
+      "pointer": "/text",
+      "span": [
+        337,
+        367
+      ],
+      "sense_id": "ws_07dk2fhrnr8t",
+      "source_sense_key": "vts:червоний#article/1",
+      "scope_key": "wc_2qd2qv9v6nsg/ws_07dk2fhrnr8t/textbook-example"
+    },
+    {
+      "card_id": "wc_cyspr2xscsd8",
+      "entry_id": 420579,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0042",
+      "pointer": "/text",
+      "span": [
+        368,
+        418
+      ],
+      "sense_id": "ws_bf2nzwh7mtcp",
+      "source_sense_key": "vts:чистий#article/1",
+      "scope_key": "wc_cyspr2xscsd8/ws_bf2nzwh7mtcp/textbook-example"
+    },
+    {
+      "card_id": "wc_jrycyzsy17qk",
+      "entry_id": 421202,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0088",
+      "pointer": "/text",
+      "span": [
+        54,
+        86
+      ],
+      "sense_id": "ws_rqprkzr4qt41",
+      "source_sense_key": "vts:чорний#article/1",
+      "scope_key": "wc_jrycyzsy17qk/ws_rqprkzr4qt41/textbook-example"
+    },
+    {
+      "card_id": "wc_p41ag4cb6be8",
+      "entry_id": 436589,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021",
+      "pointer": "/text",
+      "span": [
+        337,
+        367
+      ],
+      "sense_id": "ws_57v0kdgk52fv",
+      "source_sense_key": "vts:яблуко#article/1",
+      "scope_key": "wc_p41ag4cb6be8/ws_57v0kdgk52fv/textbook-example"
+    },
+    {
+      "card_id": "wc_ccskdp7tg7fr",
+      "entry_id": 157273,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0113",
+      "pointer": "/text",
+      "span": [
+        2,
+        18
+      ],
+      "sense_id": "ws_f23m3dr6fwfr",
+      "source_sense_key": "vts:їжа#article/1",
+      "scope_key": "wc_ccskdp7tg7fr/ws_f23m3dr6fwfr/textbook-example"
+    },
+    {
+      "card_id": "wc_c6s46sgs336y",
+      "entry_id": 157343,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0078",
+      "pointer": "/text",
+      "span": [
+        726,
+        742
+      ],
+      "sense_id": "ws_d554k8w7czxw",
+      "source_sense_key": "vts:їсти#article/1",
+      "scope_key": "wc_c6s46sgs336y/ws_d554k8w7czxw/textbook-example"
+    },
+    {
+      "card_id": "wc_rcxyyvh7qtww",
+      "entry_id": 377643,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0088",
+      "pointer": "/text",
+      "span": [
+        456,
+        489
+      ],
+      "sense_id": "ws_m3cbpb9xp3ba",
+      "source_sense_key": "vts:сумка#article/1",
+      "scope_key": "wc_rcxyyvh7qtww/ws_m3cbpb9xp3ba/textbook-example"
+    },
+    {
+      "card_id": "wc_ypzn1h33by3s",
+      "entry_id": 18381,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0062",
+      "pointer": "/text",
+      "span": [
+        0,
+        22
+      ],
+      "sense_id": "ws_3f4zrg016vrx",
+      "source_sense_key": "vts:бачити#article/2",
+      "scope_key": "wc_ypzn1h33by3s/ws_3f4zrg016vrx/textbook-example"
+    },
+    {
+      "card_id": "wc_basa8zkw7f82",
+      "entry_id": 25726,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
+      "pointer": "/text",
+      "span": [
+        1056,
+        1096
+      ],
+      "sense_id": "ws_xtx2ak3gj0ze",
+      "source_sense_key": "vts:блакитний#article/0",
+      "scope_key": "wc_basa8zkw7f82/ws_xtx2ak3gj0ze/textbook-example"
+    },
+    {
+      "card_id": "wc_9sx49mn7gh14",
+      "sense_id": "ws_wwqf7yd6mfsg",
+      "source_sense_key": "vts:чай#article/3",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0046",
+      "pointer": "/text",
+      "span": [
+        509,
+        572
+      ],
+      "entry_id": 418239,
+      "field": "examples",
+      "scope_key": "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/textbook-example-wave2"
+    },
+    {
+      "card_id": "wc_cxjtr6481e7t",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0054",
+      "pointer": "/text",
+      "span": [
+        659,
+        678
+      ],
+      "entry_id": 239967,
+      "field": "examples",
+      "scope_key": "wc_cxjtr6481e7t/ws_v2e8s53d12wq/textbook-example-wave2"
+    },
+    {
+      "card_id": "wc_hqegd3tewbkh",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0084",
+      "pointer": "/text",
+      "span": [
+        160,
+        181
+      ],
+      "entry_id": 387967,
+      "field": "examples",
+      "scope_key": "wc_hqegd3tewbkh/ws_v0r72qwhbz8r/textbook-example-wave2"
     }
   ],
   "denominator": {
@@ -43488,7 +44911,94 @@
     "selected_rows": 258,
     "targets": 60
   },
-  "example_approvals": {},
+  "example_approvals": {
+    "wr_308ab64522338b7309729bdcd0c5dd8107f994ca5e4afa6398d3a209b7fc8c14": {"entry_id":23833,"quotation":"Усе засипав білий сніг.","receipt_sha256":"882d2cde9bfe25c2d78808fdc5a1a5bf79de400367e6c05c97e9db65de52c6b5","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_28k425w5yks4","source_sense_key":"vts:білий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[385,408],"verdict":"APPROVE"},
+    "wr_4b491783414c19a9151e6f0bcf72638267ec1ab0e3c510c771c95c9cb908cdfb": {"entry_id":35012,"quotation":"Ти знаєш, що таке вареники?","receipt_sha256":"583e97c80cb4d012744a3ffb2affa2d488ff98b820521c4a1da5cabe7a13823e","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_vgmcce7hewcd","source_sense_key":"vts:вареник#article/0","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[141,168],"verdict":"APPROVE"},
+    "wr_837c3977ee992935de3f116fe0f67dffd37a76d701fd84e5281a867b2a6e4553": {"entry_id":37661,"quotation":"Тут є великий музей.","receipt_sha256":"88069771a6886641af91c93ac4f7aea9b7ac1af870fa81bb1ee553c24aff2150","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_2zvrrv0czj60","source_sense_key":"vts:великий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[1152,1172],"verdict":"APPROVE"},
+    "wr_bf56cea0ef5460a0f89a990dbee4dbaa415a616a6b71f347dda69b6fdad7fbf2": {"entry_id":88214,"quotation":"Двадцять учнів ще прийшло.","receipt_sha256":"eb904171d0942ad167fed4312438a7070c66171cf77330c41c12586468abaf7c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_fmfcqf67ryy1","source_sense_key":"vts:двадцять#article/0","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[766,792],"verdict":"APPROVE"},
+    "wr_4976f2e88a7ec7dcdb24ae03524fd6c8b16eb042caf48e636eba4961e65591d9": {"entry_id":116808,"quotation":"Спершу вони жовті, а потім білі.","receipt_sha256":"c4c1590267abecbab880fa45fd66944b230200383e1322a87ab1ded4c42ff077","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_nrfwcp7p48m5","source_sense_key":"vts:жовтий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[856,888],"verdict":"APPROVE"},
+    "wr_4ee81b5a00cfe090352f471148859598bc983d53b9f0f2b8033c1320b7f84a70": {"entry_id":147610,"quotation":"Я знаю, де твоя мама!","receipt_sha256":"83d1e0f9213c8a304cef33f49c33f4e0710bd0ed21aa804ea00d70c94628d5e8","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_wyk76q95wxr1","source_sense_key":"vts:знати#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[163,184],"verdict":"APPROVE"},
+    "wr_718d3275915286b50dce709949398ab6583b420e86b7f0814ba374d91f321dbf": {"entry_id":149755,"quotation":"Ти пишеш слова ручкою\nв зошиті.","receipt_sha256":"8c57c8c11a278c11336d338799ddf92415519fcef0506af08ca2eba594f79ea9","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_b02bq7jmx65r","source_sense_key":"vts:зошит#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[899,930],"verdict":"APPROVE"},
+    "wr_21aab8f15535a81fbb7d50efaeb2513d504094be0201c4b57e93b79369c1acdd": {"entry_id":162776,"quotation":"Я не люблю манної каші.","receipt_sha256":"e608f81a8f53af74e0e3df268ed003f26485e3342c226235657cc69136cf3dce","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_068k30t2gv3z","source_sense_key":"vts:каша#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[316,339],"verdict":"APPROVE"},
+    "wr_9a4938762074f11b76f4fbac755c749c7cf6f2fecf8c6540e73ccb7a1e88925d": {"entry_id":168631,"quotation":"Ця книга для вас.","receipt_sha256":"1557c63990e9d38eb585e6bd054e5a2dea61355f9dd1349cd8a83358590aa854","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_tt8qhs72c8qg","source_sense_key":"vts:книга#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[377,394],"verdict":"APPROVE"},
+    "wr_ed775cd55c4fa63f36e2d5ef653b1e9b908942153c02e9ac74a11b6a69e6ed24": {"entry_id":177290,"quotation":"Скільки коштує твій кролик?","receipt_sha256":"9a520d516dc0638c725f097b75d7bc4714a6826d563781590314d53848b37754","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_fgbm48a7dc4m","source_sense_key":"vts:коштувати#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[718,745],"verdict":"APPROVE"},
+    "wr_a06c93899f66460e6807407270ef7f86f48a834d6d341a7d860528d5e3d0ffb9": {"entry_id":165701,"quotation":"Він важив понад кілограм.","receipt_sha256":"efb9eca00c4b55a915668b82fdf197cdb9b32bcf7324215ce1c4193733d75635","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_2kc1ce5sa4d9","source_sense_key":"vts:кілограм#article/0","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[834,859],"verdict":"APPROVE"},
+    "wr_d3432ba05e4a11bac9342556fda4b2fc60eb232f350367a7a3cbd4ec31338c13": {"entry_id":165902,"quotation":"У кімнату зайшла мама.","receipt_sha256":"7c9f2efd7a51d67208bacebe31fd87d4051cd0bc9580bc300a36de09e549c3ef","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_eqayc6bmek1j","source_sense_key":"vts:кімната#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[16,38],"verdict":"APPROVE"},
+    "wr_4fc92f27215ac073a4c0a3c73f84e43966785cf9ac6a0c68110fb2351c3673f1": {"entry_id":206584,"quotation":"Я люблю молоко.","receipt_sha256":"f07f274412f1d3d8c9a94b214e1afc85325245b5a557ba0c2fb4031fe22d730d","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_bpw0ph14cq93","source_sense_key":"vts:молоко#article/2","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[284,299],"verdict":"APPROVE"},
+    "wr_e23e1703bf533d057eb835e36f43cc0968c98c79935d55c1f1fead0b8b85de0e": {"entry_id":275992,"quotation":"Дідусь п’є липовий чай.","receipt_sha256":"dbec735f131640adc4262b585c53c53c1837fa2adca1a2b1fd602b9ef9207504","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_n6z6wmyzpa24","source_sense_key":"vts:пити#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[210,233],"verdict":"APPROVE"},
+    "wr_929c40ead05222401134d3e82a28135d0cf3f5187e84a9ac6f25b95c8fb4815f": {"entry_id":357936,"quotation":"Я малюю синє\nнебо.","receipt_sha256":"8e3d67707e11dbb8857a9f01680d4d6a20c2a7bd99b539908d115a7a1e3a1b04","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_zc6h97fz7v5v","source_sense_key":"vts:синій#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[775,793],"verdict":"APPROVE"},
+    "wr_d884d5a51375ae089ffc6591509f404e3c9e9a81eedf53a5389aeac0ec5cbe3c": {"entry_id":364016,"quotation":"Ото був смачний обід!","receipt_sha256":"f22ed9b222d206ad61cfe1c57e3ba9c19c63004f08aa76e9a0688dd29b25cee9","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_75y1vpmcs07g","source_sense_key":"vts:смачний#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[831,852],"verdict":"APPROVE"},
+    "wr_c41c80baecd974c9332ccca0909e502155135f0df21a76cad51d5ed7b6612add": {"entry_id":371988,"quotation":"На подвір’ї ріс старий дуб.","receipt_sha256":"38ded13dab1f06bdd462000b57926ea047b604a5a308160d2459f62cdf042931","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_tr93m3gfd3qg","source_sense_key":"vts:старий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[248,275],"verdict":"APPROVE"},
+    "wr_22808e0f5d1b0192ac5f7b7de0b16446967769c8f5d471a9e46a92f75027b950": {"entry_id":374681,"quotation":"Які страви ти обереш?","receipt_sha256":"f9cb836c8506e8961b19a47cceca10f6f2abadb67060b46df9e323ef2dafd8ab","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_ntxjryfh6sg6","source_sense_key":"vts:страва#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[637,658],"verdict":"APPROVE"},
+    "wr_c54c9de43845121a7fe67ec4cde16fd9c28677941cc58bfa33672b9284bdabcc": {"entry_id":390896,"quotation":"Зате дам тобі три поради.","receipt_sha256":"fa3250a8ba7b6ddc0fefa707bb5c3720976d83f2722174774a696f8513f939e9","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rh2p0cg44sh4","source_sense_key":"vts:три#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[412,437],"verdict":"APPROVE"},
+    "wr_b7d61f5e009cb899dd050421874ad193ff65c7958b9f068f9ffe6ee8aef19eb3": {"entry_id":412841,"quotation":"А хто ж їстиме хліб?","receipt_sha256":"de0235237cb9910e1bf631bd8f7de8e19c489cbf234648c06125dc7d79c93983","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_a97e8v62tej4","source_sense_key":"vts:хліб#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[160,180],"verdict":"APPROVE"},
+    "wr_e9469b9618cae64aa48be04119850aa8de6d21565cd9a095e5d29e58f60b1b39": {"entry_id":413786,"quotation":"А зими тут довгі й холодні.","receipt_sha256":"43a258c5d2e54aa3d59dea1944c658cadff926fe0b2738a73fde1b0e237c0d53","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_e5q86rjhb9dc","source_sense_key":"vts:холодний#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[1177,1204],"verdict":"APPROVE"},
+    "wr_46bd050c5892f4b2df6bd046247427fe1e3134c5d7bf58b41e831323b6ab61d8": {"entry_id":416048,"quotation":"Ця книга для вас.","receipt_sha256":"e7932130053bba2d44fdddb3e5afc3f186c40c700dab217a59f32a1d19fc2e77","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_1fdmndkna7gw","source_sense_key":"vts:цей#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[377,394],"verdict":"APPROVE"},
+    "wr_ec98dcbafacd41e580ec9d15d34fb9badd129dadc411864d90f7d8554a041984": {"entry_id":418931,"quotation":"Ми чекали досить довго.","receipt_sha256":"3356f1d0a4fe037aba23912efa93145c1e9631a8b6c38f5fce21f61d2ab95ce8","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_qgsjzf69m9ts","source_sense_key":"vts:чекати#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[328,351],"verdict":"APPROVE"},
+    "wr_c93ba437a6eb9d1662ca2b4aff8bfcb3651605537fc1247d97589a9cac8a21a9": {"entry_id":419237,"quotation":"Карина чистить червоне яблуко.","receipt_sha256":"795b08914743ccd881fa10ad8af08ace624eb005dfb5fe22ac8824eacae897db","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_07dk2fhrnr8t","source_sense_key":"vts:червоний#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[337,367],"verdict":"APPROVE"},
+    "wr_1092d1ef8687266abb15e6b1658cbbb6460617fa4a7ae398c61e364620f5a471": {"entry_id":420579,"quotation":"З того часу всі ліси, річки й озера\nстали чистими.","receipt_sha256":"bf6747c5a4a5b1276ed10fc6b6d177c51fdde1edc5d18a889a22107757a4d0ee","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_bf2nzwh7mtcp","source_sense_key":"vts:чистий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[368,418],"verdict":"APPROVE"},
+    "wr_4e3db97c0be3c16a1c18f12d05903ee15d67cf00ab05fd45ba1ae649cb3bf646": {"entry_id":421202,"quotation":"Уранці тато узув чорні черевики.","receipt_sha256":"91e3a5df16b0c8a2db3efd09353677b623908e0a4f338ef968936665a5a7c63c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rqprkzr4qt41","source_sense_key":"vts:чорний#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[54,86],"verdict":"APPROVE"},
+    "wr_ab36c58561695a9d0a9b199da9f5103ce3ae82616ec7ce268334dc6ee715c309": {"entry_id":436589,"quotation":"Карина чистить червоне яблуко.","receipt_sha256":"b8b3f04553ea0d6489d84eda5befa2a816aeb05db671d1df50dc46f0eec6435a","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_57v0kdgk52fv","source_sense_key":"vts:яблуко#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[337,367],"verdict":"APPROVE"},
+    "wr_00359393018ee56416dd96b0997b0b3b8a2c859b8c118d712cc73dc455c9cf1c": {"entry_id":157273,"quotation":"Він їв нашу їжу.","receipt_sha256":"69e0d3e2e6830a6327120ccff198753bbf1e9b97a0c0e6d4851c35a5ad3ede4c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_f23m3dr6fwfr","source_sense_key":"vts:їжа#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[2,18],"verdict":"APPROVE"},
+    "wr_7fec3f85214a8010b44ed2591a57f58e69d0189fb03809acd895a82ad3aa10cf": {"entry_id":157343,"quotation":"Собака їв м’ясо.","receipt_sha256":"380ba67dd4fc386a788305834eb57c61897177d256189f18af193da399f101ca","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_d554k8w7czxw","source_sense_key":"vts:їсти#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[726,742],"verdict":"APPROVE"},
+    "wr_34c7237594d155c6034395163995fea3770cb480d7deda9ac3240ca7e93fffb3": {"entry_id":377643,"quotation":"Треба було брати\nсумку з тканини.","receipt_sha256":"610c9fd54879cbed67c83280cb81ec0e476bbf62d41e1ac530c9cc3520bbc721","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_m3cbpb9xp3ba","source_sense_key":"vts:сумка#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[456,489],"verdict":"APPROVE"},
+    "wr_b0c18f6c1ee8a95761a55e9a3a669b8faecae9b89cab98b4ae807dd3382ac912": {"entry_id":18381,"quotation":"Які ти бачиш предмети?","receipt_sha256":"28fbd71984d3d69a5c2d305293607f44083ae331b364c612017a31f831e6abff","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3f4zrg016vrx","source_sense_key":"vts:бачити#article/2","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[0,22],"verdict":"APPROVE"},
+    "wr_d46f4aff650ad54a925034610463f8beba9f82f545af9b872b497dc3412836fc": {"entry_id":25726,"quotation":"Блакитні\nхмари повільно пливуть по небу.","receipt_sha256":"fb8bb60c618be0b7871cdd6f3d778be745c6579675d10d125c6473f70192e979","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xtx2ak3gj0ze","source_sense_key":"vts:блакитний#article/0","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[1056,1096],"verdict":"APPROVE"},
+    "wr_3684641effe60c2bd8493c82ce475affc2f9ee6faf0f6f9e12b197cb15a05220": {
+      "entry_id": 418239,
+      "quotation": "Одного разу Оленка прийшла зі школи, а на кухні пив\nчай дракон.",
+      "receipt_sha256": "6dbd4578a403ec495e8562ede4dcdcbb6f6e7e021d508354856456181d394ac0",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_wwqf7yd6mfsg",
+      "source_sense_key": "vts:чай#article/3",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        509,
+        572
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_7008032ea1a3e3c0c9cfba40d34805836f448eac071b70e2ef234d8b4c7d7167": {
+      "entry_id": 239967,
+      "quotation": "У мене нове взуття.",
+      "receipt_sha256": "7db5b77081f64e8503efe0deccf10a1467bd920e605b9400581fce1c958d9201",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        659,
+        678
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_87c067516009337c785a49aaf112670cb536d96311d81a46b974954666d17166": {
+      "entry_id": 387967,
+      "quotation": "Це\nпо той бік ставка.",
+      "receipt_sha256": "ab73b616b6b830027bb49987e89e49984ac88074f133744ab653255309ab6767",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        160,
+        181
+      ],
+      "verdict": "APPROVE"
+    }
+  },
   "field_dependencies": {
     "antonyms": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
     "aspect": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
@@ -43546,10 +45056,50 @@
     "stress": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "synonyms": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "transliteration": "no_approved_derivation",
-    "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/examples": "independent_exact_version_A1_review_pending",
+    "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/examples": "rejected at exact-head Ukrainian review",
+    "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/definition_uk": "missing_antecedent_for_source_sense",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/cefr": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/definition_uk": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
-    "wc_b8efpmnj944x/wc_b8efpmnj944x/examples": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb"
+    "wc_b8efpmnj944x/wc_b8efpmnj944x/examples": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
+    "wc_bgkyf53yfr86/ws_938zczetnamg/definition_uk": "missing_antecedent_for_source_sense",
+    "wc_3y5n43zpg96s/wc_3y5n43zpg96s/gloss_en": "gloss_no_allocated_sense",
+    "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/gloss_en": "gloss_no_qualified_sense_witness",
+    "wc_b8efpmnj944x/wc_b8efpmnj944x/gloss_en": "gloss_identity_unresolved",
+    "wc_basa8zkw7f82/ws_xtx2ak3gj0ze/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_bgkyf53yfr86/ws_938zczetnamg/gloss_en": "gloss_no_qualified_sense_witness",
+    "wc_e4z1pzzscypr/wc_e4z1pzzscypr/gloss_en": "gloss_no_allocated_sense",
+    "wc_hwer5kzzm1yv/wc_hwer5kzzm1yv/gloss_en": "gloss_no_allocated_sense",
+    "wc_q3sh7s4k42za/ws_3g96nz7yqmmv/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_s7hwf2ecgcn7/wc_s7hwf2ecgcn7/gloss_en": "gloss_no_allocated_sense",
+    "wc_svje3e69sc54/ws_vgmcce7hewcd/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_v3w185cm66rw/wc_v3w185cm66rw/gloss_en": "gloss_no_allocated_sense",
+    "wc_zjbdpzen17s3/wc_zjbdpzen17s3/gloss_en": "gloss_no_allocated_sense",
+    "wc_zsc04zgz0hga/wc_zsc04zgz0hga/gloss_en": "gloss_no_allocated_sense",
+    "wc_py0epqn7swtw/ws_sanbarh801y0/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_9vpv6mqryvp2/ws_r8s4qz21686k/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_6qh6expdm912/ws_2tcmrwbn1sdc/examples": "example_no_complete_textbook_sentence_found",
+    "wc_v3nzetykq0v7/ws_k9vs2m5m7f34/examples": "example_no_complete_textbook_sentence_found",
+    "wc_pqaqagyk9vh7/ws_4hxydfgef3j8/examples": "example_no_complete_textbook_sentence_found",
+    "wc_q60sbpjxcy9n/ws_9ann5n924zmc/examples": "rejected at exact-head Ukrainian review",
+    "wc_q3sh7s4k42za/ws_3g96nz7yqmmv/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_fgmd4vag1zry/ws_y71sjv5hbrp9/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_fgmd4vag1zry/ws_5zkdvca1t3bj/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_q5nda40qxatn/ws_eb9qmfbqnm52/examples": "example_no_complete_textbook_sentence_found",
+    "wc_3yy18dm7bfjn/ws_msczwzfvcy4s/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_crtdb1jnzqmw/ws_9bqqzachsz34/examples": "example_no_complete_textbook_sentence_found",
+    "wc_jqew4381q230/ws_jq8zh4vv8xw9/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_v3w185cm66rw/wc_v3w185cm66rw/examples": "example_no_allocated_sense",
+    "wc_3y5n43zpg96s/wc_3y5n43zpg96s/examples": "example_no_allocated_sense",
+    "wc_zsc04zgz0hga/wc_zsc04zgz0hga/examples": "example_no_allocated_sense",
+    "wc_zjbdpzen17s3/wc_zjbdpzen17s3/examples": "example_no_allocated_sense",
+    "wc_e4z1pzzscypr/wc_e4z1pzzscypr/examples": "example_no_allocated_sense",
+    "wc_hwer5kzzm1yv/wc_hwer5kzzm1yv/examples": "example_no_allocated_sense",
+    "wc_bgkyf53yfr86/ws_938zczetnamg/examples": "rejected at exact-head Ukrainian review",
+    "wc_s7hwf2ecgcn7/wc_s7hwf2ecgcn7/examples": "example_no_allocated_sense",
+    "wc_ypzn1h33by3s/ws_ft7y8t0t9qfx/examples": "no_captured_qualified_source_example",
+    "wc_v4vzfzx2bhhc/ws_5mavrnxp83k2/examples": "example_independent_review_rejected",
+    "wc_2v18q0e9cqh3/ws_phbxbhs2ypwr/examples": "example_independent_review_rejected",
+    "wc_04tmbj6y1v3y/ws_g744f7jcbwym/examples": "example_independent_review_rejected"
   },
   "held_units": [
     {
@@ -45387,6 +46937,952 @@
       "span": [
         32,
         49
+      ]
+    },
+    "wc_04tmbj6y1v3y:ws_g744f7jcbwym:gloss_en": {
+      "card_id": "wc_04tmbj6y1v3y",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:50605",
+      "sense_id": "ws_g744f7jcbwym",
+      "source_sense_key": "vts:тарілка#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_0mqxj7dc1h56:ws_e5q86rjhb9dc:gloss_en": {
+      "card_id": "wc_0mqxj7dc1h56",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11615",
+      "sense_id": "ws_e5q86rjhb9dc",
+      "source_sense_key": "vts:холодний#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_0se7zg3rf6v7:ws_xhjmhfprktd9:gloss_en": {
+      "card_id": "wc_0se7zg3rf6v7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:76105",
+      "sense_id": "ws_xhjmhfprktd9",
+      "source_sense_key": "vts:вода#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_16se443s25m6:ws_1fdmndkna7gw:gloss_en": {
+      "card_id": "wc_16se443s25m6",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68514",
+      "sense_id": "ws_1fdmndkna7gw",
+      "source_sense_key": "vts:цей#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_2f5c5rwqcdkq:ws_qgsjzf69m9ts:gloss_en": {
+      "card_id": "wc_2f5c5rwqcdkq",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:75717",
+      "sense_id": "ws_qgsjzf69m9ts",
+      "source_sense_key": "vts:чекати#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_2pz4fz2mf1ye:ws_a97e8v62tej4:gloss_en": {
+      "card_id": "wc_2pz4fz2mf1ye",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:7797",
+      "sense_id": "ws_a97e8v62tej4",
+      "source_sense_key": "vts:хліб#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_2qd2qv9v6nsg:ws_07dk2fhrnr8t:gloss_en": {
+      "card_id": "wc_2qd2qv9v6nsg",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:55114",
+      "sense_id": "ws_07dk2fhrnr8t",
+      "source_sense_key": "vts:червоний#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_2v18q0e9cqh3:ws_phbxbhs2ypwr:gloss_en": {
+      "card_id": "wc_2v18q0e9cqh3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:25288",
+      "sense_id": "ws_phbxbhs2ypwr",
+      "source_sense_key": "vts:свіжий#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_3yy18dm7bfjn:ws_msczwzfvcy4s:gloss_en": {
+      "card_id": "wc_3yy18dm7bfjn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:35741",
+      "sense_id": "ws_msczwzfvcy4s",
+      "source_sense_key": "vts:сік#article/1-drink",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_55zc7ex1jc2j:ws_wyk76q95wxr1:gloss_en": {
+      "card_id": "wc_55zc7ex1jc2j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:36525",
+      "sense_id": "ws_wyk76q95wxr1",
+      "source_sense_key": "vts:знати#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_66q1zkhz0n37:ws_068k30t2gv3z:gloss_en": {
+      "card_id": "wc_66q1zkhz0n37",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:51413",
+      "sense_id": "ws_068k30t2gv3z",
+      "source_sense_key": "vts:каша#article/1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_6qh6expdm912:ws_2tcmrwbn1sdc:gloss_en": {
+      "card_id": "wc_6qh6expdm912",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:8678",
+      "sense_id": "ws_2tcmrwbn1sdc",
+      "source_sense_key": "vts:купувати#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_7dbh05d8eafd:ws_fgbm48a7dc4m:gloss_en": {
+      "card_id": "wc_7dbh05d8eafd",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:13135",
+      "sense_id": "ws_fgbm48a7dc4m",
+      "source_sense_key": "vts:коштувати#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_80w8202kdfmp:ws_b02bq7jmx65r:gloss_en": {
+      "card_id": "wc_80w8202kdfmp",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:44570",
+      "sense_id": "ws_b02bq7jmx65r",
+      "source_sense_key": "vts:зошит#article/1",
+      "span": [
+        0,
+        9
+      ]
+    },
+    "wc_8k2pbxvtp3k0:ws_fmfcqf67ryy1:gloss_en": {
+      "card_id": "wc_8k2pbxvtp3k0",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:71139",
+      "sense_id": "ws_fmfcqf67ryy1",
+      "source_sense_key": "vts:двадцять#article/0",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_9vpv6mqryvp2:ws_r8s4qz21686k:gloss_en": {
+      "card_id": "wc_9vpv6mqryvp2",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:3530",
+      "sense_id": "ws_r8s4qz21686k",
+      "source_sense_key": "vts:крісло#article/1",
+      "span": [
+        0,
+        9
+      ]
+    },
+    "wc_afgr7kxhd4kb:ws_2kc1ce5sa4d9:gloss_en": {
+      "card_id": "wc_afgr7kxhd4kb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:36207",
+      "sense_id": "ws_2kc1ce5sa4d9",
+      "source_sense_key": "vts:кілограм#article/0",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_av1fw54h16cw:ws_nrfwcp7p48m5:gloss_en": {
+      "card_id": "wc_av1fw54h16cw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:78327",
+      "sense_id": "ws_nrfwcp7p48m5",
+      "source_sense_key": "vts:жовтий#article/1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_c6s46sgs336y:ws_d554k8w7czxw:gloss_en": {
+      "card_id": "wc_c6s46sgs336y",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:18844",
+      "sense_id": "ws_d554k8w7czxw",
+      "source_sense_key": "vts:їсти#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_cahfacc2r044:ws_n6z6wmyzpa24:gloss_en": {
+      "card_id": "wc_cahfacc2r044",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:18222",
+      "sense_id": "ws_n6z6wmyzpa24",
+      "source_sense_key": "vts:пити#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_ccskdp7tg7fr:ws_f23m3dr6fwfr:gloss_en": {
+      "card_id": "wc_ccskdp7tg7fr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:24449",
+      "sense_id": "ws_f23m3dr6fwfr",
+      "source_sense_key": "vts:їжа#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_cq6yxvj1gjb3:ws_2zvrrv0czj60:gloss_en": {
+      "card_id": "wc_cq6yxvj1gjb3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6360",
+      "sense_id": "ws_2zvrrv0czj60",
+      "source_sense_key": "vts:великий#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_crtdb1jnzqmw:ws_9bqqzachsz34:gloss_en": {
+      "card_id": "wc_crtdb1jnzqmw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:52288",
+      "sense_id": "ws_9bqqzachsz34",
+      "source_sense_key": "vts:ціна#I/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_cxjtr6481e7t:ws_v2e8s53d12wq:gloss_en": {
+      "card_id": "wc_cxjtr6481e7t",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43704",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_cyspr2xscsd8:ws_bf2nzwh7mtcp:gloss_en": {
+      "card_id": "wc_cyspr2xscsd8",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11059",
+      "sense_id": "ws_bf2nzwh7mtcp",
+      "source_sense_key": "vts:чистий#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_d0ks22prnwg0:ws_eqayc6bmek1j:gloss_en": {
+      "card_id": "wc_d0ks22prnwg0",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:57128",
+      "sense_id": "ws_eqayc6bmek1j",
+      "source_sense_key": "vts:кімната#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_f1k1r2j836hx:ws_bpw0ph14cq93:gloss_en": {
+      "card_id": "wc_f1k1r2j836hx",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:41402",
+      "sense_id": "ws_bpw0ph14cq93",
+      "source_sense_key": "vts:молоко#article/2",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_fgmd4vag1zry:ws_5zkdvca1t3bj:gloss_en": {
+      "card_id": "wc_fgmd4vag1zry",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10311",
+      "sense_id": "ws_5zkdvca1t3bj",
+      "source_sense_key": "vts:сир#article/2",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_fpqf4tvz9y1a:ws_zc6h97fz7v5v:gloss_en": {
+      "card_id": "wc_fpqf4tvz9y1a",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6962",
+      "sense_id": "ws_zc6h97fz7v5v",
+      "source_sense_key": "vts:синій#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_hqegd3tewbkh:ws_v0r72qwhbz8r:gloss_en": {
+      "card_id": "wc_hqegd3tewbkh",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68175",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_jqew4381q230:ws_jq8zh4vv8xw9:gloss_en": {
+      "card_id": "wc_jqew4381q230",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:20154",
+      "sense_id": "ws_jq8zh4vv8xw9",
+      "source_sense_key": "vts:інженер#article/0",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_jrycyzsy17qk:ws_rqprkzr4qt41:gloss_en": {
+      "card_id": "wc_jrycyzsy17qk",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:6637",
+      "sense_id": "ws_rqprkzr4qt41",
+      "source_sense_key": "vts:чорний#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_m1c9b97e30xw:ws_tt8qhs72c8qg:gloss_en": {
+      "card_id": "wc_m1c9b97e30xw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:7308",
+      "sense_id": "ws_tt8qhs72c8qg",
+      "source_sense_key": "vts:книга#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_nb47def20y51:ws_tr93m3gfd3qg:gloss_en": {
+      "card_id": "wc_nb47def20y51",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:45496",
+      "sense_id": "ws_tr93m3gfd3qg",
+      "source_sense_key": "vts:старий#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_nb47def20y51:ws_3tsxwrtrg1c1:gloss_en": {
+      "card_id": "wc_nb47def20y51",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:45496",
+      "sense_id": "ws_3tsxwrtrg1c1",
+      "source_sense_key": "vts:старий#article/3",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_p41ag4cb6be8:ws_57v0kdgk52fv:gloss_en": {
+      "card_id": "wc_p41ag4cb6be8",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:3099",
+      "sense_id": "ws_57v0kdgk52fv",
+      "source_sense_key": "vts:яблуко#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_pqaqagyk9vh7:ws_4hxydfgef3j8:gloss_en": {
+      "card_id": "wc_pqaqagyk9vh7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:48402",
+      "sense_id": "ws_4hxydfgef3j8",
+      "source_sense_key": "vts:платити#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_py0epqn7swtw:ws_sanbarh801y0:gloss_en": {
+      "card_id": "wc_py0epqn7swtw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11533",
+      "sense_id": "ws_sanbarh801y0",
+      "source_sense_key": "vts:кава#I/3",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_q5nda40qxatn:ws_eb9qmfbqnm52:gloss_en": {
+      "card_id": "wc_q5nda40qxatn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:26980",
+      "sense_id": "ws_eb9qmfbqnm52",
+      "source_sense_key": "vts:склянка#I/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_q60sbpjxcy9n:ws_9ann5n924zmc:gloss_en": {
+      "card_id": "wc_q60sbpjxcy9n",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:57866",
+      "sense_id": "ws_9ann5n924zmc",
+      "source_sense_key": "vts:салат#I/3",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_q9n7n6hp9z1q:ws_ntxjryfh6sg6:gloss_en": {
+      "card_id": "wc_q9n7n6hp9z1q",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:16899",
+      "sense_id": "ws_ntxjryfh6sg6",
+      "source_sense_key": "vts:страва#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_r721w0bts5q3:ws_rh2p0cg44sh4:gloss_en": {
+      "card_id": "wc_r721w0bts5q3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68617",
+      "sense_id": "ws_rh2p0cg44sh4",
+      "source_sense_key": "vts:три#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_rcxyyvh7qtww:ws_m3cbpb9xp3ba:gloss_en": {
+      "card_id": "wc_rcxyyvh7qtww",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:4835",
+      "sense_id": "ws_m3cbpb9xp3ba",
+      "source_sense_key": "vts:сумка#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_v3nzetykq0v7:ws_k9vs2m5m7f34:gloss_en": {
+      "card_id": "wc_v3nzetykq0v7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43383",
+      "sense_id": "ws_k9vs2m5m7f34",
+      "source_sense_key": "vts:намисто#article/0",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_v4vzfzx2bhhc:ws_5mavrnxp83k2:gloss_en": {
+      "card_id": "wc_v4vzfzx2bhhc",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:31200",
+      "sense_id": "ws_5mavrnxp83k2",
+      "source_sense_key": "vts:гарячий#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_vz8hdnedkd66:ws_28k425w5yks4:gloss_en": {
+      "card_id": "wc_vz8hdnedkd66",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:77051",
+      "sense_id": "ws_28k425w5yks4",
+      "source_sense_key": "vts:білий#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_ypzn1h33by3s:ws_ft7y8t0t9qfx:gloss_en": {
+      "card_id": "wc_ypzn1h33by3s",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:59297",
+      "sense_id": "ws_ft7y8t0t9qfx",
+      "source_sense_key": "vts:бачити#article/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_ypzn1h33by3s:ws_3f4zrg016vrx:gloss_en": {
+      "card_id": "wc_ypzn1h33by3s",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:59297",
+      "sense_id": "ws_3f4zrg016vrx",
+      "source_sense_key": "vts:бачити#article/2",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_zqdf8ank7bq3:ws_75y1vpmcs07g:gloss_en": {
+      "card_id": "wc_zqdf8ank7bq3",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:67341",
+      "sense_id": "ws_75y1vpmcs07g",
+      "source_sense_key": "vts:смачний#article/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_vz8hdnedkd66/ws_28k425w5yks4/textbook-example": {
+      "card_id": "wc_vz8hdnedkd66",
+      "sense_id": "ws_28k425w5yks4",
+      "source_sense_key": "vts:білий#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0093",
+      "pointer": "/text",
+      "span": [
+        385,
+        408
+      ]
+    },
+    "wc_svje3e69sc54/ws_vgmcce7hewcd/textbook-example": {
+      "card_id": "wc_svje3e69sc54",
+      "sense_id": "ws_vgmcce7hewcd",
+      "source_sense_key": "vts:вареник#article/0",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0057",
+      "pointer": "/text",
+      "span": [
+        141,
+        168
+      ]
+    },
+    "wc_cq6yxvj1gjb3/ws_2zvrrv0czj60/textbook-example": {
+      "card_id": "wc_cq6yxvj1gjb3",
+      "sense_id": "ws_2zvrrv0czj60",
+      "source_sense_key": "vts:великий#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ]
+    },
+    "wc_8k2pbxvtp3k0/ws_fmfcqf67ryy1/textbook-example": {
+      "card_id": "wc_8k2pbxvtp3k0",
+      "sense_id": "ws_fmfcqf67ryy1",
+      "source_sense_key": "vts:двадцять#article/0",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0094",
+      "pointer": "/text",
+      "span": [
+        766,
+        792
+      ]
+    },
+    "wc_av1fw54h16cw/ws_nrfwcp7p48m5/textbook-example": {
+      "card_id": "wc_av1fw54h16cw",
+      "sense_id": "ws_nrfwcp7p48m5",
+      "source_sense_key": "vts:жовтий#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0094",
+      "pointer": "/text",
+      "span": [
+        856,
+        888
+      ]
+    },
+    "wc_55zc7ex1jc2j/ws_wyk76q95wxr1/textbook-example": {
+      "card_id": "wc_55zc7ex1jc2j",
+      "sense_id": "ws_wyk76q95wxr1",
+      "source_sense_key": "vts:знати#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0099",
+      "pointer": "/text",
+      "span": [
+        163,
+        184
+      ]
+    },
+    "wc_80w8202kdfmp/ws_b02bq7jmx65r/textbook-example": {
+      "card_id": "wc_80w8202kdfmp",
+      "sense_id": "ws_b02bq7jmx65r",
+      "source_sense_key": "vts:зошит#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        899,
+        930
+      ]
+    },
+    "wc_66q1zkhz0n37/ws_068k30t2gv3z/textbook-example": {
+      "card_id": "wc_66q1zkhz0n37",
+      "sense_id": "ws_068k30t2gv3z",
+      "source_sense_key": "vts:каша#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0041",
+      "pointer": "/text",
+      "span": [
+        316,
+        339
+      ]
+    },
+    "wc_m1c9b97e30xw/ws_tt8qhs72c8qg/textbook-example": {
+      "card_id": "wc_m1c9b97e30xw",
+      "sense_id": "ws_tt8qhs72c8qg",
+      "source_sense_key": "vts:книга#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005",
+      "pointer": "/text",
+      "span": [
+        377,
+        394
+      ]
+    },
+    "wc_7dbh05d8eafd/ws_fgbm48a7dc4m/textbook-example": {
+      "card_id": "wc_7dbh05d8eafd",
+      "sense_id": "ws_fgbm48a7dc4m",
+      "source_sense_key": "vts:коштувати#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0134",
+      "pointer": "/text",
+      "span": [
+        718,
+        745
+      ]
+    },
+    "wc_afgr7kxhd4kb/ws_2kc1ce5sa4d9/textbook-example": {
+      "card_id": "wc_afgr7kxhd4kb",
+      "sense_id": "ws_2kc1ce5sa4d9",
+      "source_sense_key": "vts:кілограм#article/0",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0142",
+      "pointer": "/text",
+      "span": [
+        834,
+        859
+      ]
+    },
+    "wc_d0ks22prnwg0/ws_eqayc6bmek1j/textbook-example": {
+      "card_id": "wc_d0ks22prnwg0",
+      "sense_id": "ws_eqayc6bmek1j",
+      "source_sense_key": "vts:кімната#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        16,
+        38
+      ]
+    },
+    "wc_f1k1r2j836hx/ws_bpw0ph14cq93/textbook-example": {
+      "card_id": "wc_f1k1r2j836hx",
+      "sense_id": "ws_bpw0ph14cq93",
+      "source_sense_key": "vts:молоко#article/2",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ]
+    },
+    "wc_cxjtr6481e7t/ws_v2e8s53d12wq/textbook-example": {
+      "card_id": "wc_cxjtr6481e7t",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0069",
+      "pointer": "/text",
+      "span": [
+        327,
+        345
+      ]
+    },
+    "wc_cahfacc2r044/ws_n6z6wmyzpa24/textbook-example": {
+      "card_id": "wc_cahfacc2r044",
+      "sense_id": "ws_n6z6wmyzpa24",
+      "source_sense_key": "vts:пити#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060",
+      "pointer": "/text",
+      "span": [
+        210,
+        233
+      ]
+    },
+    "wc_fpqf4tvz9y1a/ws_zc6h97fz7v5v/textbook-example": {
+      "card_id": "wc_fpqf4tvz9y1a",
+      "sense_id": "ws_zc6h97fz7v5v",
+      "source_sense_key": "vts:синій#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0023",
+      "pointer": "/text",
+      "span": [
+        775,
+        793
+      ]
+    },
+    "wc_zqdf8ank7bq3/ws_75y1vpmcs07g/textbook-example": {
+      "card_id": "wc_zqdf8ank7bq3",
+      "sense_id": "ws_75y1vpmcs07g",
+      "source_sense_key": "vts:смачний#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037",
+      "pointer": "/text",
+      "span": [
+        831,
+        852
+      ]
+    },
+    "wc_nb47def20y51/ws_tr93m3gfd3qg/textbook-example": {
+      "card_id": "wc_nb47def20y51",
+      "sense_id": "ws_tr93m3gfd3qg",
+      "source_sense_key": "vts:старий#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0080",
+      "pointer": "/text",
+      "span": [
+        248,
+        275
+      ]
+    },
+    "wc_q9n7n6hp9z1q/ws_ntxjryfh6sg6/textbook-example": {
+      "card_id": "wc_q9n7n6hp9z1q",
+      "sense_id": "ws_ntxjryfh6sg6",
+      "source_sense_key": "vts:страва#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0089",
+      "pointer": "/text",
+      "span": [
+        637,
+        658
+      ]
+    },
+    "wc_r721w0bts5q3/ws_rh2p0cg44sh4/textbook-example": {
+      "card_id": "wc_r721w0bts5q3",
+      "sense_id": "ws_rh2p0cg44sh4",
+      "source_sense_key": "vts:три#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0039",
+      "pointer": "/text",
+      "span": [
+        412,
+        437
+      ]
+    },
+    "wc_2pz4fz2mf1ye/ws_a97e8v62tej4/textbook-example": {
+      "card_id": "wc_2pz4fz2mf1ye",
+      "sense_id": "ws_a97e8v62tej4",
+      "source_sense_key": "vts:хліб#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037",
+      "pointer": "/text",
+      "span": [
+        160,
+        180
+      ]
+    },
+    "wc_0mqxj7dc1h56/ws_e5q86rjhb9dc/textbook-example": {
+      "card_id": "wc_0mqxj7dc1h56",
+      "sense_id": "ws_e5q86rjhb9dc",
+      "source_sense_key": "vts:холодний#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0135",
+      "pointer": "/text",
+      "span": [
+        1177,
+        1204
+      ]
+    },
+    "wc_16se443s25m6/ws_1fdmndkna7gw/textbook-example": {
+      "card_id": "wc_16se443s25m6",
+      "sense_id": "ws_1fdmndkna7gw",
+      "source_sense_key": "vts:цей#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005",
+      "pointer": "/text",
+      "span": [
+        377,
+        394
+      ]
+    },
+    "wc_2f5c5rwqcdkq/ws_qgsjzf69m9ts/textbook-example": {
+      "card_id": "wc_2f5c5rwqcdkq",
+      "sense_id": "ws_qgsjzf69m9ts",
+      "source_sense_key": "vts:чекати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0135",
+      "pointer": "/text",
+      "span": [
+        328,
+        351
+      ]
+    },
+    "wc_2qd2qv9v6nsg/ws_07dk2fhrnr8t/textbook-example": {
+      "card_id": "wc_2qd2qv9v6nsg",
+      "sense_id": "ws_07dk2fhrnr8t",
+      "source_sense_key": "vts:червоний#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021",
+      "pointer": "/text",
+      "span": [
+        337,
+        367
+      ]
+    },
+    "wc_cyspr2xscsd8/ws_bf2nzwh7mtcp/textbook-example": {
+      "card_id": "wc_cyspr2xscsd8",
+      "sense_id": "ws_bf2nzwh7mtcp",
+      "source_sense_key": "vts:чистий#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0042",
+      "pointer": "/text",
+      "span": [
+        368,
+        418
+      ]
+    },
+    "wc_jrycyzsy17qk/ws_rqprkzr4qt41/textbook-example": {
+      "card_id": "wc_jrycyzsy17qk",
+      "sense_id": "ws_rqprkzr4qt41",
+      "source_sense_key": "vts:чорний#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0088",
+      "pointer": "/text",
+      "span": [
+        54,
+        86
+      ]
+    },
+    "wc_p41ag4cb6be8/ws_57v0kdgk52fv/textbook-example": {
+      "card_id": "wc_p41ag4cb6be8",
+      "sense_id": "ws_57v0kdgk52fv",
+      "source_sense_key": "vts:яблуко#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021",
+      "pointer": "/text",
+      "span": [
+        337,
+        367
+      ]
+    },
+    "wc_ccskdp7tg7fr/ws_f23m3dr6fwfr/textbook-example": {
+      "card_id": "wc_ccskdp7tg7fr",
+      "sense_id": "ws_f23m3dr6fwfr",
+      "source_sense_key": "vts:їжа#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0113",
+      "pointer": "/text",
+      "span": [
+        2,
+        18
+      ]
+    },
+    "wc_c6s46sgs336y/ws_d554k8w7czxw/textbook-example": {
+      "card_id": "wc_c6s46sgs336y",
+      "sense_id": "ws_d554k8w7czxw",
+      "source_sense_key": "vts:їсти#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0078",
+      "pointer": "/text",
+      "span": [
+        726,
+        742
+      ]
+    },
+    "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/textbook-example": {
+      "card_id": "wc_0se7zg3rf6v7",
+      "sense_id": "ws_xhjmhfprktd9",
+      "source_sense_key": "vts:вода#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0152",
+      "pointer": "/text",
+      "span": [
+        963,
+        995
+      ]
+    },
+    "wc_rcxyyvh7qtww/ws_m3cbpb9xp3ba/textbook-example": {
+      "card_id": "wc_rcxyyvh7qtww",
+      "sense_id": "ws_m3cbpb9xp3ba",
+      "source_sense_key": "vts:сумка#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0088",
+      "pointer": "/text",
+      "span": [
+        456,
+        489
+      ]
+    },
+    "wc_ypzn1h33by3s/ws_3f4zrg016vrx/textbook-example": {
+      "card_id": "wc_ypzn1h33by3s",
+      "sense_id": "ws_3f4zrg016vrx",
+      "source_sense_key": "vts:бачити#article/2",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0062",
+      "pointer": "/text",
+      "span": [
+        0,
+        22
+      ]
+    },
+    "wc_basa8zkw7f82/ws_xtx2ak3gj0ze/textbook-example": {
+      "card_id": "wc_basa8zkw7f82",
+      "sense_id": "ws_xtx2ak3gj0ze",
+      "source_sense_key": "vts:блакитний#article/0",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
+      "pointer": "/text",
+      "span": [
+        1056,
+        1096
+      ]
+    },
+    "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/textbook-example-wave2": {
+      "card_id": "wc_9sx49mn7gh14",
+      "sense_id": "ws_wwqf7yd6mfsg",
+      "source_sense_key": "vts:чай#article/3",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0046",
+      "pointer": "/text",
+      "span": [
+        509,
+        572
+      ]
+    },
+    "wc_cxjtr6481e7t/ws_v2e8s53d12wq/textbook-example-wave2": {
+      "card_id": "wc_cxjtr6481e7t",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0054",
+      "pointer": "/text",
+      "span": [
+        659,
+        678
+      ]
+    },
+    "wc_hqegd3tewbkh/ws_v0r72qwhbz8r/textbook-example-wave2": {
+      "card_id": "wc_hqegd3tewbkh",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0084",
+      "pointer": "/text",
+      "span": [
+        160,
+        181
       ]
     }
   },
@@ -49558,6 +52054,754 @@
       "prior_observations_compared": 1112,
       "record_key": "textbook:water",
       "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "79fff5e78faff7ae1fe64cdbc4bbc0592c7ff8df310f4f1d0ca7f9718c0b4148",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:50605",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "5ced31b2aca64f4a8a0d9c1e892d1381344aff5b91408257d51d4b9bfdc4f567",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:11615",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "4bc3963768c3ef5599dc22f75350c1c6068e448e1653f617eea95dc833e47900",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:76105",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "1bb7972dcf497963402ae392a83e2761a2b247a5393eb66c3377122af8c182a4",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:68514",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "c0672aceabdc2893308d8324695273e33ec0785db844249024d3ea645891f93a",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:75717",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "0b94c7131d46263c45c80597ce6f7ddc5d8ef202f9d8ef1b1870aa892c43b200",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:7797",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "7c7f891487d30a254c5c4b2843924eeb7d0a0f417256c267d6edaf96d2195e07",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:55114",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "b141faded1b4586373e02f3115640336de38074d9c8d1edd078524b6eb1b0bf9",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:25288",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "33aac4e70e9e87ad35a0269f638cd8a1d8a0270054a47dc4cb7bba41ddce6c0e",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:35741",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "8ca411a0a40fe7460e659f83e68fa0b47d31e40fa4db81440ad098864b130eeb",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:36525",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "8f127a293faaa4cc70e1ce79d75e9eb4b1956aeb5da7e4208a0113465a71af93",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:51413",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "b41ab2334487ef68b9776cb60a028118676e2a0050e7bd8dc54f49cdf31b4c29",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:8678",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "e9af7706397ad2e8cc9f1a47cc5e5c292d3115c9e4558661eb0a714f0fefe35c",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:13135",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "59c6d4117a3d466735d44fb82c65b6169087c281a81834565ac49503a14585a9",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:44570",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "659d2425a9da75ca6bf7728bd816e6bc23598f385aeae95258d4b77323d03de0",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:71139",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "3fc3935f6b75ff4547dcd09a035ad1e4cac1da6dad19bdf5b0c88cf62e939cee",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:3530",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "9aa17e5e025a9bc015ba6f0cb40e9c6120cc594cac78b7b5e0ba9ccb14a1c8e8",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:36207",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "7df681dd9fcb694c2c7550ae1abef3a10def48335dafb966794251ac0df82981",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:78327",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "4fb1fdd7f14fcafb070907c2396893179dea96bffc95e8e3d4f48122f9b402b9",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:18844",
+      "reused_identity": null
+    },
+    {
+      "disposition": "reuse",
+      "equal_prior_rows": 1,
+      "payload_sha256": "2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:18222",
+      "reused_identity": {
+        "locator": "balla:balla_en_uk:id:18222",
+        "snapshot_id": "balla@sha256:2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188",
+        "source_record_id": "sr_kvf76a0xpyjh"
+      }
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "bd69837271350ccfaa1196d1adbbc7bedacb8fb780465c2cd362fe8a1d141fa6",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:24449",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "338f0a14e19c28d2bfc5b1c03ae4a092c5b3ba69a5ba90dedd0b6606d55e1976",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:6360",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "a7bac847d86edc0aa18faf91a5d6982cf606a9a1e0ab12cec91fa8cda0047624",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:52288",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "51cb417247726332630d94ade0be7230bb768fcc16d2f6693ab60378007eff89",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:43704",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "1ded68bcd75e53b14d6012b76554d26637caf2eace15db3974f53ec1f5c797ce",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:11059",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "4e79f1754a2f7d9649fd68fd802b23bfe0c883cc67c01cc4348c5110e38648e3",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:57128",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "64d4892f3f309e6e815760285048b4cb5424291f1d46077928ea20198994e7d8",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:41402",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "64489a655298274fd20802a3d923329e1e94608ecb539c5063923bd765107ba2",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:10311",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "1a493afb2ea8829304d3c4d854e1eeb3dab3aa61104aa758730acd3a28afbd70",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:6962",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "2e0f29e9a057adcb35ffcd5004a53193be475ca655abb997e7480c59e1975fa8",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:68175",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "a025a93ebee486b45c11e0b53c6f9373cf33e88d2c09172abdef691f82353b4c",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:20154",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "da6607b0cf32c34a2862b47fbda27878599f8323055f0ab11fcbadcbb243b007",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:6637",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "87f928ef444d62d8eee81af95e61e1adba7bdc99e5258ea33d18fd8639ae0395",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:7308",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "8ddf5233d02ed01bbe3655edc949407bbf1ad926d0a9ab2d19b71893ff2a2607",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:45496",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "fa0eed5ba62a79293692590acbecf68302422c988b4a74f82292026af77fea47",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:3099",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "7cb71d75d71280c412a2dabee8ac45a67545dadeb6eadca5e4ad141b49b7ec76",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:48402",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "2914a0843f91cefee320be05e99d6815240a83434dea40d672e8139e03401fef",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:11533",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "f6d712d344aa46e13d64b405f08b5ef098e69794662da8eee39a0dc3e482e124",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:26980",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "858771b75bb7823cea3ef1f7ccace654b412040c4d1736dc478aa356ddb94f8b",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:57866",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "e01fb1f0f96e5e33b0f737d83fa54c36eb822f2080c37a037dbdd6846b00a2d5",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:16899",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "a4afb0550ea92a24682ed099f6660535201971312da6e97a381d982869d9b101",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:68617",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "ed2ceda245ad0dfc93d1cfa502875454fc5475e47daa7b7e53cf76a102445231",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:4835",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "f5882a86b61561f6cf1f7e3e1134072cdfebc17b72a1996016190fd1494b6532",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:43383",
+      "reused_identity": null
+    },
+    {
+      "disposition": "reuse",
+      "equal_prior_rows": 1,
+      "payload_sha256": "8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:31200",
+      "reused_identity": {
+        "locator": "balla:balla_en_uk:id:31200",
+        "snapshot_id": "balla@sha256:8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308",
+        "source_record_id": "sr_4c50c6e691fr"
+      }
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "6298c05a53417a9cadec0e43b675b37fc871304f5014edda7889328fb9cee99e",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:77051",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "07ea2a36fce317b2ac478a4f6e77f06449a8369bba0ece249683534217f46645",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:59297",
+      "reused_identity": null
+    },
+    {
+      "disposition": "new_observation",
+      "equal_prior_rows": 0,
+      "payload_sha256": "1d68d6d9e16e1e53f429fabaf817ca4edb247621b07b7b81a6684446f5c93b92",
+      "pilot_rows_compared": 272,
+      "prior_allocated_observations_compared": 934,
+      "prior_observations_compared": 1206,
+      "record_key": "balla:en-uk:row:67341",
+      "reused_identity": null
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0028",
+      "payload_sha256": "b7feeb1dfe68d753e4e94a14ab2fa1ca103b60cec1310dac2c387c5ecd63bec4",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0003",
+      "payload_sha256": "29ff15202d9247cd0ea86177fc997a8675128cccce7e9d2ecde81bb74b639b9c",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0093",
+      "payload_sha256": "9848408c7396a66337bcfa0887af64f8615ca7c449b445f4a989c8e5337a5ab8",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0057",
+      "payload_sha256": "814aa04f22860211b024a16af29e255b59bc81d3ba2c3ffc38cfd217abe86b4b",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "payload_sha256": "edde9dbbc4a7b352942aaa85302063a1aa153c707236667ab9eed85408aba00b",
+      "reused_identity": {
+        "source_record_id": "sr_5crwjw31hms0",
+        "snapshot_id": "textbooks@sha256:edde9dbbc4a7b352942aaa85302063a1aa153c707236667ab9eed85408aba00b",
+        "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0079",
+      "payload_sha256": "b036e8e6b9375b15fab1b77b63ca8f98f177c6462b8735cf40f04cd68913d3db",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0094",
+      "payload_sha256": "e7bffc81d74814c8790157a62c2f928f151e268fe4dad5cd2edffd920bfdfceb",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0094",
+      "payload_sha256": "a36760324d9f33ac394f9a615d3e7ce4d7ffb964c370ec28e0f780275dbe323e",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0099",
+      "payload_sha256": "20729f55f96fcd8b0904d0c641bc4a600e9874ca53be4d5088cef5ab49fe8cc2",
+      "reused_identity": {
+        "source_record_id": "sr_wb9hhajrhn51",
+        "snapshot_id": "textbooks@sha256:20729f55f96fcd8b0904d0c641bc4a600e9874ca53be4d5088cef5ab49fe8cc2",
+        "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0099"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0084",
+      "payload_sha256": "3336e39c659f13c030aafa8a6668b3a53fb09b408e522a7490a06a5b1f43ac59",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0041",
+      "payload_sha256": "2c0c65b35213ddb62ae77f2412f309c588921f0527dcfa7604c3b2deee5708d9",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005",
+      "payload_sha256": "40ede7e5a4fb1a4e473601bb010894dcd8831e9a0fc4ae3f901e8bf78305f3ff",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0134",
+      "payload_sha256": "121a3effd1f7380412d08264a65718ea4bc8caeda26e09369d3514952a3772bc",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0142",
+      "payload_sha256": "0632a894e02883b578ec6e1afcc9c3fcbc1d7db27902296ad4ca6d2c5e45a752",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "payload_sha256": "9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d",
+      "reused_identity": {
+        "source_record_id": "sr_mh9s3pqb2hzg",
+        "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d",
+        "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "payload_sha256": "4fbe76511f23a722744231f28860acc08b858f6b74d40b5188e1634f818313b2",
+      "reused_identity": {
+        "source_record_id": "sr_1hmn6zqd1kc3",
+        "snapshot_id": "textbooks@sha256:4fbe76511f23a722744231f28860acc08b858f6b74d40b5188e1634f818313b2",
+        "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0071"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0069",
+      "payload_sha256": "5e7e91e043e922863ea331509214baa58de4be53adbc432bc681c05dbd63d101",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060",
+      "payload_sha256": "02d5fd7467157536f98a17bfe7dc3b534d895cf142cddaf7c1b95146dee8dfe6",
+      "reused_identity": {
+        "source_record_id": "sr_jp2107h5xjsq",
+        "snapshot_id": "textbooks@sha256:02d5fd7467157536f98a17bfe7dc3b534d895cf142cddaf7c1b95146dee8dfe6",
+        "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0060"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0023",
+      "payload_sha256": "fff4b2be5fc72dcb595b75a40693a8f00b80a42b9d2aa5851e35ef56570fae39",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037",
+      "payload_sha256": "f40753ff87657fb042afec41009dc1d0e90d277362387398d4ddbff5e730f857",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0080",
+      "payload_sha256": "208968312d56607b4cc294a97c16b87c67420f0fa9b5abfb07e8df0afc820508",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0089",
+      "payload_sha256": "de1088a93e80515313aa7d1c3ac76d3cfc6b2ea891384e166b46c7b67c3d1a01",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0039",
+      "payload_sha256": "47a2edccd8a3fbee09f0a22fd5720e46981edefdfda8a4cac2a533a86b6efc99",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0135",
+      "payload_sha256": "318312127516797879d609810c435da7b3339e63841b60a7fb48017b8e3bd5d6",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0135",
+      "payload_sha256": "09b6fa29decd7ca2eaa661e0ce9b685909eb87468cfc47ed6189e4a61b796410",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021",
+      "payload_sha256": "895018bc73938cc80ab66d90b9a39b8bb52c8388e5980bc545b3dd721dea39f3",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0042",
+      "payload_sha256": "f0034b051e1abc6bbbb11a8d079b339d1efc0896dff120b7e5b9db777b3d16d1",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0088",
+      "payload_sha256": "ad002dba1e7b556e514bbae75cc04e805cb9fe091ac66a477a7f5f64aedb33aa",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0113",
+      "payload_sha256": "b23dbec6322792587637bfcc5143585d071e6dc419acec61b4de10f9acad55ec",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0078",
+      "payload_sha256": "84a18a835cd47619481089ae7aec3b986b564cd7aee8fcaf911c27260d735d67",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0152",
+      "payload_sha256": "ce95443dc2d84bc55a6d9d8e6fd4ce6ceb2ea3567521a8a577acabe2aeb7fa3c",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0030",
+      "payload_sha256": "c2eeb6f15cb214852a4c45a769f9c96df3071eefd3560f477110ae605b78bf25",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0088",
+      "payload_sha256": "0ed0f93d37a789753414d5fca4768343e48cd1007a5b0ad694364566b7c8ab23",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050",
+      "payload_sha256": "0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3",
+      "reused_identity": {
+        "source_record_id": "sr_7hfmqxey0f0w",
+        "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3",
+        "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050"
+      },
+      "disposition": "reuse"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0062",
+      "payload_sha256": "d06b2ed2af16c3d6cc69e90a9edee25a5feb80d4b58a853f8dcf0653563c9a73",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
+      "payload_sha256": "6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0046",
+      "payload_sha256": "99925c0aec9996916e0dba16d933ea9c4e35d9c282e61c80698573c18bebd911",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067",
+      "payload_sha256": "4c9ee5cc3cd03d4a3380fe8d827256f2a0edd5a617e3448b13a5fdb485f4fc33",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0054",
+      "payload_sha256": "7da3f8c1bcd1d632c1e7994f803f8399d9d49b906a587a4a5d195a62ff72adc5",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0084",
+      "payload_sha256": "f42b87b1acdb291ef0781ce9abf186776bdf5d373695684cd6e17ba2bdbfd5d2",
+      "reused_identity": null,
+      "disposition": "new_observation"
+    },
+    {
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0087",
+      "payload_sha256": "fa63b5ed5f5bed28820ee6ac2e8c52961afef58da449a6def075ee52d4f7eabf",
+      "reused_identity": null,
+      "disposition": "new_observation"
     }
   ],
   "source_record_ids": {
@@ -49766,7 +53010,95 @@
     "vts:яблуко": "sr_z4sw3dmr7gcj",
     "vts:інженер": "sr_75e7a0pwtrn0",
     "vts:їжа": "sr_kbzgkdr90dm9",
-    "vts:їсти": "sr_7z2vedt3m5t3"
+    "vts:їсти": "sr_7z2vedt3m5t3",
+    "balla:en-uk:row:50605": "sr_3qtxwfcdcsb1",
+    "balla:en-uk:row:11615": "sr_3fbkcmgrv8a6",
+    "balla:en-uk:row:76105": "sr_0xt2g5fj6vw7",
+    "balla:en-uk:row:68514": "sr_csfab271qk21",
+    "balla:en-uk:row:75717": "sr_3y6v2vwqjm7g",
+    "balla:en-uk:row:7797": "sr_q049vrrgrc01",
+    "balla:en-uk:row:55114": "sr_ryj0v993vrm2",
+    "balla:en-uk:row:25288": "sr_6js1myekmev6",
+    "balla:en-uk:row:35741": "sr_en3r9s3p93x8",
+    "balla:en-uk:row:36525": "sr_zagnzktsg4vn",
+    "balla:en-uk:row:51413": "sr_xfwyf778mjmq",
+    "balla:en-uk:row:8678": "sr_kzq2caktvj1t",
+    "balla:en-uk:row:13135": "sr_cgxwktrf1yd4",
+    "balla:en-uk:row:44570": "sr_yx6hbz73k9gz",
+    "balla:en-uk:row:71139": "sr_ygsr1ey2ngg1",
+    "balla:en-uk:row:3530": "sr_rp5y0qfdx0r5",
+    "balla:en-uk:row:36207": "sr_3nzqvwm4nwgd",
+    "balla:en-uk:row:78327": "sr_1v8xa8rankc2",
+    "balla:en-uk:row:18844": "sr_ttky5228crzh",
+    "balla:en-uk:row:18222": "sr_kvf76a0xpyjh",
+    "balla:en-uk:row:24449": "sr_fxhz0gr5zcxb",
+    "balla:en-uk:row:6360": "sr_fs5w08ht2han",
+    "balla:en-uk:row:52288": "sr_8pfr9h42wj3t",
+    "balla:en-uk:row:43704": "sr_yknx070yd3x7",
+    "balla:en-uk:row:11059": "sr_mv32w3yctq73",
+    "balla:en-uk:row:57128": "sr_wbzv1qk64heq",
+    "balla:en-uk:row:41402": "sr_vzx3j5rc05y7",
+    "balla:en-uk:row:10311": "sr_nr6szd495ztf",
+    "balla:en-uk:row:6962": "sr_wwbc2wvm9yhs",
+    "balla:en-uk:row:68175": "sr_h1jmrmhczxe7",
+    "balla:en-uk:row:20154": "sr_hcycdh3zevvy",
+    "balla:en-uk:row:6637": "sr_w03vpy9x43cc",
+    "balla:en-uk:row:7308": "sr_ej2mmssvq6bw",
+    "balla:en-uk:row:45496": "sr_r59309z5e1c8",
+    "balla:en-uk:row:3099": "sr_p5z0xvd4shsb",
+    "balla:en-uk:row:48402": "sr_t0zc26m9qbp5",
+    "balla:en-uk:row:11533": "sr_f880svyd6882",
+    "balla:en-uk:row:26980": "sr_vsktkpw6fkb9",
+    "balla:en-uk:row:57866": "sr_zd15k1yt88q6",
+    "balla:en-uk:row:16899": "sr_ftza4fmyd3bd",
+    "balla:en-uk:row:68617": "sr_t87ntmgg8c89",
+    "balla:en-uk:row:4835": "sr_hs50r30tp87p",
+    "balla:en-uk:row:43383": "sr_k482kwpvxtry",
+    "balla:en-uk:row:31200": "sr_4c50c6e691fr",
+    "balla:en-uk:row:77051": "sr_xnr7y02856vx",
+    "balla:en-uk:row:59297": "sr_g0ccqxk8s9m1",
+    "balla:en-uk:row:67341": "sr_g2qmbh95y3d9",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0028": "sr_rxwk34c6w5js",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0003": "sr_k6q46dt9cfj5",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0093": "sr_149hx20baq8h",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0057": "sr_2tqbvewhkz62",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": "sr_5crwjw31hms0",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0079": "sr_scg0xgqgjyj6",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0094": "sr_q0ygbt92w94a",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0094": "sr_trzwym463jvr",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0099": "sr_wb9hhajrhn51",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0084": "sr_4p2g728rkwft",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0041": "sr_1ww1wdegawvt",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0005": "sr_bxj1v5hm2yz6",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0134": "sr_bavh1dt3dca4",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0142": "sr_k8f4rdh9w05k",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008": "sr_mh9s3pqb2hzg",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": "sr_1hmn6zqd1kc3",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0069": "sr_mvbng149wnzz",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060": "sr_jp2107h5xjsq",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0023": "sr_wettrm6yv1vk",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0037": "sr_1491n57ct09a",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0080": "sr_pdrf2r9xsd1d",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0089": "sr_p3qa7799af15",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0039": "sr_esndrhf9w3c2",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0135": "sr_xmknjn8a2z7r",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0135": "sr_ng8rtg67a5h7",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0021": "sr_6s1ye3czttam",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0042": "sr_w1vwazn8xnmb",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0088": "sr_h9d6seg7fy70",
+    "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0113": "sr_nm9100xbbt6s",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0078": "sr_w1qr733rckx5",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0152": "sr_0ewrej4rn387",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0030": "sr_nzfrts4hzbd1",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0088": "sr_4bk386pzt0mt",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050": "sr_7hfmqxey0f0w",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0062": "sr_1mytm64pn77a",
+    "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121": "sr_nwvvwj33kh07",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0046": "sr_xefz5y0w9w47",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067": "sr_fm2d1py8ag7e",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0054": "sr_vakwnr3jgy08",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0084": "sr_awbhghvqx0q5",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0087": "sr_wtrk385f5466"
   },
   "source_record_reuses": {
     "cefr:новий": {
@@ -49804,9 +53136,49 @@
       "locator": "ulif:ulif_dictua_entries:id:267330",
       "snapshot_id": "selected-row@sha256:32c6a332ed64ab65ac2f8ca332ce8b59fa524a9050fd270937d5cca9b8d9393e",
       "source_record_id": "sr_jcadgw4k57qc"
+    },
+    "balla:en-uk:row:18222": {
+      "locator": "balla:balla_en_uk:id:18222",
+      "snapshot_id": "balla@sha256:2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188",
+      "source_record_id": "sr_kvf76a0xpyjh"
+    },
+    "balla:en-uk:row:31200": {
+      "locator": "balla:balla_en_uk:id:31200",
+      "snapshot_id": "balla@sha256:8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308",
+      "source_record_id": "sr_4c50c6e691fr"
+    },
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": {
+      "source_record_id": "sr_5crwjw31hms0",
+      "snapshot_id": "textbooks@sha256:edde9dbbc4a7b352942aaa85302063a1aa153c707236667ab9eed85408aba00b",
+      "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0099": {
+      "source_record_id": "sr_wb9hhajrhn51",
+      "snapshot_id": "textbooks@sha256:20729f55f96fcd8b0904d0c641bc4a600e9874ca53be4d5088cef5ab49fe8cc2",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0099"
+    },
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008": {
+      "source_record_id": "sr_mh9s3pqb2hzg",
+      "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d",
+      "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": {
+      "source_record_id": "sr_1hmn6zqd1kc3",
+      "snapshot_id": "textbooks@sha256:4fbe76511f23a722744231f28860acc08b858f6b74d40b5188e1634f818313b2",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0071"
+    },
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060": {
+      "source_record_id": "sr_jp2107h5xjsq",
+      "snapshot_id": "textbooks@sha256:02d5fd7467157536f98a17bfe7dc3b534d895cf142cddaf7c1b95146dee8dfe6",
+      "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0060"
+    },
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050": {
+      "source_record_id": "sr_7hfmqxey0f0w",
+      "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3",
+      "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050"
     }
   },
-  "sources_sha256": "9f44d428da23ce4f782185189d7258e4b5cd44857a72179e0fb9c501060329af",
+  "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
   "stress_attempts": {
     "wc_04tmbj6y1v3y": [
       {

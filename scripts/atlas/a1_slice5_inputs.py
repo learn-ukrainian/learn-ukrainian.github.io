@@ -26,7 +26,9 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "ac7792ee75bc5f5fb8bde700076279d2d368dde9cc5a91971a4a2cd1024be6b1"
+MANIFEST_SHA256 = "a1815ee5e67dbb1f4f4c0cc915b22dec0b150d6d40e8ff65c31dc9bb3704206c"
+COMPANION_FILE_SHA256 = "edb9ee640f813289293e85c0a9d0e603d2780414f1b8101bee0acaf885bb6d63"
+MANIFEST_FILE_SHA256 = "86f86d04e75481fbd4a4e9b4a9cefef183d8992ddd99e2c8e51e3917198377b1"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -103,7 +105,18 @@ def select(inventory, slice3, slice4, snapshot):
 def frozen_selection(root):
     snapshot = cards.load(root / INPUTS)
     cards.require(digest(snapshot) == INPUTS_SHA256, "slice5_snapshot_digest_mismatch")
-    for path, expected in FILE_SHA256.items():
+    # Verify the current predecessor manifests and companions separately from
+    # the historical file digests recorded in the selection snapshot.
+    file_pins = {
+        **FILE_SHA256,
+        cards.MANIFEST: cards.MANIFEST_FILE_SHA256,
+        slice3_inputs.MANIFEST: slice3_inputs.MANIFEST_FILE_SHA256,
+        cards.COMPANION: cards.COMPANION_FILE_SHA256,
+        slice3_inputs.COMPANION: slice3_inputs.COMPANION_FILE_SHA256,
+        previous.MANIFEST: previous.MANIFEST_FILE_SHA256,
+        previous.COMPANION: previous.COMPANION_FILE_SHA256,
+    }
+    for path, expected in file_pins.items():
         cards.require(hashlib.sha256((root / path).read_bytes()).hexdigest() == expected,
                       "slice5_input_file_digest_mismatch")
     inventory = cards.load(root / "registry/atlas/a1-v1-inventory.json")
@@ -197,6 +210,9 @@ def response_payload(record, call):
         return {"text": text.split("\n\n", 1)[1].split("Джерело:", 1)[0].rstrip()}
     if source == "textbooks":
         return call["response"]["structuredContent"]["hits"][0]
+    if source == "balla":
+        cards.require(call["tool"] == "translate_en_uk", "slice5_balla_call_mismatch")
+        return call["response"]["structuredContent"]
     cards.require(source in {"puls", "grac", "heritage"}, "slice5_unexpected_source")
     return call["response"].get("structuredContent") or {"text": text}
 

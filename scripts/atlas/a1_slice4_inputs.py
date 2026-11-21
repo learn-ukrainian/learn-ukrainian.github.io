@@ -17,6 +17,7 @@ from scripts.atlas import a1_slice3_inputs as previous
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas.a1_card_receipts import _payload_text, digest, selected_rows
+from scripts.atlas.a1_card_receipts import is_citation_analysis as _canonical_grammar
 
 SOURCE_SHA = "0398eb5caa1c6a98dccaf9275520ccb2f978a95c"
 JOIN = "remaining_resolved_entry_priority_inventory_order_v1"
@@ -25,7 +26,9 @@ MANIFEST = "registry/atlas/a1-v1-slice4.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice4.json"
 INPUTS = "registry/atlas/a1-v1-slice4-inputs.json"
 INPUTS_SHA256 = "c3d85031e708005e8018c097cd35ce83b985f9ceda5e5b1a8659e61706f660e8"
-MANIFEST_SHA256 = "9d8dc2693765f87adbf01decc72542c8225e942f0c60aa9bed4cdc982d6b38b4"
+MANIFEST_SHA256 = "4a8e1a8d5e0b201f3b8373f93959019a2e1ba65b3f1719678c071d8327ec4bb2"
+COMPANION_FILE_SHA256 = "d93f7c10272373516791e629cefd355c3e1695566e71a8d24f50889fd8e9a225"
+MANIFEST_FILE_SHA256 = "dadd09211a6b5676cc0281cc6fcf24724358dff1a8a9db4a2390fef691fa37c4"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -95,7 +98,16 @@ def select(inventory, slice3, snapshot):
 def frozen_selection(root):
     snapshot = cards.load(root / INPUTS)
     cards.require(digest(snapshot) == INPUTS_SHA256, "slice4_snapshot_digest_mismatch")
-    for path, expected in FILE_SHA256.items():
+    # Verify the current predecessor manifests and companions separately from
+    # the historical file digests recorded in the selection snapshot.
+    file_pins = {
+        **FILE_SHA256,
+        cards.MANIFEST: cards.MANIFEST_FILE_SHA256,
+        previous.MANIFEST: previous.MANIFEST_FILE_SHA256,
+        cards.COMPANION: cards.COMPANION_FILE_SHA256,
+        previous.COMPANION: previous.COMPANION_FILE_SHA256,
+    }
+    for path, expected in file_pins.items():
         cards.require(hashlib.sha256((root / path).read_bytes()).hexdigest() == expected,
                       "slice4_input_file_digest_mismatch")
     inventory = cards.load(root / "registry/atlas/a1-v1-inventory.json")
@@ -163,26 +175,6 @@ def _strings(value):
     elif isinstance(value, list):
         for item in value:
             yield from _strings(item)
-
-
-def _canonical_grammar(analysis, target):
-    """Distinguish citation readings from syncretic forms of the same entry."""
-    if (analysis.get("entry_id"), analysis.get("lemma"), analysis.get("pos"),
-            analysis.get("word_form")) != (target["entry_id"], target["lemma"],
-                                           target["pos"], target["lemma"]):
-        return False
-    tags = analysis["tags"].split(":")
-    if tags[0] != target["pos"]:
-        return False
-    if target["pos"] == "noun":
-        # Plural-only headwords retain p:...:ns; indeclinables use the
-        # singular nominative reading, not an arbitrary identical case form.
-        return "v_naz" in tags and (("p" in tags) == ("ns" in tags))
-    if target["pos"] == "adj":
-        return "m" in tags and "v_naz" in tags
-    if target["pos"] == "verb":
-        return "inf" in tags
-    return target["pos"] == "adv"
 
 
 def _validate_grammar(claim, record, target):

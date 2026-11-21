@@ -111,7 +111,7 @@ describe('public A1 edition entry points', () => {
       button.id, button.getAttribute('type'), button.getAttribute('aria-label'),
     ])).toEqual([
       ['lu-theme-toggle', 'button', 'Toggle dark and light theme'],
-      ['lu-locale-toggle', 'button', 'Switch interface language (English / Ukrainian)'],
+      ['lu-locale-toggle', 'button', 'УКР — Switch interface language (English / Ukrainian)'],
     ]);
     expect(page.querySelectorAll('#lu-theme-toggle')).toHaveLength(1);
     expect(page.querySelectorAll('#lu-locale-toggle')).toHaveLength(1);

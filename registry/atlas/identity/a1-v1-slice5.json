@@ -1,5 +1,5 @@
 {
-  "base_sha256": "1da304956bb6a345e40da1bc969b7a0766f0f93b756bb8f04e083090c397bfd8",
+  "base_sha256": "4c85c63d00ec519ffc408b8f619afb14d4cfec07da87913ced6c7854d4001715",
   "entries": [
     {
       "card_id": "wc_3xqwne5jgn63",
@@ -3645,6 +3645,672 @@
       "to": [
         "sr_5d7zs7en0d9s"
       ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2269",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:54731\",\"snapshot_id\":\"balla@sha256:7533f236d6893645d2785283d7b08469a656a780647bee346450bf5722c2601a\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_z220jhpza9zg"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2270",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:52569\",\"snapshot_id\":\"balla@sha256:bf6775669adb3d7979403e1d779d16965be56b7c176e64b10451b400ce9de190\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_zyqr4pqdn1r7"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2271",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:8603\",\"snapshot_id\":\"balla@sha256:ee7030efafaafb519cbc50ce1865235bf669ea4085759c7be9539f5397f0bb13\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_7r8yv1bqh5hp"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2272",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:75860\",\"snapshot_id\":\"balla@sha256:a84b93daf95e50b7994a37fca235bf06cfdf859d213ec6d619ad8788180c6826\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_kzkr5wtj282k"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2273",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:14440\",\"snapshot_id\":\"balla@sha256:fa16fb181f0085564a99f8ebefd6b507ba32a945d0a7d3af67ca83d8089b9e2e\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_9zwmkfmqzz88"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2274",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:29866\",\"snapshot_id\":\"balla@sha256:6e1268fa7e8e16954c582a07f0c2c021af8f7717a6dda7ac826f665132279688\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_v2ke2dcpx7kf"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2275",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:38968\",\"snapshot_id\":\"balla@sha256:cb3e8af2ad4102ae899b7ccb7edff78af5ecdfc5ef13eaa1b39f8e93517c1684\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0mwhs5235bv1"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2276",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:38128\",\"snapshot_id\":\"balla@sha256:2a20692ba991ae80aa81c4d85ef25184bdc044a56b9b93a43f1f3befe234f7cf\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_67yv1s22xdas"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2277",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:8843\",\"snapshot_id\":\"balla@sha256:d75879f5d8e27c308b7eceb128a40b56564b403ac3e6580a9ed7a3fd2d5c14f1\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_1ky9dr44682m"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2278",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:7822\",\"snapshot_id\":\"balla@sha256:49c2acad0794f3c298c380b7e006f70ecb2b193e7f45b9b8f54d38bd7ce5413a\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_xee4a7ym2618"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2279",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:17418\",\"snapshot_id\":\"balla@sha256:3c090536c22d3179aa4a9cf7ecfbebf20233c6b12d6643cd7b17db9d1de69b70\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_qx9248qc56e6"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2280",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:11922\",\"snapshot_id\":\"balla@sha256:8deb832697e6a876d51fad886f33f67a9f176935b4dd5b716ca53e1dc3165be2\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_yn24fm9nd73e"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2281",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:31200\",\"snapshot_id\":\"balla@sha256:8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4c50c6e691fr"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2282",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:10042\",\"snapshot_id\":\"balla@sha256:0c95343a18cb88588ac44935830ed8c9aca76c95a29f1d9e54dbc86ebcd481f1\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_g81wg5ejbvbx"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2283",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:518\",\"snapshot_id\":\"balla@sha256:f2efa289411b52f20e046905d9d4c3a9785140511062072127af08f26495856b\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_qbrtq2z0nrxb"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2284",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:42939\",\"snapshot_id\":\"balla@sha256:87ae786c4c332386647391bbbd72e5f6a0c0ae46f14f910b76141f0ad7c3f2a2\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_m08srcj1ncn2"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2285",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:75729\",\"snapshot_id\":\"balla@sha256:0c0f0751301f5a6202e8a17cdac8d44a4c484d429769264bb276b15461f6a1c3\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_fp7s40pq4s4y"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2286",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:27839\",\"snapshot_id\":\"balla@sha256:336006548e38a07cdd797c61e9e0f206b106ad905da7f3067cebda6ddf7e044d\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_vq7vm0dqxz7n"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2287",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:77920\",\"snapshot_id\":\"balla@sha256:8ed26a0cf5c1a160f42cc34e4df4f05b33c486a8d2a904f9ff6c84cd5508646c\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_y0pearvg449w"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2288",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:43246\",\"snapshot_id\":\"balla@sha256:84309903b8c645915ccef24f8af754c49aedff01f148383180580fb3fc2e364a\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_se71fv5y7bh0"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2289",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:9047\",\"snapshot_id\":\"balla@sha256:fa325183dbf7b640b09d80659d9726aa3d84512ba01dda770eb625afcf3e7d98\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_byztm0cqgxzg"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2290",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:9510\",\"snapshot_id\":\"balla@sha256:39e0f5e63beccb5a2ee6ec4c936a3a9dcb5f3c15d52e78b2b27fa044d217e4a0\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_tk2fahv7zmrw"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2291",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:76897\",\"snapshot_id\":\"balla@sha256:e5606cf9264e9ea134daa6485335b8b4103bf3db0cdf1d6e8bfcd658326a6b85\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0cg0j19gnpyh"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2292",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:38817\",\"snapshot_id\":\"balla@sha256:396489adcc4f6deceb0b59f98d8b58d8f7df598b1b724157f886f706569c09e8\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_31yhsqpg81dg"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2293",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:68234\",\"snapshot_id\":\"balla@sha256:757c14f99f0fecc063c707cdc3d7ab9732c489b76b511a1a002d43e5ba3ebeb8\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_bcb5hmveg8zh"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2294",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:78117\",\"snapshot_id\":\"balla@sha256:d18d46b66ef48228e75f61cbf352e11322627225730d869a022b4f4ae790973c\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_xzwgktjyva2h"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2295",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:30020\",\"snapshot_id\":\"balla@sha256:44ac40f15862953f5e17f6d6fafaf090c1cbc291e3f9b711e27c31f6e4685248\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_e6dxc4f4129t"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2296",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:52083\",\"snapshot_id\":\"balla@sha256:d565ff2a672c3b0c121cd95a1cf057dfc804a01de3787960124a66feb19d6fa2\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_d2pb2h4ejekt"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2297",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:12794\",\"snapshot_id\":\"balla@sha256:266465aa32f08a50a86c50f4660d54f948fef85f25c8cefd09cca60eb6fb43ab\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_kvm4r44jrzpf"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2298",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:51531\",\"snapshot_id\":\"balla@sha256:3368df3b4eae593450425968e747608db81a46a568a7ce658cf808b2b2c19b5d\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_jbt4j8a7zvc4"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2299",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:63226\",\"snapshot_id\":\"balla@sha256:a35e9d873034bb5d2c8d0b2f75d7d753d17b93596a3a40784bc575ed20f2b267\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_3gwj37sbc4k9"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2300",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:67050\",\"snapshot_id\":\"balla@sha256:ab5977e91261810bb18899bf41f482cfff656b049640bd2111d748ec83dc22d5\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_ty6em3b2bqck"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2301",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:37412\",\"snapshot_id\":\"balla@sha256:4ddff8bc5e135e8b6fdfd3f8f6b5f8e7293025bfd72236913873238346867641\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_vma2g84t83js"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2302",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:25337\",\"snapshot_id\":\"balla@sha256:9dca581391f567d42abe0c95558e3af34c506395c5d696c4ce0b09e96d3f1d62\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_1pkhnkgdtngy"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2303",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:66265\",\"snapshot_id\":\"balla@sha256:ac196fbb94562e8ab3003bf92e4492d0886dafc6a0dbbcf366ea209cd89f49a6\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_wf9czk91j149"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2304",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:23558\",\"snapshot_id\":\"balla@sha256:5d7282cb5902e2c2509faef604ccbe0ab27ae626fe8d0325b5329fb730abc724\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_dbyantm6xbdg"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2305",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:473\",\"snapshot_id\":\"balla@sha256:84f74b8e898f563707fc78d7cab1a3dcd242767a66fc2bfd06fff288abe6c8ae\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_7byn3ehp2k5c"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2306",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:23370\",\"snapshot_id\":\"balla@sha256:c8b093861923ebea192302c24c79d56a3e841b966dd53d381037c88d60e6eacb\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_24qx3j0z866g"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2307",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:18222\",\"snapshot_id\":\"balla@sha256:2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_kvf76a0xpyjh"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2308",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:20338\",\"snapshot_id\":\"balla@sha256:0044bf9604a1514e21faa2c1d0021f18af64a61f6753a60069b6f35b3980f078\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_8x8eyjbntxsr"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2309",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:61416\",\"snapshot_id\":\"balla@sha256:d2dbc5d7845a14021500f185f3a962353cbea4026069fef9a901d5d1d4159959\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_zsc3k9gz9185"
+      ]
+    },
+    {
+      "build_id": "a1-slice5-gloss-allocation-12638",
+      "event_id": "ie_2310",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:65240\",\"snapshot_id\":\"balla@sha256:f53f0023399dd65bb2fe628b4c33fc4f34e8a20a37ac494766e4b1211acf7580\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_vpzy9a9bpdby"
+      ]
+    },
+    {
+      "event_id": "ie_2415",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_xzmcvn9fppvh"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0047\",\"snapshot_id\":\"textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2416",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_k8ej9pzx0hyw"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0089\",\"snapshot_id\":\"textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2417",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0kg7gkgkmfvx"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122\",\"snapshot_id\":\"textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2418",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4m766nrzfpbz"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054\",\"snapshot_id\":\"textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2419",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_j79rvsfkzkx3"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138\",\"snapshot_id\":\"textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2420",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_m4dsskayr8zv"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-2_s0084\",\"snapshot_id\":\"textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2421",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_2g1xmbe95swg"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043\",\"snapshot_id\":\"textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2422",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_7hfmqxey0f0w"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0050\",\"snapshot_id\":\"textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2423",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_651kg1tfd5jp"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0065\",\"snapshot_id\":\"textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2424",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_8ap0ghn651s1"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0051\",\"snapshot_id\":\"textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2425",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_whtqsj99bevg"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008\",\"snapshot_id\":\"textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2426",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_714skah9mnf7"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055\",\"snapshot_id\":\"textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2427",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_n9nfq473adgf"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0004\",\"snapshot_id\":\"textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2428",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_byh3mmevwtrr"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064\",\"snapshot_id\":\"textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2429",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_cdq4k5jq7vg1"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000\",\"snapshot_id\":\"textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2430",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_1h622w2g5j0e"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0014\",\"snapshot_id\":\"textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2431",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_c988asybxgr4"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0022\",\"snapshot_id\":\"textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2432",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_bjsc059tewnp"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061\",\"snapshot_id\":\"textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2433",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_21sscdrvtznx"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137\",\"snapshot_id\":\"textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2434",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_j324rb1kdjz7"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043\",\"snapshot_id\":\"textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2435",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_39akq9jwnen2"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055\",\"snapshot_id\":\"textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2436",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_cr8s7egfhd96"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0081\",\"snapshot_id\":\"textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2437",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0e0f4cn67asy"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060\",\"snapshot_id\":\"textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2438",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_a1b9qe6sn576"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-2_s0004\",\"snapshot_id\":\"textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2439",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_6x3ynvwx5kf5"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0082\",\"snapshot_id\":\"textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2440",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4kgca0k3jecd"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-1_s0106\",\"snapshot_id\":\"textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2441",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_8nkg84qwc2t1"
+      ],
+      "evidence": "{\"locator\":\"textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141\",\"snapshot_id\":\"textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2442",
+      "build_id": "a1-slice5-examples-allocation-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_mh9s3pqb2hzg"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0008\",\"snapshot_id\":\"textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2472",
+      "build_id": "a1-slice5-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_s0fh5capw23q"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-2_s0055\",\"snapshot_id\":\"textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2473",
+      "build_id": "a1-slice5-examples-replacements-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_nr6h7shteqbn"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003\",\"snapshot_id\":\"textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2484",
+      "build_id": "a1-slice5-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_mwqvmdg2x29d"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050\",\"snapshot_id\":\"textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2485",
+      "build_id": "a1-slice5-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_dv0z5waqxh43"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107\",\"snapshot_id\":\"textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice5-allocation.v1",
@@ -8454,6 +9120,1412 @@
       ],
       "source_id": "vts_busel_slovnyk_me",
       "source_record_id": "sr_5d7zs7en0d9s"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:54731",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:7533f236d6893645d2785283d7b08469a656a780647bee346450bf5722c2601a"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:54731",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:7533f236d6893645d2785283d7b08469a656a780647bee346450bf5722c2601a",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_z220jhpza9zg"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:52569",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:bf6775669adb3d7979403e1d779d16965be56b7c176e64b10451b400ce9de190"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:52569",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:bf6775669adb3d7979403e1d779d16965be56b7c176e64b10451b400ce9de190",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_zyqr4pqdn1r7"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:8603",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:ee7030efafaafb519cbc50ce1865235bf669ea4085759c7be9539f5397f0bb13"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:8603",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:ee7030efafaafb519cbc50ce1865235bf669ea4085759c7be9539f5397f0bb13",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_7r8yv1bqh5hp"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:75860",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:a84b93daf95e50b7994a37fca235bf06cfdf859d213ec6d619ad8788180c6826"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:75860",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:a84b93daf95e50b7994a37fca235bf06cfdf859d213ec6d619ad8788180c6826",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_kzkr5wtj282k"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:14440",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:fa16fb181f0085564a99f8ebefd6b507ba32a945d0a7d3af67ca83d8089b9e2e"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:14440",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:fa16fb181f0085564a99f8ebefd6b507ba32a945d0a7d3af67ca83d8089b9e2e",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_9zwmkfmqzz88"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:29866",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:6e1268fa7e8e16954c582a07f0c2c021af8f7717a6dda7ac826f665132279688"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:29866",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:6e1268fa7e8e16954c582a07f0c2c021af8f7717a6dda7ac826f665132279688",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_v2ke2dcpx7kf"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:38968",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:cb3e8af2ad4102ae899b7ccb7edff78af5ecdfc5ef13eaa1b39f8e93517c1684"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:38968",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:cb3e8af2ad4102ae899b7ccb7edff78af5ecdfc5ef13eaa1b39f8e93517c1684",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_0mwhs5235bv1"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:38128",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:2a20692ba991ae80aa81c4d85ef25184bdc044a56b9b93a43f1f3befe234f7cf"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:38128",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:2a20692ba991ae80aa81c4d85ef25184bdc044a56b9b93a43f1f3befe234f7cf",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_67yv1s22xdas"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:8843",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:d75879f5d8e27c308b7eceb128a40b56564b403ac3e6580a9ed7a3fd2d5c14f1"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:8843",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:d75879f5d8e27c308b7eceb128a40b56564b403ac3e6580a9ed7a3fd2d5c14f1",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_1ky9dr44682m"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:7822",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:49c2acad0794f3c298c380b7e006f70ecb2b193e7f45b9b8f54d38bd7ce5413a"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:7822",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:49c2acad0794f3c298c380b7e006f70ecb2b193e7f45b9b8f54d38bd7ce5413a",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_xee4a7ym2618"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:17418",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:3c090536c22d3179aa4a9cf7ecfbebf20233c6b12d6643cd7b17db9d1de69b70"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:17418",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:3c090536c22d3179aa4a9cf7ecfbebf20233c6b12d6643cd7b17db9d1de69b70",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_qx9248qc56e6"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:11922",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:8deb832697e6a876d51fad886f33f67a9f176935b4dd5b716ca53e1dc3165be2"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:11922",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:8deb832697e6a876d51fad886f33f67a9f176935b4dd5b716ca53e1dc3165be2",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_yn24fm9nd73e"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:31200",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:31200",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:8005562f90f901b0087c5d1a5d03d5e7b864560f2a70be645ee656fd38e49308",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_4c50c6e691fr"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:10042",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:0c95343a18cb88588ac44935830ed8c9aca76c95a29f1d9e54dbc86ebcd481f1"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:10042",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:0c95343a18cb88588ac44935830ed8c9aca76c95a29f1d9e54dbc86ebcd481f1",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_g81wg5ejbvbx"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:518",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:f2efa289411b52f20e046905d9d4c3a9785140511062072127af08f26495856b"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:518",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:f2efa289411b52f20e046905d9d4c3a9785140511062072127af08f26495856b",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_qbrtq2z0nrxb"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:42939",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:87ae786c4c332386647391bbbd72e5f6a0c0ae46f14f910b76141f0ad7c3f2a2"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:42939",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:87ae786c4c332386647391bbbd72e5f6a0c0ae46f14f910b76141f0ad7c3f2a2",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_m08srcj1ncn2"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:75729",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:0c0f0751301f5a6202e8a17cdac8d44a4c484d429769264bb276b15461f6a1c3"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:75729",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:0c0f0751301f5a6202e8a17cdac8d44a4c484d429769264bb276b15461f6a1c3",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_fp7s40pq4s4y"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:27839",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:336006548e38a07cdd797c61e9e0f206b106ad905da7f3067cebda6ddf7e044d"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:27839",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:336006548e38a07cdd797c61e9e0f206b106ad905da7f3067cebda6ddf7e044d",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_vq7vm0dqxz7n"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:77920",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:8ed26a0cf5c1a160f42cc34e4df4f05b33c486a8d2a904f9ff6c84cd5508646c"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:77920",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:8ed26a0cf5c1a160f42cc34e4df4f05b33c486a8d2a904f9ff6c84cd5508646c",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_y0pearvg449w"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:43246",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:84309903b8c645915ccef24f8af754c49aedff01f148383180580fb3fc2e364a"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:43246",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:84309903b8c645915ccef24f8af754c49aedff01f148383180580fb3fc2e364a",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_se71fv5y7bh0"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:9047",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:fa325183dbf7b640b09d80659d9726aa3d84512ba01dda770eb625afcf3e7d98"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:9047",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:fa325183dbf7b640b09d80659d9726aa3d84512ba01dda770eb625afcf3e7d98",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_byztm0cqgxzg"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:9510",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:39e0f5e63beccb5a2ee6ec4c936a3a9dcb5f3c15d52e78b2b27fa044d217e4a0"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:9510",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:39e0f5e63beccb5a2ee6ec4c936a3a9dcb5f3c15d52e78b2b27fa044d217e4a0",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_tk2fahv7zmrw"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:76897",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:e5606cf9264e9ea134daa6485335b8b4103bf3db0cdf1d6e8bfcd658326a6b85"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:76897",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:e5606cf9264e9ea134daa6485335b8b4103bf3db0cdf1d6e8bfcd658326a6b85",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_0cg0j19gnpyh"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:38817",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:396489adcc4f6deceb0b59f98d8b58d8f7df598b1b724157f886f706569c09e8"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:38817",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:396489adcc4f6deceb0b59f98d8b58d8f7df598b1b724157f886f706569c09e8",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_31yhsqpg81dg"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:68234",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:757c14f99f0fecc063c707cdc3d7ab9732c489b76b511a1a002d43e5ba3ebeb8"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:68234",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:757c14f99f0fecc063c707cdc3d7ab9732c489b76b511a1a002d43e5ba3ebeb8",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_bcb5hmveg8zh"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:78117",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:d18d46b66ef48228e75f61cbf352e11322627225730d869a022b4f4ae790973c"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:78117",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:d18d46b66ef48228e75f61cbf352e11322627225730d869a022b4f4ae790973c",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_xzwgktjyva2h"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:30020",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:44ac40f15862953f5e17f6d6fafaf090c1cbc291e3f9b711e27c31f6e4685248"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:30020",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:44ac40f15862953f5e17f6d6fafaf090c1cbc291e3f9b711e27c31f6e4685248",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_e6dxc4f4129t"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:52083",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:d565ff2a672c3b0c121cd95a1cf057dfc804a01de3787960124a66feb19d6fa2"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:52083",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:d565ff2a672c3b0c121cd95a1cf057dfc804a01de3787960124a66feb19d6fa2",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_d2pb2h4ejekt"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:12794",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:266465aa32f08a50a86c50f4660d54f948fef85f25c8cefd09cca60eb6fb43ab"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:12794",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:266465aa32f08a50a86c50f4660d54f948fef85f25c8cefd09cca60eb6fb43ab",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_kvm4r44jrzpf"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:51531",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:3368df3b4eae593450425968e747608db81a46a568a7ce658cf808b2b2c19b5d"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:51531",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:3368df3b4eae593450425968e747608db81a46a568a7ce658cf808b2b2c19b5d",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_jbt4j8a7zvc4"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:63226",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:a35e9d873034bb5d2c8d0b2f75d7d753d17b93596a3a40784bc575ed20f2b267"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:63226",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:a35e9d873034bb5d2c8d0b2f75d7d753d17b93596a3a40784bc575ed20f2b267",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_3gwj37sbc4k9"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:67050",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:ab5977e91261810bb18899bf41f482cfff656b049640bd2111d748ec83dc22d5"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:67050",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:ab5977e91261810bb18899bf41f482cfff656b049640bd2111d748ec83dc22d5",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_ty6em3b2bqck"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:37412",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:4ddff8bc5e135e8b6fdfd3f8f6b5f8e7293025bfd72236913873238346867641"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:37412",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:4ddff8bc5e135e8b6fdfd3f8f6b5f8e7293025bfd72236913873238346867641",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_vma2g84t83js"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:25337",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:9dca581391f567d42abe0c95558e3af34c506395c5d696c4ce0b09e96d3f1d62"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:25337",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:9dca581391f567d42abe0c95558e3af34c506395c5d696c4ce0b09e96d3f1d62",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_1pkhnkgdtngy"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:66265",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:ac196fbb94562e8ab3003bf92e4492d0886dafc6a0dbbcf366ea209cd89f49a6"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:66265",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:ac196fbb94562e8ab3003bf92e4492d0886dafc6a0dbbcf366ea209cd89f49a6",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_wf9czk91j149"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:23558",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:5d7282cb5902e2c2509faef604ccbe0ab27ae626fe8d0325b5329fb730abc724"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:23558",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:5d7282cb5902e2c2509faef604ccbe0ab27ae626fe8d0325b5329fb730abc724",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_dbyantm6xbdg"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:473",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:84f74b8e898f563707fc78d7cab1a3dcd242767a66fc2bfd06fff288abe6c8ae"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:473",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:84f74b8e898f563707fc78d7cab1a3dcd242767a66fc2bfd06fff288abe6c8ae",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_7byn3ehp2k5c"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:23370",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:c8b093861923ebea192302c24c79d56a3e841b966dd53d381037c88d60e6eacb"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:23370",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:c8b093861923ebea192302c24c79d56a3e841b966dd53d381037c88d60e6eacb",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_24qx3j0z866g"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:18222",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:18222",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:2d9a8bfa980b96cd1771720b6c8749c250c3e6a391a7529c6666322250b0d188",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_kvf76a0xpyjh"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:20338",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:0044bf9604a1514e21faa2c1d0021f18af64a61f6753a60069b6f35b3980f078"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:20338",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:0044bf9604a1514e21faa2c1d0021f18af64a61f6753a60069b6f35b3980f078",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_8x8eyjbntxsr"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:61416",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:d2dbc5d7845a14021500f185f3a962353cbea4026069fef9a901d5d1d4159959"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:61416",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:d2dbc5d7845a14021500f185f3a962353cbea4026069fef9a901d5d1d4159959",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_zsc3k9gz9185"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:65240",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:f53f0023399dd65bb2fe628b4c33fc4f34e8a20a37ac494766e4b1211acf7580"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:65240",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:f53f0023399dd65bb2fe628b4c33fc4f34e8a20a37ac494766e4b1211acf7580",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_vpzy9a9bpdby"
+    },
+    {
+      "source_record_id": "sr_xzmcvn9fppvh",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0047",
+          "snapshot_id": "textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:130b1fcb59d3e5469d4593531ba21e999b499c62024fb100861f8073cabaf746",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0047",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_k8ej9pzx0hyw",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0089",
+          "snapshot_id": "textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:f29a2e7f4ca9b62b37cc93868cfa85a4fb5af5ff44475aa19760ab32833ade44",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0089",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_0kg7gkgkmfvx",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+          "snapshot_id": "textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e2af53ee58054bb144409ee60e4e4c56f6bf4c3e23b73b8cf130c8691236a59a",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_4m766nrzfpbz",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+          "snapshot_id": "textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:d49999b21e4c0566915e96f3a8901800ade534476f509a17a50506f83febd4e3",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_j79rvsfkzkx3",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+          "snapshot_id": "textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:11ec8fddb17a47157b36c04d425b89754f7ba9fc1fe56262c5ea03235d75272f",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_m4dsskayr8zv",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0084",
+          "snapshot_id": "textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:9ca38d2b5a43c0360380e6c21f72bfb00082c6480ec27c5df57feec02ced9d69",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0084",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_2g1xmbe95swg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+          "snapshot_id": "textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:266356bbe2b9fa992ffce778283a895db7178d04ee79df03afee1d61a3108712",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_7hfmqxey0f0w",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050",
+          "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0cbc996b6cafda984798e973c83c742692515002cb14ae8a30e5b376f1a34ff3",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0050",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_651kg1tfd5jp",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0065",
+          "snapshot_id": "textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:b68be32ae26eb3037d170abb25825d2b72ac1f8d354023246bdf4bbb54e3063f",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0065",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_8ap0ghn651s1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0051",
+          "snapshot_id": "textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:176625d30aa660bd8d612a29fdcf4ee70867cf591619fc67b6795f1d53fd2030",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0051",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_whtqsj99bevg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+          "snapshot_id": "textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:017d62988058fe4b4c607efe08efcce000963b23bfdae474c35006c15f49daf7",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_714skah9mnf7",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+          "snapshot_id": "textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:b83f2e2c7054cb154d61d48c2afae40af1454327764d607233332ad275f75b14",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_n9nfq473adgf",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0004",
+          "snapshot_id": "textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0be62e7cce068b77f4815d75726293f3e6eb57fc5459e065f30935d024069e08",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0004",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_byh3mmevwtrr",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+          "snapshot_id": "textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:bbbfa0fde68c21ff9dd9e804c2fc2971e661fa9a4e29dfc3468d03702d2bca93",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_cdq4k5jq7vg1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+          "snapshot_id": "textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:5f989e394ebf64596648d27722a6ab57a1b660740445f8eb1f7773ee4139108f",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_1h622w2g5j0e",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0014",
+          "snapshot_id": "textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:371e3e43a2d752e9f74082bfb521832dd546e77e58c063a97638b923491748b2",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0014",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_c988asybxgr4",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0022",
+          "snapshot_id": "textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:cec8262975e4a5b3de815ccbec0b4c626f0ba1b2956377ff178359cad16f4018",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0022",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_bjsc059tewnp",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+          "snapshot_id": "textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:2bbf87c96bb3a5956dcfbf914857af27cd6914d300004d8cb8f9996024e9c558",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_21sscdrvtznx",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+          "snapshot_id": "textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0927ba0dec2ae174994b68cec6b945e6499d6a9c4caedd26c1a0ee4a8a216cf4",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_j324rb1kdjz7",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+          "snapshot_id": "textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e742e136c60e48dd3930fefdf9e2c88b71aab301d9349dfcb82bfbe1eb33b880",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_39akq9jwnen2",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+          "snapshot_id": "textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0c41a42a404cd18a0bcf4bcbd0ae3e2325c92b2e9325783ce2e4ff77587a2f53",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_cr8s7egfhd96",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0081",
+          "snapshot_id": "textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:29f7f2a483d401a2bda5517b98c040d8cef799afcee6d81ea872a04b1e5291fe",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0081",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_0e0f4cn67asy",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+          "snapshot_id": "textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:ee7dcab9ceaaa166277402919d31d7b3003e6624a9b966b7417823eccf04af2c",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_a1b9qe6sn576",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0004",
+          "snapshot_id": "textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:408a2320e974ac0f9f8da85ecc76b1dd2b847d7eb8cf2cffa33270df63ac86eb",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-2_s0004",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_6x3ynvwx5kf5",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0082",
+          "snapshot_id": "textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:99906b1fa0a08a8f6ac203773a7ab1aa9b698aafdc20567f2f816a353feb535b",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0082",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_4kgca0k3jecd",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0106",
+          "snapshot_id": "textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:28966f6ba550cb272649e4e4abef635e0a6aa57b8fb30c2b9c08db5bd04e0e7e",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-vashulenko-2019-1_s0106",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_8nkg84qwc2t1",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+          "snapshot_id": "textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:4564ed08e9867c0bea90036bb2674117295b458ab64b3eac3c0a9fe1c442d35b",
+          "status": "unique",
+          "locator": "textbook:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_mh9s3pqb2hzg",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008",
+          "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:9b584f5d23677ad297515456fd39498ca65b2a4596cb7737382bc6105a53e01d",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0008",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_s0fh5capw23q",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0055",
+          "snapshot_id": "textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:e584060e0dc6af0a6745d1ad00bacc39cc54fec6113046f3a1c4650495cf2bfc",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-2_s0055",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_nr6h7shteqbn",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+          "snapshot_id": "textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_mwqvmdg2x29d",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050",
+          "snapshot_id": "textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_dv0z5waqxh43",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
+          "snapshot_id": "textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
     }
   ]
 }

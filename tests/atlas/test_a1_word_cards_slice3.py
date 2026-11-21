@@ -222,6 +222,23 @@ def test_slice3_authorities_and_reviewed_chain_replay(monkeypatch, tmp_path, cap
     mechanics.refresh(foreign, "vesum")
     with pytest.raises(Refusal, match="form_entry_mismatch"):
         cards.build(**foreign, batch=fixture_context(foreign))
+    morphology = copy.deepcopy(batch)
+    record = morphology["sources"]["records"]["vesum:яйце"]
+    identity = {"entry_id": 436914, "lemma": "яйце", "pos": "noun"}
+    inflected = {**identity, "word_form": "fixture-form", "tags": "noun:n:v_naz"}
+    dative = {**identity, "word_form": "яйцю", "tags": "noun:n:v_dav"}
+    citation = {**identity, "word_form": "яйце", "tags": "noun:n:v_naz"}
+    record["payload"]["clean_analyses"] = [inflected, dative, citation]
+    mechanics.refresh(morphology, "vesum")
+    label = mechanics.recipe("grammatical_label", "vesum", "/clean_analyses/1/tags", dative["tags"], None)
+    morphology["manifest"]["claims"].append(label)
+    with pytest.raises(Refusal, match="slice3_morphology_not_canonical_headword"):
+        cards.build(**morphology, batch=fixture_context(morphology))
+    label.update(pointer="/clean_analyses/2/tags", supporting_spans=[
+        {"pointer": f"/clean_analyses/2/{field}", "span": [0, len(citation[field])]}
+        for field in ("word_form", "lemma", "pos")])
+    fixed = cards.build(**morphology, batch=fixture_context(morphology))
+    assert mechanics.values(fixed, "grammatical_label") == ["noun:n:v_naz"]
     example = mechanics.example_claim(batch)
     pending = cards.build(**batch, batch=context)
     assert mechanics.values(pending, "examples", mechanics.SENSE) == []

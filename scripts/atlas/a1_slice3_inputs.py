@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 import unicodedata
 from functools import partial
 from pathlib import Path
@@ -15,14 +16,16 @@ import yaml
 
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_foundation as foundation
-from scripts.atlas.a1_card_receipts import digest, selected_rows, validate_allocation
+from scripts.atlas.a1_card_receipts import digest, is_citation_analysis, selected_rows, validate_allocation
 
 PLAN_SHA = "e7a9ac497da8bbeba5531937a4c8543369462942"
 MANIFEST = "registry/atlas/a1-v1-slice3.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice3.json"
 PLAN_INPUTS = "registry/atlas/a1-v1-slice3-plan-inputs.json"
 PLAN_INPUTS_SHA256 = "bdaaab21adf8aa678921fa785f24fb9075f7e037fab22508d62c94791d85b91a"
-MANIFEST_SHA256 = "b59e14203ef9656e51a2d878b6a77296397b5651f1c013931e7adf0ce91ad454"
+MANIFEST_SHA256 = "afb95a04ca870b2d37786e0e1ce73a55d359d5dc3c4f0326ad9d671ca8102058"
+MANIFEST_FILE_SHA256 = "9e8f49656920944be6a8ef69b6c0cfaead40ea7cd4f5a82601c8eb94378faaad"
+COMPANION_FILE_SHA256 = "ef9fec4ea56bd7d1d94ad3e8e7f06995f510a6726dfebb2b14c1a0f125635a14"
 VERSION = "a1-slice3-v1"
 JOIN = "reviewed_plan_vocabulary_to_inventory_mapping_lemma_v1"
 
@@ -134,6 +137,31 @@ def allocation(base, companion, pins, root):
     return effective
 
 
+def _validate_morphology(claim, record, target):
+    cards.require(record["source_id"] == "vesum", "slice3_morphology_requires_vesum")
+    analyses = record["payload"]["clean_analyses"]
+    matches = [(i, row) for i, row in enumerate(analyses) if is_citation_analysis(row, target)]
+    cards.require(len(matches) == 1, "slice3_morphology_canonical_reading_ambiguous")
+    index, analysis = matches[0]
+    prefix = f"/clean_analyses/{index}/"
+    cards.require(claim["entry_id"] == target["entry_id"] and claim["pointer"] == prefix + "tags",
+                  "slice3_morphology_not_canonical_headword")
+    field = claim["field"]
+    tags = analysis["tags"]
+    if field == "grammatical_label":
+        expected = [0, len(tags)]
+    else:
+        pattern = r"(?<=:)[mfn](?=:|$)" if field == "gender" else r"(?<=:)(?:imperf|perf)(?=:|$)"
+        tokens = list(re.finditer(pattern, tags))
+        cards.require(len(tokens) == 1 and (field != "aspect" or target["pos"] == "verb"),
+                      "slice3_morphology_scalar_ambiguous")
+        expected = list(tokens[0].span())
+    cards.require(claim["span"] == expected, "slice3_morphology_tag_span_mismatch")
+    required = {(prefix + member, 0, len(analysis[member])) for member in ("word_form", "lemma", "pos")}
+    supplied = {(span["pointer"], *span["span"]) for span in claim.get("supporting_spans", [])}
+    cards.require(supplied == required, "slice3_morphology_binding_receipts_mismatch")
+
+
 def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, selection):
     cards.require(digest(inv) == spec["inventory_sha256"] and digest(sources) == spec["sources_sha256"],
                   "slice3_input_drift")
@@ -142,13 +170,17 @@ def validate_inputs(inv, registry, additions, spec, sources, pins, *, root, sele
     selected = [r for r in inv["rows"] if r["id"] in spec["row_card_ids"]]
     cards.require([r["id"] for r in selected] == selection["row_ids"], "slice3_row_selection_mismatch")
     cards.require(sorted(set(spec["row_card_ids"].values())) == spec["card_ids"], "slice3_card_mapping_mismatch")
+    targets = {spec["row_card_ids"][row["id"]]: row["mapping"] for row in selected}
     for record in sources["records"].values():
         call = sources["calls"][record["call_key"]]
         cards.require(digest(call["response"]) == record["response_sha256"] and call["tool"] == record["tool"]
                       and call["arguments"] == record["arguments"], "tool_response_digest_mismatch")
     for claim in spec["claims"]:
+        record = sources["records"][claim["record_key"]]
+        if claim["field"] in {"grammatical_label", "gender", "aspect"}:
+            _validate_morphology(claim, record, targets[claim["card_id"]])
         if claim["field"] == "definition_uk":
-            cards.require(sources["records"][claim["record_key"]]["source_id"] in
+            cards.require(record["source_id"] in
                           {"sum20", "vts_busel_slovnyk_me", "ulif"}, "slice3_meaning_authority")
     for attempts in spec["stress_attempts"].values():
         chosen, _ = cards.choose_stress(attempts)

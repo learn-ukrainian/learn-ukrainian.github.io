@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import type { PracticeSessionSnapshot } from '../src/lib/lexicon/srs';
 import { expect, test } from './support/hardened-browser.mjs';
 
 function trackConsoleErrors(page: Page): string[] {
@@ -52,12 +53,15 @@ test('browse supports search, category, and letter entry points without dumping 
 
   await search.fill('');
   await expect(cards).toHaveCount(0);
+  await expect.poll(() => new URL(page.url()).searchParams.has('q')).toBe(false);
 
-  await page.getByRole('button', { name: 'русизм' }).click();
+  await page.locator('[data-chip="avoid"]').click();
   await expect.poll(() => cards.count()).toBeGreaterThanOrEqual(1);
-  expect(new URL(page.url()).searchParams.get('cls')).toBe('rus');
-  await expect(page.getByRole('heading', { name: 'русизм' })).toBeVisible();
+  expect(new URL(page.url()).searchParams.get('cls')).toBe('avoid');
+  await expect(page.getByRole('heading', { name: 'уникати' })).toBeVisible();
 
+  await page.locator('[data-chip="avoid"]').click();
+  await expect.poll(() => new URL(page.url()).searchParams.has('cls')).toBe(false);
   await page.locator('[data-letter="Д"]').click();
   await expect.poll(() => cards.count()).toBeGreaterThanOrEqual(1);
   await expect(page.getByRole('heading', { name: 'Д', exact: true })).toBeVisible();
@@ -76,27 +80,26 @@ test('practice cloze mode never dead-ends for a fresh learner', async ({ page })
   await expect(clozeCard.or(clozeEmpty)).toBeVisible();
 });
 
-test('practice matching renders a real round (>=3 pairs) for a fresh learner', async ({ page }) => {
-  await page.goto('/practice/');
 
-  await page.locator('button[data-mode="matching"]').click();
-  await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
-  await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
-});
+
+
 
 test('practice mode switch starts the selected mode without inheriting the unfinished one', async ({ page }) => {
   await page.goto('/practice/');
 
-  await page.locator('button[data-mode="matching"]').click();
-  await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
+  await page.locator('button[data-mode="stress"]').click();
+  await expect(page.locator('[data-testid="practice-stress"]')).toBeVisible();
+  await page.locator('.stress-vowel').first().click();
+  await page.getByTestId('practice-advance-button').click();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
   await page.getByRole('button', { name: /Додому|Home/ }).click();
 
   // The K3 dashboard preserves mode snapshots but exposes only the primary mixed resume CTA.
   // Switching to a different mode starts fresh instead of inheriting the unfinished session.
-  await page.locator('button[data-mode="flashcards"]').click();
+  await page.locator('button[data-mode="cloze"]').click();
 
-  await expect(page.locator('[data-activity="flashcard"]')).toBeVisible();
-  await expect(page.locator('[data-testid="practice-matching"]')).toBeHidden();
+  await expect(page.getByTestId('practice-cloze')).toBeVisible();
+  await expect(page.locator('[data-testid="practice-stress"]')).toBeHidden();
   await expect(page.locator('[data-testid="practice-session-progress"]')).toContainText('0/');
 });
 
@@ -335,8 +338,8 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
   // ZNO deck count tracks ZNO_PRACTICE_DECK_META (site/src/components/ZnoPractice.tsx);
   // update both counts together when decks are added/removed.
   await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(9);
-  // 20 vocab/grammar/ZNO mode cards, plus the later-added (#7961) culture error-correction card.
-  await expect(page.locator('button[data-mode]:not([data-mode="culture-error-correction"])')).toHaveCount(20);
+  // Meaning-based modes are withdrawn until their senses have been admitted (#11885).
+  await expect(page.locator('button[data-mode]:not([data-mode="culture-error-correction"])')).toHaveCount(17);
   await expect(page.locator('button[data-mode="culture-error-correction"]')).toBeVisible();
   await page.locator('button[data-mode="zno-orthography"]').click();
   await expect(page.getByTestId('practice-zno-session')).toBeVisible();
@@ -345,39 +348,9 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
   await expect(page.getByTestId('zno-practice-verdict')).toBeVisible();
 });
 
-test('practice flashcard rating locks the card and waits for explicit next', async ({ page, context }) => {
-  await context.clearCookies();
-  await page.goto('/practice/');
 
-  await page.locator('button[data-mode="flashcards"]').click();
-  const card = page.locator('[data-activity="flashcard"]');
-  await expect(card).toBeVisible();
-
-  // Ratings are disabled before the card is flipped.
-  const goodButton = page.locator('[data-rate="good"]');
-  await expect(goodButton).toBeDisabled();
-
-  await card.click();
-  await expect(card).toHaveAttribute('data-flipped', 'true');
-  await expect(goodButton).toBeEnabled();
-
-  await goodButton.click();
-  await expect(card).toHaveAttribute('data-rated', 'true');
-  await expect(goodButton).toBeDisabled();
-  await expect(page.getByTestId('practice-advance-button')).toBeVisible();
-});
 
 // --- Practice UX batch — design delta 2026-07-26 (A1-A7) ---
-
-/** Complete one flashcard round (flip + rate) so the caller can advance or inspect progress. */
-async function completeOneFlashcard(page: Page, rating: 'good' | 'easy' | 'hard' | 'again' = 'good'): Promise<void> {
-  const card = page.locator('[data-activity="flashcard"]');
-  await expect(card).toBeVisible();
-  await card.click();
-  await expect(card).toHaveAttribute('data-flipped', 'true');
-  await page.locator(`[data-rate="${rating}"]`).click();
-  await expect(page.getByTestId('practice-advance-button')).toBeVisible();
-}
 
 /**
  * `Mixed` mode opens on any of the 11 exercise types (D3: session-seeded, not fixed).
@@ -467,26 +440,28 @@ test('A1b: the Words-of-the-Day preview card renders a real word and gloss on re
   expect(((await back.textContent()) ?? '').trim().length).toBeGreaterThan(0);
 });
 
+
+
 test('A2: starting two sessions back-to-back yields different item sequences', async ({ page, context }) => {
   await context.clearCookies();
 
-  async function captureFirstThreeFlashcards(): Promise<string[]> {
+  async function captureFirstThreeStressItems(): Promise<string[]> {
     await page.goto('/practice/');
-    await page.locator('button[data-mode="flashcards"]').click();
+    await page.locator('button[data-mode="stress"]').click();
     const words: string[] = [];
     for (let i = 0; i < 3; i += 1) {
-      const card = page.locator('[data-activity="flashcard"]');
+      const card = page.getByTestId('practice-stress');
       await expect(card).toBeVisible();
-      words.push((await card.locator('.flashcard-word').first().textContent()) ?? '');
-      await completeOneFlashcard(page);
+      words.push((await card.locator('.practice-stress-word').textContent()) ?? '');
+      await card.locator('.stress-vowel').first().click();
       await page.getByTestId('practice-advance-button').click();
     }
     await page.getByRole('button', { name: /Додому|Home/ }).click();
     return words;
   }
 
-  const first = await captureFirstThreeFlashcards();
-  const second = await captureFirstThreeFlashcards();
+  const first = await captureFirstThreeStressItems();
+  const second = await captureFirstThreeStressItems();
 
   expect(second).not.toEqual(first);
 });
@@ -511,13 +486,15 @@ test('A3: a stored in-progress session shows Продовжити + Почати
   await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
 });
 
+
+
 test('A4: Далі sits in the top status row next to the counter and is clickable without scrolling at 1366x768', async ({ page, context }) => {
   await context.clearCookies();
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto('/practice/');
 
-  await page.locator('button[data-mode="flashcards"]').click();
-  await completeOneFlashcard(page);
+  await page.locator('button[data-mode="stress"]').click();
+  await page.locator('.stress-vowel').first().click();
 
   // Exactly one Next control, living in the status bar next to the n/N pill.
   await expect(page.getByTestId('practice-advance-button')).toHaveCount(1);
@@ -534,13 +511,13 @@ test('A4: Далі sits in the top status row next to the counter and is clickab
   expect(box).not.toBeNull();
   expect(box!.y + box!.height).toBeLessThanOrEqual(768);
 
-  // Enter also advances, per the existing key-handling contract.
-  await page.keyboard.press('Enter');
+  await statusBarNext.press('Enter');
+  await expect(statusBarNext).toBeHidden();
   await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
 });
 
 /**
- * F1/F2 (PR #5837 review): route disjoint, single-item fixture decks for the A1/A2 core
+ * F1/F2 (PR #5837 review): route disjoint fixture decks for the A1/A2 core
  * shards so "the accepted level drives the session" is provable from ITEM CONTENT, not
  * merely from a request having fired for the right URL — a same-tick closure bug could
  * silently replay the stale level's pool while the request log still looks correct.
@@ -548,57 +525,29 @@ test('A4: Далі sits in the top status row next to the counter and is clickab
  * background lower-level merge a higher level kicks off can never dilute the accepted
  * level's pool back into ambiguous territory.
  */
-async function mockDisjointLevelFixtures(page: Page): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
+async function mockDisjointLevelFixtures(
+  page: Page,
+  a1Lemmas: readonly string[] = ['вода'],
+): Promise<{ depleteLowerLevel(level: 'A1' | 'A2'): void }> {
   const depleted = new Set<'A1' | 'A2'>();
-  const fixtureItem = (level: 'A1' | 'A2') => ({
-    lemmaId: `e2eFixture${level}`,
-    lemma: `e2eFixture${level}`,
-    cefr: level,
-    modes: ['flashcards'] as const,
-    hasCloze: false,
-    clozeIds: [] as string[],
-    newOrder: 0,
-  });
-  const fixtureLexeme = (level: 'A1' | 'A2') => ({
-    lemmaId: `e2eFixture${level}`,
-    lemma: `e2eFixture${level}`,
-    lemmaPlain: `e2eFixture${level}`,
-    ipa: null,
-    gloss: `e2eFixture${level}`,
-    pos: 'noun',
-    cefr: level,
-    heritage: null,
-    severity: null,
-    paradigm: { cases: {} },
-  });
   for (const level of ['A1', 'A2'] as const) {
-    await page.route(`**/lexicon/practice-index.${level}.json`, (route) =>
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({
-          deckVersion: `e2e-fixture-${level}`,
-          level,
-          items: depleted.has(level) ? [] : [fixtureItem(level)],
-        }),
-      }),
-    );
-    await page.route(`**/lexicon/practice-lexemes.${level}.json`, (route) =>
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({
-          deckVersion: `e2e-fixture-${level}`,
-          level,
-          lexemes: depleted.has(level) ? [] : [fixtureLexeme(level)],
-        }),
-      }),
-    );
+    const lemmas = level === 'A1' ? a1Lemmas : ['абетка'];
+    for (const [kind, key] of [['index', 'items'], ['lexemes', 'lexemes'], ['stress', 'stress']] as const) {
+      await page.route(`**/lexicon/practice-${kind}.${level}.json`, async (route) => {
+        const response = await route.fetch();
+        const shard = await response.json();
+        shard[key] = depleted.has(level) ? [] : shard[key].filter((item: { lemmaId: string }) => lemmas.includes(item.lemmaId));
+        if (kind === 'index') shard[key] = shard[key].map((item: object) => ({ ...item, modes: ['stress'] }));
+        await route.fulfill({ response, json: shard });
+      });
+    }
   }
   return { depleteLowerLevel: (level) => depleted.add(level) };
 }
 
 async function readMixedSessionSnapshot(
   page: Page,
-): Promise<{ level?: string; deckId?: string; dateSeed?: number } | null> {
+): Promise<Pick<PracticeSessionSnapshot, 'level' | 'deckId' | 'dateSeed' | 'plannedTotal'> | null> {
   return page.evaluate(() => {
     const raw = window.localStorage.getItem('lu-practice-session');
     return raw ? JSON.parse(raw).byMode?.mixed ?? null : null;
@@ -629,11 +578,13 @@ test('A5: switching level with a session in progress offers a fresh session; acc
   // presented item must be drawn from the ACCEPTED (A2) pool — not the stale A1 one.
   const snapshot = await readMixedSessionSnapshot(page);
   expect(snapshot?.level).toBe('A2');
-  await expect(page.locator('.flashcard-word').first()).toContainText('e2eFixtureA2');
+  await expect(page.locator('.lexicon-practice-stage')).toContainText('абетка');
 });
 
 test('A5c: choosing a deck from the custom-deck manager while a session is active also offers a fresh session (finding 2 bypass)', async ({ page, context }) => {
   await context.clearCookies();
+  // The All Words pool is larger than the one-word deck even in this controlled build.
+  await mockDisjointLevelFixtures(page, ['вода', 'або', 'мама', 'автобус']);
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'learn_ukrainian_custom_sets_v1',
@@ -642,7 +593,7 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
           id: 'e2e-custom-deck',
           title: 'E2E Custom Deck',
           description: '',
-          lemma_keys: ['e2eCustomDeckWord'],
+          lemma_keys: ['вода'],
           created_at: '2026-01-01T00:00:00.000Z',
           updated_at: '2026-01-01T00:00:00.000Z',
           device_id: 'e2e-device',
@@ -652,6 +603,9 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
     );
   });
   await prepareResumableMixedSession(page);
+  const allWords = await readMixedSessionSnapshot(page);
+  expect(allWords?.deckId).toBe('all');
+  expect(allWords?.plannedTotal).toBeGreaterThan(2);
   await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
@@ -667,13 +621,8 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
   await page.getByTestId('practice-switch-session-accept').click();
 
   await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
-  // The custom deck has exactly one word that resolves to no Atlas/cloze content, so the
-  // P0-3 mode-claim honesty fix in `ensureDeckCustomSetCoverage` only claims the one mode it
-  // can actually deliver (flashcards) rather than promising modes with nothing behind them.
-  // A mixed-mode session over ONE such word plans exactly 1 mode-card — wildly different from
-  // a full-level session (hundreds of due/new cards) — proof the pool is the accepted deck,
-  // not the full corpus.
-  await expect(page.getByTestId('practice-session-progress')).toContainText('0/1');
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/2');
+  await expect(page.locator('.lexicon-practice-stage')).toContainText('вода');
 
   const snapshot = await readMixedSessionSnapshot(page);
   expect(snapshot?.deckId).toBe('e2e-custom-deck');
@@ -741,7 +690,7 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
           lemmaId: `e2eScope${suffix}`,
           lemma: `e2eScope${suffix}`,
           cefr: 'A1',
-          modes: ['flashcards'],
+          modes: ['stress'],
           hasCloze: false,
           clozeIds: [],
           newOrder: 0,
@@ -827,7 +776,7 @@ function customSetFixture(id: string, title: string, lemmaKeys: string[]) {
   };
 }
 
-test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true orphan stays unlinked', async ({
+test('A8a: an Atlas-only custom-deck key gets its route while a true orphan stays unlinked', async ({
   page,
   context,
 }) => {
@@ -896,7 +845,7 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
     '/lexicon/%D0%BA%D1%96%D1%82/',
   );
   await catCard.click();
-  await expect(catCard).toContainText('cat');
+  await expect(catCard).toContainText('Meaning unavailable.');
   await expect(catCard).not.toContainText('noun');
 
   await selectDeckInSettings(page, /E2E D10 Orphan Deck/);
@@ -904,16 +853,6 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
   await expect(page.locator('.daily-preview-card')).toContainText('вигаданий термін');
   await expect(page.getByTestId('practice-preview-atlas-link')).toHaveCount(0);
 
-  await selectDeckInSettings(page, /E2E D10 Cat Deck/);
-  // The daily card is only the preview path. Start a real flashcard session
-  // and reveal its back so the deck's committed lexeme, not preview state,
-  // proves the Atlas shard enrichment reached `cardData()`.
-  await page.locator('button[data-mode="flashcards"]').click();
-  const sessionCard = page.locator('[data-activity="flashcard"]');
-  await expect(sessionCard).toBeVisible();
-  await sessionCard.click();
-  await expect(sessionCard.locator('.flashcard-back .flashcard-word')).toHaveText('cat');
-  await expect(sessionCard.locator('.flashcard-subtitle')).toHaveCount(0);
 });
 
 /** Opens the daily-zone disclosure (idempotent — `PracticeDailyDeck` can remount and
@@ -1171,6 +1110,8 @@ test('saved learning progress (SRS reviews and in-progress session) survives leg
 // #10706 binds the WAV's declared або / або́ identity, not pronunciation quality.
 const AUDIO_FILE = 'f451ecae99efb39c3af48fd70b23edfa00d22ce483cc9f0c525200f286f6b7fb.wav';
 const AUDIO_FIXTURE = new URL('../../tests/fixtures/audio/pronunciation.wav', import.meta.url).pathname;
+// The comparison's current article uses WordAtlasPageShell and remounts on pageshow.
+const STATIC_ATLAS_AUDIO_PATH = '/lexicon-v2/compare/kliuch-1/';
 type AudioObservation = { element: HTMLMediaElement; events: string[]; promises: string[]; times: number[] };
 declare global {
   interface Window {
@@ -1219,42 +1160,13 @@ async function observePracticeAudio(page: Page, loop = false): Promise<void> {
   // Specific fixture routes override this refusal before any navigation.
   await page.route('**/*', (route) => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
 }
-async function audioPracticeFixture(page: Page, second = false): Promise<void> {
-  for (const level of ['A1', 'A2', 'B1', 'B2', 'C1']) {
-    const lexemes = level === 'A1' ? [
-      { lemmaId: 'або', lemma: 'або́', lemmaPlain: 'або', cefr: level, gloss: 'fixture identity', pos: 'conj', ipa: null, heritage: null, severity: null, paradigm: { cases: {} } },
-    ] : level === 'A2' && second ? [
-      { lemmaId: 'audio-next-control', lemma: 'audio-next-control', lemmaPlain: 'audio-next-control', cefr: level, gloss: 'next control', pos: 'noun', ipa: null, heritage: null, severity: null, paradigm: { cases: {} } },
-    ] : [];
-    await page.route(`**/lexicon/practice-index.${level}.json`, (route) => route.fulfill({ json: {
-      deckVersion: '10706-audio-native-v1', level,
-      items: lexemes.map((word, newOrder) => ({ lemmaId: word.lemmaId, lemma: word.lemma, cefr: level, modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder })),
-    } }));
-    await page.route(`**/lexicon/practice-lexemes.${level}.json`, (route) => route.fulfill({ json: { deckVersion: '10706-audio-native-v1', level, lexemes } }));
-    await page.route(`**/lexicon/practice-cloze.${level}.json`, (route) => route.fulfill({ json: { cloze: [] } }));
-  }
-}
 async function routeGoodAudio(page: Page): Promise<void> {
-  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } } } }));
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } } } }));
   await page.route(`**/${AUDIO_FILE}`, (route) => route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } }));
-}
-async function openAudioPractice(page: Page, second = false): Promise<void> {
-  await audioPracticeFixture(page, second);
-  const manifest = page.waitForResponse((response) => response.url().endsWith('/manifest.json'));
-  await page.goto('/practice/');
-  await page.locator('button[data-mode="flashcards"]').click();
-  await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', 'або́');
-  await manifest;
-  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
 }
 function audioButton(page: Page) { return page.locator('[data-pronunciation-lemma] button'); }
 async function audioLearningState(page: Page) {
-  return {
-    flipped: await page.locator('[data-activity="flashcard"]').getAttribute('data-flipped'),
-    rated: await page.locator('[data-activity="flashcard"]').getAttribute('data-rated'),
-    progress: await page.getByTestId('practice-session-progress').textContent(),
-    saved: await page.evaluate(() => ({ srs: localStorage.getItem('lu-lexicon-srs'), session: localStorage.getItem('lu-practice-session') })),
-  };
+  return page.evaluate(() => ({ srs: localStorage.getItem('lu-lexicon-srs'), session: localStorage.getItem('lu-practice-session') }));
 }
 async function nativePlaying(page: Page): Promise<void> {
   await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media.some((record) =>
@@ -1314,19 +1226,6 @@ async function assertNativeFallback(page: Page) {
   return inventory;
 }
 
-async function audioOverlappingLevel(page: Page, rawLemma = 'або́') {
-  await page.route('**/lexicon/practice-index.A2.json', (route) => route.fulfill({ json: {
-    deckVersion: '10706-overlap-v1', level: 'A2', items: [{ lemmaId: 'або', lemma: rawLemma, cefr: 'A2', modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder: 0 }],
-  } }));
-  await page.route('**/lexicon/practice-lexemes.A2.json', (route) => route.fulfill({ json: {
-    deckVersion: '10706-overlap-v1', level: 'A2', lexemes: [{ lemmaId: 'або', lemma: rawLemma, lemmaPlain: 'або', cefr: 'A2', gloss: 'fixture identity', pos: 'conj', ipa: null, heritage: null, severity: null, paradigm: { cases: {} } }],
-  } }));
-}
-
-async function audioAnimationFrame(page: Page) {
-  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
-}
-
 async function lateNativeFailure(page: Page) {
   const previousErrors = await page.evaluate(() => window.practiceAudioProbe.media[0].events.filter((event) => event === 'error').length);
   await page.evaluate(async () => {
@@ -1338,6 +1237,14 @@ async function lateNativeFailure(page: Page) {
   await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].events.filter((event) => event === 'error').length)).toBe(previousErrors + 1);
   await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('NotSupportedError');
   await nativePlaying(page);
+}
+
+async function openAtlasAudio(page: Page, path = '/lexicon/або/'): Promise<void> {
+  const manifest = page.waitForResponse((response) => response.url().endsWith('/audio/pronunciation/manifest.json'));
+  await page.goto(path);
+  await expect(page.locator('[data-pronunciation-lemma]')).toBeVisible();
+  await manifest;
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
 }
 
 test.describe('#10706 audio:', () => {
@@ -1358,7 +1265,7 @@ test.describe('#10706 audio:', () => {
     test(`P01 playback and completion / ${activation}`, async ({ page }) => {
       await observePracticeAudio(page);
       await routeGoodAudio(page);
-      await openAudioPractice(page);
+      await openAtlasAudio(page);
       expect(await page.evaluate(() => window.practiceAudioProbe.media)).toEqual([]);
       const before = await audioLearningState(page);
       if (activation === 'pointer') await audioButton(page).click();
@@ -1380,7 +1287,7 @@ test.describe('#10706 audio:', () => {
   test('P02 explicit native stop resets playback', async ({ page }) => {
     await observePracticeAudio(page, true);
     await routeGoodAudio(page);
-    await openAudioPractice(page);
+    await openAtlasAudio(page);
     const before = await audioLearningState(page);
     await audioButton(page).click();
     await nativePlaying(page);
@@ -1390,200 +1297,33 @@ test.describe('#10706 audio:', () => {
     expect(await audioLearningState(page)).toEqual(before);
   });
 
-  test('P04 Home cancels and dashboard has the six active-stage switch N/A counterparts', async ({ page }) => {
-    await observePracticeAudio(page, true);
-    await routeGoodAudio(page);
-    await openAudioPractice(page);
-    await audioButton(page).click();
-    await nativePlaying(page);
-    expect(await page.locator('.lexicon-practice-stage').count()).toBe(1);
-    expect(await page.locator('.k3-levels:visible').count()).toBe(0);
-    expect(await page.getByTestId('practice-settings-toggle').count()).toBe(0);
-    expect(await page.getByTestId('practice-active-deck').count()).toBe(0);
-    await page.getByRole('button', { name: /Додому|Home/ }).click();
-    await oldAudioStopped(page);
-    await expect(page.getByTestId('practice-start-session')).toBeVisible();
-    await expect(page.getByTestId('practice-settings-toggle')).toBeVisible();
-    await expect(page.locator('.k3-levels')).toBeVisible();
-    await test.info().attach('active-switch-applicability.json', { body: JSON.stringify({ activeStage: 1, deck: 0, level: 0, settings: 0, activeVariants: 'N/A, six dashboard counterparts remain mandatory' }), contentType: 'application/json' });
-  });
-
-  test('P04 real header locale rebind cancels without changing learner level or review', async ({ page }) => {
-    await observePracticeAudio(page, true);
-    await routeGoodAudio(page);
-    await openAudioPractice(page);
-    const before = await audioLearningState(page);
-    await audioButton(page).click();
-    await nativePlaying(page);
-    await page.locator('#lu-locale-toggle').click();
-    await oldAudioStopped(page);
-    await expect(audioButton(page)).toHaveText('Послухати вимову');
-    expect(await audioLearningState(page)).toEqual(before);
-    expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A1');
-  });
-
-  for (const kind of ['deck', 'level'] as const) {
-    for (const disposition of ['accept different item', 'accept reused item', 'decline'] as const) {
-      test(`P04 Home then ${kind} switch / ${disposition}, resumable Mixed`, async ({ page }) => {
-        const reused = disposition === 'accept reused item';
-        await observePracticeAudio(page, true);
-        await routeGoodAudio(page);
-        await audioPracticeFixture(page, true);
-        if (reused) await audioOverlappingLevel(page);
-        await page.addInitScript(({ reused }) => {
-          localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([{
-            id: 'audio-switch-target', title: 'Audio switch fixture', description: '',
-            lemma_keys: [reused ? 'або' : 'audio-next-control'],
-            created_at: '2026-01-01T00:00:00.000Z', updated_at: '2026-01-01T00:00:00.000Z', device_id: 'audio-fixture', revision: 1,
-          }]));
-        }, { reused });
-        await page.goto('/practice/');
-        await page.getByTestId('practice-start-session').click();
-        await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', 'або́');
-        await audioAnimationFrame(page);
-        const before = await audioLearningState(page);
-        await audioButton(page).click();
-        await nativePlaying(page);
-        expect(await audioLearningState(page)).toEqual(before);
-        await page.getByRole('button', { name: /Додому|Home/ }).click();
-        await oldAudioStopped(page);
-        const snapshot = await readMixedSessionSnapshot(page);
-        expect(snapshot?.level).toBe('A1');
-        expect(snapshot?.deckId).toBe('all');
-        if (kind === 'deck') {
-          await page.getByTestId('practice-active-deck-chip').click();
-          await page.getByTestId('practice-deck-option-audio-switch-target').click();
-        } else {
-          await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
-        }
-        await expect(page.getByTestId('practice-switch-session-offer')).toBeVisible();
-        if (disposition === 'decline') {
-          await page.getByTestId('practice-switch-session-decline').click();
-          await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-          expect(await readMixedSessionSnapshot(page)).toEqual(snapshot);
-          expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A1');
-          await expect(page.getByTestId('practice-active-deck-chip')).toContainText('All Words');
-          await expect(page.getByTestId('practice-settings-toggle')).toBeFocused();
-        } else {
-          await page.getByTestId('practice-switch-session-accept').click();
-          await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', reused ? 'або́' : 'audio-next-control');
-          const committed = await readMixedSessionSnapshot(page);
-          expect(committed?.deckId).toBe(kind === 'deck' ? 'audio-switch-target' : 'all');
-          expect(committed?.level).toBe(kind === 'level' ? 'A2' : 'A1');
-          expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe(kind === 'level' ? 'A2' : 'A1');
-          await expect(audioButton(page)).toHaveText('Play pronunciation');
-        }
-        await audioAnimationFrame(page);
-        await oldAudioStopped(page);
-        expect(await page.evaluate(() => window.practiceAudioProbe.media.length)).toBe(1);
-        expect(await page.evaluate(() => localStorage.getItem('lu-lexicon-srs'))).toBe(before.saved.srs);
-      });
-    }
-  }
-
-  test('P04 idle immediate switches, unchanged no-ops, unpublished-level refusal and unconfigured refresh', async ({ page }) => {
-    await observePracticeAudio(page);
-    await routeGoodAudio(page);
-    await audioPracticeFixture(page, true);
-    await page.goto('/practice/');
-    await page.getByTestId('practice-active-deck-chip').click();
-    await page.getByTestId('practice-deck-option-all').click();
-    await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A1', exact: true }).click();
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await expect(page.getByTestId('practice-dashboard-hero').getByRole('button', { name: /C2/, exact: false })).toBeDisabled();
-    await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
-    expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A2');
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await page.getByTestId('practice-active-deck-chip').click();
-    await page.getByTestId('practice-deck-option-virtual_teacher_lesson').click();
-    await expect(page.getByTestId('practice-active-deck-chip')).toContainText('Curated');
-    await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
-    await page.getByTestId('practice-settings-toggle').click();
-    await expect(page.getByTestId('practice-drive-sync-section')).toHaveCount(0);
-    await test.info().attach('refresh-applicability.json', { body: JSON.stringify({ customSetRefresh: 'N/A in this unconfigured artifact: actual Drive sync control absent; no fabricated storage event', pendingRefreshStarted: false }), contentType: 'application/json' });
-  });
-
-  for (const replacement of [false, true]) {
-    test(`P04 delayed shard arrival / ${replacement ? 'actual pronunciation rebind cancels' : 'same presentation keeps playback'}`, async ({ page }) => {
-      await observePracticeAudio(page, true);
-      await routeGoodAudio(page);
-      await audioPracticeFixture(page, true);
-      if (replacement) await audioOverlappingLevel(page, 'або');
-      let release!: () => void;
-      const held = new Promise<void>((resolve) => { release = resolve; });
-      let arrived = 0;
-      await page.route(/practice-(index|lexemes)\.A2\.json$/, async (route) => {
-        await held;
-        arrived++;
-        await route.fallback();
-      });
-      await page.goto('/practice/');
-      await page.locator('button[data-mode="flashcards"]').click();
-      await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', 'або́');
-      await audioAnimationFrame(page);
-      await audioButton(page).click();
-      await nativePlaying(page);
-      const before = await audioLearningState(page);
-      release();
-      await expect.poll(() => arrived).toBeGreaterThanOrEqual(2);
-      if (replacement) {
-        await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', 'або');
-        await oldAudioStopped(page);
-        await expect(audioButton(page)).toHaveText('Play pronunciation');
-      } else {
-        await audioAnimationFrame(page);
-        await nativePlaying(page);
-        expect(await page.evaluate(() => window.practiceAudioProbe.media[0].events.includes('pause()'))).toBe(false);
-      }
-      expect(await audioLearningState(page)).toEqual(before);
-    });
-  }
-
-  test('P04 delayed daily pool arrival preserves the current presentation and playback', async ({ page }) => {
-    await observePracticeAudio(page, true);
-    await routeGoodAudio(page);
-    let release!: () => void;
-    const held = new Promise<void>((resolve) => { release = resolve; });
-    let delivered = false;
-    await page.route('**/lexicon/daily-pool.json', async (route) => {
-      await held;
-      await route.fulfill({ json: [{ lemma: 'або', slug: 'або', gloss: 'fixture identity', cefr: 'A1' }] });
-      delivered = true;
-    });
-    await openAudioPractice(page);
-    await audioButton(page).click();
-    await nativePlaying(page);
-    const before = await audioLearningState(page);
-    release();
-    await expect.poll(() => delivered).toBe(true);
-    await audioAnimationFrame(page);
-    await nativePlaying(page);
-    expect(await audioLearningState(page)).toEqual(before);
-    expect(await page.evaluate(() => window.practiceAudioProbe.media[0].events.includes('pause()'))).toBe(false);
-  });
-
   for (const fault of ['404', 'network', '500'] as const) {
     test(`P05 manifest ${fault} and subsequent-mount ${fault === '404' ? 'permanent cache' : 'retry'}`, async ({ page }) => {
       await observePracticeAudio(page, true);
-      await routeGoodAudio(page);
+      await page.route(`**/${AUDIO_FILE}`, (route) => route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' }));
       let requests = 0;
       await page.route('**/audio/pronunciation/manifest.json', (route) => {
         requests++;
-        if (requests > 1) return route.fulfill({ json: { schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } } } });
+        if (requests > 1) return route.fulfill({ json: { schemaVersion: 1, entries: { 'ключ': { file: AUDIO_FILE } } } });
         return fault === 'network' ? route.abort('failed') : route.fulfill({ status: Number(fault), body: '' });
       });
       // A failed request has no response; the mounted fallback itself is the settle oracle.
-      await audioPracticeFixture(page);
-      await page.goto('/practice/');
-      await page.locator('button[data-mode="flashcards"]').click();
+      await page.goto(STATIC_ATLAS_AUDIO_PATH);
+      await expect(page.locator('[data-word-atlas] [data-pronunciation-lemma="ключ"]')).toBeVisible();
       await expect.poll(() => requests).toBe(1);
       await assertNativeFallback(page);
-      await page.getByRole('button', { name: /Додому|Home/ }).click();
-      await page.locator('button[data-mode="flashcards"]').click();
+      const refreshed = fault === '404' ? undefined : page.waitForResponse((response) =>
+        response.url().endsWith('/audio/pronunciation/manifest.json') && response.ok());
+      await page.evaluate(() => {
+        window.dispatchEvent(new PageTransitionEvent('pagehide'));
+        window.dispatchEvent(new PageTransitionEvent('pageshow'));
+      });
+      await expect(page.locator('[data-pronunciation-lemma]')).toBeVisible();
       if (fault === '404') {
         await assertNativeFallback(page);
         expect(requests).toBe(1);
       } else {
+        await (await refreshed)?.finished();
         await expect.poll(() => requests).toBe(2);
         await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
         await audioButton(page).click();
@@ -1607,7 +1347,7 @@ test.describe('#10706 audio:', () => {
         mediaRequests.push(route.request().url());
         return route.abort();
       });
-      await openAudioPractice(page);
+      await openAtlasAudio(page);
       await assertNativeFallback(page);
       expect(mediaRequests).toEqual([]);
       expect(await page.evaluate(() => window.practiceAudioProbe.media)).toEqual([]);
@@ -1627,7 +1367,7 @@ test.describe('#10706 audio:', () => {
         return route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } });
       });
       await page.route('**/prior-attempt-invalid.wav', (route) => route.fulfill({ body: 'invalid prior attempt', contentType: 'audio/wav' }));
-      await openAudioPractice(page);
+      await openAtlasAudio(page);
       const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
       const before = await audioLearningState(page);
       await audioButton(page).click();
@@ -1647,7 +1387,7 @@ test.describe('#10706 audio:', () => {
   test('P11 observed native inventory, language and controlled empty availability retry', async ({ page }) => {
     await observePracticeAudio(page);
     await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
-    await openAudioPractice(page);
+    await openAtlasAudio(page);
     test.setTimeout(60000);
     const nativeInventory = await assertNativeFallback(page);
     if (!nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
@@ -1687,160 +1427,37 @@ test.describe('#10706 audio:', () => {
       speechSynthesis.getVoices = () => [{ lang: 'en-US', localService: true, name: 'boundary English' } as SpeechSynthesisVoice];
     });
     await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
-    await openAudioPractice(page);
+    await openAtlasAudio(page);
     await assertNativeFallback(page);
     expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
   });
 
-  for (const transition of ['Home', 'Next same item', 'locale'] as const) {
-    test(`P04 held native play cancelled across ${transition}, late response cannot resurrect it`, async ({ page }) => {
-      await observePracticeAudio(page, true);
-      await routeGoodAudio(page);
-      let release!: () => void;
-      const held = new Promise<void>((resolve) => { release = resolve; });
-      let requested = false;
-      await page.route(`**/${AUDIO_FILE}`, async (route) => {
-        requested = true;
-        await held;
-        await route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
-      });
-      await openAudioPractice(page);
-      if (transition === 'Next same item') await completeOneFlashcard(page, 'again');
-      const srs = (await audioLearningState(page)).saved.srs;
-      await audioButton(page).click();
-      await expect.poll(() => requested).toBe(true);
-      await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
-      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
-      if (transition === 'Home') await page.getByRole('button', { name: /Додому|Home/ }).click();
-      else if (transition === 'locale') await page.locator('#lu-locale-toggle').click();
-      else await page.getByTestId('practice-advance-button').click();
-      await oldAudioStopped(page);
-      release();
-      await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('AbortError');
-      await audioAnimationFrame(page);
-      await oldAudioStopped(page);
-      expect(await page.evaluate(() => localStorage.getItem('lu-lexicon-srs'))).toBe(srs);
-      expect(await page.evaluate(() => window.practiceAudioProbe.media[0].events.includes('playing'))).toBe(false);
+  test('P11 late native catalog observation after cancel cannot resurrect a cancelled request', async ({ page }) => {
+    await observePracticeAudio(page);
+    await page.addInitScript(() => {
+      const native = speechSynthesis.getVoices.bind(speechSynthesis);
+      Reflect.set(window, 'restoreNativeVoices', () => { speechSynthesis.getVoices = native; });
+      speechSynthesis.getVoices = () => [];
     });
-  }
-
-  test('P04 actual rendered route departure cancels native audio', async ({ page }) => {
-    await observePracticeAudio(page, true);
-    await routeGoodAudio(page);
-    await openAudioPractice(page);
+    await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+    await openAtlasAudio(page);
+    const before = await audioLearningState(page);
     await audioButton(page).click();
-    await nativePlaying(page);
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    await audioButton(page).click();
     await page.evaluate(() => {
-      // Register after the real controller so its departure cleanup runs first.
-      window.addEventListener('pagehide', () => {
-        const record = window.practiceAudioProbe.media[0];
-        sessionStorage.setItem('audio-departure', JSON.stringify({
-          pauseCalled: record.events.includes('pause()'),
-          paused: record.element.paused,
-          time: record.element.currentTime,
-        }));
-      });
+      Reflect.get(window, 'restoreNativeVoices')();
+      speechSynthesis.dispatchEvent(new Event('voiceschanged'));
     });
-    await page.locator('a[href="/lexicon/"]:visible').first().click();
-    await expect(page).toHaveURL(/\/lexicon\/$/);
-    const departure = await page.evaluate(() => JSON.parse(sessionStorage.getItem('audio-departure') ?? 'null'));
-    await test.info().attach('departure.json', { body: JSON.stringify(departure), contentType: 'application/json' });
-    expect(departure).toEqual({ pauseCalled: true, paused: true, time: 0 });
+    const inventory = await observedAudioVoices(page);
+    await test.info().attach('late-native-catalog.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+    expect(await audioLearningState(page)).toEqual(before);
+    await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
   });
-
-  for (const same of [false, true]) {
-    test(`P03 Next / ${same ? 'same-item re-presentation' : 'deterministic different selection'}`, async ({ page }) => {
-      await observePracticeAudio(page, true);
-      await routeGoodAudio(page);
-      await openAudioPractice(page, !same);
-      await completeOneFlashcard(page, 'again');
-      const answered = await audioLearningState(page);
-      expect(JSON.parse(answered.saved.srs!).reviews).toHaveLength(1);
-      await audioButton(page).click();
-      await nativePlaying(page);
-      expect(await audioLearningState(page)).toEqual(answered);
-      await page.getByTestId('practice-advance-button').click();
-      await oldAudioStopped(page);
-      await expect(page.locator('[data-pronunciation-lemma]')).toHaveAttribute('data-pronunciation-lemma', same ? 'або́' : 'audio-next-control');
-      await expect(page.locator('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false');
-      await expect(page.getByTestId('practice-advance-button')).toHaveCount(0);
-      await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
-      expect((await audioLearningState(page)).saved.srs).toBe(answered.saved.srs);
-    });
-  }
-  for (const historyLength of [49, 50]) {
-    test(`P03 resumed history ${historyLength} cancels native same-item audio through and beyond the cap`, async ({ page }) => {
-      await observePracticeAudio(page, true);
-      await routeGoodAudio(page);
-      await openAudioPractice(page);
-      await completeOneFlashcard(page, 'again');
-      await page.getByRole('button', { name: /Додому|Home/ }).click();
-      await page.evaluate((length) => {
-        const stored = JSON.parse(localStorage.getItem('lu-practice-session')!);
-        const snapshot = stored.byMode.flashcards;
-        snapshot.history = Array.from({ length }, () => snapshot.history[0]);
-        snapshot.completed = length;
-        snapshot.plannedTotal = 100;
-        snapshot.budget = 'until-zero';
-        snapshot.modeFilter = 'mixed';
-        localStorage.setItem('lu-practice-session', JSON.stringify({ version: 2, byMode: { mixed: snapshot } }));
-      }, historyLength);
-      await page.reload();
-      await page.getByTestId('practice-start-session').click();
-      for (let round = 0; round < 3; round++) {
-        await completeOneFlashcard(page, 'again');
-        const answered = await audioLearningState(page);
-        expect(JSON.parse(answered.saved.srs!).reviews).toHaveLength(round + 2);
-        await audioButton(page).click();
-        await nativePlaying(page);
-        const index = await page.evaluate(() => window.practiceAudioProbe.media.length - 1);
-        await page.getByTestId('practice-advance-button').click();
-        await expect.poll(() => page.evaluate((i) => {
-          const record = window.practiceAudioProbe.media[i];
-          return { paused: record.element.paused, time: record.element.currentTime, pauseCalled: record.events.includes('pause()') };
-        }, index)).toEqual({ paused: true, time: 0, pauseCalled: true });
-        await expect(page.locator('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false');
-        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
-        await expect(page.getByTestId('practice-session-progress')).toContainText(`${historyLength + round + 1}/`);
-        expect((await audioLearningState(page)).saved.srs).toBe(answered.saved.srs);
-        expect(await page.evaluate(() => JSON.parse(localStorage.getItem('lu-practice-session')!).byMode.mixed.history.length)).toBe(50);
-      }
-    });
-  }
-
-  for (const transition of ['cancel', 'Home', 'Next same item']) {
-    test(`P11 late native catalog observation after ${transition} cannot resurrect a cancelled request`, async ({ page }) => {
-      await observePracticeAudio(page);
-      await page.addInitScript(() => {
-        const native = speechSynthesis.getVoices.bind(speechSynthesis);
-        Reflect.set(window, 'restoreNativeVoices', () => { speechSynthesis.getVoices = native; });
-        speechSynthesis.getVoices = () => [];
-      });
-      await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
-      await openAudioPractice(page);
-      if (transition === 'Next same item') await completeOneFlashcard(page, 'again');
-      const before = await audioLearningState(page);
-      await audioButton(page).click();
-      await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
-      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
-      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
-      if (transition === 'cancel') await audioButton(page).click();
-      else if (transition === 'Home') await page.getByRole('button', { name: /Додому|Home/ }).click();
-      else await page.getByTestId('practice-advance-button').click();
-      await page.evaluate(() => {
-        Reflect.get(window, 'restoreNativeVoices')();
-        speechSynthesis.dispatchEvent(new Event('voiceschanged'));
-      });
-      const inventory = await observedAudioVoices(page);
-      await test.info().attach('late-native-catalog.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
-      expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
-      expect(await page.evaluate(() => localStorage.getItem('lu-lexicon-srs'))).toBe(before.saved.srs);
-      if (transition !== 'Home') {
-        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
-        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
-      }
-    });
-  }
 
   test('P10 held native play / native abort then SAME-mounted retry', async ({ page }) => {
     await observePracticeAudio(page, true);
@@ -1854,7 +1471,7 @@ test.describe('#10706 audio:', () => {
       if (requests === 1) await held;
       await route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav', headers: { 'Cache-Control': 'no-store' } });
     });
-    await openAudioPractice(page);
+    await openAtlasAudio(page);
     const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
     const before = await audioLearningState(page);
     await audioButton(page).click();
@@ -1879,26 +1496,6 @@ test.describe('#10706 audio:', () => {
     })).toEqual({ paused: true, time: 0, pauseCalled: true });
   });
 
-  test('P01 Enter and Space on audio while an answer is pending preserve focus, one review and Next', async ({ page }) => {
-    await observePracticeAudio(page, true);
-    await routeGoodAudio(page);
-    await openAudioPractice(page);
-    await completeOneFlashcard(page, 'again');
-    await expect(page.getByTestId('practice-advance-button')).toBeFocused();
-    const answered = await audioLearningState(page);
-    expect(JSON.parse(answered.saved.srs!).reviews).toHaveLength(1);
-    await audioButton(page).focus();
-    await page.keyboard.press('Enter');
-    await nativePlaying(page);
-    await expect(audioButton(page)).toBeFocused();
-    expect(await audioLearningState(page)).toEqual(answered);
-    await page.keyboard.press('Space');
-    await oldAudioStopped(page);
-    await expect(audioButton(page)).toBeFocused();
-    await expect(page.getByTestId('practice-advance-button')).toBeVisible();
-    expect(await audioLearningState(page)).toEqual(answered);
-  });
-
   test('P10 held play / explicit pending stop and same-mounted retry', async ({ page }) => {
     await observePracticeAudio(page, true);
     await routeGoodAudio(page);
@@ -1909,7 +1506,7 @@ test.describe('#10706 audio:', () => {
       if (++requests === 1) await held;
       await route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
     });
-    await openAudioPractice(page);
+    await openAtlasAudio(page);
     const root = await page.locator('[data-pronunciation-lemma]').elementHandle();
     const before = await audioLearningState(page);
     await audioButton(page).click();
@@ -1928,13 +1525,54 @@ test.describe('#10706 audio:', () => {
     expect(await root!.evaluate((element) => element.isConnected)).toBe(true);
     expect(await audioLearningState(page)).toEqual(before);
   });
+  test('P04 actual rendered route departure cancels native audio', async ({ page }) => {
+    await observePracticeAudio(page, true);
+    await routeGoodAudio(page);
+    await openAtlasAudio(page);
+    await audioButton(page).click();
+    await nativePlaying(page);
+    await page.evaluate(() => {
+      // Register after the real controller so its departure cleanup runs first.
+      window.addEventListener('pagehide', () => {
+        const record = window.practiceAudioProbe.media[0];
+        sessionStorage.setItem('audio-departure', JSON.stringify({
+          pauseCalled: record.events.includes('pause()'),
+          paused: record.element.paused,
+          time: record.element.currentTime,
+        }));
+      });
+    });
+    await page.locator('a[href="/lexicon/"]:visible').first().click();
+    await expect(page).toHaveURL(/\/lexicon\/$/);
+    const departure = await page.evaluate(() => JSON.parse(sessionStorage.getItem('audio-departure') ?? 'null'));
+    await test.info().attach('departure.json', { body: JSON.stringify(departure), contentType: 'application/json' });
+    expect(departure).toEqual({ pauseCalled: true, paused: true, time: 0 });
+  });
 });
 
+test('P04 idle immediate switches, unchanged no-ops, unpublished-level refusal and unconfigured refresh', async ({ page }) => {
+  await page.goto('/practice/');
+  await page.getByTestId('practice-active-deck-chip').click();
+  await page.getByTestId('practice-deck-option-all').click();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A1', exact: true }).click();
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await expect(page.getByTestId('practice-dashboard-hero').getByRole('button', { name: /C2/, exact: false })).toBeDisabled();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
+  expect(await page.evaluate(() => localStorage.getItem('lu-learner-level'))).toBe('A2');
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await page.getByTestId('practice-active-deck-chip').click();
+  await page.getByTestId('practice-deck-option-virtual_teacher_lesson').click();
+  await expect(page.getByTestId('practice-active-deck-chip')).toContainText('Curated');
+  await expect(page.getByTestId('practice-switch-session-offer')).toHaveCount(0);
+  await page.getByTestId('practice-settings-toggle').click();
+  await expect(page.getByTestId('practice-drive-sync-section')).toHaveCount(0);
+  await test.info().attach('refresh-applicability.json', { body: JSON.stringify({ customSetRefresh: 'N/A in this unconfigured artifact: actual Drive sync control absent; no fabricated storage event', pendingRefreshStarted: false }), contentType: 'application/json' });
+});
 
 test('#10706 A3 D01 actual native empty catalog expires and permits retry', async ({ page }) => {
   await observePracticeAudio(page);
-  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
-  await openAudioPractice(page);
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  await openAtlasAudio(page);
   const inventory = await observedAudioVoices(page);
   await test.info().attach('actual-native-inventory.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
   // This host-path check must expose its applicability, never inject native availability.
@@ -1954,7 +1592,7 @@ test('#10706 A3 D01 actual native empty catalog expires and permits retry', asyn
 });
 
 // A3 controls exercise the built consumer. Injected availability is never native speech proof.
-async function a3SpeechControl(page: Page, preloaded = false, media = false) {
+async function a3SpeechControl(page: Page, preloaded = false, media = false, path?: string) {
   await observePracticeAudio(page);
   await page.addInitScript(({ preloaded, media }) => {
     if (media) {
@@ -1997,9 +1635,9 @@ async function a3SpeechControl(page: Page, preloaded = false, media = false) {
       snapshot: () => ({ count: submitted.length, cancels, selected: submitted.map((utterance) => ({ text: utterance.text, lang: utterance.lang, voice: utterance.voice?.name })) }),
     });
   }, { preloaded, media });
-  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
   if (media) await routeGoodAudio(page);
-  await openAudioPractice(page);
+  await openAtlasAudio(page, path);
   await page.clock.install({ time: 0 });
   await page.clock.pauseAt(0);
 }
@@ -2018,7 +1656,13 @@ async function a3Expired(page: Page) {
 test.describe('#10706 A3 injected startup controls:', () => {
   for (const scenario of ['D02 preactivation empty', 'D03 repeated empty', 'D04 voice before boundary', 'D05 voice after boundary', 'D06 cancel', 'D07 supersession', 'D08 stale retry', 'D09 speech never starts', 'D10 start at 9999', 'D11 duplicate voices', 'D12 error and retry']) {
     test(scenario, async ({ page }) => {
-      await a3SpeechControl(page, ['D08', 'D09', 'D10', 'D12'].some((id) => scenario.startsWith(id)));
+      const supersession = scenario.startsWith('D07');
+      await a3SpeechControl(
+        page,
+        ['D08', 'D09', 'D10', 'D12'].some((id) => scenario.startsWith(id)),
+        false,
+        supersession ? STATIC_ATLAS_AUDIO_PATH : undefined,
+      );
       const before = await audioLearningState(page);
       if (scenario.startsWith('D02')) {
         await page.evaluate(() => speechSynthesis.dispatchEvent(new Event('voiceschanged')));
@@ -2046,20 +1690,25 @@ test.describe('#10706 A3 injected startup controls:', () => {
         await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
         await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
         await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
-      } else if (scenario.startsWith('D06') || scenario.startsWith('D07')) {
-        if (scenario.startsWith('D06')) await audioButton(page).click();
-        else {
-          await page.locator('[data-activity="flashcard"]').click();
-          await page.locator('[data-rate="again"]').click();
-          const answered = (await audioLearningState(page)).saved.srs;
-          await page.getByTestId('practice-advance-button').click();
-          expect((await audioLearningState(page)).saved.srs).toBe(answered);
+      } else if (scenario.startsWith('D06') || supersession) {
+        if (supersession) {
+          await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
+          // The server-rendered button stays in the DOM while its controller is detached.
+          await audioButton(page).dispatchEvent('click');
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+          await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pageshow')));
+        } else {
+          await audioButton(page).click();
         }
         await page.clock.runFor(20000);
         await a3Signal(page, 'voices');
         expect((await a3Snapshot(page)).count).toBe(0);
         await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
         await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+        if (supersession) {
+          await audioButton(page).click();
+          expect((await a3Snapshot(page)).count).toBe(1);
+        }
       } else if (scenario.startsWith('D12')) {
         await a3Signal(page, 'error');
         await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
@@ -2089,11 +1738,10 @@ test.describe('#10706 A3 injected startup controls:', () => {
         if (scenario.startsWith('D09')) expect((await a3Snapshot(page)).cancels).toBe(1);
         if (scenario.startsWith('D11')) expect((await a3Snapshot(page)).count).toBe(1);
       }
-      if (!scenario.startsWith('D07')) expect(await audioLearningState(page)).toEqual(before);
+      expect(await audioLearningState(page)).toEqual(before);
     });
   }
 });
-
 
 async function a3MediaSignal(page: Page, action: 'resolve' | 'reject' | 'error', index = 0) {
   await page.evaluate(({ action, index }) => Reflect.get(window, 'a3Media').signal(action, index), { action, index });
@@ -2143,7 +1791,7 @@ test('F1 CDN media failure plus throwing speech fallback reports error promptly 
     Reflect.set(window, 'f1SpeechFaults', () => faults);
     speechSynthesis.getVoices = () => { faults++; throw new Error('F1 injected catalog failure'); };
   });
-  await page.route('**/manifest.json', (route) => route.fulfill({ json: {
+  await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: {
     schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } },
   } }));
   let requests = 0;
@@ -2152,7 +1800,7 @@ test('F1 CDN media failure plus throwing speech fallback reports error promptly 
     return requests === 1 ? route.fulfill({ status: 404, body: '' })
       : route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
   });
-  await openAudioPractice(page);
+  await openAtlasAudio(page);
   const before = await audioLearningState(page);
   await audioButton(page).click();
   await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.', { timeout: 3000 });
@@ -2174,6 +1822,7 @@ test('F1 CDN media failure plus throwing speech fallback reports error promptly 
   expect(uncaught).toEqual([]);
   await test.info().attach('f1-browser-control.json', { body: JSON.stringify({ requests, uncaught, media: await page.evaluate(() => window.practiceAudioProbe.media.map((record) => ({ src: record.element.src, events: record.events, promises: record.promises }))) }), contentType: 'application/json' });
 });
+
 
 
 for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {

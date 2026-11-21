@@ -36,11 +36,18 @@ from scripts.atlas.a1_card_receipts import (
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "registry/atlas/a1-v1-slice2.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice2.json"
-MANIFEST_SHA256 = "0a1f990cede86d08e3683851883908514296d33a02763e83f5f0852808b7eebc"
+MANIFEST_SHA256 = "3ddc189696fc9127a830be4cbbf05a062cb09c7e8fcf2e0940d7e950e608a12e"
+MANIFEST_FILE_SHA256 = "0aca5c805f5ace1f2721ec447e49fe6f1f944868c2848e0f71c39f768b5a14ec"
+COMPANION_FILE_SHA256 = "c72cf5996026a5c2cde2b506d0f626c9624282dc9858bd1c2a795ec19952bb12"
 VERSION = "a1-slice2-v1"
 CARD_FIELDS = (*assembly.CARD_FIELDS, "mwe_form", "mwe_frame")
 SENSE_FIELDS = assembly.SENSE_FIELDS
 STRESS_ORDER = ("ulif", "sum20", "vts_busel_slovnyk_me")
+_VTS_DEFINITION_REFERENCE = re.compile(
+    r"(?:див\.|те саме,\s*що|те ж,\s*що|"
+    r"(?:присл\.|пестл\.|зменш\.(?:-пестл\.)?|прикм\.|жін\.|займ\.\s+присв\.)\s+до)\s",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -141,6 +148,17 @@ def require(condition, reason):
 def selected_assertions(resolution):
     value = resolution.get("selected")
     return [value] if isinstance(value, str) else value or []
+
+
+def lexical_gender_applies(card):
+    """Use the selected citation analysis for nouns with no lexical gender."""
+    if card["key_at_creation"]["pos"] != "noun":
+        return False
+    selected = selected_assertions(card["fields"].get("grammatical_label", {}))
+    tag_sets = [set(a["value"].split(":")) for a in card["assertions"] if a["assertion_id"] in selected]
+    # An absent or unresolved citation label does not resolve the gender field.
+    return not tag_sets or any("ns" not in tags and ("pron" not in tags or tags & {"m", "f", "n"})
+                               for tags in tag_sets)
 
 
 def load(path):
@@ -306,6 +324,9 @@ def _scope(claim, manifest, receipt, *, batch=None, record=None):
                     and receipt["quotation"] == record["payload"]["sense_gloss"], "ulif_definition_not_exact")
         else:
             require(receipt["source_id"] in {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}, "meaning_source_invalid")
+        if receipt["source_id"] == "vts_busel_slovnyk_me":
+            require(not _VTS_DEFINITION_REFERENCE.match(receipt["quotation"].strip()),
+                    "reference_only_definition")
         require("Джерело:" not in receipt["quotation"] and "Значення в інших" not in receipt["quotation"], "dictionary_footer")
 
 
@@ -436,8 +457,9 @@ def build(inventory, base, companion, manifest, sources, pins, register, *, batc
                     state, reason = "not_applicable", "lexeme_not_mwe"
                 elif sid == card_id and field == "aspect" and card["key_at_creation"]["pos"] != "verb":
                     state, reason = "not_applicable", "nonverb_has_no_aspect"
-                elif sid == card_id and field == "gender" and card["key_at_creation"]["pos"] not in {"noun", "adj"}:
-                    state, reason = "not_applicable", "no_lexical_gender_for_this_pos"
+                elif sid == card_id and field == "gender" and not lexical_gender_applies(card):
+                    require(not ids, "lexical_gender_not_applicable")
+                    state, reason = "not_applicable", "no_lexical_gender"
                 elif not ids:
                     reason = stress_reasons.get(card_id) if field == "stress" else None
                     reason = reason or manifest["field_residuals"].get(f"{card_id}/{sid}/{field}",
