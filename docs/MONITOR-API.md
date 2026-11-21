@@ -371,6 +371,22 @@ Sample response:
 }
 ```
 
+#### Section availability and freshness
+
+A requested section can be `null` when collection is pending, fails, or times out;
+`meta.<section>.error` gives the reason. An error can also accompany a returned value.
+For each section, `meta.<section>.generated_at` is its timestamp (the attempt time
+when unavailable), `stale_after_s` is its freshness window in seconds, `stale`
+indicates an older value, and `refreshing` indicates an update in progress. These
+last two fields may be absent. The top-level `generated_at` is the earliest section
+timestamp. `cache` reports `hit` or `miss`, and `source` identifies the data source.
+
+Use `?fresh=true` to request new values instead of waiting for normal freshness
+windows; a section can still return `null` with an error. `idle_prs` remains
+cache-first. Use `?sections=delegate` to request only that section, or list section
+names separated by commas. Unknown names return HTTP 400; an explicit list overrides
+`lean=true`.
+
 For live agent progress from the channel bridge, Monitor can consume the event stream directly: `Monitor(command=".venv/bin/python -m lu_machinery.ai_agent_bridge channel watch <thread_id> --follow --event-stream", ...)`. The watch command replays historical events first, then keeps streaming line-buffered JSONL for `reply_started`, `heartbeat`, `reply_complete`, and delivery outcome events as the inbox worker updates the thread.
 
 Related MCP source lookup: `mcp__sources__search_external` searches the chunked external articles corpus with channel/register/decolonization filters and optional track-aware reranking.
