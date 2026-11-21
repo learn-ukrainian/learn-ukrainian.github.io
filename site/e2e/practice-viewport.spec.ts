@@ -47,7 +47,7 @@ test.describe('desktop practice active session viewport constraints (#8377)', ()
       test.use({ viewport });
 
       for (const locale of ['en', 'uk'] as const) {
-        test(`active flashcard session has zero overflow and visible controls (${locale})`, async ({ page }) => {
+        test(`active stress session has zero overflow and visible controls (${locale})`, async ({ page }) => {
           await page.goto('/practice/', { waitUntil: 'load' });
           await page.evaluate((loc) => {
             document.documentElement.dataset.chromeLocale = loc;
@@ -58,12 +58,12 @@ test.describe('desktop practice active session viewport constraints (#8377)', ()
           await expect(a1Btn).toBeVisible({ timeout: 20000 });
           await a1Btn.click();
 
-          const flashcardMode = page.locator('button[data-mode="flashcards"]');
-          await expect(flashcardMode).toBeVisible({ timeout: 10000 });
-          await flashcardMode.click();
+          const stressMode = page.locator('button[data-mode="stress"]');
+          await expect(stressMode).toBeVisible({ timeout: 10000 });
+          await stressMode.click();
 
-          // Wait for active flashcard session card to mount
-          const card = page.locator('[data-activity="flashcard"]');
+          // Wait for active stress session card to mount
+          const card = page.locator('[data-testid="practice-stress"]');
           await expect(card).toBeVisible({ timeout: 15000 });
 
           // Verify document has zero horizontal overflow during active exercise
@@ -72,7 +72,7 @@ test.describe('desktop practice active session viewport constraints (#8377)', ()
             const body = document.body;
             return doc.scrollWidth > window.innerWidth || body.scrollWidth > window.innerWidth;
           });
-          expect(overflow, `active flashcard session produced horizontal overflow at ${name} (${locale})`).toBe(false);
+          expect(overflow, `active stress session produced horizontal overflow at ${name} (${locale})`).toBe(false);
 
           // Verify card elements are fully within the viewport bounds
           const cardBox = await card.boundingBox();

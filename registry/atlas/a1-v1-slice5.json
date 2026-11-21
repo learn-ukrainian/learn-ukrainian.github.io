@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "c808de273887310a153d1726b8548bce9c8c08c4b2d815ea90aad5690148fe57",
-    "companion_sha256": "bffccab5f9d85943e660641b72e2baf9782b05e5fe6c881ea2846987757e3738",
-    "consumed_sha256": "1da304956bb6a345e40da1bc969b7a0766f0f93b756bb8f04e083090c397bfd8",
+    "combined_sha256": "b39325e63eaa2d0d037f31012f6c4f957b7ad02cd5f2b9439396df324ddf4cac",
+    "companion_sha256": "77b3588045b9c9f2463e39320944c2531c1c038074f2c795ecb4eb319256e10c",
+    "consumed_sha256": "e92e91e5aae6c2547805d7a72c114ce93e62072f5b36c3d0b59c640b28c2e073",
     "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
     "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c",
-    "slice4_companion_sha256": "629a8ac52b704494b837a2c5325b6fc70e07b947be75fa390e59bdb60db2b79c"
+    "slice4_companion_sha256": "11dd7026406ca5293d83db64cb43fac1b85a8a0fb299b76c1724fd8e89e82de9"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -2313,40 +2313,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_7edehzqd24wz",
-      "entry_id": 82239,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:гострий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -32628,40 +32594,6 @@
       "span": [
         0,
         32
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_39m7asavdtt3",
-      "entry_id": 124518,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:зайнятий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {

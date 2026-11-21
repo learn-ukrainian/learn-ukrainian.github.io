@@ -3781,6 +3781,15 @@
       "to": [
         "sr_p9fk8j71rqen"
       ]
+    },
+    {
+      "build_id": "a1-slice4-allocation@sha256:b2d6b4cb94e5b49bf56ba7d2a9641002acb98850726f667e45470393a9cd373c",
+      "event_id": "ie_2209",
+      "evidence": "{\"locator\":\"vts:slovnyk_me_entries:195015\",\"snapshot_id\":\"vts_busel_slovnyk_me@sha256:0c639b32f2817dbe962792a7a9251d1dcb3c8b244694a14f1d0eeac097513300\",\"source_id\":\"vts_busel_slovnyk_me\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_t948ex1qxtvn"
+      ]
     }
   ],
   "schema_version": "atlas-a1-slice4-allocation.v1",
@@ -4734,6 +4743,23 @@
       "sense": {
         "order": 1,
         "sense_id": "ws_ez436kxgc1jw",
+        "state": "active"
+      }
+    },
+    {
+      "card_id": "wc_xhzws68qph50",
+      "event": {
+        "build_id": "a1-slice4-allocation@sha256:b2d6b4cb94e5b49bf56ba7d2a9641002acb98850726f667e45470393a9cd373c",
+        "event_id": "ie_2210",
+        "evidence": "{\"card_id\":\"wc_xhzws68qph50\",\"source_id\":\"vts_busel_slovnyk_me\",\"source_sense_key\":\"vts:кав'ярня#unnumbered/1\"}",
+        "kind": "sense_mint",
+        "to": [
+          "ws_6nz17rc3jtw0"
+        ]
+      },
+      "sense": {
+        "order": 1,
+        "sense_id": "ws_6nz17rc3jtw0",
         "state": "active"
       }
     }
@@ -9051,6 +9077,25 @@
       ],
       "source_id": "vts_busel_slovnyk_me",
       "source_record_id": "sr_p9fk8j71rqen"
+    },
+    {
+      "aliases": [
+        {
+          "key": "vts:slovnyk_me_entries:195015",
+          "kind": "uid",
+          "snapshot_id": "vts_busel_slovnyk_me@sha256:0c639b32f2817dbe962792a7a9251d1dcb3c8b244694a14f1d0eeac097513300"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "vts:slovnyk_me_entries:195015",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "vts_busel_slovnyk_me@sha256:0c639b32f2817dbe962792a7a9251d1dcb3c8b244694a14f1d0eeac097513300",
+          "status": "unique"
+        }
+      ],
+      "source_id": "vts_busel_slovnyk_me",
+      "source_record_id": "sr_t948ex1qxtvn"
     }
   ]
 }

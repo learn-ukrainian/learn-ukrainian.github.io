@@ -89,10 +89,9 @@ def input_binding(spec: dict) -> str:
 
 def runtime_fingerprint() -> str:
     """Bind resource trials to implementation bytes and the current runtime."""
-    implementation = cert.digest({
-        path.relative_to(PROJECT_ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in IMPLEMENTATION_PATHS
-    })
+    authority = cert.CertificationAuthority.__new__(cert.CertificationAuthority)
+    authority.hashes = {}
+    implementation = authority.fingerprint(IMPLEMENTATION_PATHS)
     return cert.digest({"python": sys.version, "sqlite": sqlite3.sqlite_version,
                         "implementation_sha256": implementation,
                         "system": platform.system(), "release": platform.release(), "machine": platform.machine()})

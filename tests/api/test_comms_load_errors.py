@@ -46,7 +46,11 @@ def test_corrupt_curriculum_yaml_surfaces_track_error(
     body = resp.json()
     assert body["total_expected"] == 0
     assert any("a1" in item and "curriculum.yaml" in item for item in body["errors"])
-    assert any("curriculum.yaml" in record.message for record in caplog.records)
+    assert [
+        record.message
+        for record in caplog.records
+        if record.name == "scripts.project_api.batch_progress"
+    ] == ["comms batch progress: failed to load curriculum.yaml (ParserError)"]
 
 
 def test_ps_timeout_is_not_reported_as_zero_processes(

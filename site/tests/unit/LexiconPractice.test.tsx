@@ -1497,7 +1497,7 @@ describe('LexiconPractice', () => {
       />,
     );
 
-    await userEvent.setup().click(screen.getByRole('button', { name: 'Натисніть, щоб перевернути' }));
+    await userEvent.setup().click(screen.getByRole('button', { name: /борщ/ }));
 
     expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Я їм борщ.');
     expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
