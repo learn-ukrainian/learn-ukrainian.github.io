@@ -361,10 +361,31 @@ def _write_json(path: Path, data: dict) -> None:
 
 
 def _git(cwd: Path, *args: str) -> None:
+    """Run git from ``/usr/bin`` with no inherited config and no detached maintenance.
+
+    ``git worktree add`` creates ``.git/worktrees/<id>`` and only then opens
+    ``locked``. ``git worktree prune`` deletes that directory while ``gitdir``
+    is still absent, and the open then fails with ENOENT (exit 128). ``git
+    commit`` detaches ``maintenance run --auto``, which can run that prune.
+    The environment below is replaced, not updated, so a caller's ``GIT_*``,
+    ``XDG_*`` or ``LU_*`` cannot point this git at another repository, and
+    ``maintenance.auto=false`` stops the detach.
+    """
     env = {
         "PATH": "/usr/bin:/bin",
         "HOME": str(cwd),
         "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        # An empty value copies no template, so no hook is installed, and it
+        # does not need a directory from the parent environment.
+        "GIT_TEMPLATE_DIR": "",
+        "GIT_CONFIG_COUNT": "3",
+        "GIT_CONFIG_KEY_0": "maintenance.auto",
+        "GIT_CONFIG_VALUE_0": "false",
+        "GIT_CONFIG_KEY_1": "gc.auto",
+        "GIT_CONFIG_VALUE_1": "0",
+        "GIT_CONFIG_KEY_2": "gc.autodetach",
+        "GIT_CONFIG_VALUE_2": "false",
         "GIT_AUTHOR_NAME": "Test",
         "GIT_AUTHOR_EMAIL": "test@example.invalid",
         "GIT_COMMITTER_NAME": "Test",
@@ -378,10 +399,14 @@ def _git(cwd: Path, *args: str) -> None:
         raise
 
 
+def _private_checkout(tmp_path: Path, prefix: str) -> Path:
+    """A new directory under ``tmp_path``. Pytest reuses one tmp basename across parameters."""
+    return Path(tempfile.mkdtemp(prefix=prefix, dir=tmp_path))
+
+
 def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
     """A real primary checkout with real node_modules and a dispatch git worktree named ``name``."""
-    primary = tmp_path / "primary"
-    primary.mkdir()
+    primary = _private_checkout(tmp_path, "primary-")
     _git(primary, "init", "-q", "-b", "main")
     _git(primary, "commit", "-q", "--allow-empty", "-m", "init")
     _write_json(primary / "package.json", {"name": "primary", "workspaces": ["packages/*"]})
@@ -462,6 +487,11 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     allocated outside that ancestor. Callers delete ``ephemeral_root`` when set.
     """
     root, relocated = _root_outside_protected_ancestors(tmp_path)
+    # A relocated root is already a private directory. Otherwise the tooling
+    # repo, fake binaries and log would keep fixed names under a tmp pytest
+    # reuses across parameters.
+    if not relocated:
+        root = _private_checkout(root, "layout-")
     tooling = root / "tooling"
     shim_dir = _release_shim_dir(tooling)
     _git(tooling, "init", "-q", "-b", "main")
@@ -1200,7 +1230,7 @@ def test_walk_survives_deep_paths_and_unreadable_ancestors(layout):
 
 def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
     """A primary checkout holding the shim and a .venv, plus a linked worktree without a .venv."""
-    main_root = tmp_path / "shim-primary"
+    main_root = _private_checkout(tmp_path, "shim-primary-")
     shim_dir = _release_shim_dir(main_root)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
