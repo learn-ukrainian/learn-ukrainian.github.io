@@ -8,10 +8,7 @@ from pathlib import Path
 
 import lu_machinery.api.delegate_router as delegate_router
 import lu_machinery.api.main as api_main
-import lu_machinery.api.state_helpers as state_helpers
 from fastapi.testclient import TestClient
-
-import scripts.project_api.orient as product_orient
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -58,43 +55,9 @@ def _task_payload(task_id: str, **overrides) -> dict:
     return payload
 
 
-def _reset_orient_cache() -> None:
-    for key in [k for k in state_helpers._ttl_cache if k.startswith("orient_")]:
-        state_helpers._ttl_cache.pop(key, None)
-
-
-def _patch_non_delegate_orient_sources(monkeypatch) -> None:
-    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda *a, **k: {"branch": "main"})
-    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda *a, **k: {"issues": []})
-    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda *a, **k: {"idle_prs": []})
-
-    async def fake_pipeline(*a, **k):
-        return {"summary": {}}
-
-    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
-    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
-    monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
-    monkeypatch.setattr(
-        product_orient,
-        "collect_governance_orient_data",
-        lambda *a, **k: {
-            "decisions_total": 0,
-            "decisions_stale": 0,
-            "decisions_approaching_expiry": 0,
-            "adrs_total": 0,
-            "adrs_warnings": 0,
-            "adrs_errors": 0,
-        },
-    )
-    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda *a, **k: {"api": True})
-    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda *a, **k: [])
-
-
 def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    _pin_tasks_dir(monkeypatch, tasks_dir)
-    _reset_orient_cache()
-    _patch_non_delegate_orient_sources(monkeypatch)
+    ctx = _pin_tasks_dir(monkeypatch, tasks_dir)
 
     def fake_kill(pid: int, sig: int) -> None:
         if pid != 111:
@@ -123,16 +86,21 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     )
     _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
 
-    # Machinery #353: the lifespan writer publishes before HTTP readers run.
-    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
-    active_response = client.get("/api/delegate/active")
-    orient_response = client.get("/api/orient?fresh=true")
+    try:
+        # Machinery #353: the lifespan writer publishes before HTTP readers run.
+        delegate_router.active_snapshot(ctx).refresh()
+        active_response = client.get("/api/delegate/active")
+        orient_response = client.get("/api/orient?sections=delegate&fresh=true")
+    finally:
+        api_main.reset_detached_orient_state_for_tests(ctx)
 
     assert active_response.status_code == 200
     assert orient_response.status_code == 200
     active = active_response.json()
     orient = orient_response.json()
     assert active["total"] == 2
+    assert set(orient["meta"]) == {"delegate"}
+    assert "error" not in orient["meta"]["delegate"]
     assert orient["delegate"]["active_count"] == active["total"]
     assert [task["task_id"] for task in active["tasks"]] == ["spawning", "running"]
     assert active["tasks"][0]["status"] == "spawning"

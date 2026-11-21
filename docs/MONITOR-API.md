@@ -2190,22 +2190,26 @@ library APIs.
 ### `GET /api/orient`
 
 One-call agent orientation: git, issues, the cache-first idle PR feed, pipeline,
-runtime, delegate, rollovers, wiki, health, and session hints.
+runtime, delegate, capacity, rollovers, wiki, governance, health, and session hints.
 
 Query params:
 
-- `fresh=true` — invalidate orient-layer caches before gathering (see below).
+- `fresh=true` — bypass cached section values and run a single-flight fresh
+  collection per requested section (see below).
 - `lean=true` — use the lightweight cold-start preset and omit the heavy
-  `pipeline`, `issues`, and `wiki` sections. An explicit `sections` list wins.
-  `capacity`, `health`, `delegate`, and `rollovers` stay in the lean preset
-  but are cache-first / detached (#6983, #10866): a hung collector returns
-  `meta.error` plus the empty/default payload and must not stall the
-  rest of the gather. A later request inside the section TTL serves the
-  stored value without waiting on a new hang.
+  `pipeline`, `issues`, `idle_prs`, and `wiki` sections. An explicit `sections`
+  list wins. `capacity`, `health`, `delegate`, `rollovers`, and product
+  `governance` stay in the lean preset as cache-first detached sections
+  (#6983, #10866): a hung or failing collector never stalls the rest of the
+  gather. When a prior measurement exists, non-`fresh` reads serve it
+  immediately labelled `meta.<section>.stale: true` while a background refresh
+  runs; when no measurement exists yet (or a `fresh=true` read fails or times
+  out), the section payload is `null` and `meta.<section>.error` states why —
+  never a fabricated zero or empty fallback.
 - `sections=git,runtime` — comma-separated subset of section keys to
-  collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
-  `idle_prs`, `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`,
-  `health`, `session_hints`. Unknown keys return `400`. Omitted = full payload
+  collect. Valid keys: `git`, `issues`, `idle_prs`, `pipeline`, `runtime`,
+  `delegate`, `capacity`, `rollovers`, `wiki`, `governance`, `health`,
+  `session_hints`. Unknown keys return `400`. Omitted = full payload
   (back-compat). Skipped sections are not collected and are omitted
   from both the top-level payload and `meta`.
 - `role=<role>` — **opt-in** ADR-011 P3 cold-start research (see
@@ -2235,7 +2239,7 @@ Query params:
   "runtime": {"agents": ["claude", "gemini", "codex"]},
   "health": {"api": true, "mcp_sources": false, "mcp_rag": false},
   "meta": {
-    "git": {"generated_at": "2026-04-11T00:15:00Z", "stale_after_s": 30, "source": "git", "cache": "miss"},
+    "git": {"generated_at": "2026-04-11T00:15:00Z", "stale_after_s": 30, "source": "git", "cache": "miss", "stale": false, "refreshing": false},
     "issues": {"generated_at": "2026-04-11T00:14:10Z", "stale_after_s": 120, "source": "gh", "cache": "hit"}
   }
 }
@@ -2245,108 +2249,165 @@ When `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1`, the JSON response includes
 top-level `_telemetry` with the same context-window fields documented
 above.
 
-#### Per-section caching + freshness metadata (#1309)
+#### Per-section caching, aged measurements + freshness metadata (#1309, machinery #1036)
 
-Each section is computed by an independent collector. Most have a
-per-section TTL cache; a repeat call within the window skips the
-underlying shellout (`git`, `gh issue list`) or filesystem scan and
-returns the cached value. Errors are **not** cached — a transient
-failure retries on the next call.
+Each section is computed by an independent collector and stored in the
+context's per-section snapshot store (`_orient_state(ctx)`).
 
-| Section | TTL (s) | Source | Notes |
+- **Current hit**: a stored measurement younger than its TTL is returned
+  immediately on non-`fresh` reads with `cache: "hit"`.
+- **Cache-first aged measurement**: once a stored measurement is at or past
+  its TTL (including `stale_after_s: 0`, such as `pipeline`), a non-`fresh`
+  read returns that stored measurement immediately with its original
+  `generated_at`, `cache: "miss"`, `stale: true`, and `refreshing: true`
+  while one single-flight background refresh runs. If a prior refresh failed
+  after that measurement was stored, `meta.<section>.error` is attached
+  alongside the aged value.
+- **Unavailable section (`null` + `meta.<section>.error`)**: if no
+  measurement has ever been stored and the initial wait expires or fails, or
+  if a `?fresh=true` collection fails or times out, the section value is
+  `null` (never an empty/zero fallback) and `meta.<section>.error` names the
+  reason (`"refreshing"`, `"section_timeout_<wait_s>s"`, or the exception
+  text). For `issues` and `idle_prs`, top-level `issues_error` /
+  `idle_prs_error` mirrors `meta.<section>.error`. For `governance`
+  (`merge_meta=True`), section fields are merged into `meta.governance` only
+  when the value is a mapping (not `null`).
+- **Monotonic compare-and-set publishing**: collections record the monotonic
+  start timestamp (`_orient_clock()`) when work begins; a slower older
+  collection never overwrites a newer measurement, and errors are not cached
+  as values. A newer successful measurement clears any older error.
+- **Demand-driven periodic refresh**: the lifespan warmer
+  (`refresh_orient_periodically`, every `10 s`) warms product sections once
+  at startup and thereafter refreshes only sections with active request
+  `Demand`.
+
+| Section | TTL (s) | Source | Pool / Notes |
 |---|---:|---|---|
-| `git` | 30 | `git` | branch, head, ahead_of_origin, recent_commits |
-| `issues` | 120 | `gh` | top 10 open issues; slow API, rare updates |
-| `idle_prs` | 60 | `gh` | green, reviewed, open PRs idle for more than one hour; detached refresh |
-| `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
-| `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
-| `delegate` | 30 | `fs` | active delegate/codex tasks; cache-first detached worker so a hung collector never pins `/api/orient` (#10866) |
-| `capacity` | 15 | `fs` | routing-budget lane snapshot; cache-first detached worker so CodexBar never pins `/api/orient` (#6983) |
-| `rollovers` | 15 | `fs` | compact fleet rollover counts plus actionable pending or incompletely cleaned entries; cache-first detached worker (#10866) |
-| `wiki` | 120 | `fs` | per-track wiki compilation coverage |
-| `health` | 15 | `probe` | API/DB/MCP port + integrity canaries; cache-first detached worker (#6983) |
-| `session_hints` | 60 | `fs` | recent `docs/session-state/*.md` entries |
+| `git` | 30 | `git` | unpooled (`5.0 s` inline wait); branch, head, ahead_of_origin, recent_commits |
+| `issues` | 120 | `gh` | detached (`0.4 s` inline wait, pooled); top 10 open issues |
+| `idle_prs` | 60 | `gh` | dedicated cache-first detached worker keyed by project-root scope (`_ctx_cache_scope`) |
+| `pipeline` | 0 | `fs` | product section, detached (`0.4 s` inline wait, pooled); wraps `/api/state/summary` (own 60 s cache), so every read refreshes rather than stacking TTLs (#1309 reviewer BLOCKER B2) |
+| `runtime` | 60 | `fs` | unpooled (`5.0 s` inline wait); agent registry + headroom + recent outcomes |
+| `delegate` | 30 | `fs` | detached (`0.4 s` inline wait, pooled); active delegate/codex tasks (#10866) |
+| `capacity` | 15 | `fs` | detached (`0.4 s` inline wait, pooled); routing-budget lane snapshot (#6983) |
+| `rollovers` | 120 | `fs` | detached (`0.4 s` inline wait, pooled); compact fleet rollover counts plus actionable entries (#10866) |
+| `wiki` | 120 | `fs` | product section, detached (`0.4 s` inline wait, pooled); per-track wiki compilation coverage |
+| `governance` | 120 | `fs` | product section, lean, `merge_meta`, detached (`0.4 s` inline wait, pooled); decision/ADR counts |
+| `health` | 15 | `probe` | detached (`0.4 s` inline wait, pooled); API/DB/MCP port + integrity canaries (#6983); integrity verdicts share project-root scope |
+| `session_hints` | 60 | `fs` | unpooled (`5.0 s` inline wait); recent `docs/session-state/*.md` entries |
 
 Every section is mirrored under `response.meta.<section>` with:
 
-- `generated_at` — ISO timestamp of the underlying collector run (useful
-  when `cache: "hit"`: the value may be up to `stale_after_s` old).
-- `stale_after_s` — TTL window, so clients know when to refetch. `0`
-  means "not cached at the orient layer" — the value is fetched on
-  every request, and downstream caching (if any) is documented in the
-  source endpoint.
+- `generated_at` — ISO timestamp of the underlying collector run (when
+  `cache: "hit"` or `stale: true`, this is the age of the stored
+  measurement, not request time).
+- `stale_after_s` — TTL window, so clients know when a measurement ages.
+  `0` means no freshness window at the orient layer (every read schedules a
+  refresh and downstream caching, if any, is documented in the source
+  endpoint).
 - `source` — origin class (`git` / `gh` / `fs` / `probe`) for quick
   provenance decisions.
-- `cache` — `"hit"` or `"miss"` on this specific call. Sections with
+- `cache` — `"hit"` (current stored value served without scheduling work) or
+  `"miss"` (cold load, stale-while-refresh, or `?fresh=true`). Sections with
   `stale_after_s: 0` always report `"miss"`.
-- `error` — present only when the collector raised or timed out; value
-  is the richer `"TypeName: msg"` form. (The section payload itself
-  keeps the bare `str(exc)` error string for backwards compatibility.)
+- `stale` — present on non-hit responses that return a value: `false` when
+  the measurement is current (collection started during this read or is
+  younger than TTL), `true` when an older cached measurement is served while
+  refreshing.
+- `refreshing` — present on non-hit responses: `true` while a background
+  refresh thread is still active for the section.
+- `error` — present when the collector raised, timed out
+  (`section_timeout_<wait_s>s`), or is still `refreshing` with no stored
+  measurement. Exception errors use `str(exc) or type(exc).__name__`.
 
 The top-level `response.generated_at` is the **oldest** `generated_at`
-across sections — a fully cached response labels itself with the
-oldest piece of data the caller is looking at. (Before #1309 it was
+across sections — a cached or partially stale response labels itself with
+the oldest piece of data the caller is looking at. (Before #1309 it was
 request time, which lied to consumers about freshness.)
 
 #### Cache bypass: `?fresh=true`
 
-Pass `?fresh=true` to invalidate every `orient_*` cache entry before
-gathering. Use it right after a write an agent wants to see
+Pass `?fresh=true` to start (or join) each requested section's single-flight
+fresh collection (`_orient_state(ctx).fresh_threads`) and wait up to that
+section's inline deadline (`0.4 s` for detached sections, `5.0 s` for
+unpooled sections). Use it right after a write an agent wants to see
 immediately — a just-committed change, a just-filed issue — without
-waiting for the longest TTL (120 s for `issues` / `wiki`).
+waiting for the section TTL (up to 120 s for `issues` / `rollovers` /
+`wiki` / `governance`). If the fresh collection fails or exceeds the inline
+wait without publishing a newer measurement, that section returns `null`
+with `meta.<section>.error` rather than silently serving the stale
+pre-`fresh` value. `?fresh=true` also clears the `orient_*` TTL cache
+namespace (`orient_idle_prs`); `idle_prs` itself stays cache-first and
+detached.
 
 ```bash
-# Normal call — honours each section's TTL.
+# Normal call — honours each section's TTL (and serves aged values stale while refreshing).
 curl -s http://localhost:8765/api/orient | jq .meta.git
 
 # After running `git commit` and you want the new HEAD reflected now.
-curl -s 'http://localhost:8765/api/orient?fresh=true' | jq .git.head
+curl -s 'http://localhost:8765/api/orient?sections=git&fresh=true' | jq .git.head
 ```
 
 The query only clears this router's cache namespace; unrelated
 endpoints keep their caches intact.
 
-#### Failure isolation
+#### Per-context collector pool & failure isolation
 
-Each section runs inside `asyncio.wait_for(..., timeout=5 s)`. That
-properly cancels hung **async** coroutines — for us, that is only the
-`pipeline` collector.
+Each `MonitorContext` owns an isolated `_OrientState`
+(`_orient_state(ctx)` via `ctx.runtime.get_or_create_derived("orient-state", _OrientState)`):
+its own lock, bounded collector semaphore (`slots`, limit
+`DETACHED_ORIENT_COLLECT_LIMIT = 2`), single-flight `refresh_threads` and
+`fresh_threads`, stored `values`, `errors`, `pending` flags, and per-section
+`demand`.
 
-For sync collectors run via `asyncio.to_thread`, the hard timeout is
-advisory: Python threads aren't cancellable once they start running.
-Real protection is collector-specific:
+- **Dedicated daemon threads, never the shared default executor**: every
+  section collector runs on its own daemon thread (`orient-<key>-refresh` or
+  `orient-<key>-fresh`), including async collectors via `asyncio.run(...)`
+  on their own event loop. Request coroutines wait without pinning pool
+  threads (`_await_thread`).
+- **Bounded permits for detached/product sections**: detached sections
+  (`capacity`, `health`, `delegate`, `rollovers`, `issues`) and product
+  sections (`pipeline`, `wiki`, `governance`) acquire one of the context's
+  `2` collector permits (`slots`) and wait at most
+  `DETACHED_ORIENT_INLINE_WAIT_S` (`0.4 s`) inline. This protects request
+  threads from GIL contention under concurrent heavy scans.
+- **Unpooled fast sections**: `git`, `runtime`, and `session_hints` take no
+  collector permit (so they cannot queue behind a hung detached collector)
+  and wait up to `ORIENT_SECTION_HARD_TIMEOUT_S` (`5.0 s`) inline.
+- **Per-context isolation**: if a slow collector outlives a request or app
+  shutdown, it keeps only its own context's permit until completion and
+  cannot stall or contaminate another `MonitorContext`.
 
-| Collector | Inner timeout | Notes |
+| Collector | Pool / inline wait | Inner protection / notes |
 |---|---|---|
-| `git` | 2 s `_run_command` subprocess timeout | hardened |
-| `issues` | 5 s `_run_command` subprocess timeout | hardened |
-| `pipeline` | async — `asyncio.wait_for` works | hardened |
-| `runtime` | none — pure Python / filesystem | fast in practice; an NFS stall could wedge a thread past the 5 s ceiling |
-| `delegate` | none — filesystem read of a small JSON | same caveat |
-| `wiki` | none — enumerates a small number of files | same caveat |
-| `health` | 0.2 s socket + fast `os.access` | hardened |
-| `session_hints` | none — `glob(...)[:10]` + short `read_text` | same caveat |
+| `git` | unpooled (`5.0 s`) | `2 s` `_run_command` subprocess timeout (5-worker git probe executor) |
+| `issues` | detached (`0.4 s`, pooled) | `5 s` `_run_command` subprocess timeout |
+| `pipeline` | detached (`0.4 s`, pooled) | async product collector on thread-local loop; TTL `0` |
+| `runtime` | unpooled (`5.0 s`) | pure Python / filesystem |
+| `delegate` | detached (`0.4 s`, pooled) | cache-first detached worker |
+| `capacity` | detached (`0.4 s`, pooled) | cache-first detached worker (isolates CodexBar) |
+| `rollovers` | detached (`0.4 s`, pooled) | cache-first detached worker |
+| `wiki` | detached (`0.4 s`, pooled) | product section; indexed filesystem scan |
+| `governance` | detached (`0.4 s`, pooled) | product section (`lean`, `merge_meta`) |
+| `health` | detached (`0.4 s`, pooled) | `0.2 s` socket + fast `os.access`; integrity verdicts share project-root scope |
+| `session_hints` | unpooled (`5.0 s`) | `glob(...)[:10]` + short `read_text` |
 
-The unwrapped sync collectors are cheap enough in practice that
-they've never been observed to block, but they are **not** inside a
-real timeout. If the underlying filesystem hangs, those threads will
-tie up threadpool slots past the 5 s ceiling. See the comment near
-`ORIENT_SECTION_TTLS` in `lu_machinery/api/main.py` for the constraint.
-
-If a section fails or times out, its own payload degrades to a
-fallback (e.g. `git: {"error": "..."}`) while every other section
-still populates. A single wedged collector never takes down the
-whole response — this fixed the incident logged in the first entry
-of `docs/monitor-api/cold-start-baseline.md`.
+If a section fails, times out, or is still warming with no prior stored
+value, its payload is `null` with `meta.<section>.error` while every other
+section still populates. A single wedged collector never takes down the
+whole response — this fixed the incident logged in the first entry of
+`docs/monitor-api/cold-start-baseline.md`.
 
 #### Idle PR feed (#4728)
 
 The full response includes `idle_prs`, a compact list of open PRs whose latest
 non-advisory checks are green, review-gate evidence is present, and GitHub
 activity has been idle for more than one hour. Each row contains `number`, the
-head `branch`, and `minutes_idle`. The `gh` refresh is cache-first and detached:
-the request serves the last successful value or an empty list immediately when
-GitHub is slow or unavailable. `?lean=true` omits this section; request
+head `branch`, and `minutes_idle`. The `gh` refresh is cache-first and detached
+(keyed by project-root scope `_ctx_cache_scope`): when GitHub is slow or
+unavailable, the request serves the last successful value marked `stale: true`
+immediately, or `null` with `idle_prs_error` and `meta.idle_prs.error` when no
+prior measurement exists. `?lean=true` omits this section; request
 `?sections=idle_prs` when it is needed explicitly.
 
 If the `issues` collector returns `issues_error` or the GitHub
