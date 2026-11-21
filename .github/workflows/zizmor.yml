@@ -16,9 +16,6 @@ concurrency:
 on:
   push:
     branches: ['main']
-  pull_request:
-    paths:
-      - '.github/workflows/**'
   schedule:
     # Weekly run on Mondays at 09:00 UTC catches new audit rules that ship
     # in zizmor releases between user-triggered runs.

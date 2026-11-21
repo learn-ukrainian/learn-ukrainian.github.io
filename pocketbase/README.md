@@ -29,12 +29,15 @@ configured (`pocketBaseAdapterFromEnv` returns `null` without a base URL).
 
 ## Run it (binary)
 
-Pinned at PocketBase **v0.40.2** (hooks/migrations API: v0.23+). Bump
-deliberately, then re-check the hook against the JSVM docs.
+Pinned at PocketBase **v0.40.6** (hooks/migrations API: v0.23+). When updating
+the version, update the release checksum and recheck the hook against the JSVM
+docs.
 
 ```bash
-curl -L -o /tmp/pb.zip \
-  https://github.com/pocketbase/pocketbase/releases/download/v0.40.2/pocketbase_0.40.2_linux_amd64.zip
+curl -fL -o /tmp/pb.zip \
+  https://github.com/pocketbase/pocketbase/releases/download/v0.40.6/pocketbase_0.40.6_linux_amd64.zip
+printf '%s  %s\n' 0e1f609158ed945f809f8a02ae012aa0427129c66ebb63c1aee76f2c0309373f /tmp/pb.zip \
+  | sha256sum -c -
 unzip /tmp/pb.zip -d /tmp/pb-bin
 /tmp/pb-bin/pocketbase serve \
   --http 127.0.0.1:8090 \
@@ -55,6 +58,16 @@ docker compose up --build
 
 Same result: PocketBase on `127.0.0.1:8090`, repo migration + hook mounted
 read-only, state in the `pb_data` volume.
+
+The container runs as UID and GID `10001`. Docker initializes new named
+volumes from the image. If you already have a `pb_data` volume from the
+root-running image, stop PocketBase and run this once from this directory
+before starting it again:
+
+```bash
+docker compose run --rm --build --no-deps --user 0:0 --entrypoint chown pocketbase \
+  -hR 10001:10001 /pb_data
+```
 
 ## Point the client at it
 

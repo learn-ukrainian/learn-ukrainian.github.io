@@ -16,7 +16,21 @@ rules:
       # accepts `$/`, then migrate and drop these ignores. Whole-file entries:
       # the reason holds for every `./` use in the file, and line-anchored
       # entries went stale whenever a step moved.
+      - actionlint.yml
+      - atlas-grow.yml
+      - cache-hygiene.yml
       - content-ci.yml
       - ci.yml
       - ci-advisory.yml
+      - deploy-pages.yml
+      - issue-task-quality.yml
+      - model-catalog-freshness.yml
+      - pr-body-guard.yml
+      - pr-publication-scan.yml
+      - pr-size-warning.yml
+      - pytest-slow-nightly.yml
+      - rules-deployment-check.yml
+      - security-audit.yml
+      - stale-branch-cleanup.yml
       - uv-cache-warm.yml
+      - validate-yaml.yml

@@ -7,15 +7,9 @@ name: actionlint
 # step keys / `with:` inputs / runner labels, and lints `run:` scripts via the
 # shellcheck preinstalled on GitHub runners.
 #
-# Runs on EVERY PR (no `paths:` filter) on purpose: it lints only the handful
-# of workflow files, finishes in seconds, and — unlike the path-scoped
-# validate-yaml job — is therefore safe to add to branch protection's required
-# checks without deadlocking doc-only PRs (GitHub blocks on a *skipped* required
-# check). The pinned version + checksums live in scripts/audit/check_workflows.sh,
-# which both this job and local devs invoke (single source of truth). The job
-# never uses the anonymous release URL (throttled with HTTP 403 for the shared
-# runner pool): the tarball comes from the Actions cache or, on a miss, through
-# the authenticated releases API with the job token.
+# On PRs, ci.yml runs actionlint through the shared fleet workflow. This job
+# still runs the product runner-slot and interpolation checks. Main pushes and
+# manual runs use the same pinned lint script as local developers.
 
 permissions:
   contents: read
@@ -69,11 +63,16 @@ jobs:
             --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
           .venv/bin/python -m lu_machinery.ci.slot_inventory --check
 
+      - name: Check workflow interpolation
+        if: github.event_name == 'pull_request'
+        run: .venv/bin/python scripts/audit/check_untrusted_workflow_interpolation.py
+
       # The release tarball comes from the Actions cache, keyed on the version
       # pinned in check_workflows.sh; a miss downloads it through the
       # authenticated releases API. The script checks the tarball's sha256 on
       # every run, a cache hit included.
       - name: Read the pinned actionlint version
+        if: github.event_name != 'pull_request'
         id: actionlint-pin
         run: |
           set -euo pipefail
@@ -85,6 +84,7 @@ jobs:
           echo "version=${versions[0]}" >> "$GITHUB_OUTPUT"
 
       - name: Restore the actionlint tarball
+        if: github.event_name != 'pull_request'
         id: actionlint-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -92,6 +92,7 @@ jobs:
           key: actionlint-${{ steps.actionlint-pin.outputs.version }}-${{ runner.os }}-${{ runner.arch }}
 
       - name: Lint workflows
+        if: github.event_name != 'pull_request'
         env:
           # Force the pinned, checksum-verified actionlint build for a
           # reproducible result even if a runner image ever bundles its own.
@@ -101,13 +102,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: scripts/audit/check_workflows.sh
 
-      # A few MiB, written only on a miss after the lint step passed (so the
-      # tarball is verified): main writes the entry every ref can read; a pull
-      # request writes its own, readable only by that PR.
+      # A few MiB, written only on a miss after verification. Main writes
+      # the entry every ref can read.
       - name: Save the actionlint tarball
         if: >-
-          steps.actionlint-cache.outputs.cache-hit != 'true'
-          && (github.ref == 'refs/heads/main' || github.event_name == 'pull_request')
+          github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+          && steps.actionlint-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ runner.temp }}/actionlint-cache
