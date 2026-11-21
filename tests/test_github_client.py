@@ -806,6 +806,46 @@ def test_issue_unlink_surfaces_redacted_error_and_never_claims_already_linked(tm
     assert json.loads(failed.stderr)["error"] == "github_graphql_error"
 
 
+@pytest.mark.parametrize("failure", [None, sqlite3.OperationalError, sqlite3.DatabaseError, OSError])
+@pytest.mark.parametrize("raw_response", [False, True])
+@pytest.mark.parametrize(
+    "payload,code,error",
+    [
+        ({"errors": [{"type": "RATE_LIMITED", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
+        ({"errors": [{"type": "RATE_LIMIT", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
+        ({"data": {"viewer": {"login": "unit"}}}, 0, None),
+    ],
+)
+def test_graphql_persistence_failure_cannot_change_command_result(
+    tmp_path, monkeypatch, failure, raw_response, payload, code, error
+):
+    store, calls = client(tmp_path, [response(payload)])
+    writes = []
+    if failure:
+
+        def fail_every_write(*args, **kwargs):
+            writes.append(1)
+            raise failure("persistent write failure")
+
+        monkeypatch.setattr(gh, "_store_budget", fail_every_write)
+    result = store.request(
+        "POST", "graphql", payload={"query": "query { viewer { login } }"}, raw_response=raw_response
+    )
+    proc = gh._result_process(["gh", "api", "graphql"], result, {}, {"capture_output": True})
+    assert (proc.returncode, result.error) == (code, error)
+    assert len(calls) == 1
+    if failure:
+        assert len(writes) == 2
+    if error:
+        assert LEAKED_TOKEN.encode() not in proc.stdout + proc.stderr
+        detail = json.loads(proc.stderr)
+        assert json.loads(proc.stdout) == detail
+        assert detail == {"error": error, "reset_at": 2000, "reason": "pool_exhausted"}
+    else:
+        assert json.loads(proc.stdout) == payload
+        assert proc.stderr == b""
+
+
 @pytest.mark.parametrize("message", ["short", "я" * 500, "\u0001" * 500])
 def test_graphql_error_output_caps_count_and_encoded_bytes(tmp_path, monkeypatch, message):
     result, _ = _publish_link(
@@ -1903,6 +1943,69 @@ def test_pr_filters_and_unmodelled_fields_fall_through_intact(tmp_path, flags):
     result = gh.run(args, client=store, runner=native, capture_output=True, text=True, timeout=7)
     assert json.loads(result.stdout) == [{"number": 1, "headRefName": "x"}]
     assert seen == [args] and calls == []
+
+
+def admitted_read_cases():
+    return [
+        ['gh', 'ruleset', 'list', '--repo', 'unit/public'],
+        ['gh', 'api', 'repos/unit/public/rulesets'],
+        ['gh', 'api', 'repos/unit/public/merge-queue/entries'],
+        ['gh', 'run', 'watch', '1', '--compact', '--exit-status'],
+        ['gh', 'issue', 'view', '1'],
+        ['gh', 'issue', 'list'],
+        ['gh', 'issue', 'status'],
+        ['gh', 'run', 'view'],
+        ['gh', 'run', 'list'],
+        ['gh', 'run', 'watch', '1'],
+        ['gh', 'run', 'download'],
+        ['gh', 'workflow', 'list'],
+        ['gh', 'workflow', 'view'],
+        ['gh', 'repo', 'view'],
+        ['gh', 'repo', 'list'],
+        ['gh', 'release', 'view'],
+        ['gh', 'release', 'list'],
+        ['gh', 'release', 'download'],
+        ['gh', 'auth', 'status'],
+        ['gh', 'gist', 'view', '1'],
+        ['gh', 'gist', 'list'],
+        ['gh', 'label', 'list'],
+        ['gh', 'search', 'prs', '1'],
+    ]
+
+
+@pytest.mark.parametrize("args", admitted_read_cases())
+def test_every_shim_admitted_read_translates_or_falls_through(tmp_path, args):
+    from importlib.resources import files
+
+    from lu_machinery.opsec.gh_snapshot import admit
+
+    # These are the live entry chain: the installed release's bash shim -> admission -> client.
+    assert '"${PROJECT_PACKAGE}.opsec.gh_entry"' in (files("lu_machinery.agent_runtime") / "shims/gh").read_text()
+    entry = (files("lu_machinery.opsec") / "gh_entry.py").read_text()
+    assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
+    assert not admit(args[1:], cwd=tmp_path, environment={}).write
+    translated, native = [], []
+
+    def transport(method, endpoint, headers, body, timeout):
+        translated.append(endpoint)
+        if args[1] == "run" and args[2] == "list":
+            return response({"workflow_runs": []})
+        if "/pulls?" in endpoint:
+            return response([{"number": 1}])
+        return response([] if args[2] == "list" else {"number": 1, "head": {}, "base": {}})
+
+    def fallback(command, **kw):
+        native.append(command)
+        return subprocess.CompletedProcess(command, 0, b"native", b"")
+
+    store = gh.GitHubClient(cache_dir=tmp_path, env={"GH_REPO": "o/r"}, transport=transport)
+    result = gh.run(args, client=store, runner=fallback, capture_output=True, text=True)
+    assert result.returncode == 0
+    assert bool(translated) != bool(native)
+    if native:
+        assert native == [natively_runs(args)]
+    else:
+        assert gh._translation_options(args) is not None
 
 
 @pytest.mark.parametrize("entry", ["request", "run", "request_run"])

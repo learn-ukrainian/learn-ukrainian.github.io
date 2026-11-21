@@ -1100,6 +1100,26 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
         assert resolution.selected.family != "openai"
 
 
+@pytest.mark.parametrize("risk", ["medium", "low"])
+def test_ladders_end_the_frontier_rungs_with_opus(risk):
+    ladder = REVIEW_LADDERS[risk]
+    # No Claude model reviews through Cursor (D-129, #10464), and the Cursor Grok rung retired
+    # (GROK-CANCEL-1110): Opus on AGY is the last frontier rung.
+    assert [rung[0].name for rung in ladder[:4]] == [
+        "openai_frontier_b",
+        "openai_frontier",
+        "claude-opus-5-5",
+        "claude-opus-5-5-agy",
+    ]
+    assert "grok-4.7-cursor-fallback" not in {c.name for rung in ladder for c in rung}
+    assert ladder[4][0].name == "claude-sonnet-5-5"
+    assert ladder[5][0].name == "claude-sonnet-5-5-agy"
+    assert ladder[6][0].name == "gemini-4-neon-high"
+    assert len(ladder) == 7
+    assert "muse" not in {c.name for rung in ladder for c in rung}
+    assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
+
+
 def test_old_sonnet_record_still_resolves_anthropic_family():
     assert resolve_author_family("claude-sonnet-5") == "anthropic"
     assert "claude-sonnet-5" not in REVIEW_CANDIDATES
@@ -1718,6 +1738,52 @@ def test_grok_critical_review_pin_fails_the_risk_gate(candidate, profile):
     resolution = resolve_reviewer(inputs, ladder=((REVIEW_CANDIDATES[candidate],),))
     assert resolution.selected is None
     assert resolution.fail_closed_reason == f"explicit reviewer pin {candidate!r} failed a hard eligibility gate"
+
+
+_SOL_OPUS = {"gpt-6.2-sol", "claude-opus-5-5"}
+# Neon is the last HIGH rung (code profile only; lu-machinery 0.1.40): it reviews only when Sol and Opus cannot.
+_HIGH_REVIEWERS = _SOL_OPUS | {"gemini-4-neon"}
+_HIGH_SEATS = {
+    "openai_frontier_b",
+    "openai_frontier",
+    "claude-opus-5-5",
+    "claude-opus-5-5-agy",
+    "gemini-4-neon-high",
+}
+_SOL_UNAVAILABLE = {"codex": "unhealthy"}
+# (author, Sol state, profile) -> expected concrete reviewer (excluding the two
+# Sol-unavailable infra Claude-author cases covered in machinery NEON-SOLTIER-1120).
+_HIGH_DENOMINATOR = {
+    (author, sol, profile): (
+        ("gpt-6.2-sol" if sol == "healthy" else "gemini-4-neon")
+        if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
+        else (
+            "gpt-6.2-sol"
+            if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" and profile == "code"
+            else "claude-opus-5-5"
+        )
+    )
+    for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.2-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
+    for sol in ("healthy", "unavailable")
+    for profile in ("code", "infra")
+    if not (author in {"claude-opus-5-5", "claude-sonnet-5-5"} and sol == "unavailable" and profile == "infra")
+}
+
+
+@pytest.mark.parametrize("key", sorted(_HIGH_DENOMINATOR))
+def test_high_risk_resolves_to_sol_or_opus(key):
+    """The denominator admits Sol and Opus, then Neon on the code profile; the Cursor Grok transport (#9769) retired (GROK-CANCEL-1110)."""
+    author, sol, profile = key
+    snapshot = _SOL_UNAVAILABLE if sol == "unavailable" else None
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model=author, risk="high", review_profile=profile, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
+    )
+    expected = _HIGH_DENOMINATOR[key]
+    assert {entry.name for entry in resolution.trace} <= _HIGH_SEATS
+    assert resolution.selected is not None
+    assert resolution.selected.concrete_model == expected
+    assert resolution.selected.concrete_model in _HIGH_REVIEWERS
+    assert resolution.selected.transport in {"native_codex", "native_claude", "agy"}
 
 
 _HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.2-sol, claude-opus-5-5"

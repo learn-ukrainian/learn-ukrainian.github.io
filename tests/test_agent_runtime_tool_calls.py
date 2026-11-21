@@ -192,3 +192,10 @@ def test_normalize_tool_calls_correlates_codex_function_call_output() -> None:
     assert calls[0]["name"] == "mcp__sources__search_text"
     assert calls[0]["result"] == [{"type": "text", "text": "Found 10 results"}]
     assert "Found 10 results" in calls[0]["output_summary"]
+
+    from scripts.audit.runtime_tool_events import map_runtime_tool_calls
+
+    gate_events = map_runtime_tool_calls(calls)
+    assert len(gate_events) == 1
+    assert gate_events[0]["tool"] == "mcp__sources__search_text"
+    assert gate_events[0]["output"] == "Found 10 results"
