@@ -26,7 +26,9 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "ac7792ee75bc5f5fb8bde700076279d2d368dde9cc5a91971a4a2cd1024be6b1"
+MANIFEST_SHA256 = "fbce5b9c25989c8d1b7c6695ecd09d29ea934321abe4a579d830fa891072784d"
+COMPANION_FILE_SHA256 = "38c2f42d375d13a812b3c36fef8d96b2ad75676fa27b333094bf20e2479f1050"
+MANIFEST_FILE_SHA256 = "ac501fbfc01e1dcc1ee8924b1b6b201742448c85ab06057b3cf412560e825766"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -105,7 +107,13 @@ def frozen_selection(root):
     cards.require(digest(snapshot) == INPUTS_SHA256, "slice5_snapshot_digest_mismatch")
     # Keep the selection snapshot's historical inputs and verify the repaired
     # predecessor against its current, independently pinned manifest bytes.
-    file_pins = {**FILE_SHA256, slice3_inputs.MANIFEST: slice3_inputs.MANIFEST_FILE_SHA256}
+    file_pins = {
+        **FILE_SHA256,
+        cards.MANIFEST: cards.MANIFEST_FILE_SHA256,
+        slice3_inputs.MANIFEST: slice3_inputs.MANIFEST_FILE_SHA256,
+        previous.MANIFEST: previous.MANIFEST_FILE_SHA256,
+        previous.COMPANION: previous.COMPANION_FILE_SHA256,
+    }
     for path, expected in file_pins.items():
         cards.require(hashlib.sha256((root / path).read_bytes()).hexdigest() == expected,
                       "slice5_input_file_digest_mismatch")

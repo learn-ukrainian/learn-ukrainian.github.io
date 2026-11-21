@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "5949d49e40f49df8a1f1360f901d449b6f2f096219ce783910640462941e8132",
-    "companion_sha256": "3345a361e4468c1bdb76b71a9fc67d8f94c22acab6f43efaf2f6ccf29d7ab18e",
-    "consumed_sha256": "c808de273887310a153d1726b8548bce9c8c08c4b2d815ea90aad5690148fe57",
+    "combined_sha256": "f8288ac75e046690cf1428da3dee20ffb543bac1ebb08de24c5bd8883f866599",
+    "companion_sha256": "b9646a214f9a9649257a5bd658c7e4414fe60888a824aa88867bbe9a0212df60",
+    "consumed_sha256": "b39325e63eaa2d0d037f31012f6c4f957b7ad02cd5f2b9439396df324ddf4cac",
     "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
     "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c",
-    "slice5_companion_sha256": "bffccab5f9d85943e660641b72e2baf9782b05e5fe6c881ea2846987757e3738"
+    "slice5_companion_sha256": "77b3588045b9c9f2463e39320944c2531c1c038074f2c795ecb4eb319256e10c"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -9696,40 +9696,6 @@
       ]
     },
     {
-      "card_id": "wc_zqdf8ank7bq3",
-      "entry_id": 364016,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:смачний",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_zqdf8ank7bq3",
       "entry_id": 364016,
@@ -10699,40 +10665,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_2v18q0e9cqh3",
-      "entry_id": 353491,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:свіжий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -12015,40 +11947,6 @@
       ]
     },
     {
-      "card_id": "wc_v4vzfzx2bhhc",
-      "entry_id": 73671,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:гарячий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_v4vzfzx2bhhc",
       "entry_id": 73671,
@@ -13279,40 +13177,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_0mqxj7dc1h56",
-      "entry_id": 413786,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:холодний",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -28055,40 +27919,6 @@
       ]
     },
     {
-      "card_id": "wc_16se443s25m6",
-      "entry_id": 416048,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:цей",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_16se443s25m6",
       "entry_id": 416048,
@@ -29116,40 +28946,6 @@
       "span": [
         0,
         20
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            3
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_hqegd3tewbkh",
-      "entry_id": 387967,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:той",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -30298,40 +30094,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            7
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_cq6yxvj1gjb3",
-      "entry_id": 37661,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:великий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -31614,40 +31376,6 @@
       ]
     },
     {
-      "card_id": "wc_cxjtr6481e7t",
-      "entry_id": 239967,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:новий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_cxjtr6481e7t",
       "entry_id": 239967,
@@ -32878,40 +32606,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_cyspr2xscsd8",
-      "entry_id": 420579,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:чистий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -34194,40 +33888,6 @@
       ]
     },
     {
-      "card_id": "wc_2qd2qv9v6nsg",
-      "entry_id": 419237,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:червоний",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            8
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_2qd2qv9v6nsg",
       "entry_id": 419237,
@@ -35458,40 +35118,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_fpqf4tvz9y1a",
-      "entry_id": 357936,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:синій",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -36774,40 +36400,6 @@
       ]
     },
     {
-      "card_id": "wc_basa8zkw7f82",
-      "entry_id": 25726,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:блакитний",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            9
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            9
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_basa8zkw7f82",
       "entry_id": 25726,
@@ -37777,40 +37369,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            5
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_vz8hdnedkd66",
-      "entry_id": 23833,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:білий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -39067,40 +38625,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/15/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/15/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/15/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_jrycyzsy17qk",
-      "entry_id": 421202,
-      "field": "gender",
-      "pointer": "/clean_analyses/15/tags",
-      "record_key": "vesum:чорний",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
@@ -40470,40 +39994,6 @@
       ]
     },
     {
-      "card_id": "wc_av1fw54h16cw",
-      "entry_id": 116808,
-      "field": "gender",
-      "pointer": "/clean_analyses/11/tags",
-      "record_key": "vesum:жовтий",
-      "span": [
-        4,
-        5
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/11/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/11/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
       "alternative_forms": [],
       "card_id": "wc_av1fw54h16cw",
       "entry_id": 116808,
@@ -41473,40 +40963,6 @@
       "span": [
         0,
         17
-      ],
-      "supporting_spans": [
-        {
-          "pointer": "/clean_analyses/14/word_form",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/lemma",
-          "span": [
-            0,
-            6
-          ]
-        },
-        {
-          "pointer": "/clean_analyses/14/pos",
-          "span": [
-            0,
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "card_id": "wc_nb47def20y51",
-      "entry_id": 371988,
-      "field": "gender",
-      "pointer": "/clean_analyses/14/tags",
-      "record_key": "vesum:старий",
-      "span": [
-        4,
-        5
       ],
       "supporting_spans": [
         {
