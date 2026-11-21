@@ -104,13 +104,13 @@ def test_orient_fresh_query_bypasses_cache(monkeypatch):
 
 
 def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
-    """Product ``pipeline`` section (TTL 0) serves aged values stale and always refreshes.
+    """Product ``pipeline`` section (TTL 0) serves aged values stale while refresh is gated.
 
     Regression for GH #1309 / reviewer BLOCKER B2: ``pipeline`` wraps
     ``state_summary()`` which carries its own 60 s cache. With TTL 0 under
-    lu-machinery 0.1.46, every repeat request returns the prior stored value
-    labelled ``stale=True`` and ``cache="miss"`` while scheduling a background
-    refresh.
+    lu-machinery 0.1.46, a repeat request whose background refresh has not yet
+    published returns the prior stored value labelled ``stale=True`` and
+    ``cache="miss"`` while scheduling a background refresh.
     """
     calls = {"pipeline": 0}
     release_run2 = threading.Event()
@@ -126,9 +126,9 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
         calls["pipeline"] += 1
         run = calls["pipeline"]
         if run == 2:
-            release_run2.wait(timeout=2.0)
+            release_run2.wait()
         elif run == 3:
-            release_run3.wait(timeout=2.0)
+            release_run3.wait()
         return {"summary": {"run": run}}
 
     monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", counting_pipeline)
