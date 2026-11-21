@@ -2207,10 +2207,9 @@ Query params:
   (#6983, #10866): a hung or failing collector never stalls the rest of the
   gather. On non-`fresh` reads, a prior measurement within its TTL is served
   immediately as `cache: "hit"` with no refresh; once past its TTL, the read
-  skips the inline wait, schedules a single-flight background refresh, and
-  returns whichever snapshot is present when the response is assembled (the
-  aged value with `stale: true` if refresh is still pending, or the newly
-  published value with `stale: false` if refresh finished first). When no
+  skips the inline wait, starts or joins a single-flight background refresh,
+  and returns the available snapshot with `cache: "miss"` (`stale` and
+  `refreshing` reported independently in `meta.<section>`). When no
   measurement exists yet (or a `fresh=true` read fails or times out), the
   section payload is `null` and `meta.<section>.error` states why — never a
   fabricated zero or empty fallback.
@@ -2259,24 +2258,24 @@ above.
 
 #### Per-section caching, aged measurements + freshness metadata (#1309, machinery #1036)
 
-Each section is computed by an independent collector and stored in the
-context's per-section snapshot store (`_orient_state(ctx)`).
+Each `_OrientState` section is computed by an independent collector and stored
+in the context's per-section snapshot store (`_orient_state(ctx)`); `idle_prs`
+uses its own project-root-scoped cache and last-good store (see below).
 
 - **Current hit**: a stored measurement younger than its TTL is returned
   immediately on non-`fresh` reads with `cache: "hit"`.
 - **Cache-first aged measurement**: once a stored measurement is at or past
   its TTL (including `stale_after_s: 0`, such as `pipeline`), a non-`fresh`
   read skips the inline wait, starts or joins one single-flight background
-  refresh, and then reads the current snapshot when assembling the response.
-  If the refresh has not yet published, the response returns the prior aged
-  measurement with its original `generated_at`, `cache: "miss"`, and
-  `stale: true`. If the background refresh finishes and publishes before the
-  response reads the snapshot, the response returns that newly published
-  measurement with `cache: "miss"` and `stale: false`. Independently of
-  `stale`, `refreshing` is `true` only while a background refresh is still
-  pending (`false` once finished). If a prior refresh failed after the
-  returned measurement was stored, `meta.<section>.error` is attached
-  alongside it.
+  refresh, and returns whichever snapshot is stored when the response is
+  assembled with its `generated_at` and `cache: "miss"`. `stale` is `false`
+  only when the returned measurement is current (`stamp >= read_started` or
+  `_orient_clock() - stamp < ttl`), so a joined worker started by an earlier
+  read that publishes before snapshot assembly still returns `stale: true`
+  when not within its TTL. Independently of `stale`, `refreshing` is `true`
+  only while a background refresh is still pending (`false` once finished).
+  If a prior refresh failed after the returned measurement was stored,
+  `meta.<section>.error` is attached alongside it.
 - **Unavailable section (`null` + `meta.<section>.error`)**: if no
   measurement has ever been stored and the initial inline wait expires or
   fails, or if a `?fresh=true` collection fails or reaches its deadline, the
@@ -2315,11 +2314,14 @@ context's per-section snapshot store (`_orient_state(ctx)`).
 
 Every section is mirrored under `response.meta.<section>` with:
 
-- `generated_at` — for measured results (`cache: "hit"`, fresh collections,
-  or aged snapshots), the ISO timestamp when the underlying collector began
-  running. For unavailable (`null`) sections, the endpoint assigns the
-  response-assembly timestamp (`datetime.now(UTC)`), which does **not**
-  attest to a measurement.
+- `generated_at` — for measured `_OrientState` sections (`cache: "hit"`,
+  fresh collections, or aged snapshots), the ISO timestamp recorded when the
+  collector began running (after acquiring a collector permit, if pooled).
+  For successful `idle_prs` measurements, the ISO timestamp recorded at
+  completion after the GitHub scan finishes (`60 s` fetch timeout). For
+  unavailable (`null`) sections, the endpoint assigns the response-assembly
+  timestamp (`datetime.now(UTC)`), which does **not** attest to a
+  measurement.
 - `stale_after_s` — TTL window, so clients know when a measurement ages.
   `0` means no freshness window at the orient layer (every read schedules a
   refresh and downstream caching, if any, is documented in the source
@@ -2329,10 +2331,10 @@ Every section is mirrored under `response.meta.<section>` with:
 - `cache` — `"hit"` (current stored value served without scheduling work) or
   `"miss"` (cold load, aged read, or `?fresh=true`). Sections with
   `stale_after_s: 0` always report `"miss"`.
-- `stale` — present on non-hit responses that return a value: `false` when
-  the returned measurement is current (collection started during this read
-  — including an aged refresh that published before response assembly — or
-  is younger than TTL), `true` when an older cached measurement is returned.
+- `stale` — present on non-hit responses that return a value: for
+  `_OrientState` sections, `false` when the returned measurement is current
+  (`stamp >= read_started` or `_orient_clock() - stamp < ttl`) and `true`
+  otherwise; for `idle_prs` last-good fallback responses, always `true`.
 - `refreshing` — present on non-hit responses: `true` while a background
   refresh thread is still pending for the section, `false` once it finishes
   (or, for `idle_prs`, while suppressed during failure retry backoff).
