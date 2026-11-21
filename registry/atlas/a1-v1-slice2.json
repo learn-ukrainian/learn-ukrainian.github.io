@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "13305ab0596192d25f1125d7134f3d5d869648b323fc3b87e392696952fdb686",
-    "companion_sha256": "bf73c57185515c57b7852f462f731bb73a935b58cc8c69a25e897cb29d012e3a"
+    "combined_sha256": "98a69abfcd91247b5c26a174da988f27d61ef2d067033c794e08ddd33fabdf0f",
+    "companion_sha256": "66f526000bd436912719f30a7bbb7389825336b5972c6599157e01078852ca9b"
   },
   "approved_plan_sha256": "51da87dc0fe1c079468d9c3a86f4ebfa67ac4f432acc73a2871ee8d9c39bba9b",
   "card_ids": [
@@ -281,7 +281,8 @@
       "entry_id": 428619,
       "field": "examples",
       "scope_key": "wc_n1g44brn5vs2/ws_v6f1shn82zy4/textbook-example-wave2"
-    }
+    },
+    {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"gloss_en","pointer":"/text","record_key":"balla:ukreng:ясно","scope_key":"wc_5btr8jkdzvd1/ws_vhddxeq6x5ch/bilingual-gloss","sense_id":"ws_vhddxeq6x5ch","source_sense_key":"vts:ясно#4/1","span":[508,517],"supporting_spans":[{"pointer":"/text","span":[472,517]}],"translation_direction":"uk-en","usage_pair":{"pointer":"/text","span":[472,517]}}
   ],
   "denominator": {
     "all_rows": 2144,
@@ -349,7 +350,6 @@
     "wc_5btr8jkdzvd1/ws_f0s41epq6taq/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_5btr8jkdzvd1/ws_zwsxtdzt1cnx/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_5btr8jkdzvd1/ws_jgsdj5r6xvg9/gloss_en": "gloss_no_sense_aligned_balla_witness",
-    "wc_5btr8jkdzvd1/ws_vhddxeq6x5ch/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_n1g44brn5vs2/ws_j9t3p50c44n2/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_n1g44brn5vs2/ws_v6f1shn82zy4/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_ppr39m6qsr4e/ws_y84jfe2m1y5k/examples": "example_no_sense_matched_a1_sentence_found",
@@ -503,7 +503,8 @@
         363,
         412
       ]
-    }
+    },
+    "wc_5btr8jkdzvd1/ws_vhddxeq6x5ch/bilingual-gloss": {"card_id":"wc_5btr8jkdzvd1","pointer":"/text","record_key":"balla:ukreng:ясно","sense_id":"ws_vhddxeq6x5ch","source_sense_key":"vts:ясно#4/1","span":[508,517]}
   },
   "source_record_ids": {
     "balla-ambulance": "sr_b0mm6jnrr7at",
@@ -604,9 +605,10 @@
     "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0063": "sr_nvhzfhyg2edy",
     "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0125": "sr_ej4nytxakh2f",
     "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137": "sr_cxfbz2b8wa2r",
-    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0043": "sr_xdkpmac6wmq1"
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0043": "sr_xdkpmac6wmq1",
+    "balla:ukreng:ясно": "sr_ee4s6rsq6yzj"
   },
-  "sources_sha256": "3925eafb29001a611a956318e66786c91ddaef5f512924d37877c8d4179d7386",
+  "sources_sha256": "23009dd7e29c483cb30c96ec0a5ed0c50c82e3c085b8278a9186ff6988e17153",
   "stress_attempts": {
     "wc_08svjhdbe0fq": [{"source_id":"ulif","state":"unmarked"},{"evidence_call":"4-sum20","source_id":"sum20","state":"not_found"},{"reason":"admitted_header_has_no_explicit_mark","source_id":"vts_busel_slovnyk_me","state":"unmarked"}],
     "wc_0r1cdw5z36cd": [{"claim":{"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"stress","pointer":"/canonical_headword","record_key":"ulif:швидко","span":[0,7]},"source_id":"ulif","state":"supported"},{"evidence_call":"2-sum20","source_id":"sum20","state":"not_found"},{"reason":"not_consumed_after_ULIF_receipt","source_id":"vts_busel_slovnyk_me","state":"unavailable"}],

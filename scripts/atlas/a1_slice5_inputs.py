@@ -26,9 +26,9 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "a1815ee5e67dbb1f4f4c0cc915b22dec0b150d6d40e8ff65c31dc9bb3704206c"
-COMPANION_FILE_SHA256 = "edb9ee640f813289293e85c0a9d0e603d2780414f1b8101bee0acaf885bb6d63"
-MANIFEST_FILE_SHA256 = "86f86d04e75481fbd4a4e9b4a9cefef183d8992ddd99e2c8e51e3917198377b1"
+MANIFEST_SHA256 = "55d81a82dba7bce8442150055a235f1e02f5f759b67032b60d612e1179302d4c"
+COMPANION_FILE_SHA256 = "43d41506d2f5834726efd5c98b4393277bc62e8bc60d4f7d8a81f509a1146207"
+MANIFEST_FILE_SHA256 = "bfeb2a2888b0b4e2cf37af933ff389b6d3ff2c9528596c54acf311e75cfe9f9a"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -211,6 +211,9 @@ def response_payload(record, call):
     if source == "textbooks":
         return call["response"]["structuredContent"]["hits"][0]
     if source == "balla":
+        if call["tool"] == "query_slovnyk_me":
+            cards.require(call["arguments"].get("dict") == "ukreng", "slice5_balla_call_mismatch")
+            return {"text": text}
         cards.require(call["tool"] == "translate_en_uk", "slice5_balla_call_mismatch")
         return call["response"]["structuredContent"]
     cards.require(source in {"puls", "grac", "heritage"}, "slice5_unexpected_source")

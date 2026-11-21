@@ -1,5 +1,5 @@
 {
-  "base_sha256": "4c85c63d00ec519ffc408b8f619afb14d4cfec07da87913ced6c7854d4001715",
+  "base_sha256": "df5ad7da0e67434b0abb5b08e65f1ddf0f3fac2840e72c3aeb7b110b90c8cd9f",
   "entries": [
     {
       "card_id": "wc_3xqwne5jgn63",
@@ -4311,6 +4311,51 @@
         "sr_dv0z5waqxh43"
       ],
       "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107\",\"snapshot_id\":\"textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2504",
+      "evidence": "{\"locator\":\"balla:ukreng:піти\",\"snapshot_id\":\"balla@sha256:e806ec15129c2208555df2b6b918c1fa1c52b6702733271615ebea8da141ce9e\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_4b0xs708rvmn"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2505",
+      "evidence": "{\"locator\":\"balla:ukreng:гривня\",\"snapshot_id\":\"balla@sha256:ffbd7a5e9c491798e602c707d76b547cd93addea34c8ecb0aa07d7ef2b2b4ab5\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_0861jpgvmgw4"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2506",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:68893\",\"snapshot_id\":\"balla@sha256:6c76eeab5ffdec50fd907b2651ae4d1aacb6676a31bf0ae3530ab4c0bcc66ddf\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_5z3a4xmn5349"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2507",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:15824\",\"snapshot_id\":\"balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_nb1yg3re7n91"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2508",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:77120\",\"snapshot_id\":\"balla@sha256:d78284a6cb971e6d13b739a7699c2593d40ef0a2be095c618eb0faeeb4d8bc01\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_qqfnvw76n8m9"
+      ]
     }
   ],
   "schema_version": "atlas-a1-slice5-allocation.v1",
@@ -10526,6 +10571,101 @@
           "matched_by": "actual_Sources_tool_response"
         }
       ]
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:ukreng:піти",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:e806ec15129c2208555df2b6b918c1fa1c52b6702733271615ebea8da141ce9e"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:ukreng:піти",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:e806ec15129c2208555df2b6b918c1fa1c52b6702733271615ebea8da141ce9e",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_4b0xs708rvmn"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:ukreng:гривня",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:ffbd7a5e9c491798e602c707d76b547cd93addea34c8ecb0aa07d7ef2b2b4ab5"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:ukreng:гривня",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:ffbd7a5e9c491798e602c707d76b547cd93addea34c8ecb0aa07d7ef2b2b4ab5",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_0861jpgvmgw4"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:68893",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:6c76eeab5ffdec50fd907b2651ae4d1aacb6676a31bf0ae3530ab4c0bcc66ddf"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:68893",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:6c76eeab5ffdec50fd907b2651ae4d1aacb6676a31bf0ae3530ab4c0bcc66ddf",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_5z3a4xmn5349"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:15824",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:15824",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:ccd89e6673e79104035f40f234c2d5bc329df0def607fedd784de30e12318b54",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_nb1yg3re7n91"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:77120",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:d78284a6cb971e6d13b739a7699c2593d40ef0a2be095c618eb0faeeb4d8bc01"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:77120",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:d78284a6cb971e6d13b739a7699c2593d40ef0a2be095c618eb0faeeb4d8bc01",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_qqfnvw76n8m9"
     }
   ]
 }

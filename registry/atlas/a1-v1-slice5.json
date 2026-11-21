@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "b6385ab3e982a49451f44898d894d5f514847db7c95ef07f595675015a1101f1",
-    "companion_sha256": "21a473258c11f20a4666aabc769754299e4f1b2b3d192e25bc070fc0a53a4b13",
-    "consumed_sha256": "4c85c63d00ec519ffc408b8f619afb14d4cfec07da87913ced6c7854d4001715",
-    "slice2_companion_sha256": "bf73c57185515c57b7852f462f731bb73a935b58cc8c69a25e897cb29d012e3a",
-    "slice3_companion_sha256": "e0232f66a42aa8e82953ad0830e6e8639f6438bba9af9f49f97f5344534c3d15",
-    "slice4_companion_sha256": "89f74aca48ee20be6eb87663ba3097f6a928a42b5c6e38aad1be25badd06fb4a"
+    "combined_sha256": "13cd90b85d48ef7e56a438040edb733e99059b43d68e732ea8e0811d92ad2736",
+    "companion_sha256": "a9c7f383a82356afc98f97e1889017c2e4358b4be348b4cee19fb6d8fe123239",
+    "consumed_sha256": "df5ad7da0e67434b0abb5b08e65f1ddf0f3fac2840e72c3aeb7b110b90c8cd9f",
+    "slice2_companion_sha256": "66f526000bd436912719f30a7bbb7389825336b5972c6599157e01078852ca9b",
+    "slice3_companion_sha256": "c71995614a7dfcf0a785c80ae149da4ac701f0d51357091707e9538870159a4e",
+    "slice4_companion_sha256": "8b21e31f1e023ca6463f014dde7e28a2bef7dbbb4add1c229571646cc75946d3"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -38656,6 +38656,161 @@
       "entry_id": 283856,
       "field": "examples",
       "scope_key": "wc_pnye70yqdqxy/ws_xpwspgr73c2y/textbook-example-wave2"
+    },
+    {
+      "card_id": "wc_918g9xampn77",
+      "entry_id": 283475,
+      "field": "gloss_en",
+      "pointer": "/text",
+      "record_key": "balla:ukreng:піти",
+      "scope_key": "wc_918g9xampn77/ws_c4zswhkm50hz/bilingual-gloss",
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "span": [
+        215,
+        220
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/text",
+          "span": [
+            201,
+            238
+          ]
+        }
+      ],
+      "translation_direction": "uk-en",
+      "usage_pair": {
+        "pointer": "/text",
+        "span": [
+          201,
+          238
+        ]
+      }
+    },
+    {
+      "card_id": "wc_f3w4ga64h4y1",
+      "entry_id": 83682,
+      "field": "gloss_en",
+      "pointer": "/text",
+      "record_key": "balla:ukreng:гривня",
+      "scope_key": "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/bilingual-gloss",
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "span": [
+        242,
+        249
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/text",
+          "span": [
+            201,
+            249
+          ]
+        }
+      ],
+      "translation_direction": "uk-en",
+      "usage_pair": {
+        "pointer": "/text",
+        "span": [
+          201,
+          249
+        ]
+      }
+    },
+    {
+      "card_id": "wc_jdzec32j5jad",
+      "entry_id": 310434,
+      "field": "gloss_en",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-68893",
+      "scope_key": "wc_jdzec32j5jad/ws_f38fgkwaqqkn/bilingual-gloss",
+      "sense_id": "ws_f38fgkwaqqkn",
+      "source_sense_key": "vts:прибирати#article/1",
+      "span": [
+        0,
+        4
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            480,
+            554
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          480,
+          554
+        ]
+      }
+    },
+    {
+      "card_id": "wc_yx5tjedf0xte",
+      "entry_id": 307328,
+      "field": "gloss_en",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-15824",
+      "scope_key": "wc_yx5tjedf0xte/ws_cd47mmbnv00f/bilingual-gloss",
+      "sense_id": "ws_cd47mmbnv00f",
+      "source_sense_key": "vts:походження#article/1",
+      "span": [
+        0,
+        7
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            125,
+            196
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          125,
+          196
+        ]
+      }
+    },
+    {
+      "card_id": "wc_33qv20nmgm94",
+      "entry_id": 415172,
+      "field": "gloss_en",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-77120",
+      "scope_key": "wc_33qv20nmgm94/ws_byas06qy605q/bilingual-gloss",
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "span": [
+        0,
+        3
+      ],
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            53,
+            120
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          53,
+          120
+        ]
+      }
     }
   ],
   "denominator": {
@@ -38777,24 +38932,19 @@
     "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/grammatical_label": "canonical_VESUM_grammatical_label_conflict: entry_17542/noun/бариста; clean_analyses/3=noun:anim:f:v_naz, clean_analyses/10=noun:anim:m:v_naz; scalar_requires_qualified_source_adjudication",
     "wc_0772arm98z39/wc_0772arm98z39/gloss_en": "gloss_no_allocated_sense",
     "wc_21cbx08fthn0/wc_21cbx08fthn0/gloss_en": "gloss_no_allocated_sense",
-    "wc_33qv20nmgm94/ws_byas06qy605q/gloss_en": "gloss_no_qualified_sense_witness",
     "wc_3xqwne5jgn63/wc_3xqwne5jgn63/gloss_en": "gloss_no_allocated_sense",
     "wc_3ytmbxews4cg/wc_3ytmbxews4cg/gloss_en": "gloss_no_allocated_sense",
     "wc_62djjmfxk1c8/wc_62djjmfxk1c8/gloss_en": "gloss_no_allocated_sense",
-    "wc_918g9xampn77/ws_c4zswhkm50hz/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_ar4jq8xbvd1f/ws_18tkkbhbfz7c/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_b22c5cw8ddrm/wc_b22c5cw8ddrm/gloss_en": "gloss_no_allocated_sense",
     "wc_f2xad8rbzgv2/wc_f2xad8rbzgv2/gloss_en": "gloss_no_allocated_sense",
-    "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_g8ft669hekw7/wc_g8ft669hekw7/gloss_en": "gloss_no_allocated_sense",
-    "wc_jdzec32j5jad/ws_f38fgkwaqqkn/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/gloss_en": "gloss_no_allocated_sense",
     "wc_rn7hfetva0ve/wc_rn7hfetva0ve/gloss_en": "gloss_no_allocated_sense",
     "wc_s5y8rpjnn3x0/wc_s5y8rpjnn3x0/gloss_en": "gloss_no_allocated_sense",
     "wc_tabtj29yne4z/wc_tabtj29yne4z/gloss_en": "gloss_no_allocated_sense",
     "wc_vvbq92wwxskh/wc_vvbq92wwxskh/gloss_en": "gloss_no_allocated_sense",
     "wc_y4mfsa75a8dq/wc_y4mfsa75a8dq/gloss_en": "gloss_no_allocated_sense",
-    "wc_yx5tjedf0xte/ws_cd47mmbnv00f/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_zswwf0b1r8s1/ws_fkntkngmqt79/gloss_en": "gloss_no_sense_aligned_balla_witness",
     "wc_7edehzqd24wz/ws_jjee3899y5xb/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_zswwf0b1r8s1/ws_fkntkngmqt79/examples": "example_no_complete_textbook_sentence_found",
@@ -41429,6 +41579,61 @@
         3,
         29
       ]
+    },
+    "wc_918g9xampn77/ws_c4zswhkm50hz/bilingual-gloss": {
+      "card_id": "wc_918g9xampn77",
+      "pointer": "/text",
+      "record_key": "balla:ukreng:піти",
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "span": [
+        215,
+        220
+      ]
+    },
+    "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/bilingual-gloss": {
+      "card_id": "wc_f3w4ga64h4y1",
+      "pointer": "/text",
+      "record_key": "balla:ukreng:гривня",
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "span": [
+        242,
+        249
+      ]
+    },
+    "wc_jdzec32j5jad/ws_f38fgkwaqqkn/bilingual-gloss": {
+      "card_id": "wc_jdzec32j5jad",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-68893",
+      "sense_id": "ws_f38fgkwaqqkn",
+      "source_sense_key": "vts:прибирати#article/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_yx5tjedf0xte/ws_cd47mmbnv00f/bilingual-gloss": {
+      "card_id": "wc_yx5tjedf0xte",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-15824",
+      "sense_id": "ws_cd47mmbnv00f",
+      "source_sense_key": "vts:походження#article/1",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_33qv20nmgm94/ws_byas06qy605q/bilingual-gloss": {
+      "card_id": "wc_33qv20nmgm94",
+      "pointer": "/hits/0/word",
+      "record_key": "balla-gloss2-en-uk-row-77120",
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "span": [
+        0,
+        3
+      ]
     }
   },
   "selection": {
@@ -42932,7 +43137,12 @@
     "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0055": "sr_s0fh5capw23q",
     "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003": "sr_nr6h7shteqbn",
     "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050": "sr_mwqvmdg2x29d",
-    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107": "sr_dv0z5waqxh43"
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107": "sr_dv0z5waqxh43",
+    "balla:ukreng:піти": "sr_4b0xs708rvmn",
+    "balla:ukreng:гривня": "sr_0861jpgvmgw4",
+    "balla-gloss2-en-uk-row-68893": "sr_5z3a4xmn5349",
+    "balla-gloss2-en-uk-row-15824": "sr_nb1yg3re7n91",
+    "balla-gloss2-en-uk-row-77120": "sr_qqfnvw76n8m9"
   },
   "source_record_reuses": {
     "cefr:читати": {
@@ -42968,7 +43178,7 @@
       "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
     }
   },
-  "sources_sha256": "868e06511dacc974a09e0114e424cbafe11c0561b4c2bc26dbb35bfb232d0e0a",
+  "sources_sha256": "72be7d66cdead3ca600db8268d0b0f5f6e8bccd2dce6fadf9501b3837ee70849",
   "stress_attempts": {
     "wc_043h3npd7ed4": [
       {

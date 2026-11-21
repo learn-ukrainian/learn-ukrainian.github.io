@@ -27,7 +27,7 @@ MANIFEST = "registry/atlas/a1-v1-slice6.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice6.json"
 INPUTS = "registry/atlas/a1-v1-slice6-inputs.json"
 INPUTS_SHA256 = "05542e67e4f80c716a787558c36d8cfffce82992f2b5b065c581ae3548d10197"
-MANIFEST_SHA256 = "8168b07b29cb295eae74abfd871da89237dfe04a9fcf352082784fa602bc92fb"
+MANIFEST_SHA256 = "192df31a67354f6a3ef7accb06938ec4bd59895e5b9212f93b35176e05aef70d"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -222,8 +222,7 @@ def response_payload(record, call):
     if source == "textbooks":
         return call["response"]["structuredContent"]["hits"][0]
     if source == "balla":
-        cards.require(call["tool"] == "translate_en_uk", "slice6_balla_call_mismatch")
-        return call["response"]["structuredContent"]
+        return previous.response_payload(record, call)
     cards.require(source in {"puls", "grac", "heritage"}, "slice6_unexpected_source")
     return call["response"].get("structuredContent") or {"text": text}
 
