@@ -21,6 +21,12 @@ const EXPECTED_EN_SUBTITLES: Record<string, string> = {
   'culture-error-correction': 'Error Correction',
 };
 
+/** The slot's whole text. A substring, or the other locale beside it, fails. */
+function expectExactSlotText(element: HTMLElement, expected: string): void {
+  const normalized = (element.textContent ?? '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+  expect(normalized).toBe(expected);
+}
+
 describe('Practice Hub Course & Exam Tiles (#8381)', () => {
   describe('Denominator: Exactly 10 course tiles', () => {
     test('covers 9 ZNO decks plus 1 Culture of Speech deck', () => {
@@ -40,11 +46,11 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
         />,
       );
 
-      // Verify all 9 ZNO deck subtitles
+      // Verify all 9 ZNO deck subtitles, each as the whole subtitle slot.
       for (const znoDeck of ZNO_PRACTICE_DECK_META) {
         const subtitleEl = screen.getByTestId(`practice-course-subtitle-${znoDeck.deckId}`);
         expect(subtitleEl).toBeInTheDocument();
-        expect(subtitleEl).toHaveTextContent(EXPECTED_EN_SUBTITLES[znoDeck.deckId]);
+        expectExactSlotText(subtitleEl, EXPECTED_EN_SUBTITLES[znoDeck.deckId]);
       }
 
       // Verify Culture of Speech subtitle
@@ -52,7 +58,10 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
         'practice-course-subtitle-culture-error-correction',
       );
       expect(cultureSubtitleEl).toBeInTheDocument();
-      expect(cultureSubtitleEl).toHaveTextContent(EXPECTED_EN_SUBTITLES['culture-error-correction']);
+      expectExactSlotText(
+        cultureSubtitleEl,
+        EXPECTED_EN_SUBTITLES['culture-error-correction'],
+      );
 
       // Exactly 10 subtitles rendered in total
       const allSubtitles = document.querySelectorAll('.k3-mode-subtitle');
@@ -68,15 +77,17 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
         />,
       );
 
-      // Stress card: "Наголос" with "Word Stress Exam Prep"
-      const stressCard = screen.getByTestId('practice-zno-card-zno-stress');
-      expect(stressCard).toHaveTextContent('Наголос');
-      expect(stressCard).toHaveTextContent('Word Stress Exam Prep');
+      // Stress card: title slot is "Наголос", subtitle slot is only "Word Stress Exam Prep".
+      const stressTitle = screen.getByTestId('practice-course-title-zno-stress');
+      expectExactSlotText(stressTitle, 'Наголос');
+      const stressSubtitle = screen.getByTestId('practice-course-subtitle-zno-stress');
+      expectExactSlotText(stressSubtitle, 'Word Stress Exam Prep');
 
-      // Lexical norm card: "Лексична норма" with "Lexical Norms & Calques"
-      const lexicalCard = screen.getByTestId('practice-zno-card-zno-lexical-norm');
-      expect(lexicalCard).toHaveTextContent('Лексична норма');
-      expect(lexicalCard).toHaveTextContent('Lexical Norms & Calques');
+      // Lexical norm card: title slot is "Лексична норма", subtitle slot is only the English line.
+      const lexicalTitle = screen.getByTestId('practice-course-title-zno-lexical-norm');
+      expectExactSlotText(lexicalTitle, 'Лексична норма');
+      const lexicalSubtitle = screen.getByTestId('practice-course-subtitle-zno-lexical-norm');
+      expectExactSlotText(lexicalSubtitle, 'Lexical Norms & Calques');
 
       // Culture of speech: the title and subtitle slots carry the English strings.
       // Absence stays on the card so the other locale cannot hide in the description or badge.
@@ -84,13 +95,13 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
       const cultureTitle = screen.getByTestId(
         'practice-course-title-culture-error-correction',
       );
-      expect(cultureTitle).toHaveTextContent('Culture of Speech');
+      expectExactSlotText(cultureTitle, 'Culture of Speech');
       expect(cultureTitle).not.toHaveTextContent('Культура мовлення');
       expect(cultureCard).not.toHaveTextContent('Культура мовлення');
       const cultureSubtitle = screen.getByTestId(
         'practice-course-subtitle-culture-error-correction',
       );
-      expect(cultureSubtitle).toHaveTextContent('Error Correction');
+      expectExactSlotText(cultureSubtitle, 'Error Correction');
     });
   });
 
@@ -184,7 +195,7 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
       const cultureTitle = screen.getByTestId(
         'practice-course-title-culture-error-correction',
       );
-      expect(cultureTitle).toHaveTextContent(CULTURE_DECK_META.title); // 'Культура мовлення'
+      expectExactSlotText(cultureTitle, CULTURE_DECK_META.title); // 'Культура мовлення'
       expect(cultureTitle).not.toHaveTextContent(CULTURE_DECK_META.en); // 'Culture of Speech'
       expect(cultureCard).not.toHaveTextContent(CULTURE_DECK_META.en); // 'Culture of Speech'
       const cultureStep = screen.getByTestId(

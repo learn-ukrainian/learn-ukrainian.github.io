@@ -109,7 +109,12 @@ export default function CoursesTrack({
               >
                 {CHROME_STRINGS[chromeLocale]['practice.courses.badgeExam']}
               </span>
-              <span className="k3-mode-title">{znoDeck.title}</span>
+              <span
+                className="k3-mode-title"
+                data-testid={`practice-course-title-${znoDeck.deckId}`}
+              >
+                {znoDeck.title}
+              </span>
               {subtitle ? (
                 <span
                   className="k3-mode-subtitle"
