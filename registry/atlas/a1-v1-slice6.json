@@ -2566,20 +2566,6 @@
       ]
     },
     {
-      "card_id": "wc_0se7zg3rf6v7",
-      "entry_id": 64056,
-      "field": "examples",
-      "pointer": "/text",
-      "record_key": "textbook:water",
-      "scope_key": "wc_0se7zg3rf6v7:water-example",
-      "sense_id": "ws_xhjmhfprktd9",
-      "source_sense_key": "vts:вода#article/1",
-      "span": [
-        465,
-        502
-      ]
-    },
-    {
       "card_id": "wc_py0epqn7swtw",
       "entry_id": 157965,
       "field": "spelling",
@@ -44609,20 +44595,6 @@
       "scope_key": "wc_f1k1r2j836hx/ws_bpw0ph14cq93/textbook-example"
     },
     {
-      "card_id": "wc_cxjtr6481e7t",
-      "entry_id": 239967,
-      "field": "examples",
-      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-1_s0069",
-      "pointer": "/text",
-      "span": [
-        327,
-        345
-      ],
-      "sense_id": "ws_v2e8s53d12wq",
-      "source_sense_key": "vts:новий#article/1",
-      "scope_key": "wc_cxjtr6481e7t/ws_v2e8s53d12wq/textbook-example"
-    },
-    {
       "card_id": "wc_cahfacc2r044",
       "entry_id": 275992,
       "field": "examples",
@@ -44847,20 +44819,6 @@
       "scope_key": "wc_c6s46sgs336y/ws_d554k8w7czxw/textbook-example"
     },
     {
-      "card_id": "wc_0se7zg3rf6v7",
-      "entry_id": 64056,
-      "field": "examples",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0152",
-      "pointer": "/text",
-      "span": [
-        963,
-        995
-      ],
-      "sense_id": "ws_xhjmhfprktd9",
-      "source_sense_key": "vts:вода#article/1",
-      "scope_key": "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/textbook-example"
-    },
-    {
       "card_id": "wc_rcxyyvh7qtww",
       "entry_id": 377643,
       "field": "examples",
@@ -44925,7 +44883,6 @@
     "wr_a06c93899f66460e6807407270ef7f86f48a834d6d341a7d860528d5e3d0ffb9": {"entry_id":165701,"quotation":"Він важив понад кілограм.","receipt_sha256":"efb9eca00c4b55a915668b82fdf197cdb9b32bcf7324215ce1c4193733d75635","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_2kc1ce5sa4d9","source_sense_key":"vts:кілограм#article/0","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[834,859],"verdict":"APPROVE"},
     "wr_d3432ba05e4a11bac9342556fda4b2fc60eb232f350367a7a3cbd4ec31338c13": {"entry_id":165902,"quotation":"У кімнату зайшла мама.","receipt_sha256":"7c9f2efd7a51d67208bacebe31fd87d4051cd0bc9580bc300a36de09e549c3ef","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_eqayc6bmek1j","source_sense_key":"vts:кімната#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[16,38],"verdict":"APPROVE"},
     "wr_4fc92f27215ac073a4c0a3c73f84e43966785cf9ac6a0c68110fb2351c3673f1": {"entry_id":206584,"quotation":"Я люблю молоко.","receipt_sha256":"f07f274412f1d3d8c9a94b214e1afc85325245b5a557ba0c2fb4031fe22d730d","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_bpw0ph14cq93","source_sense_key":"vts:молоко#article/2","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[284,299],"verdict":"APPROVE"},
-    "wr_a71c0bb99264bae8449a89b7f0adf967ee293d519167b42027aab60b31304c79": {"entry_id":239967,"quotation":"Утвори нові слова.","receipt_sha256":"562c0b8c9520031a8c75184ff7065b87a8fb7219502f05e767e985cfb9c3e8e7","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_v2e8s53d12wq","source_sense_key":"vts:новий#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[327,345],"verdict":"APPROVE"},
     "wr_e23e1703bf533d057eb835e36f43cc0968c98c79935d55c1f1fead0b8b85de0e": {"entry_id":275992,"quotation":"Дідусь п’є липовий чай.","receipt_sha256":"dbec735f131640adc4262b585c53c53c1837fa2adca1a2b1fd602b9ef9207504","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_n6z6wmyzpa24","source_sense_key":"vts:пити#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[210,233],"verdict":"APPROVE"},
     "wr_929c40ead05222401134d3e82a28135d0cf3f5187e84a9ac6f25b95c8fb4815f": {"entry_id":357936,"quotation":"Я малюю синє\nнебо.","receipt_sha256":"8e3d67707e11dbb8857a9f01680d4d6a20c2a7bd99b539908d115a7a1e3a1b04","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_zc6h97fz7v5v","source_sense_key":"vts:синій#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[775,793],"verdict":"APPROVE"},
     "wr_d884d5a51375ae089ffc6591509f404e3c9e9a81eedf53a5389aeac0ec5cbe3c": {"entry_id":364016,"quotation":"Ото був смачний обід!","receipt_sha256":"f22ed9b222d206ad61cfe1c57e3ba9c19c63004f08aa76e9a0688dd29b25cee9","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_75y1vpmcs07g","source_sense_key":"vts:смачний#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[831,852],"verdict":"APPROVE"},
@@ -44942,7 +44899,6 @@
     "wr_ab36c58561695a9d0a9b199da9f5103ce3ae82616ec7ce268334dc6ee715c309": {"entry_id":436589,"quotation":"Карина чистить червоне яблуко.","receipt_sha256":"b8b3f04553ea0d6489d84eda5befa2a816aeb05db671d1df50dc46f0eec6435a","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_57v0kdgk52fv","source_sense_key":"vts:яблуко#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[337,367],"verdict":"APPROVE"},
     "wr_00359393018ee56416dd96b0997b0b3b8a2c859b8c118d712cc73dc455c9cf1c": {"entry_id":157273,"quotation":"Він їв нашу їжу.","receipt_sha256":"69e0d3e2e6830a6327120ccff198753bbf1e9b97a0c0e6d4851c35a5ad3ede4c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_f23m3dr6fwfr","source_sense_key":"vts:їжа#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[2,18],"verdict":"APPROVE"},
     "wr_7fec3f85214a8010b44ed2591a57f58e69d0189fb03809acd895a82ad3aa10cf": {"entry_id":157343,"quotation":"Собака їв м’ясо.","receipt_sha256":"380ba67dd4fc386a788305834eb57c61897177d256189f18af193da399f101ca","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_d554k8w7czxw","source_sense_key":"vts:їсти#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[726,742],"verdict":"APPROVE"},
-    "wr_55001c1d1104a1d07d94b906e3584f1f3906624a49226e6124d08c72d3176dd4": {"entry_id":64056,"quotation":"Я вважаю, що воду треба берегти.","receipt_sha256":"da431d65d0aae6bc5ef4d4b79618b4d7bdaf3ab280ee21a4486c47730663d66f","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xhjmhfprktd9","source_sense_key":"vts:вода#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[963,995],"verdict":"APPROVE"},
     "wr_34c7237594d155c6034395163995fea3770cb480d7deda9ac3240ca7e93fffb3": {"entry_id":377643,"quotation":"Треба було брати\nсумку з тканини.","receipt_sha256":"610c9fd54879cbed67c83280cb81ec0e476bbf62d41e1ac530c9cc3520bbc721","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_m3cbpb9xp3ba","source_sense_key":"vts:сумка#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[456,489],"verdict":"APPROVE"},
     "wr_b0c18f6c1ee8a95761a55e9a3a669b8faecae9b89cab98b4ae807dd3382ac912": {"entry_id":18381,"quotation":"Які ти бачиш предмети?","receipt_sha256":"28fbd71984d3d69a5c2d305293607f44083ae331b364c612017a31f831e6abff","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3f4zrg016vrx","source_sense_key":"vts:бачити#article/2","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[0,22],"verdict":"APPROVE"},
     "wr_d46f4aff650ad54a925034610463f8beba9f82f545af9b872b497dc3412836fc": {"entry_id":25726,"quotation":"Блакитні\nхмари повільно пливуть по небу.","receipt_sha256":"fb8bb60c618be0b7871cdd6f3d778be745c6579675d10d125c6473f70192e979","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xtx2ak3gj0ze","source_sense_key":"vts:блакитний#article/0","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[1056,1096],"verdict":"APPROVE"}
@@ -45004,7 +44960,7 @@
     "stress": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "synonyms": "no_literal_source_claim_and_adjudicated_entry_or_sense_alignment",
     "transliteration": "no_approved_derivation",
-    "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/examples": "independent_exact_version_A1_review_pending",
+    "wc_0se7zg3rf6v7/ws_xhjmhfprktd9/examples": "rejected at exact-head Ukrainian review",
     "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/definition_uk": "missing_antecedent_for_source_sense",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/cefr": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
     "wc_b8efpmnj944x/wc_b8efpmnj944x/definition_uk": "ULIF_numeral_and_VTS_quantity_question_sense_not_adjudicated_for_frozen_adverb",
@@ -45045,13 +45001,12 @@
     "wc_hwer5kzzm1yv/wc_hwer5kzzm1yv/examples": "example_no_allocated_sense",
     "wc_bgkyf53yfr86/ws_938zczetnamg/examples": "example_no_unambiguous_a1_sentence_for_sourced_sense",
     "wc_s7hwf2ecgcn7/wc_s7hwf2ecgcn7/examples": "example_no_allocated_sense",
-    "wc_ypzn1h33by3s/ws_ft7y8t0t9qfx/examples": "example_independent_review_rejected",
-    "wc_ypzn1h33by3s/ws_3f4zrg016vrx/examples": "example_independent_review_rejected",
-    "wc_basa8zkw7f82/ws_xtx2ak3gj0ze/examples": "example_independent_review_rejected",
+    "wc_ypzn1h33by3s/ws_ft7y8t0t9qfx/examples": "no_captured_qualified_source_example",
     "wc_v4vzfzx2bhhc/ws_5mavrnxp83k2/examples": "example_independent_review_rejected",
     "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/examples": "example_independent_review_rejected",
     "wc_2v18q0e9cqh3/ws_phbxbhs2ypwr/examples": "example_independent_review_rejected",
-    "wc_04tmbj6y1v3y/ws_g744f7jcbwym/examples": "example_independent_review_rejected"
+    "wc_04tmbj6y1v3y/ws_g744f7jcbwym/examples": "example_independent_review_rejected",
+    "wc_cxjtr6481e7t/ws_v2e8s53d12wq/examples": "rejected at exact-head Ukrainian review"
   },
   "held_units": [
     {
