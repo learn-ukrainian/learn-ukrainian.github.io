@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "2f99524c3b718621ca2911ba06cf23f5e6dcfed3e900242591a32ef23bd9eb25",
-    "companion_sha256": "2b8d117d65bd29125e87f5f8e8d20cfda1398476878a82cd9cfdd4a450bdb7eb",
-    "consumed_sha256": "39834ef08dde1735f9310701da788711cda3125d36b24d52ea7510a0797a48c7",
-    "slice2_companion_sha256": "b23f417ec7e1e4dafb9beeda56dd5a795594f495cdac4b02699b9b689fbf5109",
-    "slice3_companion_sha256": "cb6fdef7407cf3a352c958918ebf25a2104cb0d5d14afe97aefa245fd27a5848",
-    "slice4_companion_sha256": "a0f11ff75cbf2b47040f4b53b3a60d1565aab3419c401eb2d405e82c2e1549ce"
+    "combined_sha256": "ecfbd4f369f1d3cce16650019b57255f8691976bae886c794031ad509faa5ec2",
+    "companion_sha256": "b86b8b165f327ca05a1fb0b3685b8eb93ecc0906b20f6c19d64e469fd7a2190d",
+    "consumed_sha256": "20f03fed388347fbd8198d49fe47849611777d7be1305e41f8d835a1c169ea7f",
+    "slice2_companion_sha256": "e62c63254f6f696c0c1a5a9a075e12f078bbd91694dcaf885b94b737b9b79eff",
+    "slice3_companion_sha256": "5f49fca153a4b3212eaa3277dd90280c6d55947c7f4937e687dde73a0627d6b8",
+    "slice4_companion_sha256": "11b7cec7aa07322ef2e61b676317234c54de0b7d407421a82fdb85e20ff39c28"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -7500,20 +7500,6 @@
       "span": [
         58,
         176
-      ]
-    },
-    {
-      "card_id": "wc_043h3npd7ed4",
-      "entry_id": 420694,
-      "field": "examples",
-      "pointer": "/text",
-      "record_key": "textbook:reading",
-      "scope_key": "wc_043h3npd7ed4:reading-example",
-      "sense_id": "ws_083jgmxn0scr",
-      "source_sense_key": "vts:читати#article/1",
-      "span": [
-        241,
-        254
       ]
     },
     {
@@ -38222,6 +38208,440 @@
           135
         ]
       }
+    },
+    {
+      "card_id": "wc_px86d59gp8r3",
+      "entry_id": 79694,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047",
+      "pointer": "/text",
+      "span": [
+        185,
+        207
+      ],
+      "sense_id": "ws_yk0sp1dg1r5g",
+      "source_sense_key": "vts:говорити#article/2",
+      "scope_key": "wc_px86d59gp8r3/ws_yk0sp1dg1r5g/textbook-example"
+    },
+    {
+      "card_id": "wc_pkd9csb7q432",
+      "entry_id": 82444,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089",
+      "pointer": "/text",
+      "span": [
+        133,
+        169
+      ],
+      "sense_id": "ws_8dr06agye2qr",
+      "source_sense_key": "vts:готувати#article/3",
+      "scope_key": "wc_pkd9csb7q432/ws_8dr06agye2qr/textbook-example"
+    },
+    {
+      "card_id": "wc_jc5hm24xj9g8",
+      "entry_id": 82409,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+      "pointer": "/text",
+      "span": [
+        338,
+        357
+      ],
+      "sense_id": "ws_q5csnrkb9fgx",
+      "source_sense_key": "vts:готівка#article/2",
+      "scope_key": "wc_jc5hm24xj9g8/ws_q5csnrkb9fgx/textbook-example"
+    },
+    {
+      "card_id": "wc_kj4qvd0z2c6f",
+      "entry_id": 95335,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+      "pointer": "/text",
+      "span": [
+        123,
+        146
+      ],
+      "sense_id": "ws_4n1cs9ashe26",
+      "source_sense_key": "vts:дивитися#article/1",
+      "scope_key": "wc_kj4qvd0z2c6f/ws_4n1cs9ashe26/textbook-example"
+    },
+    {
+      "card_id": "wc_4gwhrn64d98m",
+      "entry_id": 102549,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        605,
+        628
+      ],
+      "sense_id": "ws_c6fk1tatww29",
+      "source_sense_key": "vts:допомагати#article/1",
+      "scope_key": "wc_4gwhrn64d98m/ws_c6fk1tatww29/textbook-example"
+    },
+    {
+      "card_id": "wc_qp5msqsb9fzq",
+      "entry_id": 105869,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+      "pointer": "/text",
+      "span": [
+        790,
+        813
+      ],
+      "sense_id": "ws_cy6eg17ma1s6",
+      "source_sense_key": "vts:друг#article/1",
+      "scope_key": "wc_qp5msqsb9fzq/ws_cy6eg17ma1s6/textbook-example"
+    },
+    {
+      "card_id": "wc_9e056tqtgkgf",
+      "entry_id": 97867,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050",
+      "pointer": "/text",
+      "span": [
+        27,
+        59
+      ],
+      "sense_id": "ws_yktemmtxt8c5",
+      "source_sense_key": "vts:дія#article/1",
+      "scope_key": "wc_9e056tqtgkgf/ws_yktemmtxt8c5/textbook-example"
+    },
+    {
+      "card_id": "wc_w4me13yj3r2k",
+      "entry_id": 137888,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066",
+      "pointer": "/text",
+      "span": [
+        392,
+        410
+      ],
+      "sense_id": "ws_ktjjfkqyj3re",
+      "source_sense_key": "vts:заходити#I/1",
+      "scope_key": "wc_w4me13yj3r2k/ws_ktjjfkqyj3re/textbook-example"
+    },
+    {
+      "card_id": "wc_k73qexhmp0z4",
+      "entry_id": 180917,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065",
+      "pointer": "/text",
+      "span": [
+        694,
+        710
+      ],
+      "sense_id": "ws_915j4dh4xc0n",
+      "source_sense_key": "vts:куди#article/1",
+      "scope_key": "wc_k73qexhmp0z4/ws_915j4dh4xc0n/textbook-example"
+    },
+    {
+      "card_id": "wc_4q9w3j4e77gt",
+      "entry_id": 191390,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ],
+      "sense_id": "ws_rckst3bfp0pg",
+      "source_sense_key": "vts:любити#article/3",
+      "scope_key": "wc_4q9w3j4e77gt/ws_rckst3bfp0pg/textbook-example"
+    },
+    {
+      "card_id": "wc_qj9tmdk3h2kv",
+      "entry_id": 211435,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+      "pointer": "/text",
+      "span": [
+        801,
+        820
+      ],
+      "sense_id": "ws_j5q7s41aezwy",
+      "source_sense_key": "vts:навчатися#article/0",
+      "scope_key": "wc_qj9tmdk3h2kv/ws_j5q7s41aezwy/textbook-example"
+    },
+    {
+      "card_id": "wc_v6505n1mccxw",
+      "entry_id": 222963,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+      "pointer": "/text",
+      "span": [
+        1036,
+        1056
+      ],
+      "sense_id": "ws_pdxdn992dhwg",
+      "source_sense_key": "vts:нарешті#article/1",
+      "scope_key": "wc_v6505n1mccxw/ws_pdxdn992dhwg/textbook-example"
+    },
+    {
+      "card_id": "wc_mksarbeeytde",
+      "entry_id": 275878,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004",
+      "pointer": "/text",
+      "span": [
+        106,
+        140
+      ],
+      "sense_id": "ws_fyq1mxvtrhga",
+      "source_sense_key": "vts:писати#article/1",
+      "scope_key": "wc_mksarbeeytde/ws_fyq1mxvtrhga/textbook-example"
+    },
+    {
+      "card_id": "wc_ktd3je2d66tr",
+      "entry_id": 306069,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        289,
+        307
+      ],
+      "sense_id": "ws_4n6hzdn99ekg",
+      "source_sense_key": "vts:потім#article/1",
+      "scope_key": "wc_ktd3je2d66tr/ws_4n6hzdn99ekg/textbook-example"
+    },
+    {
+      "card_id": "wc_febqqttxses2",
+      "entry_id": 309355,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+      "pointer": "/text",
+      "span": [
+        371,
+        387
+      ],
+      "sense_id": "ws_rk6hmzn5gyc0",
+      "source_sense_key": "vts:працювати#article/1",
+      "scope_key": "wc_febqqttxses2/ws_rk6hmzn5gyc0/textbook-example"
+    },
+    {
+      "card_id": "wc_1z714m00t0wn",
+      "entry_id": 324665,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014",
+      "pointer": "/text",
+      "span": [
+        660,
+        701
+      ],
+      "sense_id": "ws_w7w2cragx6x5",
+      "source_sense_key": "vts:професія#article/0",
+      "scope_key": "wc_1z714m00t0wn/ws_w7w2cragx6x5/textbook-example"
+    },
+    {
+      "card_id": "wc_qx6g6av4pwne",
+      "entry_id": 317122,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022",
+      "pointer": "/text",
+      "span": [
+        192,
+        232
+      ],
+      "sense_id": "ws_bxk78ct52x0t",
+      "source_sense_key": "vts:прізвище#article/1",
+      "scope_key": "wc_qx6g6av4pwne/ws_bxk78ct52x0t/textbook-example"
+    },
+    {
+      "card_id": "wc_918g9xampn77",
+      "entry_id": 283475,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+      "pointer": "/text",
+      "span": [
+        38,
+        55
+      ],
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "scope_key": "wc_918g9xampn77/ws_c4zswhkm50hz/textbook-example"
+    },
+    {
+      "card_id": "wc_747417qp1aa2",
+      "entry_id": 336997,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        162,
+        178
+      ],
+      "sense_id": "ws_sfq11eqe763v",
+      "source_sense_key": "vts:робити#article/1",
+      "scope_key": "wc_747417qp1aa2/ws_sfq11eqe763v/textbook-example"
+    },
+    {
+      "card_id": "wc_rp7fevd2hhwv",
+      "entry_id": 370542,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+      "pointer": "/text",
+      "span": [
+        798,
+        836
+      ],
+      "sense_id": "ws_wk52tsxd2j2p",
+      "source_sense_key": "vts:спочатку#article/1",
+      "scope_key": "wc_rp7fevd2hhwv/ws_wk52tsxd2j2p/textbook-example"
+    },
+    {
+      "card_id": "wc_xa55f1hddjbm",
+      "entry_id": 368511,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081",
+      "pointer": "/text",
+      "span": [
+        466,
+        486
+      ],
+      "sense_id": "ws_6v13fpwmr6yx",
+      "source_sense_key": "vts:співати#article/1",
+      "scope_key": "wc_xa55f1hddjbm/ws_6v13fpwmr6yx/textbook-example"
+    },
+    {
+      "card_id": "wc_47r5291z25s4",
+      "entry_id": 381665,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+      "pointer": "/text",
+      "span": [
+        1008,
+        1042
+      ],
+      "sense_id": "ws_ym772g9hetwr",
+      "source_sense_key": "vts:танцювати#article/1",
+      "scope_key": "wc_47r5291z25s4/ws_ym772g9hetwr/textbook-example"
+    },
+    {
+      "card_id": "wc_n8cp2z97e93q",
+      "entry_id": 393864,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ],
+      "sense_id": "ws_z3x27v28nn57",
+      "source_sense_key": "vts:тут#I/1",
+      "scope_key": "wc_n8cp2z97e93q/ws_z3x27v28nn57/textbook-example"
+    },
+    {
+      "card_id": "wc_44j85tkme8q8",
+      "entry_id": 414329,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004",
+      "pointer": "/text",
+      "span": [
+        78,
+        101
+      ],
+      "sense_id": "ws_ygkcdpfdyghn",
+      "source_sense_key": "vts:хотіти#article/1",
+      "scope_key": "wc_44j85tkme8q8/ws_ygkcdpfdyghn/textbook-example"
+    },
+    {
+      "card_id": "wc_043h3npd7ed4",
+      "entry_id": 420694,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082",
+      "pointer": "/text",
+      "span": [
+        807,
+        833
+      ],
+      "sense_id": "ws_083jgmxn0scr",
+      "source_sense_key": "vts:читати#article/1",
+      "scope_key": "wc_043h3npd7ed4/ws_083jgmxn0scr/textbook-example"
+    },
+    {
+      "card_id": "wc_33qv20nmgm94",
+      "entry_id": 415172,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106",
+      "pointer": "/text",
+      "span": [
+        686,
+        707
+      ],
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "scope_key": "wc_33qv20nmgm94/ws_byas06qy605q/textbook-example"
+    },
+    {
+      "card_id": "wc_f3w4ga64h4y1",
+      "entry_id": 83682,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        927,
+        994
+      ],
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "scope_key": "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/textbook-example"
+    },
+    {
+      "card_id": "wc_a9nng3hpfkq9",
+      "entry_id": 209599,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+      "pointer": "/text",
+      "span": [
+        142,
+        168
+      ],
+      "sense_id": "ws_brm3c1wfegdn",
+      "source_sense_key": "vts:мусити#article/1",
+      "scope_key": "wc_a9nng3hpfkq9/ws_brm3c1wfegdn/textbook-example"
+    },
+    {
+      "card_id": "wc_ats38w2t9akg",
+      "entry_id": 319823,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        112,
+        149
+      ],
+      "sense_id": "ws_yx2bpdp01cy6",
+      "source_sense_key": "vts:прокидатися#II/1",
+      "scope_key": "wc_ats38w2t9akg/ws_yx2bpdp01cy6/textbook-example"
+    },
+    {
+      "card_id": "wc_y4svzq6hbp20",
+      "entry_id": 85475,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0055",
+      "pointer": "/text",
+      "span": [
+        339,
+        357
+      ],
+      "sense_id": "ws_np3aywv7t5f9",
+      "source_sense_key": "vts:гуляти#article/1",
+      "scope_key": "wc_y4svzq6hbp20/ws_np3aywv7t5f9/textbook-example"
+    },
+    {
+      "card_id": "wc_hwfp5x61yhxy",
+      "entry_id": 205889,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+      "pointer": "/text",
+      "span": [
+        366,
+        395
+      ],
+      "sense_id": "ws_3ax4c8wz66xb",
+      "source_sense_key": "vts:могти#article/1",
+      "scope_key": "wc_hwfp5x61yhxy/ws_3ax4c8wz66xb/textbook-example"
     }
   ],
   "denominator": {
@@ -38232,7 +38652,39 @@
     "selected_rows": 289,
     "targets": 60
   },
-  "example_approvals": {},
+  "example_approvals": {
+    "wr_5f4384150de5022ab9b083a6d6ea06a0f4181711166d395508a37a36b7399602": {"entry_id":79694,"quotation":"Про кого так говорять?","receipt_sha256":"5ff1e67e3126b790e8b3668583e3b644930007cc848ae8625e6eb3322fc528b5","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_yk0sp1dg1r5g","source_sense_key":"vts:говорити#article/2","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[185,207],"verdict":"APPROVE"},
+    "wr_383b92078d7e6a2315854b13fc7ad7e3a2001c5acdaa535e15bd77472a12f914": {"entry_id":82444,"quotation":"У неділю наша сім’я готувала вечерю.","receipt_sha256":"75b2ea3108b012d98d556ed03ecda59cd00bfab7d1b086df2d99954135dd10a7","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_8dr06agye2qr","source_sense_key":"vts:готувати#article/3","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[133,169],"verdict":"APPROVE"},
+    "wr_cf7f1f4a270e296d618f2cd74d9d09045558e26f92fb7a20293fc0fd1b535176": {"entry_id":82409,"quotation":"Готівка — це гроші.","receipt_sha256":"dcc609d87183a91356749e2e23181b2d8cbd6e4b01ea015b778289e361b82923","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_q5csnrkb9fgx","source_sense_key":"vts:готівка#article/2","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[338,357],"verdict":"APPROVE"},
+    "wr_ca3b488a7130148cd30d2419c4908bb7aee94d74e10d9400d3131b85ff4ad7c5": {"entry_id":95335,"quotation":"Я дивлюся на вчительку.","receipt_sha256":"7e513f5cc1324ebe53fab2fc23cd6009b55ea1fd71c1c582f9c367fa641fb4b8","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_4n1cs9ashe26","source_sense_key":"vts:дивитися#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[123,146],"verdict":"APPROVE"},
+    "wr_9a4ff65af6f3a15657f7b50e27449e2060d0fec3e8dd8f9d2c4aca95f3b4fb2c": {"entry_id":102549,"quotation":"Мені допомагали батьки.","receipt_sha256":"e8569f5fa360e3120d6ce2537b7c8058e02523d7b277c720c50653e5a455d5c4","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_c6fk1tatww29","source_sense_key":"vts:допомагати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[605,628],"verdict":"APPROVE"},
+    "wr_df88bc8aba195cc04541cc011dd2d483ebd620f6d82c94f48a652971339bc50e": {"entry_id":105869,"quotation":"Я напишу листа другові.","receipt_sha256":"7b403ae888a47d71db72db26876bcd7dc78bc2c3741adb636168e1e3b94b163e","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_cy6eg17ma1s6","source_sense_key":"vts:друг#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[790,813],"verdict":"APPROVE"},
+    "wr_dcd717a3d86d2fdd514525ea182384f79dfdce2eaab1b1c2a0beb6c4c3bd2807": {"entry_id":97867,"quotation":"Повтори дії, які виконують діти.","receipt_sha256":"8501fe7b8a38369282f3ea198ce9a930f1589e8e9dd65879867094685ecce083","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_yktemmtxt8c5","source_sense_key":"vts:дія#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[27,59],"verdict":"APPROVE"},
+    "wr_9240fb6a6684e12b18175bfa7f0757a12cde4b374c690cde58a38ef1752c6c4e": {"entry_id":137888,"quotation":"Я заходжу в школу.","receipt_sha256":"9a29f3eb4a71a41aae328d901b84d2470eae10af99798de839948fc85905037d","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_ktjjfkqyj3re","source_sense_key":"vts:заходити#I/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[392,410],"verdict":"APPROVE"},
+    "wr_dff6ff1b706d7ed67afe4240999a809df55f088f63b199d093f113928109aa65": {"entry_id":180917,"quotation":"Куди йдуть діти?","receipt_sha256":"1aac3ccb4243da16e33f4cbd7c54360c956e326d0202add4d56ef3b2d1b4a095","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_915j4dh4xc0n","source_sense_key":"vts:куди#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[694,710],"verdict":"APPROVE"},
+    "wr_e58ce1ae54822ae13a81547a83231eaeff46ea17d580d7825d88b782a1083f73": {"entry_id":191390,"quotation":"Я люблю молоко.","receipt_sha256":"0f1c06f7dc575df5373634bf9903c66835c65f9d6d177c371a8d2d09c0189b92","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rckst3bfp0pg","source_sense_key":"vts:любити#article/3","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[284,299],"verdict":"APPROVE"},
+    "wr_f82ff3c12e33a4f98bb8e3f3cccfaa0576859cbdd1d71ba6810048e6eb4c2aed": {"entry_id":211435,"quotation":"Де навчається Ліна?","receipt_sha256":"313b60c7f6e9a428753b0c7dc5fded1458bd689864bbdf11a1e54330bedd22c0","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_j5q7s41aezwy","source_sense_key":"vts:навчатися#article/0","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[801,820],"verdict":"APPROVE"},
+    "wr_232ee4b7dd2a93c871cafadf0e2b80f2945b13bdc051c1b0d9064d256ceecc01": {"entry_id":222963,"quotation":"Нарешті в лісі сніг!","receipt_sha256":"57e8aab8d6edc1c6b89f7dd847feaea1d8cf560bf089ac049f7be594511db2a8","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_pdxdn992dhwg","source_sense_key":"vts:нарешті#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[1036,1056],"verdict":"APPROVE"},
+    "wr_b25c8a566f42e98832f33db13b6e74d9bb27251db9dab6b96bb01cfcb43511c0": {"entry_id":275878,"quotation":"Букви ми бачимо, читаємо і пишемо.","receipt_sha256":"fbbb2cf90ec000d650eaca3eeeed42ac9e00133e99ed29dd230eddcffa2cbd0c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_fyq1mxvtrhga","source_sense_key":"vts:писати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[106,140],"verdict":"APPROVE"},
+    "wr_ce1fd9b68fe4d3c198bf04657713f87aac4941831fcbe35be36eb7056cb738f9": {"entry_id":306069,"quotation":"Потім був концерт.","receipt_sha256":"22fe083408f125cfa8d01013f132d729a82070d9764a5b5c351c3d9ce43eb8fd","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_4n6hzdn99ekg","source_sense_key":"vts:потім#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[289,307],"verdict":"APPROVE"},
+    "wr_0c5cd36c9962d39246a4ba7988780d3b2c5040fb89c6fe85928c1cd2bd03e0ee": {"entry_id":309355,"quotation":"Працюємо в парі.","receipt_sha256":"07a5bf440976dbd7c596fa85db157be2ec0029f44a648b63f952664d63f89206","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rk6hmzn5gyc0","source_sense_key":"vts:працювати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[371,387],"verdict":"APPROVE"},
+    "wr_a916c583621cdfb9c60db764eca1126984d700c355203e51b9c4f5fb3da32345": {"entry_id":324665,"quotation":"Напиши, про яку професію ти мрієш і чому.","receipt_sha256":"2773f4662823e7a36958bf87dccc9d7334041c012eb08977b5e78e71ca8a078c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_w7w2cragx6x5","source_sense_key":"vts:професія#article/0","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[660,701],"verdict":"APPROVE"},
+    "wr_6811d618059df7c268ae2cfcb1d0748df68674eef32f2aee824fb35e96e8e450": {"entry_id":317122,"quotation":"Напиши своє прізвище, ім’я, по батькові.","receipt_sha256":"5efa0aab3361f07d30f53b89e0c4e82aefb1c0ed7c68411a6217c271405fd9b6","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_bxk78ct52x0t","source_sense_key":"vts:прізвище#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[192,232],"verdict":"APPROVE"},
+    "wr_90457fa4d030014f6aa3a0bb68acbdb00088b2c7498bf664c76e5242f587db55": {"entry_id":283475,"quotation":"Піду і я з тобою.","receipt_sha256":"e5ef6cccbed68fce557d5fa95ca06af6672756e41daf997ef46b17af6956cfbb","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_c4zswhkm50hz","source_sense_key":"vts:піти#II/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[38,55],"verdict":"APPROVE"},
+    "wr_ee7d22d725a256c775d9a71920660b09c4b5d9ba57251faf92146f8eff35ed55": {"entry_id":336997,"quotation":"Ти що тут робиш?","receipt_sha256":"02f91a8fe24c7ca2b54d85834d689b5d4bbecf423a96c4665380cfae145a0ea2","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_sfq11eqe763v","source_sense_key":"vts:робити#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[162,178],"verdict":"APPROVE"},
+    "wr_3db9a385a00a5715eda6220a80d8db798d372626c5c809b5e25ca5ddc3c8f99f": {"entry_id":370542,"quotation":"Хто спочатку їсть, а потім вмивається?","receipt_sha256":"e58f9812c56fe7b093f047c10fbb5c7f1be7f13326b5098c1f243b730674e44e","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_wk52tsxd2j2p","source_sense_key":"vts:спочатку#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[798,836],"verdict":"APPROVE"},
+    "wr_2d59d5667a3dc6e8d3f02aa9fb9a60d63882275aa7bd15d8a2518a7321384d36": {"entry_id":368511,"quotation":"Поліна співає пісню.","receipt_sha256":"eb18e83700a0a35933fad43427961ec0cbf09a7f9b47d4b807a3d72c7eb4b42c","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_6v13fpwmr6yx","source_sense_key":"vts:співати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[466,486],"verdict":"APPROVE"},
+    "wr_09b30b8b9e757b385cae537cd70272f7be839c7150c0d54599b45fb6a5dffe07": {"entry_id":381665,"quotation":"Ви там будете співати й танцювати?","receipt_sha256":"4bc58feaed14880999205322d75f4065dbc4ad87e0514acd6a214da666664e38","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_ym772g9hetwr","source_sense_key":"vts:танцювати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[1008,1042],"verdict":"APPROVE"},
+    "wr_af327d4c38865bf7567e391c0d5e7741a2efd52b63e16f451aef2f10f9f5c310": {"entry_id":393864,"quotation":"Тут є великий музей.","receipt_sha256":"b7067e793506855eed8bbf9769b82a840d8bfe82c6ae4768e4dc61592e159afc","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_z3x27v28nn57","source_sense_key":"vts:тут#I/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[1152,1172],"verdict":"APPROVE"},
+    "wr_3ba1cc4e441ec0e5e402a38a1454f7cdbcf0c5796ff38312dbf583d9db2f8bb2": {"entry_id":414329,"quotation":"Я не хочу йти до школи!","receipt_sha256":"f979538753071b965e5a0b64a7a141e481390eb9eb9ac4585b1ec7e4d445d6a3","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_ygkcdpfdyghn","source_sense_key":"vts:хотіти#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[78,101],"verdict":"APPROVE"},
+    "wr_5b0f8a7732da4e122abcee13161e9468e6009cde334eed8d2c4e5a797870957e": {"entry_id":420694,"quotation":"Які книжки я люблю читати?","receipt_sha256":"419a1d342965996da2eae6ac8188f946ecaac6d9e06e4bfee53ce2535a227717","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_083jgmxn0scr","source_sense_key":"vts:читати#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[807,833],"verdict":"APPROVE"},
+    "wr_3c59adb730331267f7dc8eee77bd14291a3952ecb86d83d8b8627a997eae52f4": {"entry_id":415172,"quotation":"Хто написав цю казку?","receipt_sha256":"fed2259683d60705e3de746d6597b2cf5d4243593c1170eb429a717a2c01b74e","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_byas06qy605q","source_sense_key":"vts:хто#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[686,707],"verdict":"APPROVE"},
+    "wr_1324851919e31775202997ff440d3eade1e7f96281d6b5102fdb712d978a3374": {"entry_id":83682,"quotation":"Мамо, а п’ятсот гривень вистачить на квиток\nвід Луганська до Києва?","receipt_sha256":"1980eef64d8b662193c170fb24dc64e52e407bcbcd4f39c3fc869778dca5ab49","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_syyrm7b3njsm","source_sense_key":"vts:гривня#article/4","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[927,994],"verdict":"APPROVE"},
+    "wr_7955ab415ef0d216c734d1257b2f03e3df1d1f8ba58391467fff1cddf3952aa6": {"entry_id":209599,"quotation":"Я мушу додому\nнегайно іти.","receipt_sha256":"36daef7a0b9723bbbba08aeffe281a5d2c7500494305b9c0104685cf8d1d12f6","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_brm3c1wfegdn","source_sense_key":"vts:мусити#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[142,168],"verdict":"APPROVE"},
+    "wr_243fe41a877b5c18403a3b058c20cc7355ed33f4928362cd171ff7c88ac31c00": {"entry_id":319823,"quotation":"Засинай і прокидайся\nзавтра здоровою.","receipt_sha256":"4594ce936cafa11e8335c5f37e9ddda3a62c685fcf1e0d8988b2a6d570a24371","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_yx2bpdp01cy6","source_sense_key":"vts:прокидатися#II/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[112,149],"verdict":"APPROVE"},
+    "wr_2733666fb4654906ba239c64125a7be5603a8545a0566c08b7140978e2172083": {"entry_id":85475,"quotation":"Я гуляю з собакою.","receipt_sha256":"4daf41dbc4089a63d8e1c72cb4b367b4946572475fea04e7593772213d7fa662","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_np3aywv7t5f9","source_sense_key":"vts:гуляти#article/1","sources_sha256":"3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3","span":[339,357],"verdict":"APPROVE"},
+    "wr_df9f42d712eb1d93589669fca51edfcb98c2ea64496592bde96f41d3f3873859": {"entry_id":205889,"quotation":"Які з них ти можеш прочитати?","receipt_sha256":"f89576da691a4e7f8f83c4a67a5da9bd77077eaad5b8ce41b500356b9e8a8676","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3ax4c8wz66xb","source_sense_key":"vts:могти#article/1","sources_sha256":"3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3","span":[366,395],"verdict":"APPROVE"}
+  },
   "field_dependencies": {
     "antonyms": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
     "aspect": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
@@ -38311,7 +38763,36 @@
     "wc_vvbq92wwxskh/wc_vvbq92wwxskh/gloss_en": "gloss_no_allocated_sense",
     "wc_y4mfsa75a8dq/wc_y4mfsa75a8dq/gloss_en": "gloss_no_allocated_sense",
     "wc_yx5tjedf0xte/ws_cd47mmbnv00f/gloss_en": "gloss_no_sense_aligned_balla_witness",
-    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/gloss_en": "gloss_no_sense_aligned_balla_witness"
+    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_7edehzqd24wz/ws_jjee3899y5xb/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/examples": "example_no_complete_textbook_sentence_found",
+    "wc_39m7asavdtt3/ws_tpvktyaq7nwe/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_t5mkqe7v31x3/ws_fddbgjterr9v/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_v7385p2vfmd7/ws_xzn6340fsvh0/examples": "example_no_complete_textbook_sentence_found",
+    "wc_hbtnjcpx6vxd/ws_3pa8f4my4qt8/examples": "example_no_complete_textbook_sentence_found",
+    "wc_pnye70yqdqxy/ws_xpwspgr73c2y/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_yx5tjedf0xte/ws_cd47mmbnv00f/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_7cq5e13zagb0/ws_t3516zz44re6/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_9cv96acr1frj/ws_9bwacnh6cd6z/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_5ac8vftv3pey/ws_d3s6z3b74bby/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_d578br9yyv83/ws_qgqt2bjb7324/examples": "example_no_complete_textbook_sentence_found",
+    "wc_3ytmbxews4cg/wc_3ytmbxews4cg/examples": "example_no_allocated_sense",
+    "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/examples": "example_no_allocated_sense",
+    "wc_f2xad8rbzgv2/wc_f2xad8rbzgv2/examples": "example_no_allocated_sense",
+    "wc_21cbx08fthn0/wc_21cbx08fthn0/examples": "example_no_allocated_sense",
+    "wc_b22c5cw8ddrm/wc_b22c5cw8ddrm/examples": "example_no_allocated_sense",
+    "wc_g8ft669hekw7/wc_g8ft669hekw7/examples": "example_no_allocated_sense",
+    "wc_3xqwne5jgn63/wc_3xqwne5jgn63/examples": "example_no_allocated_sense",
+    "wc_rn7hfetva0ve/wc_rn7hfetva0ve/examples": "example_no_allocated_sense",
+    "wc_vvbq92wwxskh/wc_vvbq92wwxskh/examples": "example_no_allocated_sense",
+    "wc_y4mfsa75a8dq/wc_y4mfsa75a8dq/examples": "example_no_allocated_sense",
+    "wc_0772arm98z39/wc_0772arm98z39/examples": "example_no_allocated_sense",
+    "wc_62djjmfxk1c8/wc_62djjmfxk1c8/examples": "example_no_allocated_sense",
+    "wc_tabtj29yne4z/wc_tabtj29yne4z/examples": "example_no_allocated_sense",
+    "wc_s5y8rpjnn3x0/wc_s5y8rpjnn3x0/examples": "example_no_allocated_sense",
+    "wc_ar4jq8xbvd1f/ws_18tkkbhbfz7c/examples": "example_independent_review_rejected",
+    "wc_61gpnh7fkt0h/ws_xhe2mxarmkcd/examples": "example_independent_review_rejected",
+    "wc_jdzec32j5jad/ws_f38fgkwaqqkn/examples": "rejected at exact-head Ukrainian review"
   },
   "held_units": [
     {
@@ -40554,6 +41035,358 @@
         0,
         6
       ]
+    },
+    "wc_px86d59gp8r3/ws_yk0sp1dg1r5g/textbook-example": {
+      "card_id": "wc_px86d59gp8r3",
+      "sense_id": "ws_yk0sp1dg1r5g",
+      "source_sense_key": "vts:говорити#article/2",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047",
+      "pointer": "/text",
+      "span": [
+        185,
+        207
+      ]
+    },
+    "wc_pkd9csb7q432/ws_8dr06agye2qr/textbook-example": {
+      "card_id": "wc_pkd9csb7q432",
+      "sense_id": "ws_8dr06agye2qr",
+      "source_sense_key": "vts:готувати#article/3",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089",
+      "pointer": "/text",
+      "span": [
+        133,
+        169
+      ]
+    },
+    "wc_jc5hm24xj9g8/ws_q5csnrkb9fgx/textbook-example": {
+      "card_id": "wc_jc5hm24xj9g8",
+      "sense_id": "ws_q5csnrkb9fgx",
+      "source_sense_key": "vts:готівка#article/2",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+      "pointer": "/text",
+      "span": [
+        338,
+        357
+      ]
+    },
+    "wc_kj4qvd0z2c6f/ws_4n1cs9ashe26/textbook-example": {
+      "card_id": "wc_kj4qvd0z2c6f",
+      "sense_id": "ws_4n1cs9ashe26",
+      "source_sense_key": "vts:дивитися#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+      "pointer": "/text",
+      "span": [
+        123,
+        146
+      ]
+    },
+    "wc_4gwhrn64d98m/ws_c6fk1tatww29/textbook-example": {
+      "card_id": "wc_4gwhrn64d98m",
+      "sense_id": "ws_c6fk1tatww29",
+      "source_sense_key": "vts:допомагати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        605,
+        628
+      ]
+    },
+    "wc_qp5msqsb9fzq/ws_cy6eg17ma1s6/textbook-example": {
+      "card_id": "wc_qp5msqsb9fzq",
+      "sense_id": "ws_cy6eg17ma1s6",
+      "source_sense_key": "vts:друг#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+      "pointer": "/text",
+      "span": [
+        790,
+        813
+      ]
+    },
+    "wc_9e056tqtgkgf/ws_yktemmtxt8c5/textbook-example": {
+      "card_id": "wc_9e056tqtgkgf",
+      "sense_id": "ws_yktemmtxt8c5",
+      "source_sense_key": "vts:дія#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050",
+      "pointer": "/text",
+      "span": [
+        27,
+        59
+      ]
+    },
+    "wc_w4me13yj3r2k/ws_ktjjfkqyj3re/textbook-example": {
+      "card_id": "wc_w4me13yj3r2k",
+      "sense_id": "ws_ktjjfkqyj3re",
+      "source_sense_key": "vts:заходити#I/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066",
+      "pointer": "/text",
+      "span": [
+        392,
+        410
+      ]
+    },
+    "wc_k73qexhmp0z4/ws_915j4dh4xc0n/textbook-example": {
+      "card_id": "wc_k73qexhmp0z4",
+      "sense_id": "ws_915j4dh4xc0n",
+      "source_sense_key": "vts:куди#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065",
+      "pointer": "/text",
+      "span": [
+        694,
+        710
+      ]
+    },
+    "wc_4q9w3j4e77gt/ws_rckst3bfp0pg/textbook-example": {
+      "card_id": "wc_4q9w3j4e77gt",
+      "sense_id": "ws_rckst3bfp0pg",
+      "source_sense_key": "vts:любити#article/3",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ]
+    },
+    "wc_qj9tmdk3h2kv/ws_j5q7s41aezwy/textbook-example": {
+      "card_id": "wc_qj9tmdk3h2kv",
+      "sense_id": "ws_j5q7s41aezwy",
+      "source_sense_key": "vts:навчатися#article/0",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+      "pointer": "/text",
+      "span": [
+        801,
+        820
+      ]
+    },
+    "wc_v6505n1mccxw/ws_pdxdn992dhwg/textbook-example": {
+      "card_id": "wc_v6505n1mccxw",
+      "sense_id": "ws_pdxdn992dhwg",
+      "source_sense_key": "vts:нарешті#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+      "pointer": "/text",
+      "span": [
+        1036,
+        1056
+      ]
+    },
+    "wc_mksarbeeytde/ws_fyq1mxvtrhga/textbook-example": {
+      "card_id": "wc_mksarbeeytde",
+      "sense_id": "ws_fyq1mxvtrhga",
+      "source_sense_key": "vts:писати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004",
+      "pointer": "/text",
+      "span": [
+        106,
+        140
+      ]
+    },
+    "wc_ktd3je2d66tr/ws_4n6hzdn99ekg/textbook-example": {
+      "card_id": "wc_ktd3je2d66tr",
+      "sense_id": "ws_4n6hzdn99ekg",
+      "source_sense_key": "vts:потім#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        289,
+        307
+      ]
+    },
+    "wc_febqqttxses2/ws_rk6hmzn5gyc0/textbook-example": {
+      "card_id": "wc_febqqttxses2",
+      "sense_id": "ws_rk6hmzn5gyc0",
+      "source_sense_key": "vts:працювати#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+      "pointer": "/text",
+      "span": [
+        371,
+        387
+      ]
+    },
+    "wc_jdzec32j5jad/ws_f38fgkwaqqkn/textbook-example": {
+      "card_id": "wc_jdzec32j5jad",
+      "sense_id": "ws_f38fgkwaqqkn",
+      "source_sense_key": "vts:прибирати#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050",
+      "pointer": "/text",
+      "span": [
+        145,
+        172
+      ]
+    },
+    "wc_1z714m00t0wn/ws_w7w2cragx6x5/textbook-example": {
+      "card_id": "wc_1z714m00t0wn",
+      "sense_id": "ws_w7w2cragx6x5",
+      "source_sense_key": "vts:професія#article/0",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014",
+      "pointer": "/text",
+      "span": [
+        660,
+        701
+      ]
+    },
+    "wc_qx6g6av4pwne/ws_bxk78ct52x0t/textbook-example": {
+      "card_id": "wc_qx6g6av4pwne",
+      "sense_id": "ws_bxk78ct52x0t",
+      "source_sense_key": "vts:прізвище#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022",
+      "pointer": "/text",
+      "span": [
+        192,
+        232
+      ]
+    },
+    "wc_918g9xampn77/ws_c4zswhkm50hz/textbook-example": {
+      "card_id": "wc_918g9xampn77",
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+      "pointer": "/text",
+      "span": [
+        38,
+        55
+      ]
+    },
+    "wc_747417qp1aa2/ws_sfq11eqe763v/textbook-example": {
+      "card_id": "wc_747417qp1aa2",
+      "sense_id": "ws_sfq11eqe763v",
+      "source_sense_key": "vts:робити#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        162,
+        178
+      ]
+    },
+    "wc_rp7fevd2hhwv/ws_wk52tsxd2j2p/textbook-example": {
+      "card_id": "wc_rp7fevd2hhwv",
+      "sense_id": "ws_wk52tsxd2j2p",
+      "source_sense_key": "vts:спочатку#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+      "pointer": "/text",
+      "span": [
+        798,
+        836
+      ]
+    },
+    "wc_xa55f1hddjbm/ws_6v13fpwmr6yx/textbook-example": {
+      "card_id": "wc_xa55f1hddjbm",
+      "sense_id": "ws_6v13fpwmr6yx",
+      "source_sense_key": "vts:співати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081",
+      "pointer": "/text",
+      "span": [
+        466,
+        486
+      ]
+    },
+    "wc_47r5291z25s4/ws_ym772g9hetwr/textbook-example": {
+      "card_id": "wc_47r5291z25s4",
+      "sense_id": "ws_ym772g9hetwr",
+      "source_sense_key": "vts:танцювати#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+      "pointer": "/text",
+      "span": [
+        1008,
+        1042
+      ]
+    },
+    "wc_n8cp2z97e93q/ws_z3x27v28nn57/textbook-example": {
+      "card_id": "wc_n8cp2z97e93q",
+      "sense_id": "ws_z3x27v28nn57",
+      "source_sense_key": "vts:тут#I/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ]
+    },
+    "wc_44j85tkme8q8/ws_ygkcdpfdyghn/textbook-example": {
+      "card_id": "wc_44j85tkme8q8",
+      "sense_id": "ws_ygkcdpfdyghn",
+      "source_sense_key": "vts:хотіти#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004",
+      "pointer": "/text",
+      "span": [
+        78,
+        101
+      ]
+    },
+    "wc_043h3npd7ed4/ws_083jgmxn0scr/textbook-example": {
+      "card_id": "wc_043h3npd7ed4",
+      "sense_id": "ws_083jgmxn0scr",
+      "source_sense_key": "vts:читати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082",
+      "pointer": "/text",
+      "span": [
+        807,
+        833
+      ]
+    },
+    "wc_33qv20nmgm94/ws_byas06qy605q/textbook-example": {
+      "card_id": "wc_33qv20nmgm94",
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106",
+      "pointer": "/text",
+      "span": [
+        686,
+        707
+      ]
+    },
+    "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/textbook-example": {
+      "card_id": "wc_f3w4ga64h4y1",
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        927,
+        994
+      ]
+    },
+    "wc_a9nng3hpfkq9/ws_brm3c1wfegdn/textbook-example": {
+      "card_id": "wc_a9nng3hpfkq9",
+      "sense_id": "ws_brm3c1wfegdn",
+      "source_sense_key": "vts:мусити#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+      "pointer": "/text",
+      "span": [
+        142,
+        168
+      ]
+    },
+    "wc_ats38w2t9akg/ws_yx2bpdp01cy6/textbook-example": {
+      "card_id": "wc_ats38w2t9akg",
+      "sense_id": "ws_yx2bpdp01cy6",
+      "source_sense_key": "vts:прокидатися#II/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        112,
+        149
+      ]
+    },
+    "wc_y4svzq6hbp20/ws_np3aywv7t5f9/textbook-example": {
+      "card_id": "wc_y4svzq6hbp20",
+      "sense_id": "ws_np3aywv7t5f9",
+      "source_sense_key": "vts:гуляти#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0055",
+      "pointer": "/text",
+      "span": [
+        339,
+        357
+      ]
+    },
+    "wc_hwfp5x61yhxy/ws_3ax4c8wz66xb/textbook-example": {
+      "card_id": "wc_hwfp5x61yhxy",
+      "sense_id": "ws_3ax4c8wz66xb",
+      "source_sense_key": "vts:могти#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+      "pointer": "/text",
+      "span": [
+        366,
+        395
+      ]
     }
   },
   "selection": {
@@ -42021,7 +42854,41 @@
     "balla:en-uk:row:18222": "sr_kvf76a0xpyjh",
     "balla:en-uk:row:20338": "sr_8x8eyjbntxsr",
     "balla:en-uk:row:61416": "sr_zsc3k9gz9185",
-    "balla:en-uk:row:65240": "sr_vpzy9a9bpdby"
+    "balla:en-uk:row:65240": "sr_vpzy9a9bpdby",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047": "sr_xzmcvn9fppvh",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089": "sr_k8ej9pzx0hyw",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122": "sr_0kg7gkgkmfvx",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0054": "sr_4m766nrzfpbz",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138": "sr_j79rvsfkzkx3",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084": "sr_m4dsskayr8zv",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043": "sr_2g1xmbe95swg",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050": "sr_7hfmqxey0f0w",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066": "sr_gcprhq6peyy8",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065": "sr_651kg1tfd5jp",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": "sr_1hmn6zqd1kc3",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0051": "sr_8ap0ghn651s1",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008": "sr_whtqsj99bevg",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055": "sr_714skah9mnf7",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004": "sr_n9nfq473adgf",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064": "sr_byh3mmevwtrr",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000": "sr_cdq4k5jq7vg1",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050": "sr_9ms876z90p53",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014": "sr_1h622w2g5j0e",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022": "sr_c988asybxgr4",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061": "sr_bjsc059tewnp",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0137": "sr_21sscdrvtznx",
+    "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0043": "sr_j324rb1kdjz7",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055": "sr_39akq9jwnen2",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081": "sr_cr8s7egfhd96",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060": "sr_0e0f4cn67asy",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": "sr_5crwjw31hms0",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004": "sr_a1b9qe6sn576",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082": "sr_6x3ynvwx5kf5",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106": "sr_4kgca0k3jecd",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141": "sr_8nkg84qwc2t1",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008": "sr_mh9s3pqb2hzg",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0055": "sr_s0fh5capw23q",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003": "sr_nr6h7shteqbn"
   },
   "source_record_reuses": {
     "cefr:читати": {
@@ -42035,9 +42902,29 @@
       "locator": "ulif:ulif_dictua_entries:id:258655",
       "snapshot_id": "selected-row@sha256:ddaae6079b79e134df494c369782fecac754c50f2643f8270afacc4b35161acb",
       "source_record_id": "sr_bkdj52zw8ez7"
+    },
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066": {
+      "source_record_id": "sr_gcprhq6peyy8",
+      "snapshot_id": "textbooks@sha256:b71e989620c0d88e6a2295b41b73a00f7f9f0c067682e54854154e61624dac96",
+      "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0066"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": {
+      "source_record_id": "sr_1hmn6zqd1kc3",
+      "snapshot_id": "textbooks@sha256:4fbe76511f23a722744231f28860acc08b858f6b74d40b5188e1634f818313b2",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0071"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050": {
+      "source_record_id": "sr_9ms876z90p53",
+      "snapshot_id": "textbooks@sha256:4fce26a51ce510db47cdc24f9d9d5eb966ca3a5239b59e2d583d246e576a1326",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0050"
+    },
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": {
+      "source_record_id": "sr_5crwjw31hms0",
+      "snapshot_id": "textbooks@sha256:edde9dbbc4a7b352942aaa85302063a1aa153c707236667ab9eed85408aba00b",
+      "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
     }
   },
-  "sources_sha256": "0bce6015ed244d64c22062c23be6655fc48f96b5fbfc89755c7d8b4af9b276a3",
+  "sources_sha256": "3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3",
   "stress_attempts": {
     "wc_043h3npd7ed4": [
       {
