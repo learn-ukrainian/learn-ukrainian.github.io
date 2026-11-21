@@ -1,12 +1,12 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "2f99524c3b718621ca2911ba06cf23f5e6dcfed3e900242591a32ef23bd9eb25",
-    "companion_sha256": "2b8d117d65bd29125e87f5f8e8d20cfda1398476878a82cd9cfdd4a450bdb7eb",
-    "consumed_sha256": "39834ef08dde1735f9310701da788711cda3125d36b24d52ea7510a0797a48c7",
-    "slice2_companion_sha256": "b23f417ec7e1e4dafb9beeda56dd5a795594f495cdac4b02699b9b689fbf5109",
-    "slice3_companion_sha256": "cb6fdef7407cf3a352c958918ebf25a2104cb0d5d14afe97aefa245fd27a5848",
-    "slice4_companion_sha256": "a0f11ff75cbf2b47040f4b53b3a60d1565aab3419c401eb2d405e82c2e1549ce"
+    "combined_sha256": "1b379b04dfd705c0660c9f562671911e06dee8e546fc588b050675618664c005",
+    "companion_sha256": "f1ef7e3661b8b47b0c4bf2a7f0033d015da497ffa53d181da89897bf7a775725",
+    "consumed_sha256": "9d8824785d42f1f97bb8139cd7e8911b6ff9831d8df3102687121a67b530a635",
+    "slice2_companion_sha256": "e62c63254f6f696c0c1a5a9a075e12f078bbd91694dcaf885b94b737b9b79eff",
+    "slice3_companion_sha256": "5f49fca153a4b3212eaa3277dd90280c6d55947c7f4937e687dde73a0627d6b8",
+    "slice4_companion_sha256": "ef7cae3028dc962ca43d6bbaaf370f1bf56432c0b52427530c4c02868fbec153"
   },
   "approval_ref": "ATLAS-RESUME-1031 approved frozen author brief",
   "card_ids": [
@@ -38222,6 +38222,482 @@
           135
         ]
       }
+    },
+    {
+      "card_id": "wc_px86d59gp8r3",
+      "entry_id": 79694,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047",
+      "pointer": "/text",
+      "span": [
+        185,
+        207
+      ],
+      "sense_id": "ws_yk0sp1dg1r5g",
+      "source_sense_key": "vts:говорити#article/2",
+      "scope_key": "wc_px86d59gp8r3/ws_yk0sp1dg1r5g/textbook-example"
+    },
+    {
+      "card_id": "wc_pkd9csb7q432",
+      "entry_id": 82444,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089",
+      "pointer": "/text",
+      "span": [
+        133,
+        169
+      ],
+      "sense_id": "ws_8dr06agye2qr",
+      "source_sense_key": "vts:готувати#article/3",
+      "scope_key": "wc_pkd9csb7q432/ws_8dr06agye2qr/textbook-example"
+    },
+    {
+      "card_id": "wc_jc5hm24xj9g8",
+      "entry_id": 82409,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+      "pointer": "/text",
+      "span": [
+        338,
+        357
+      ],
+      "sense_id": "ws_q5csnrkb9fgx",
+      "source_sense_key": "vts:готівка#article/2",
+      "scope_key": "wc_jc5hm24xj9g8/ws_q5csnrkb9fgx/textbook-example"
+    },
+    {
+      "card_id": "wc_y4svzq6hbp20",
+      "entry_id": 85475,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+      "pointer": "/text",
+      "span": [
+        572,
+        598
+      ],
+      "sense_id": "ws_np3aywv7t5f9",
+      "source_sense_key": "vts:гуляти#article/1",
+      "scope_key": "wc_y4svzq6hbp20/ws_np3aywv7t5f9/textbook-example"
+    },
+    {
+      "card_id": "wc_kj4qvd0z2c6f",
+      "entry_id": 95335,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+      "pointer": "/text",
+      "span": [
+        123,
+        146
+      ],
+      "sense_id": "ws_4n1cs9ashe26",
+      "source_sense_key": "vts:дивитися#article/1",
+      "scope_key": "wc_kj4qvd0z2c6f/ws_4n1cs9ashe26/textbook-example"
+    },
+    {
+      "card_id": "wc_4gwhrn64d98m",
+      "entry_id": 102549,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        605,
+        628
+      ],
+      "sense_id": "ws_c6fk1tatww29",
+      "source_sense_key": "vts:допомагати#article/1",
+      "scope_key": "wc_4gwhrn64d98m/ws_c6fk1tatww29/textbook-example"
+    },
+    {
+      "card_id": "wc_qp5msqsb9fzq",
+      "entry_id": 105869,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+      "pointer": "/text",
+      "span": [
+        790,
+        813
+      ],
+      "sense_id": "ws_cy6eg17ma1s6",
+      "source_sense_key": "vts:друг#article/1",
+      "scope_key": "wc_qp5msqsb9fzq/ws_cy6eg17ma1s6/textbook-example"
+    },
+    {
+      "card_id": "wc_9e056tqtgkgf",
+      "entry_id": 97867,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050",
+      "pointer": "/text",
+      "span": [
+        27,
+        59
+      ],
+      "sense_id": "ws_yktemmtxt8c5",
+      "source_sense_key": "vts:дія#article/1",
+      "scope_key": "wc_9e056tqtgkgf/ws_yktemmtxt8c5/textbook-example"
+    },
+    {
+      "card_id": "wc_w4me13yj3r2k",
+      "entry_id": 137888,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066",
+      "pointer": "/text",
+      "span": [
+        392,
+        410
+      ],
+      "sense_id": "ws_ktjjfkqyj3re",
+      "source_sense_key": "vts:заходити#I/1",
+      "scope_key": "wc_w4me13yj3r2k/ws_ktjjfkqyj3re/textbook-example"
+    },
+    {
+      "card_id": "wc_k73qexhmp0z4",
+      "entry_id": 180917,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065",
+      "pointer": "/text",
+      "span": [
+        694,
+        710
+      ],
+      "sense_id": "ws_915j4dh4xc0n",
+      "source_sense_key": "vts:куди#article/1",
+      "scope_key": "wc_k73qexhmp0z4/ws_915j4dh4xc0n/textbook-example"
+    },
+    {
+      "card_id": "wc_4q9w3j4e77gt",
+      "entry_id": 191390,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ],
+      "sense_id": "ws_rckst3bfp0pg",
+      "source_sense_key": "vts:любити#article/3",
+      "scope_key": "wc_4q9w3j4e77gt/ws_rckst3bfp0pg/textbook-example"
+    },
+    {
+      "card_id": "wc_hwfp5x61yhxy",
+      "entry_id": 205889,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0051",
+      "pointer": "/text",
+      "span": [
+        6,
+        23
+      ],
+      "sense_id": "ws_3ax4c8wz66xb",
+      "source_sense_key": "vts:могти#article/1",
+      "scope_key": "wc_hwfp5x61yhxy/ws_3ax4c8wz66xb/textbook-example"
+    },
+    {
+      "card_id": "wc_qj9tmdk3h2kv",
+      "entry_id": 211435,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+      "pointer": "/text",
+      "span": [
+        801,
+        820
+      ],
+      "sense_id": "ws_j5q7s41aezwy",
+      "source_sense_key": "vts:навчатися#article/0",
+      "scope_key": "wc_qj9tmdk3h2kv/ws_j5q7s41aezwy/textbook-example"
+    },
+    {
+      "card_id": "wc_v6505n1mccxw",
+      "entry_id": 222963,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+      "pointer": "/text",
+      "span": [
+        1036,
+        1056
+      ],
+      "sense_id": "ws_pdxdn992dhwg",
+      "source_sense_key": "vts:нарешті#article/1",
+      "scope_key": "wc_v6505n1mccxw/ws_pdxdn992dhwg/textbook-example"
+    },
+    {
+      "card_id": "wc_mksarbeeytde",
+      "entry_id": 275878,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004",
+      "pointer": "/text",
+      "span": [
+        106,
+        140
+      ],
+      "sense_id": "ws_fyq1mxvtrhga",
+      "source_sense_key": "vts:писати#article/1",
+      "scope_key": "wc_mksarbeeytde/ws_fyq1mxvtrhga/textbook-example"
+    },
+    {
+      "card_id": "wc_ktd3je2d66tr",
+      "entry_id": 306069,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        289,
+        307
+      ],
+      "sense_id": "ws_4n6hzdn99ekg",
+      "source_sense_key": "vts:потім#article/1",
+      "scope_key": "wc_ktd3je2d66tr/ws_4n6hzdn99ekg/textbook-example"
+    },
+    {
+      "card_id": "wc_febqqttxses2",
+      "entry_id": 309355,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+      "pointer": "/text",
+      "span": [
+        371,
+        387
+      ],
+      "sense_id": "ws_rk6hmzn5gyc0",
+      "source_sense_key": "vts:працювати#article/1",
+      "scope_key": "wc_febqqttxses2/ws_rk6hmzn5gyc0/textbook-example"
+    },
+    {
+      "card_id": "wc_jdzec32j5jad",
+      "entry_id": 310434,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050",
+      "pointer": "/text",
+      "span": [
+        145,
+        172
+      ],
+      "sense_id": "ws_f38fgkwaqqkn",
+      "source_sense_key": "vts:прибирати#article/1",
+      "scope_key": "wc_jdzec32j5jad/ws_f38fgkwaqqkn/textbook-example"
+    },
+    {
+      "card_id": "wc_1z714m00t0wn",
+      "entry_id": 324665,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014",
+      "pointer": "/text",
+      "span": [
+        660,
+        701
+      ],
+      "sense_id": "ws_w7w2cragx6x5",
+      "source_sense_key": "vts:професія#article/0",
+      "scope_key": "wc_1z714m00t0wn/ws_w7w2cragx6x5/textbook-example"
+    },
+    {
+      "card_id": "wc_qx6g6av4pwne",
+      "entry_id": 317122,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022",
+      "pointer": "/text",
+      "span": [
+        192,
+        232
+      ],
+      "sense_id": "ws_bxk78ct52x0t",
+      "source_sense_key": "vts:прізвище#article/1",
+      "scope_key": "wc_qx6g6av4pwne/ws_bxk78ct52x0t/textbook-example"
+    },
+    {
+      "card_id": "wc_918g9xampn77",
+      "entry_id": 283475,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+      "pointer": "/text",
+      "span": [
+        38,
+        55
+      ],
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "scope_key": "wc_918g9xampn77/ws_c4zswhkm50hz/textbook-example"
+    },
+    {
+      "card_id": "wc_747417qp1aa2",
+      "entry_id": 336997,
+      "field": "examples",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        162,
+        178
+      ],
+      "sense_id": "ws_sfq11eqe763v",
+      "source_sense_key": "vts:робити#article/1",
+      "scope_key": "wc_747417qp1aa2/ws_sfq11eqe763v/textbook-example"
+    },
+    {
+      "card_id": "wc_ar4jq8xbvd1f",
+      "entry_id": 364026,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+      "pointer": "/text",
+      "span": [
+        2,
+        33
+      ],
+      "sense_id": "ws_18tkkbhbfz7c",
+      "source_sense_key": "vts:смачно#article/3",
+      "scope_key": "wc_ar4jq8xbvd1f/ws_18tkkbhbfz7c/textbook-example"
+    },
+    {
+      "card_id": "wc_61gpnh7fkt0h",
+      "entry_id": 364888,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+      "pointer": "/text",
+      "span": [
+        694,
+        717
+      ],
+      "sense_id": "ws_xhe2mxarmkcd",
+      "source_sense_key": "vts:снідати#article/0",
+      "scope_key": "wc_61gpnh7fkt0h/ws_xhe2mxarmkcd/textbook-example"
+    },
+    {
+      "card_id": "wc_rp7fevd2hhwv",
+      "entry_id": 370542,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+      "pointer": "/text",
+      "span": [
+        798,
+        836
+      ],
+      "sense_id": "ws_wk52tsxd2j2p",
+      "source_sense_key": "vts:спочатку#article/1",
+      "scope_key": "wc_rp7fevd2hhwv/ws_wk52tsxd2j2p/textbook-example"
+    },
+    {
+      "card_id": "wc_xa55f1hddjbm",
+      "entry_id": 368511,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081",
+      "pointer": "/text",
+      "span": [
+        466,
+        486
+      ],
+      "sense_id": "ws_6v13fpwmr6yx",
+      "source_sense_key": "vts:співати#article/1",
+      "scope_key": "wc_xa55f1hddjbm/ws_6v13fpwmr6yx/textbook-example"
+    },
+    {
+      "card_id": "wc_47r5291z25s4",
+      "entry_id": 381665,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+      "pointer": "/text",
+      "span": [
+        1008,
+        1042
+      ],
+      "sense_id": "ws_ym772g9hetwr",
+      "source_sense_key": "vts:танцювати#article/1",
+      "scope_key": "wc_47r5291z25s4/ws_ym772g9hetwr/textbook-example"
+    },
+    {
+      "card_id": "wc_n8cp2z97e93q",
+      "entry_id": 393864,
+      "field": "examples",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ],
+      "sense_id": "ws_z3x27v28nn57",
+      "source_sense_key": "vts:тут#I/1",
+      "scope_key": "wc_n8cp2z97e93q/ws_z3x27v28nn57/textbook-example"
+    },
+    {
+      "card_id": "wc_44j85tkme8q8",
+      "entry_id": 414329,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004",
+      "pointer": "/text",
+      "span": [
+        78,
+        101
+      ],
+      "sense_id": "ws_ygkcdpfdyghn",
+      "source_sense_key": "vts:хотіти#article/1",
+      "scope_key": "wc_44j85tkme8q8/ws_ygkcdpfdyghn/textbook-example"
+    },
+    {
+      "card_id": "wc_043h3npd7ed4",
+      "entry_id": 420694,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082",
+      "pointer": "/text",
+      "span": [
+        807,
+        833
+      ],
+      "sense_id": "ws_083jgmxn0scr",
+      "source_sense_key": "vts:читати#article/1",
+      "scope_key": "wc_043h3npd7ed4/ws_083jgmxn0scr/textbook-example"
+    },
+    {
+      "card_id": "wc_33qv20nmgm94",
+      "entry_id": 415172,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106",
+      "pointer": "/text",
+      "span": [
+        686,
+        707
+      ],
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "scope_key": "wc_33qv20nmgm94/ws_byas06qy605q/textbook-example"
+    },
+    {
+      "card_id": "wc_f3w4ga64h4y1",
+      "entry_id": 83682,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        927,
+        994
+      ],
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "scope_key": "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/textbook-example"
+    },
+    {
+      "card_id": "wc_a9nng3hpfkq9",
+      "entry_id": 209599,
+      "field": "examples",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+      "pointer": "/text",
+      "span": [
+        142,
+        168
+      ],
+      "sense_id": "ws_brm3c1wfegdn",
+      "source_sense_key": "vts:мусити#article/1",
+      "scope_key": "wc_a9nng3hpfkq9/ws_brm3c1wfegdn/textbook-example"
+    },
+    {
+      "card_id": "wc_ats38w2t9akg",
+      "entry_id": 319823,
+      "field": "examples",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        112,
+        149
+      ],
+      "sense_id": "ws_yx2bpdp01cy6",
+      "source_sense_key": "vts:прокидатися#II/1",
+      "scope_key": "wc_ats38w2t9akg/ws_yx2bpdp01cy6/textbook-example"
     }
   ],
   "denominator": {
@@ -38311,7 +38787,33 @@
     "wc_vvbq92wwxskh/wc_vvbq92wwxskh/gloss_en": "gloss_no_allocated_sense",
     "wc_y4mfsa75a8dq/wc_y4mfsa75a8dq/gloss_en": "gloss_no_allocated_sense",
     "wc_yx5tjedf0xte/ws_cd47mmbnv00f/gloss_en": "gloss_no_sense_aligned_balla_witness",
-    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/gloss_en": "gloss_no_sense_aligned_balla_witness"
+    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_7edehzqd24wz/ws_jjee3899y5xb/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_zswwf0b1r8s1/ws_fkntkngmqt79/examples": "example_no_complete_textbook_sentence_found",
+    "wc_39m7asavdtt3/ws_tpvktyaq7nwe/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_t5mkqe7v31x3/ws_fddbgjterr9v/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_v7385p2vfmd7/ws_xzn6340fsvh0/examples": "example_no_complete_textbook_sentence_found",
+    "wc_hbtnjcpx6vxd/ws_3pa8f4my4qt8/examples": "example_no_complete_textbook_sentence_found",
+    "wc_pnye70yqdqxy/ws_xpwspgr73c2y/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_yx5tjedf0xte/ws_cd47mmbnv00f/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_7cq5e13zagb0/ws_t3516zz44re6/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_9cv96acr1frj/ws_9bwacnh6cd6z/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_5ac8vftv3pey/ws_d3s6z3b74bby/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_d578br9yyv83/ws_qgqt2bjb7324/examples": "example_no_complete_textbook_sentence_found",
+    "wc_3ytmbxews4cg/wc_3ytmbxews4cg/examples": "example_no_allocated_sense",
+    "wc_krh1w0gwn5w2/wc_krh1w0gwn5w2/examples": "example_no_allocated_sense",
+    "wc_f2xad8rbzgv2/wc_f2xad8rbzgv2/examples": "example_no_allocated_sense",
+    "wc_21cbx08fthn0/wc_21cbx08fthn0/examples": "example_no_allocated_sense",
+    "wc_b22c5cw8ddrm/wc_b22c5cw8ddrm/examples": "example_no_allocated_sense",
+    "wc_g8ft669hekw7/wc_g8ft669hekw7/examples": "example_no_allocated_sense",
+    "wc_3xqwne5jgn63/wc_3xqwne5jgn63/examples": "example_no_allocated_sense",
+    "wc_rn7hfetva0ve/wc_rn7hfetva0ve/examples": "example_no_allocated_sense",
+    "wc_vvbq92wwxskh/wc_vvbq92wwxskh/examples": "example_no_allocated_sense",
+    "wc_y4mfsa75a8dq/wc_y4mfsa75a8dq/examples": "example_no_allocated_sense",
+    "wc_0772arm98z39/wc_0772arm98z39/examples": "example_no_allocated_sense",
+    "wc_62djjmfxk1c8/wc_62djjmfxk1c8/examples": "example_no_allocated_sense",
+    "wc_tabtj29yne4z/wc_tabtj29yne4z/examples": "example_no_allocated_sense",
+    "wc_s5y8rpjnn3x0/wc_s5y8rpjnn3x0/examples": "example_no_allocated_sense"
   },
   "held_units": [
     {
@@ -40554,6 +41056,380 @@
         0,
         6
       ]
+    },
+    "wc_px86d59gp8r3/ws_yk0sp1dg1r5g/textbook-example": {
+      "card_id": "wc_px86d59gp8r3",
+      "sense_id": "ws_yk0sp1dg1r5g",
+      "source_sense_key": "vts:говорити#article/2",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047",
+      "pointer": "/text",
+      "span": [
+        185,
+        207
+      ]
+    },
+    "wc_pkd9csb7q432/ws_8dr06agye2qr/textbook-example": {
+      "card_id": "wc_pkd9csb7q432",
+      "sense_id": "ws_8dr06agye2qr",
+      "source_sense_key": "vts:готувати#article/3",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089",
+      "pointer": "/text",
+      "span": [
+        133,
+        169
+      ]
+    },
+    "wc_jc5hm24xj9g8/ws_q5csnrkb9fgx/textbook-example": {
+      "card_id": "wc_jc5hm24xj9g8",
+      "sense_id": "ws_q5csnrkb9fgx",
+      "source_sense_key": "vts:готівка#article/2",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122",
+      "pointer": "/text",
+      "span": [
+        338,
+        357
+      ]
+    },
+    "wc_y4svzq6hbp20/ws_np3aywv7t5f9/textbook-example": {
+      "card_id": "wc_y4svzq6hbp20",
+      "sense_id": "ws_np3aywv7t5f9",
+      "source_sense_key": "vts:гуляти#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0054",
+      "pointer": "/text",
+      "span": [
+        572,
+        598
+      ]
+    },
+    "wc_kj4qvd0z2c6f/ws_4n1cs9ashe26/textbook-example": {
+      "card_id": "wc_kj4qvd0z2c6f",
+      "sense_id": "ws_4n1cs9ashe26",
+      "source_sense_key": "vts:дивитися#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138",
+      "pointer": "/text",
+      "span": [
+        123,
+        146
+      ]
+    },
+    "wc_4gwhrn64d98m/ws_c6fk1tatww29/textbook-example": {
+      "card_id": "wc_4gwhrn64d98m",
+      "sense_id": "ws_c6fk1tatww29",
+      "source_sense_key": "vts:допомагати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084",
+      "pointer": "/text",
+      "span": [
+        605,
+        628
+      ]
+    },
+    "wc_qp5msqsb9fzq/ws_cy6eg17ma1s6/textbook-example": {
+      "card_id": "wc_qp5msqsb9fzq",
+      "sense_id": "ws_cy6eg17ma1s6",
+      "source_sense_key": "vts:друг#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043",
+      "pointer": "/text",
+      "span": [
+        790,
+        813
+      ]
+    },
+    "wc_9e056tqtgkgf/ws_yktemmtxt8c5/textbook-example": {
+      "card_id": "wc_9e056tqtgkgf",
+      "sense_id": "ws_yktemmtxt8c5",
+      "source_sense_key": "vts:дія#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050",
+      "pointer": "/text",
+      "span": [
+        27,
+        59
+      ]
+    },
+    "wc_w4me13yj3r2k/ws_ktjjfkqyj3re/textbook-example": {
+      "card_id": "wc_w4me13yj3r2k",
+      "sense_id": "ws_ktjjfkqyj3re",
+      "source_sense_key": "vts:заходити#I/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066",
+      "pointer": "/text",
+      "span": [
+        392,
+        410
+      ]
+    },
+    "wc_k73qexhmp0z4/ws_915j4dh4xc0n/textbook-example": {
+      "card_id": "wc_k73qexhmp0z4",
+      "sense_id": "ws_915j4dh4xc0n",
+      "source_sense_key": "vts:куди#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065",
+      "pointer": "/text",
+      "span": [
+        694,
+        710
+      ]
+    },
+    "wc_4q9w3j4e77gt/ws_rckst3bfp0pg/textbook-example": {
+      "card_id": "wc_4q9w3j4e77gt",
+      "sense_id": "ws_rckst3bfp0pg",
+      "source_sense_key": "vts:любити#article/3",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        284,
+        299
+      ]
+    },
+    "wc_hwfp5x61yhxy/ws_3ax4c8wz66xb/textbook-example": {
+      "card_id": "wc_hwfp5x61yhxy",
+      "sense_id": "ws_3ax4c8wz66xb",
+      "source_sense_key": "vts:могти#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0051",
+      "pointer": "/text",
+      "span": [
+        6,
+        23
+      ]
+    },
+    "wc_qj9tmdk3h2kv/ws_j5q7s41aezwy/textbook-example": {
+      "card_id": "wc_qj9tmdk3h2kv",
+      "sense_id": "ws_j5q7s41aezwy",
+      "source_sense_key": "vts:навчатися#article/0",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008",
+      "pointer": "/text",
+      "span": [
+        801,
+        820
+      ]
+    },
+    "wc_v6505n1mccxw/ws_pdxdn992dhwg/textbook-example": {
+      "card_id": "wc_v6505n1mccxw",
+      "sense_id": "ws_pdxdn992dhwg",
+      "source_sense_key": "vts:нарешті#article/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055",
+      "pointer": "/text",
+      "span": [
+        1036,
+        1056
+      ]
+    },
+    "wc_mksarbeeytde/ws_fyq1mxvtrhga/textbook-example": {
+      "card_id": "wc_mksarbeeytde",
+      "sense_id": "ws_fyq1mxvtrhga",
+      "source_sense_key": "vts:писати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004",
+      "pointer": "/text",
+      "span": [
+        106,
+        140
+      ]
+    },
+    "wc_ktd3je2d66tr/ws_4n6hzdn99ekg/textbook-example": {
+      "card_id": "wc_ktd3je2d66tr",
+      "sense_id": "ws_4n6hzdn99ekg",
+      "source_sense_key": "vts:потім#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        289,
+        307
+      ]
+    },
+    "wc_febqqttxses2/ws_rk6hmzn5gyc0/textbook-example": {
+      "card_id": "wc_febqqttxses2",
+      "sense_id": "ws_rk6hmzn5gyc0",
+      "source_sense_key": "vts:працювати#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000",
+      "pointer": "/text",
+      "span": [
+        371,
+        387
+      ]
+    },
+    "wc_jdzec32j5jad/ws_f38fgkwaqqkn/textbook-example": {
+      "card_id": "wc_jdzec32j5jad",
+      "sense_id": "ws_f38fgkwaqqkn",
+      "source_sense_key": "vts:прибирати#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050",
+      "pointer": "/text",
+      "span": [
+        145,
+        172
+      ]
+    },
+    "wc_1z714m00t0wn/ws_w7w2cragx6x5/textbook-example": {
+      "card_id": "wc_1z714m00t0wn",
+      "sense_id": "ws_w7w2cragx6x5",
+      "source_sense_key": "vts:професія#article/0",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014",
+      "pointer": "/text",
+      "span": [
+        660,
+        701
+      ]
+    },
+    "wc_qx6g6av4pwne/ws_bxk78ct52x0t/textbook-example": {
+      "card_id": "wc_qx6g6av4pwne",
+      "sense_id": "ws_bxk78ct52x0t",
+      "source_sense_key": "vts:прізвище#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022",
+      "pointer": "/text",
+      "span": [
+        192,
+        232
+      ]
+    },
+    "wc_918g9xampn77/ws_c4zswhkm50hz/textbook-example": {
+      "card_id": "wc_918g9xampn77",
+      "sense_id": "ws_c4zswhkm50hz",
+      "source_sense_key": "vts:піти#II/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061",
+      "pointer": "/text",
+      "span": [
+        38,
+        55
+      ]
+    },
+    "wc_747417qp1aa2/ws_sfq11eqe763v/textbook-example": {
+      "card_id": "wc_747417qp1aa2",
+      "sense_id": "ws_sfq11eqe763v",
+      "source_sense_key": "vts:робити#article/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071",
+      "pointer": "/text",
+      "span": [
+        162,
+        178
+      ]
+    },
+    "wc_ar4jq8xbvd1f/ws_18tkkbhbfz7c/textbook-example": {
+      "card_id": "wc_ar4jq8xbvd1f",
+      "sense_id": "ws_18tkkbhbfz7c",
+      "source_sense_key": "vts:смачно#article/3",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0137",
+      "pointer": "/text",
+      "span": [
+        2,
+        33
+      ]
+    },
+    "wc_61gpnh7fkt0h/ws_xhe2mxarmkcd/textbook-example": {
+      "card_id": "wc_61gpnh7fkt0h",
+      "sense_id": "ws_xhe2mxarmkcd",
+      "source_sense_key": "vts:снідати#article/0",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0043",
+      "pointer": "/text",
+      "span": [
+        694,
+        717
+      ]
+    },
+    "wc_rp7fevd2hhwv/ws_wk52tsxd2j2p/textbook-example": {
+      "card_id": "wc_rp7fevd2hhwv",
+      "sense_id": "ws_wk52tsxd2j2p",
+      "source_sense_key": "vts:спочатку#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055",
+      "pointer": "/text",
+      "span": [
+        798,
+        836
+      ]
+    },
+    "wc_xa55f1hddjbm/ws_6v13fpwmr6yx/textbook-example": {
+      "card_id": "wc_xa55f1hddjbm",
+      "sense_id": "ws_6v13fpwmr6yx",
+      "source_sense_key": "vts:співати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081",
+      "pointer": "/text",
+      "span": [
+        466,
+        486
+      ]
+    },
+    "wc_47r5291z25s4/ws_ym772g9hetwr/textbook-example": {
+      "card_id": "wc_47r5291z25s4",
+      "sense_id": "ws_ym772g9hetwr",
+      "source_sense_key": "vts:танцювати#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060",
+      "pointer": "/text",
+      "span": [
+        1008,
+        1042
+      ]
+    },
+    "wc_n8cp2z97e93q/ws_z3x27v28nn57/textbook-example": {
+      "card_id": "wc_n8cp2z97e93q",
+      "sense_id": "ws_z3x27v28nn57",
+      "source_sense_key": "vts:тут#I/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036",
+      "pointer": "/text",
+      "span": [
+        1152,
+        1172
+      ]
+    },
+    "wc_44j85tkme8q8/ws_ygkcdpfdyghn/textbook-example": {
+      "card_id": "wc_44j85tkme8q8",
+      "sense_id": "ws_ygkcdpfdyghn",
+      "source_sense_key": "vts:хотіти#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004",
+      "pointer": "/text",
+      "span": [
+        78,
+        101
+      ]
+    },
+    "wc_043h3npd7ed4/ws_083jgmxn0scr/textbook-example": {
+      "card_id": "wc_043h3npd7ed4",
+      "sense_id": "ws_083jgmxn0scr",
+      "source_sense_key": "vts:читати#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082",
+      "pointer": "/text",
+      "span": [
+        807,
+        833
+      ]
+    },
+    "wc_33qv20nmgm94/ws_byas06qy605q/textbook-example": {
+      "card_id": "wc_33qv20nmgm94",
+      "sense_id": "ws_byas06qy605q",
+      "source_sense_key": "vts:хто#article/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106",
+      "pointer": "/text",
+      "span": [
+        686,
+        707
+      ]
+    },
+    "wc_f3w4ga64h4y1/ws_syyrm7b3njsm/textbook-example": {
+      "card_id": "wc_f3w4ga64h4y1",
+      "sense_id": "ws_syyrm7b3njsm",
+      "source_sense_key": "vts:гривня#article/4",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064",
+      "pointer": "/text",
+      "span": [
+        927,
+        994
+      ]
+    },
+    "wc_a9nng3hpfkq9/ws_brm3c1wfegdn/textbook-example": {
+      "card_id": "wc_a9nng3hpfkq9",
+      "sense_id": "ws_brm3c1wfegdn",
+      "source_sense_key": "vts:мусити#article/1",
+      "record_key": "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141",
+      "pointer": "/text",
+      "span": [
+        142,
+        168
+      ]
+    },
+    "wc_ats38w2t9akg/ws_yx2bpdp01cy6/textbook-example": {
+      "card_id": "wc_ats38w2t9akg",
+      "sense_id": "ws_yx2bpdp01cy6",
+      "source_sense_key": "vts:прокидатися#II/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008",
+      "pointer": "/text",
+      "span": [
+        112,
+        149
+      ]
     }
   },
   "selection": {
@@ -42021,7 +42897,39 @@
     "balla:en-uk:row:18222": "sr_kvf76a0xpyjh",
     "balla:en-uk:row:20338": "sr_8x8eyjbntxsr",
     "balla:en-uk:row:61416": "sr_zsc3k9gz9185",
-    "balla:en-uk:row:65240": "sr_vpzy9a9bpdby"
+    "balla:en-uk:row:65240": "sr_vpzy9a9bpdby",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0047": "sr_xzmcvn9fppvh",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0089": "sr_k8ej9pzx0hyw",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0122": "sr_0kg7gkgkmfvx",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0054": "sr_4m766nrzfpbz",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0138": "sr_j79rvsfkzkx3",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0084": "sr_m4dsskayr8zv",
+    "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0043": "sr_2g1xmbe95swg",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0050": "sr_7hfmqxey0f0w",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066": "sr_gcprhq6peyy8",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0065": "sr_651kg1tfd5jp",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": "sr_1hmn6zqd1kc3",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0051": "sr_8ap0ghn651s1",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0008": "sr_whtqsj99bevg",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0055": "sr_714skah9mnf7",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0004": "sr_n9nfq473adgf",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0064": "sr_byh3mmevwtrr",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0000": "sr_cdq4k5jq7vg1",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050": "sr_9ms876z90p53",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0014": "sr_1h622w2g5j0e",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0022": "sr_c988asybxgr4",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0061": "sr_bjsc059tewnp",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0137": "sr_21sscdrvtznx",
+    "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0043": "sr_j324rb1kdjz7",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0055": "sr_39akq9jwnen2",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0081": "sr_cr8s7egfhd96",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0060": "sr_0e0f4cn67asy",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": "sr_5crwjw31hms0",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0004": "sr_a1b9qe6sn576",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0082": "sr_6x3ynvwx5kf5",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0106": "sr_4kgca0k3jecd",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0141": "sr_8nkg84qwc2t1",
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0008": "sr_mh9s3pqb2hzg"
   },
   "source_record_reuses": {
     "cefr:читати": {
@@ -42035,9 +42943,29 @@
       "locator": "ulif:ulif_dictua_entries:id:258655",
       "snapshot_id": "selected-row@sha256:ddaae6079b79e134df494c369782fecac754c50f2643f8270afacc4b35161acb",
       "source_record_id": "sr_bkdj52zw8ez7"
+    },
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0066": {
+      "source_record_id": "sr_gcprhq6peyy8",
+      "snapshot_id": "textbooks@sha256:b71e989620c0d88e6a2295b41b73a00f7f9f0c067682e54854154e61624dac96",
+      "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0066"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0071": {
+      "source_record_id": "sr_1hmn6zqd1kc3",
+      "snapshot_id": "textbooks@sha256:4fbe76511f23a722744231f28860acc08b858f6b74d40b5188e1634f818313b2",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0071"
+    },
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0050": {
+      "source_record_id": "sr_9ms876z90p53",
+      "snapshot_id": "textbooks@sha256:4fce26a51ce510db47cdc24f9d9d5eb966ca3a5239b59e2d583d246e576a1326",
+      "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0050"
+    },
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036": {
+      "source_record_id": "sr_5crwjw31hms0",
+      "snapshot_id": "textbooks@sha256:edde9dbbc4a7b352942aaa85302063a1aa153c707236667ab9eed85408aba00b",
+      "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0036"
     }
   },
-  "sources_sha256": "0bce6015ed244d64c22062c23be6655fc48f96b5fbfc89755c7d8b4af9b276a3",
+  "sources_sha256": "aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a",
   "stress_attempts": {
     "wc_043h3npd7ed4": [
       {
