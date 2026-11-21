@@ -61,14 +61,21 @@ def audit_exec(event: str, args: tuple) -> None:
     # before spawn/exec reads it, including when a test supplies env={}.
     if active and session_token is not None:
         environment = env if env is not None else os.environ
-        environment[SESSION_TOKEN_ENV] = session_token
+        if environment.get(SESSION_TOKEN_ENV) != session_token:
+            environment[SESSION_TOKEN_ENV] = session_token
     if active and not allow_real and child_directory is not None:
         environment = env if env is not None else os.environ
-        environment["LU_TEST_CURSOR_TARGETS"] = json.dumps(sorted(real_targets))
-        environment["LU_TEST_CURSOR_ROOTS"] = json.dumps(real_roots)
+        targets_json = json.dumps(sorted(real_targets))
+        if environment.get("LU_TEST_CURSOR_TARGETS") != targets_json:
+            environment["LU_TEST_CURSOR_TARGETS"] = targets_json
+        roots_json = json.dumps(real_roots)
+        if environment.get("LU_TEST_CURSOR_ROOTS") != roots_json:
+            environment["LU_TEST_CURSOR_ROOTS"] = roots_json
         entries = [entry for entry in environment.get("PYTHONPATH", "").split(os.pathsep) if entry]
         directory = str(child_directory)
-        environment["PYTHONPATH"] = os.pathsep.join([directory, *[entry for entry in entries if entry != directory]])
+        pythonpath = os.pathsep.join([directory, *[entry for entry in entries if entry != directory]])
+        if environment.get("PYTHONPATH") != pythonpath:
+            environment["PYTHONPATH"] = pythonpath
 
 
 def install(targets, roots, directory: Path | None) -> None:

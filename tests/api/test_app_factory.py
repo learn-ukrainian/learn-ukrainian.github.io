@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import sqlite3
 import subprocess
@@ -15,6 +16,7 @@ from fastapi.exception_handlers import websocket_request_validation_exception_ha
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
+from lu_machinery.api import fleet_workers_router
 from lu_machinery.api import main as api_main
 from lu_machinery.api.monitor_context import fixture_context, production_context
 from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
@@ -66,17 +68,33 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
 
 
 def test_factory_lifespan_is_wired_and_runs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    async def _idle_periodic(*_args, **_kwargs) -> None:
+        await asyncio.Future()
+
+    @asynccontextmanager
+    async def _no_snapshot_lifespan():
+        yield
+
     start_periodic_refresh = Mock()
     stop_periodic_refresh = Mock()
     monkeypatch.setattr(api_main, "preload_all", Mock())
     monkeypatch.setattr(api_main, "install_signal_logging", Mock())
+    monkeypatch.setattr(api_main, "warm_panel_metrics", Mock())
+    monkeypatch.setattr(api_main, "warm_pull_requests", Mock())
     monkeypatch.setattr(api_main, "seed_manifest_inventory", Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())
     monkeypatch.setattr(api_main, "warm_projection_cache", Mock())
+    monkeypatch.setattr(api_main, "schedule_state_scan_warmup", Mock())
+    monkeypatch.setattr(api_main, "refresh_projection_cache_periodically", _idle_periodic)
+    monkeypatch.setattr(api_main, "refresh_panel_metrics_periodically", _idle_periodic)
+    monkeypatch.setattr(api_main, "refresh_orient_periodically", _idle_periodic)
     monkeypatch.setattr(api_main, "start_periodic_refresh", start_periodic_refresh)
     monkeypatch.setattr(api_main, "stop_periodic_refresh", stop_periodic_refresh)
 
-    factory_app = api_main.create_app(fixture_context(tmp_path))
+    ctx = fixture_context(tmp_path)
+    factory_app = api_main.create_app(ctx)
+    monkeypatch.setattr(factory_app.state.metrics_snapshot, "lifespan", _no_snapshot_lifespan)
+    monkeypatch.setattr(fleet_workers_router.workers_snapshot(ctx), "lifespan", _no_snapshot_lifespan)
     with TestClient(factory_app):
         pass
 
