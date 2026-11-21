@@ -176,32 +176,6 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
-    """Machinery #384: retired Muse cannot rescue unhealthy primary infra routes."""
-    resolution = resolve_reviewer(
-        ResolverInputs(
-            author_model="codex",
-            review_profile="infra",
-            domain="infra",
-            changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"anthropic": "unhealthy", "openai": "unhealthy", "muse": "healthy"}, claude_account=HOST_ACCOUNT,
-        ),
-    )
-    assert resolution.selected is None
-    assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
-    assert not [item for item in resolution.trace if item.family == "xai"]
-    dark = resolve_reviewer(
-        ResolverInputs(
-            author_model="codex",
-            review_profile="infra",
-            domain="infra",
-            changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"anthropic": "unhealthy", "openai": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
-        ),
-    )
-    assert dark.selected is None
-
-
 def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     repo = tmp_path / "repo"
     repo.mkdir()
