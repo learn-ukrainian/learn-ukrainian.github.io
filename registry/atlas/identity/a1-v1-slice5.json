@@ -1,5 +1,5 @@
 {
-  "base_sha256": "20f03fed388347fbd8198d49fe47849611777d7be1305e41f8d835a1c169ea7f",
+  "base_sha256": "4c85c63d00ec519ffc408b8f619afb14d4cfec07da87913ced6c7854d4001715",
   "entries": [
     {
       "card_id": "wc_3xqwne5jgn63",
@@ -4293,6 +4293,24 @@
         "sr_nr6h7shteqbn"
       ],
       "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003\",\"snapshot_id\":\"textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2484",
+      "build_id": "a1-slice5-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_mwqvmdg2x29d"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050\",\"snapshot_id\":\"textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2485",
+      "build_id": "a1-slice5-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_dv0z5waqxh43"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107\",\"snapshot_id\":\"textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice5-allocation.v1",
@@ -10467,6 +10485,44 @@
           "snapshot_id": "textbooks@sha256:31f2333147d2ddefd34fa89bcdd1f52cece60bd28714c1bb270d7c42da262d1e",
           "status": "unique",
           "locator": "textbook:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0003",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_mwqvmdg2x29d",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050",
+          "snapshot_id": "textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:0fcca71e605d21b898fc7eff19974e845e93ad7819357b70954036a978ef5e83",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0050",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_dv0z5waqxh43",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
+          "snapshot_id": "textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:74f8f14dd3ea1ce87b51d4c72c795fcdeacfd1fce8a30dc6888fc591eeeefb0d",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
           "matched_by": "actual_Sources_tool_response"
         }
       ]

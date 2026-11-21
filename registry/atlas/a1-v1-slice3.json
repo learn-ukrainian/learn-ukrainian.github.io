@@ -1208,7 +1208,35 @@
     {"card_id":"wc_veegp1dr41hd","entry_id":373931,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0089","pointer":"/text","span":[1184,1215],"sense_id":"ws_5dd8tf605fxb","source_sense_key":"vts:стіл#1/1","scope_key":"wc_veegp1dr41hd/ws_5dd8tf605fxb/textbook-example"},
     {"card_id":"wc_tdpr4c96sg4p","entry_id":381081,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0072","pointer":"/text","span":[1119,1145],"sense_id":"ws_jnkhe98kn6q1","source_sense_key":"vts:так#1/1","scope_key":"wc_tdpr4c96sg4p/ws_jnkhe98kn6q1/textbook-example"},
     {"card_id":"wc_ej8v791n10g9","entry_id":98276,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0074","pointer":"/text","span":[275,302],"sense_id":"ws_xd4qsrpa3tq9","source_sense_key":"vts:добре#1/1","scope_key":"wc_ej8v791n10g9/ws_xd4qsrpa3tq9/textbook-example"},
-    {"card_id":"wc_a4ndp7w0v8dq","entry_id":14322,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060","pointer":"/text","span":[826,863],"sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","scope_key":"wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/textbook-example"}
+    {"card_id":"wc_a4ndp7w0v8dq","entry_id":14322,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060","pointer":"/text","span":[826,863],"sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","scope_key":"wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/textbook-example"},
+    {
+      "card_id": "wc_m5tzc8t3ck7z",
+      "sense_id": "ws_311bp37g4j0z",
+      "source_sense_key": "vts:вікно#1/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0021",
+      "pointer": "/text",
+      "span": [
+        691,
+        720
+      ],
+      "entry_id": 59992,
+      "field": "examples",
+      "scope_key": "wc_m5tzc8t3ck7z/ws_311bp37g4j0z/textbook-example-wave2"
+    },
+    {
+      "card_id": "wc_q3a3vqef00h0",
+      "sense_id": "ws_dnd6hs6qneme",
+      "source_sense_key": "vts:українець#1/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0030",
+      "pointer": "/text",
+      "span": [
+        606,
+        664
+      ],
+      "entry_id": 397247,
+      "field": "examples",
+      "scope_key": "wc_q3a3vqef00h0/ws_dnd6hs6qneme/textbook-example-wave2"
+    }
   ],
   "scopes": {
     "bilingual:vts:день#1/1": {"card_id":"wc_3n0n401kcgyz","sense_id":"ws_cs4j2dbwdg3d","source_sense_key":"vts:день#1/1","record_key":"balla:день","pointer":"/hits/0/word","span":[0,3]},
@@ -1849,7 +1877,29 @@
     "wc_veegp1dr41hd/ws_5dd8tf605fxb/textbook-example": {"card_id":"wc_veegp1dr41hd","sense_id":"ws_5dd8tf605fxb","source_sense_key":"vts:стіл#1/1","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0089","pointer":"/text","span":[1184,1215]},
     "wc_tdpr4c96sg4p/ws_jnkhe98kn6q1/textbook-example": {"card_id":"wc_tdpr4c96sg4p","sense_id":"ws_jnkhe98kn6q1","source_sense_key":"vts:так#1/1","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0072","pointer":"/text","span":[1119,1145]},
     "wc_ej8v791n10g9/ws_xd4qsrpa3tq9/textbook-example": {"card_id":"wc_ej8v791n10g9","sense_id":"ws_xd4qsrpa3tq9","source_sense_key":"vts:добре#1/1","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0074","pointer":"/text","span":[275,302]},
-    "wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/textbook-example": {"card_id":"wc_a4ndp7w0v8dq","sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060","pointer":"/text","span":[826,863]}
+    "wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/textbook-example": {"card_id":"wc_a4ndp7w0v8dq","sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","record_key":"textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0060","pointer":"/text","span":[826,863]},
+    "wc_m5tzc8t3ck7z/ws_311bp37g4j0z/textbook-example-wave2": {
+      "card_id": "wc_m5tzc8t3ck7z",
+      "sense_id": "ws_311bp37g4j0z",
+      "source_sense_key": "vts:вікно#1/1",
+      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0021",
+      "pointer": "/text",
+      "span": [
+        691,
+        720
+      ]
+    },
+    "wc_q3a3vqef00h0/ws_dnd6hs6qneme/textbook-example-wave2": {
+      "card_id": "wc_q3a3vqef00h0",
+      "sense_id": "ws_dnd6hs6qneme",
+      "source_sense_key": "vts:українець#1/1",
+      "record_key": "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0030",
+      "pointer": "/text",
+      "span": [
+        606,
+        664
+      ]
+    }
   },
   "stress_attempts": {
     "wc_h54f47k5py6b": [
@@ -2108,7 +2158,43 @@
     "wr_e74adf298269ee8e9e932b32f36d7a6027e825d89a28d727a30c29d3cafee3a5": {"entry_id":373931,"quotation":"На столі лежала кулькова ручка.","receipt_sha256":"bbf21f55d359c9c44159847cb524a62ddd89d70a0a6b80f525e3f88b4b7168d0","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_5dd8tf605fxb","source_sense_key":"vts:стіл#1/1","sources_sha256":"7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332","span":[1184,1215],"verdict":"APPROVE"},
     "wr_4dcd4a7995ae3c72c6916b6ceae86603af7f7260f68fe0e77a9f8b16e36d6071": {"entry_id":381081,"quotation":"Для чого вони так роблять?","receipt_sha256":"52dd03378a39bdf640a2dd748cf7babc0cfe23433f981060f7f4799df34f35bf","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_jnkhe98kn6q1","source_sense_key":"vts:так#1/1","sources_sha256":"7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332","span":[1119,1145],"verdict":"APPROVE"},
     "wr_6d6ca6d10e16ce63626e6d0e1c9ec981c3cff742ba5027c4a4f5d01fc43c39bd": {"entry_id":98276,"quotation":"Білий ведмідь\nдобре плаває.","receipt_sha256":"343f4d31f6e983c98635efc387c2666f9db5774fd18430a780d0880e116e0999","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xd4qsrpa3tq9","source_sense_key":"vts:добре#1/1","sources_sha256":"7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332","span":[275,302],"verdict":"APPROVE"},
-    "wr_0e85ac5136112e5a9eb60a9508e2b460a8a39a23105438a5872a650c7c8b1be8": {"entry_id":14322,"quotation":"Моя бабуся — найкраща в усьому світі.","receipt_sha256":"ab59a79f83133acd3a6519c1185109148f0e39ddaf5c1e408500f00373247f23","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","sources_sha256":"7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332","span":[826,863],"verdict":"APPROVE"}
+    "wr_0e85ac5136112e5a9eb60a9508e2b460a8a39a23105438a5872a650c7c8b1be8": {"entry_id":14322,"quotation":"Моя бабуся — найкраща в усьому світі.","receipt_sha256":"ab59a79f83133acd3a6519c1185109148f0e39ddaf5c1e408500f00373247f23","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_n2jq0wyw6qhq","source_sense_key":"vts:бабуся#1/1","sources_sha256":"7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332","span":[826,863],"verdict":"APPROVE"},
+    "wr_e6c5d648c333ee5d6dbb377c3b8c2c5116f61fade5f9d17fcbfbfc6d346396ec": {
+      "entry_id": 59992,
+      "quotation": "Папуга сумно розглядав вікна.",
+      "receipt_sha256": "5fcdffb427c0d6bd5cbb44e09a9d276bd752d31f4668ec39b555409634bc040e",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_311bp37g4j0z",
+      "source_sense_key": "vts:вікно#1/1",
+      "sources_sha256": "407cad5322eb78b754d785ca758b9def2a3906d5815bd1c62c434b334fe14613",
+      "span": [
+        691,
+        720
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_5eadb9078877ac184a72c42e0328dc4872bda105105b2848f9b527b1b70c28f8": {
+      "entry_id": 397247,
+      "quotation": "А для маленьких українців Тарас\nШевченко створив «Буквар».",
+      "receipt_sha256": "3e2760c1365eacad564cc8375a88d812b45c734dd612e0e71e6cbfa76a50a5c7",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_dnd6hs6qneme",
+      "source_sense_key": "vts:українець#1/1",
+      "sources_sha256": "407cad5322eb78b754d785ca758b9def2a3906d5815bd1c62c434b334fe14613",
+      "span": [
+        606,
+        664
+      ],
+      "verdict": "APPROVE"
+    }
   },
   "field_residuals": {"examples":"independent_a1_review_pending","collocations":"source_sense_alignment_unresolved","spelling_variants":"source_sense_alignment_unresolved","antonyms":"source_sense_alignment_unresolved","pos":"source_sense_alignment_unresolved","gender":"source_sense_alignment_unresolved","transliteration":"no_approved_derivation","grammatical_label":"source_sense_alignment_unresolved","register":"source_sense_alignment_unresolved","aspect":"source_sense_alignment_unresolved","frequency":"no_numeric_frequency","heritage_status":"source_sense_alignment_unresolved","english_gloss":"no_paired_bilingual_usage","mwe_frame":"source_sense_alignment_unresolved","synonyms":"source_sense_alignment_unresolved","sense_label":"source_sense_alignment_unresolved","gloss_en":"no_paired_bilingual_usage","definition_uk":"no_qualified_authority_receipt","spelling":"source_sense_alignment_unresolved","stress":"no_qualified_explicit_stress_receipt","paradigm":"source_sense_alignment_unresolved","mwe_form":"source_sense_alignment_unresolved","russification_exposed":"source_sense_alignment_unresolved","cefr":"source_sense_alignment_unresolved","wc_q3a3vqef00h0/ws_dnd6hs6qneme/definition_uk":"reference_only_non_definitional_meaning","wc_kejkzc45p460/ws_ft35mw3pykgg/definition_uk":"reference_only_non_definitional_meaning","wc_gsawj9bsnmxf/ws_5d6bsg0eak48/definition_uk":"reference_only_non_definitional_meaning","wc_npespt2997q4/ws_12gbg8v29spe/definition_uk":"reference_only_non_definitional_meaning","wc_zcjyvkafs1dp/ws_vjzn19yjb33a/definition_uk":"reference_only_non_definitional_meaning","wc_xk5x9nbt53hf/ws_2jqxspqpg519/definition_uk":"reference_only_non_definitional_meaning","wc_c2wqq0y4tdf3/ws_5vrr7t7yeadd/definition_uk":"reference_only_non_definitional_meaning","wc_4m61x36fvpyg/ws_yw1aqb3br3fz/definition_uk":"reference_only_non_definitional_meaning","wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/definition_uk":"reference_only_non_definitional_meaning","wc_kpafsy0mfg2a/ws_fkyx00tmh8ff/definition_uk":"reference_only_non_definitional_meaning","wc_ej8v791n10g9/ws_xd4qsrpa3tq9/definition_uk":"reference_only_non_definitional_meaning","wc_0n22c5p8st9r/wc_0n22c5p8st9r/gloss_en":"gloss_no_allocated_sense","wc_4m61x36fvpyg/ws_yw1aqb3br3fz/gloss_en":"gloss_no_qualified_sense_witness","wc_a4ndp7w0v8dq/ws_jmjd9a4nhav4/gloss_en":"gloss_no_qualified_sense_witness","wc_a4ndp7w0v8dq/ws_n2jq0wyw6qhq/gloss_en":"gloss_no_qualified_sense_witness","wc_c1vmktebvgsd/ws_n7bm5yxhv7zy/gloss_en":"gloss_no_sense_aligned_balla_witness","wc_c2wqq0y4tdf3/ws_5vrr7t7yeadd/gloss_en":"gloss_no_qualified_sense_witness","wc_ej8v791n10g9/ws_xd4qsrpa3tq9/gloss_en":"gloss_no_qualified_sense_witness","wc_ezw2j6fng108/wc_ezw2j6fng108/gloss_en":"gloss_no_allocated_sense","wc_ge2yhhdpc85b/ws_kjqp84y588e1/gloss_en":"gloss_no_sense_aligned_balla_witness","wc_gfcfzpebf6wf/wc_gfcfzpebf6wf/gloss_en":"gloss_no_allocated_sense","wc_jzzzhhz6gbkd/ws_bt6ax1av8zdm/gloss_en":"gloss_no_sense_aligned_balla_witness","wc_kejkzc45p460/ws_ft35mw3pykgg/gloss_en":"gloss_no_qualified_sense_witness","wc_m3nfhh9bzsdj/ws_vvxyvdrwdks2/gloss_en":"gloss_no_sense_aligned_balla_witness","wc_n1kd5yjsendz/ws_d3d82v15ra94/gloss_en":"gloss_no_sense_aligned_balla_witness","wc_npespt2997q4/ws_12gbg8v29spe/gloss_en":"gloss_no_qualified_sense_witness","wc_q3a3vqef00h0/ws_dnd6hs6qneme/gloss_en":"gloss_no_qualified_sense_witness","wc_xk5x9nbt53hf/ws_2jqxspqpg519/gloss_en":"gloss_no_qualified_sense_witness","wc_zcjyvkafs1dp/ws_vjzn19yjb33a/gloss_en":"gloss_no_qualified_sense_witness",
     "wc_ge2yhhdpc85b/ws_kjqp84y588e1/examples": "example_no_sense_matched_a1_sentence_found",
@@ -2116,16 +2202,14 @@
     "wc_9dxss4qn8h3d/ws_c57fbs9wv0vw/examples": "example_no_complete_textbook_sentence_found",
     "wc_m3nfhh9bzsdj/ws_vvxyvdrwdks2/examples": "example_no_complete_textbook_sentence_found",
     "wc_hn6g7zbfx7vj/ws_0h0t0xf4m3s7/examples": "example_no_complete_textbook_sentence_found",
-    "wc_9fhkdaedphth/ws_wffve5hxqs6v/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_9fhkdaedphth/ws_wffve5hxqs6v/examples": "rejected at exact-head Ukrainian review",
     "wc_gfcfzpebf6wf/wc_gfcfzpebf6wf/examples": "example_no_allocated_sense",
     "wc_0n22c5p8st9r/wc_0n22c5p8st9r/examples": "example_no_allocated_sense",
     "wc_ezw2j6fng108/wc_ezw2j6fng108/examples": "example_no_allocated_sense",
     "wc_npespt2997q4/ws_12gbg8v29spe/examples": "example_no_unambiguous_a1_sentence_for_sourced_sense",
     "wc_xk5x9nbt53hf/ws_2jqxspqpg519/examples": "example_no_complete_textbook_sentence_found",
-    "wc_q3a3vqef00h0/ws_dnd6hs6qneme/examples": "example_no_unambiguous_a1_sentence_for_sourced_sense",
     "wc_a4ndp7w0v8dq/ws_jmjd9a4nhav4/examples": "no_captured_qualified_source_example",
-    "wc_z437naq20d94/ws_hb9d9tmjm37d/examples": "rejected at exact-head Ukrainian review",
-    "wc_m5tzc8t3ck7z/ws_311bp37g4j0z/examples": "rejected at exact-head Ukrainian review"
+    "wc_z437naq20d94/ws_hb9d9tmjm37d/examples": "rejected at exact-head Ukrainian review"
   },
   "field_dependencies": {"examples":"exact authority claim and entry/sense correspondence, with independent review where required","collocations":"exact authority claim and entry/sense correspondence, with independent review where required","spelling_variants":"exact authority claim and entry/sense correspondence, with independent review where required","antonyms":"exact authority claim and entry/sense correspondence, with independent review where required","pos":"exact authority claim and entry/sense correspondence, with independent review where required","gender":"exact authority claim and entry/sense correspondence, with independent review where required","transliteration":"exact authority claim and entry/sense correspondence, with independent review where required","grammatical_label":"exact authority claim and entry/sense correspondence, with independent review where required","register":"exact authority claim and entry/sense correspondence, with independent review where required","aspect":"exact authority claim and entry/sense correspondence, with independent review where required","frequency":"exact authority claim and entry/sense correspondence, with independent review where required","heritage_status":"exact authority claim and entry/sense correspondence, with independent review where required","english_gloss":"exact authority claim and entry/sense correspondence, with independent review where required","mwe_frame":"exact authority claim and entry/sense correspondence, with independent review where required","synonyms":"exact authority claim and entry/sense correspondence, with independent review where required","sense_label":"exact authority claim and entry/sense correspondence, with independent review where required","gloss_en":"exact authority claim and entry/sense correspondence, with independent review where required","definition_uk":"exact authority claim and entry/sense correspondence, with independent review where required","spelling":"exact authority claim and entry/sense correspondence, with independent review where required","stress":"exact authority claim and entry/sense correspondence, with independent review where required","paradigm":"exact authority claim and entry/sense correspondence, with independent review where required","mwe_form":"exact authority claim and entry/sense correspondence, with independent review where required","russification_exposed":"exact authority claim and entry/sense correspondence, with independent review where required","cefr":"exact authority claim and entry/sense correspondence, with independent review where required"},
   "held_units": [
@@ -2277,9 +2361,17 @@
     "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0107": "sr_sg4t2pqb7kbj",
     "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0019": "sr_aanqc1wxw4s6",
     "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0072": "sr_wvff52nsqjfc",
-    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0074": "sr_bpcdjs7f85kq"
+    "textbook:chunk:2-klas-ukrmova-bolshakova-2019-2_s0074": "sr_bpcdjs7f85kq",
+    "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0023": "sr_wcmz7a45dba5",
+    "textbook:chunk:4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0021": "sr_hy768kvgban5",
+    "textbook:chunk:1-klas-bukvar-zaharijchuk-2025-2_s0030": "sr_00snty4zrnca"
   },
-  "sources_sha256": "7e4fecbdf8b47549bdbc02112743bac3cb97cb915f8fda0ec6a564384790d332",
-  "allocation_pins": {"base_sha256":"a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a","consumed_sha256":"89f553e7c97b6baee4e0082be95ec093ca0bbc448d8fd3d66426075b6034ffa5","companion_sha256":"5f49fca153a4b3212eaa3277dd90280c6d55947c7f4937e687dde73a0627d6b8","combined_sha256":"9bab973fed3f1a9d4b6d91d0e99fc63c3257f39326fa0f11d28a84688b6a9862"},
+  "sources_sha256": "407cad5322eb78b754d785ca758b9def2a3906d5815bd1c62c434b334fe14613",
+  "allocation_pins": {
+    "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
+    "consumed_sha256": "13305ab0596192d25f1125d7134f3d5d869648b323fc3b87e392696952fdb686",
+    "companion_sha256": "e0232f66a42aa8e82953ad0830e6e8639f6438bba9af9f49f97f5344534c3d15",
+    "combined_sha256": "552a15aa1b2871ee993c1ad483d71ca79b0d256206cc183bb0e818bc125d7b4a"
+  },
   "capture_call_overrides": {"vts:добре":"33-vts-cache","vts:донька":"20-vts-cache","vts:студентка":"12-vts-cache","vts:українець":"30-vts-cache","vts:українка":"31-vts-cache"}
 }
