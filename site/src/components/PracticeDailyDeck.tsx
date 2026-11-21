@@ -165,10 +165,10 @@ export default function PracticeDailyDeck({
           }}
           role="button"
           tabIndex={0}
-          aria-label={chromeString(chromeLocale, 'practice.tapToFlip')}
+          title={chromeString(chromeLocale, 'practice.tapToFlip')}
         >
           <div className="flashcard-inner">
-            <div className="flashcard-front">
+            <div className="flashcard-front" aria-hidden={flipped}>
               {currentItem ? (
                 <>
                   <span className="flashcard-word">{displayLemma(currentItem.lemma)}</span>
@@ -180,7 +180,7 @@ export default function PracticeDailyDeck({
                 </span>
               )}
             </div>
-            <div className="flashcard-back">
+            <div className="flashcard-back" aria-hidden={!flipped}>
               {currentItem ? (
                 <>
                   <span className="flashcard-word">{displayGloss || <ChromeText k="practice.meaningUnavailable" />}</span>
