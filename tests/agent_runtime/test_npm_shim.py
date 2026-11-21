@@ -360,22 +360,6 @@ def _write_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data), encoding="utf-8")
 
 
-# Empty template so a machine git template cannot install a hook that prunes
-# worktrees. One directory per process, under the managed temp lease.
-_EMPTY_GIT_TEMPLATE: tempfile.TemporaryDirectory[str] | None = None
-
-
-def _empty_git_template() -> str:
-    global _EMPTY_GIT_TEMPLATE
-    if _EMPTY_GIT_TEMPLATE is None:
-        # The name TMPDIR is what the temp-path lint accepts.
-        TMPDIR = os.environ.get("TMPDIR")
-        if TMPDIR is None:
-            TMPDIR = os.fspath(ensure_scratch_root())
-        _EMPTY_GIT_TEMPLATE = tempfile.TemporaryDirectory(prefix="npm-shim-git-template-", dir=TMPDIR)
-    return _EMPTY_GIT_TEMPLATE.name
-
-
 def _git(cwd: Path, *args: str) -> None:
     """Run git from ``/usr/bin`` with no inherited config and no detached maintenance.
 
@@ -392,7 +376,9 @@ def _git(cwd: Path, *args: str) -> None:
         "HOME": str(cwd),
         "GIT_CONFIG_NOSYSTEM": "1",
         "GIT_CONFIG_GLOBAL": os.devnull,
-        "GIT_TEMPLATE_DIR": _empty_git_template(),
+        # An empty value copies no template, so no hook is installed, and it
+        # does not need a directory from the parent environment.
+        "GIT_TEMPLATE_DIR": "",
         "GIT_CONFIG_COUNT": "3",
         "GIT_CONFIG_KEY_0": "maintenance.auto",
         "GIT_CONFIG_VALUE_0": "false",
@@ -501,6 +487,11 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     allocated outside that ancestor. Callers delete ``ephemeral_root`` when set.
     """
     root, relocated = _root_outside_protected_ancestors(tmp_path)
+    # A relocated root is already a private directory. Otherwise the tooling
+    # repo, fake binaries and log would keep fixed names under a tmp pytest
+    # reuses across parameters.
+    if not relocated:
+        root = _private_checkout(root, "layout-")
     tooling = root / "tooling"
     shim_dir = _release_shim_dir(tooling)
     _git(tooling, "init", "-q", "-b", "main")
