@@ -102,6 +102,15 @@ def test_orient_fresh_query_bypasses_cache(monkeypatch):
     assert "decisions_total" not in failed_data["meta"]["governance"]
     assert calls["governance"] == 4
 
+    after_failed_fresh = client.get("/api/orient?sections=governance")
+    assert after_failed_fresh.status_code == 200
+    after_data = after_failed_fresh.json()
+    assert after_data["governance"]["decisions_total"] == 3
+    assert after_data["meta"]["governance"]["cache"] == "hit"
+    assert "error" not in after_data["meta"]["governance"]
+    assert after_data["meta"]["governance"]["decisions_total"] == 3
+    assert calls["governance"] == 4
+
 
 def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
     """Product ``pipeline`` section (TTL 0) serves aged values stale while refresh is gated.
@@ -176,42 +185,63 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
 def test_orient_generated_at_floor_reflects_oldest_section(monkeypatch):
     """Top-level ``generated_at`` is the oldest section's timestamp.
 
-    Regression for GH #1309 / reviewer CONCERN C1: a response mixing a cached
-    product section (``wiki``, TTL 120 s) and a freshly collected one
-    (``pipeline``, TTL 0 s) must label the response with the oldest section's
-    ``generated_at``, not request time.
+    Regression for GH #1309 / reviewer CONCERN C1: a response mixing cached
+    product sections (``wiki`` and ``governance``, TTL 120 s) and a freshly
+    collected one (``pipeline``, TTL 0 s) with the oldest section in the middle
+    must label the response with the oldest section's ``generated_at``, not the
+    first, last, or request timestamp.
     """
     wiki_payload = {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
+    governance_payload = {
+        "decisions_total": 1,
+        "decisions_stale": 0,
+        "decisions_approaching_expiry": 0,
+        "adrs_total": 1,
+        "adrs_warnings": 0,
+        "adrs_errors": 0,
+    }
     pipeline_payload = {"summary": {"totals": {"total": 1}}}
     current_ts = {"value": "2026-11-21T00:00:01Z"}
 
     monkeypatch.setattr(api_main, "_isoformat_z", lambda _dt: current_ts["value"])
     monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda ctx=None: wiki_payload)
+    monkeypatch.setattr(product_orient, "collect_governance_orient_data", lambda ctx=None: governance_payload)
 
     async def fake_pipeline(ctx=None):
         return pipeline_payload
 
     monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
 
-    warm = client.get("/api/orient?sections=wiki")
-    assert warm.status_code == 200
-    wiki_ts = warm.json()["meta"]["wiki"]["generated_at"]
+    warm_wiki = client.get("/api/orient?sections=wiki")
+    assert warm_wiki.status_code == 200
+    wiki_ts = warm_wiki.json()["meta"]["wiki"]["generated_at"]
     assert wiki_ts == "2026-11-21T00:00:01Z"
 
+    current_ts["value"] = "2026-11-21T00:00:03Z"
+    warm_governance = client.get("/api/orient?sections=governance")
+    assert warm_governance.status_code == 200
+    governance_ts = warm_governance.json()["meta"]["governance"]["generated_at"]
+    assert governance_ts == "2026-11-21T00:00:03Z"
+
     current_ts["value"] = "2026-11-21T00:00:05Z"
-    combined = client.get("/api/orient?sections=wiki,pipeline")
+    combined = client.get("/api/orient?sections=pipeline,wiki,governance")
     assert combined.status_code == 200
     data = combined.json()
-    assert data["wiki"] == wiki_payload
+    assert list(data["meta"]) == ["pipeline", "wiki", "governance"]
     assert data["pipeline"] == pipeline_payload
-    assert "error" not in data["meta"]["wiki"]
+    assert data["wiki"] == wiki_payload
+    assert data["governance"] == governance_payload
     assert "error" not in data["meta"]["pipeline"]
-    assert data["meta"]["wiki"]["cache"] == "hit"
-    assert data["meta"]["wiki"]["generated_at"] == wiki_ts
+    assert "error" not in data["meta"]["wiki"]
+    assert "error" not in data["meta"]["governance"]
     assert data["meta"]["pipeline"]["cache"] == "miss"
     assert data["meta"]["pipeline"]["generated_at"] == "2026-11-21T00:00:05Z"
+    assert data["meta"]["wiki"]["cache"] == "hit"
+    assert data["meta"]["wiki"]["generated_at"] == wiki_ts
+    assert data["meta"]["governance"]["cache"] == "hit"
+    assert data["meta"]["governance"]["generated_at"] == governance_ts
 
     section_timestamps = [m["generated_at"] for m in data["meta"].values() if m.get("generated_at")]
-    assert section_timestamps == ["2026-11-21T00:00:01Z", "2026-11-21T00:00:05Z"]
+    assert section_timestamps == ["2026-11-21T00:00:05Z", "2026-11-21T00:00:01Z", "2026-11-21T00:00:03Z"]
     assert data["generated_at"] == wiki_ts
     assert data["generated_at"] == min(section_timestamps)
