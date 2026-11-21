@@ -162,7 +162,10 @@ export default function CoursesTrack({
           >
             {CHROME_STRINGS[chromeLocale]['practice.courses.badgeCulture']}
           </span>
-          <span className="k3-mode-title">
+          <span
+            className="k3-mode-title"
+            data-testid="practice-course-title-culture-error-correction"
+          >
             {chromeLocale === 'uk' ? CULTURE_DECK_META.title : CULTURE_DECK_META.en}
           </span>
           {chromeLocale === 'en' ? (
@@ -173,7 +176,10 @@ export default function CoursesTrack({
               {CHROME_STRINGS.en['practice.courses.subtitle.culture']}
             </span>
           ) : null}
-          <span className="k3-mode-step">
+          <span
+            className="k3-mode-step"
+            data-testid="practice-course-step-culture-error-correction"
+          >
             {chromeLocale === 'uk' ? CULTURE_DECK_META.step : CULTURE_DECK_META.stepEn}
           </span>
           <span className="k3-mode-desc">
