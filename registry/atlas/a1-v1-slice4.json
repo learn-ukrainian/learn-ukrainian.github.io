@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "1da304956bb6a345e40da1bc969b7a0766f0f93b756bb8f04e083090c397bfd8",
-    "companion_sha256": "629a8ac52b704494b837a2c5325b6fc70e07b947be75fa390e59bdb60db2b79c",
+    "combined_sha256": "e92e91e5aae6c2547805d7a72c114ce93e62072f5b36c3d0b59c640b28c2e073",
+    "companion_sha256": "11dd7026406ca5293d83db64cb43fac1b85a8a0fb299b76c1724fd8e89e82de9",
     "consumed_sha256": "3ee11d9d0535068c5ccf372a56b4b9e99176b81c484104d3007ac6663c2c92d4",
     "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
     "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c"
@@ -12477,20 +12477,6 @@
       ]
     },
     {
-      "card_id": "wc_tjwe015jd9zr",
-      "entry_id": 162570,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:кафе",
-      "scope_key": "wc_tjwe015jd9zr:vts:кафе#unnumbered/1:definition_uk",
-      "sense_id": "ws_6fx9yb2jkse4",
-      "source_sense_key": "vts:кафе#unnumbered/1",
-      "span": [
-        23,
-        44
-      ]
-    },
-    {
       "card_id": "wc_4r15bhx0tzq9",
       "entry_id": 334224,
       "field": "spelling",
@@ -16514,20 +16500,6 @@
       "span": [
         0,
         2
-      ]
-    },
-    {
-      "card_id": "wc_pjpsnj7c7ctd",
-      "entry_id": 200835,
-      "field": "definition_uk",
-      "pointer": "/text",
-      "record_key": "vts:метро",
-      "scope_key": "wc_pjpsnj7c7ctd:vts:метро#unnumbered/1:definition_uk",
-      "sense_id": "ws_0tp6dp7ap1zq",
-      "source_sense_key": "vts:метро#unnumbered/1",
-      "span": [
-        25,
-        50
       ]
     },
     {
@@ -24187,6 +24159,20 @@
         26,
         116
       ]
+    },
+    {
+      "card_id": "wc_xhzws68qph50",
+      "entry_id": 158130,
+      "field": "definition_uk",
+      "pointer": "/text",
+      "record_key": "vts:кав'ярня",
+      "scope_key": "definition:vts:кав'ярня#unnumbered/1",
+      "sense_id": "ws_6nz17rc3jtw0",
+      "source_sense_key": "vts:кав'ярня#unnumbered/1",
+      "span": [
+        26,
+        101
+      ]
     }
   ],
   "denominator": {
@@ -24255,7 +24241,8 @@
     "wc_8syxw71fkym0/wc_8syxw71fkym0/definition_uk": "reference_only_or_no_unique_admitted_sense",
     "wc_g59eyf8q3f8b/wc_g59eyf8q3f8b/definition_uk": "reference_only_or_no_unique_admitted_sense",
     "wc_jzn5f3w88gz6/wc_jzn5f3w88gz6/definition_uk": "reference_only_or_no_unique_admitted_sense",
-    "wc_xhzws68qph50/wc_xhzws68qph50/definition_uk": "reference_only_or_no_unique_admitted_sense"
+    "wc_pjpsnj7c7ctd/ws_0tp6dp7ap1zq/definition_uk": "reference_only_non_definitional_meaning",
+    "wc_tjwe015jd9zr/ws_6fx9yb2jkse4/definition_uk": "reference_only_non_definitional_meaning"
   },
   "held_units": [
     {
@@ -24856,11 +24843,6 @@
       "source": "sum20"
     },
     {
-      "lemma": "кав'ярня",
-      "reason": "no_unique_admitted_witness",
-      "source": "vts"
-    },
-    {
       "call_key": "56-sum20",
       "lemma": "кав'ярня",
       "reason": "not_consumed_for_meaning; actual_official_or_mirror_role_retained_in_call",
@@ -24914,14 +24896,6 @@
       "dependency": "qualified sense-bearing authority span",
       "entry_id": 97787,
       "lemma": "дістатися",
-      "owner": "Atlas coordinator",
-      "reason": "reference_only_or_no_unique_admitted_sense",
-      "source": "meaning"
-    },
-    {
-      "dependency": "qualified sense-bearing authority span",
-      "entry_id": 158130,
-      "lemma": "кав'ярня",
       "owner": "Atlas coordinator",
       "reason": "reference_only_or_no_unique_admitted_sense",
       "source": "meaning"
@@ -25212,6 +25186,17 @@
   },
   "schema_version": "atlas-a1-slice4-manifest.v1",
   "scopes": {
+    "definition:vts:кав'ярня#unnumbered/1": {
+      "card_id": "wc_xhzws68qph50",
+      "pointer": "/text",
+      "record_key": "vts:кав'ярня",
+      "sense_id": "ws_6nz17rc3jtw0",
+      "source_sense_key": "vts:кав'ярня#unnumbered/1",
+      "span": [
+        26,
+        101
+      ]
+    },
     "wc_0nrnjzb8y2hr:vts:вокзал#unnumbered/1:definition_uk": {
       "card_id": "wc_0nrnjzb8y2hr",
       "pointer": "/text",
@@ -27051,6 +27036,7 @@
     "vts:додому": "sr_hpvse933jjvv",
     "vts:замовляти": "sr_4zyefsm3nnb8",
     "vts:зупинка": "sr_4mrr0j0pzw9r",
+    "vts:кав'ярня": "sr_t948ex1qxtvn",
     "vts:карта": "sr_pyzzbnhy736e",
     "vts:картка": "sr_evzy950gcped",
     "vts:кафе": "sr_w5yzw4r9t27p",
@@ -27093,7 +27079,7 @@
     "vts:іти": "sr_brf4b2fj8qed",
     "vts:їхати": "sr_p9fk8j71rqen"
   },
-  "sources_sha256": "04f1740d4e4716102c6b8d766a5fbba51f5da0468a234941275afff305b4f5ef",
+  "sources_sha256": "b2d6b4cb94e5b49bf56ba7d2a9641002acb98850726f667e45470393a9cd373c",
   "stress_attempts": {
     "wc_0nrnjzb8y2hr": [
       {
