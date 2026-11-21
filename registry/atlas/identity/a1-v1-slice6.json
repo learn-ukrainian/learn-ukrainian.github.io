@@ -1,5 +1,5 @@
 {
-  "base_sha256": "ecfbd4f369f1d3cce16650019b57255f8691976bae886c794031ad509faa5ec2",
+  "base_sha256": "b6385ab3e982a49451f44898d894d5f514847db7c95ef07f595675015a1101f1",
   "entries": [
     {
       "card_id": "wc_v3w185cm66rw",
@@ -4206,6 +4206,51 @@
         "sr_nwvvwj33kh07"
       ],
       "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121\",\"snapshot_id\":\"textbooks@sha256:6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2486",
+      "build_id": "a1-slice6-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_xefz5y0w9w47"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0046\",\"snapshot_id\":\"textbooks@sha256:99925c0aec9996916e0dba16d933ea9c4e35d9c282e61c80698573c18bebd911\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2487",
+      "build_id": "a1-slice6-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_fm2d1py8ag7e"
+      ],
+      "evidence": "{\"locator\":\"textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067\",\"snapshot_id\":\"textbooks@sha256:4c9ee5cc3cd03d4a3380fe8d827256f2a0edd5a617e3448b13a5fdb485f4fc33\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2488",
+      "build_id": "a1-slice6-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_vakwnr3jgy08"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0054\",\"snapshot_id\":\"textbooks@sha256:7da3f8c1bcd1d632c1e7994f803f8399d9d49b906a587a4a5d195a62ff72adc5\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2489",
+      "build_id": "a1-slice6-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_awbhghvqx0q5"
+      ],
+      "evidence": "{\"locator\":\"textbook:1-klas-bukvar-zaharijchuk-2025-2_s0084\",\"snapshot_id\":\"textbooks@sha256:f42b87b1acdb291ef0781ce9abf186776bdf5d373695684cd6e17ba2bdbfd5d2\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "event_id": "ie_2490",
+      "build_id": "a1-slice6-examples-wave2-12638",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_wtrk385f5466"
+      ],
+      "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0087\",\"snapshot_id\":\"textbooks@sha256:fa63b5ed5f5bed28820ee6ac2e8c52961afef58da449a6def075ee52d4f7eabf\",\"source_id\":\"textbooks\"}"
     }
   ],
   "schema_version": "atlas-a1-slice6-allocation.v1",
@@ -10425,6 +10470,101 @@
           "snapshot_id": "textbooks@sha256:6daeb99f91e0827147cfa95be56b96888a4188eced426647e84f3a3b02fe81da",
           "status": "unique",
           "locator": "textbook:4-klas-ukrayinska-mova-kravtsova-2021-1_s0121",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_xefz5y0w9w47",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0046",
+          "snapshot_id": "textbooks@sha256:99925c0aec9996916e0dba16d933ea9c4e35d9c282e61c80698573c18bebd911"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:99925c0aec9996916e0dba16d933ea9c4e35d9c282e61c80698573c18bebd911",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0046",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_fm2d1py8ag7e",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067",
+          "snapshot_id": "textbooks@sha256:4c9ee5cc3cd03d4a3380fe8d827256f2a0edd5a617e3448b13a5fdb485f4fc33"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:4c9ee5cc3cd03d4a3380fe8d827256f2a0edd5a617e3448b13a5fdb485f4fc33",
+          "status": "unique",
+          "locator": "textbook:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_vakwnr3jgy08",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0054",
+          "snapshot_id": "textbooks@sha256:7da3f8c1bcd1d632c1e7994f803f8399d9d49b906a587a4a5d195a62ff72adc5"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:7da3f8c1bcd1d632c1e7994f803f8399d9d49b906a587a4a5d195a62ff72adc5",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0054",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_awbhghvqx0q5",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0084",
+          "snapshot_id": "textbooks@sha256:f42b87b1acdb291ef0781ce9abf186776bdf5d373695684cd6e17ba2bdbfd5d2"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:f42b87b1acdb291ef0781ce9abf186776bdf5d373695684cd6e17ba2bdbfd5d2",
+          "status": "unique",
+          "locator": "textbook:1-klas-bukvar-zaharijchuk-2025-2_s0084",
+          "matched_by": "actual_Sources_tool_response"
+        }
+      ]
+    },
+    {
+      "source_record_id": "sr_wtrk385f5466",
+      "source_id": "textbooks",
+      "aliases": [
+        {
+          "kind": "uid",
+          "key": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0087",
+          "snapshot_id": "textbooks@sha256:fa63b5ed5f5bed28820ee6ac2e8c52961afef58da449a6def075ee52d4f7eabf"
+        }
+      ],
+      "correspondence": [
+        {
+          "snapshot_id": "textbooks@sha256:fa63b5ed5f5bed28820ee6ac2e8c52961afef58da449a6def075ee52d4f7eabf",
+          "status": "unique",
+          "locator": "textbook:2-klas-ukrmova-bolshakova-2019-1_s0087",
           "matched_by": "actual_Sources_tool_response"
         }
       ]

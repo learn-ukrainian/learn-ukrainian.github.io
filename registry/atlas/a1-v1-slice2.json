@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "89f553e7c97b6baee4e0082be95ec093ca0bbc448d8fd3d66426075b6034ffa5",
-    "companion_sha256": "e62c63254f6f696c0c1a5a9a075e12f078bbd91694dcaf885b94b737b9b79eff"
+    "combined_sha256": "13305ab0596192d25f1125d7134f3d5d869648b323fc3b87e392696952fdb686",
+    "companion_sha256": "bf73c57185515c57b7852f462f731bb73a935b58cc8c69a25e897cb29d012e3a"
   },
   "approved_plan_sha256": "51da87dc0fe1c079468d9c3a86f4ebfa67ac4f432acc73a2871ee8d9c39bba9b",
   "card_ids": [
@@ -267,7 +267,21 @@
     {"card_id":"wc_5b36dst0her6","entry_id":429081,"field":"examples","record_key":"textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0140","pointer":"/text","span":[102,118],"sense_id":"ws_s1qye56c79fj","source_sense_key":"vts:щодня#unnumbered/1","scope_key":"wc_5b36dst0her6/ws_s1qye56c79fj/textbook-example"},
     {"card_id":"wc_vq34ms5wtfev","entry_id":441799,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0063","pointer":"/text","span":[0,30],"sense_id":"ws_d00nn55n2c4j","source_sense_key":"vts:ярмарок#unnumbered/1","scope_key":"wc_vq34ms5wtfev/ws_d00nn55n2c4j/textbook-example"},
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"examples","record_key":"textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0125","pointer":"/text","span":[361,387],"sense_id":"ws_s3rt3g7whc27","source_sense_key":"vts:швидко#unnumbered/1","scope_key":"wc_0r1cdw5z36cd/ws_s3rt3g7whc27/textbook-example"},
-    {"card_id":"wc_da7t5vpprjw3","entry_id":441309,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137","pointer":"/text","span":[152,188],"sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","scope_key":"wc_da7t5vpprjw3/ws_30rcqnyr84d2/textbook-example"}
+    {"card_id":"wc_da7t5vpprjw3","entry_id":441309,"field":"examples","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137","pointer":"/text","span":[152,188],"sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","scope_key":"wc_da7t5vpprjw3/ws_30rcqnyr84d2/textbook-example"},
+    {
+      "card_id": "wc_n1g44brn5vs2",
+      "sense_id": "ws_v6f1shn82zy4",
+      "source_sense_key": "vts:щедрівка#unnumbered/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0043",
+      "pointer": "/text",
+      "span": [
+        363,
+        412
+      ],
+      "entry_id": 428619,
+      "field": "examples",
+      "scope_key": "wc_n1g44brn5vs2/ws_v6f1shn82zy4/textbook-example-wave2"
+    }
   ],
   "denominator": {
     "all_rows": 2144,
@@ -461,7 +475,18 @@
     "wc_5b36dst0her6/ws_s1qye56c79fj/textbook-example": {"card_id":"wc_5b36dst0her6","sense_id":"ws_s1qye56c79fj","source_sense_key":"vts:щодня#unnumbered/1","record_key":"textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0140","pointer":"/text","span":[102,118]},
     "wc_vq34ms5wtfev/ws_d00nn55n2c4j/textbook-example": {"card_id":"wc_vq34ms5wtfev","sense_id":"ws_d00nn55n2c4j","source_sense_key":"vts:ярмарок#unnumbered/1","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0063","pointer":"/text","span":[0,30]},
     "wc_0r1cdw5z36cd/ws_s3rt3g7whc27/textbook-example": {"card_id":"wc_0r1cdw5z36cd","sense_id":"ws_s3rt3g7whc27","source_sense_key":"vts:швидко#unnumbered/1","record_key":"textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0125","pointer":"/text","span":[361,387]},
-    "wc_da7t5vpprjw3/ws_30rcqnyr84d2/textbook-example": {"card_id":"wc_da7t5vpprjw3","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137","pointer":"/text","span":[152,188]}
+    "wc_da7t5vpprjw3/ws_30rcqnyr84d2/textbook-example": {"card_id":"wc_da7t5vpprjw3","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","record_key":"textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137","pointer":"/text","span":[152,188]},
+    "wc_n1g44brn5vs2/ws_v6f1shn82zy4/textbook-example-wave2": {
+      "card_id": "wc_n1g44brn5vs2",
+      "sense_id": "ws_v6f1shn82zy4",
+      "source_sense_key": "vts:щедрівка#unnumbered/1",
+      "record_key": "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0043",
+      "pointer": "/text",
+      "span": [
+        363,
+        412
+      ]
+    }
   },
   "source_record_ids": {
     "balla-ambulance": "sr_b0mm6jnrr7at",
@@ -561,9 +586,10 @@
     "textbook:chunk:3-klas-ukrainska-mova-savchenko-2020-2_s0140": "sr_8vg8fhdg572b",
     "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0063": "sr_nvhzfhyg2edy",
     "textbook:chunk:4-klas-ukrayinska-mova-savchenko-2021-2_s0125": "sr_ej4nytxakh2f",
-    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137": "sr_cxfbz2b8wa2r"
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-1_s0137": "sr_cxfbz2b8wa2r",
+    "textbook:chunk:2-klas-ukrmova-vashulenko-2019-2_s0043": "sr_xdkpmac6wmq1"
   },
-  "sources_sha256": "c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88",
+  "sources_sha256": "3925eafb29001a611a956318e66786c91ddaef5f512924d37877c8d4179d7386",
   "stress_attempts": {
     "wc_08svjhdbe0fq": [{"source_id":"ulif","state":"unmarked"},{"evidence_call":"4-sum20","source_id":"sum20","state":"not_found"},{"reason":"admitted_header_has_no_explicit_mark","source_id":"vts_busel_slovnyk_me","state":"unmarked"}],
     "wc_0r1cdw5z36cd": [{"claim":{"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"stress","pointer":"/canonical_headword","record_key":"ulif:швидко","span":[0,7]},"source_id":"ulif","state":"supported"},{"evidence_call":"2-sum20","source_id":"sum20","state":"not_found"},{"reason":"not_consumed_after_ULIF_receipt","source_id":"vts_busel_slovnyk_me","state":"unavailable"}],
