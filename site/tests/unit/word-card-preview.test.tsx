@@ -233,7 +233,8 @@ describe('readable grouped release pages', () => {
       f('wc_a', 'stress', 'замо́к'), f('wc_a', 'stress', '<script>globalThis.x=1</script>', 'evil'), f('wc_a', 'pos', 'noun', 'vesum'), f('wc_a', 'cefr', 'A1', 'puls')] },
     { card_id: 'wc_b', card_kind: 'lexeme', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_b', 'spelling', 'замок'), f('wc_b', 'stress', 'за́мок'),
       f('wc_b', 'paradigm', { slot: 'v_naz.s', forms: ['за́мок'] }), f('wc_b', 'paradigm', { slot: 'v_naz.p', forms: ['за́мки'] }), f('wc_b', 'paradigm', { slot: 'inf', forms: ['x'] }),
-      f('wc_b', 'paradigm', { slot: 'v_rod.s', forms: ['за́мку'] }), f('wc_b', 'paradigm', { slot: 'zz', forms: ['?'] }), f('wc_b', 'definition_uk', 'будівля')] },
+      f('wc_b', 'paradigm', { slot: 'v_rod.s', forms: ['за́мку'] }), f('wc_b', 'paradigm', { slot: 'zz', forms: ['?'] }), f('wc_b', 'definition_uk', 'будівля'),
+      f('wc_b', 'frequency', '42')] },
     { card_id: 'wc_s', card_kind: 'proper_name', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_s', 'spelling', 'Шуба')] },
   ];
   const page = groupReleasePages(rows).pages[0]!;
@@ -251,7 +252,8 @@ describe('readable grouped release pages', () => {
     expect(b?.querySelector('[data-missing-paradigm]')).toBeNull();
     expect(Array.from(b?.querySelectorAll('[data-paradigm-source="ulif"] tr') ?? []).map(r => r.textContent)).toEqual([
       'ВідмінокОднинаМножина', 'Називнийза́мокза́мки', 'Родовийза́мку—not supplied', 'Grammatical formSupplied forms', 'Інфінітивx', 'zz (unrecognised slot code, shown literally)?']);
-    expect(b?.querySelector('[aria-label="Other source facts of entry 2"]')?.textContent).toContain('будівля');
+    expect(b?.querySelector('[aria-label="Senses of entry 2"] [data-fact="definition_uk"] [data-fact-value]')?.textContent).toBe('будівля');
+    expect(b?.querySelector('[aria-label="Other source facts of entry 2"]')?.textContent).toContain('42');
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;globalThis.x=1&lt;/script&gt;');
     expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => l.getAttribute('href'))).toEqual(expect.arrayContaining(['https://lcorp.ulif.org.ua/dictua/', 'https://vesum.nlp.net.ua/']));
