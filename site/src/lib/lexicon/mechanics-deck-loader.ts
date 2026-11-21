@@ -127,7 +127,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     pos: 'numeral',
     titleUk: 'Числівник',
     titleEn: 'Numeral',
-    descriptionUk: 'Відмінювання 50–80, 200–900, узгодження 2/3/4 та 5+ з іменниками',
+    descriptionUk: 'Відмінювання числівників 50–80 і 200–900, узгодження числівників з іменниками (два, три, чотири, п’ять і більше)',
     descriptionEn: 'Declension of 50–80, 200–900, government 2/3/4 vs 5+ with nouns',
     itemCount: 75,
     accent: 'purple',
