@@ -440,7 +440,21 @@ describe('readable candidate word cards and missing-field visibility', () => {
     expect(html).not.toContain('<svg onload');
     const dom = parseDom(html);
     const hrefs = Array.from(dom.querySelectorAll('a')).map(a => a.getAttribute('href') ?? '');
-    expect(hrefs.filter(h => h.includes('evil.invalid') || h.startsWith('javascript:'))).toEqual([]);
+    const isAllowlistedHref = (href: string): boolean => {
+      if (href.startsWith('#source-')) return true;
+      try {
+        const url = new URL(href);
+        if (url.protocol !== 'https:' || url.username || url.password) return false;
+        if (url.hostname === 'github.com') {
+          return url.pathname === '/learn-ukrainian/learn-ukrainian.github.io/issues/new';
+        }
+        return ['lcorp.ulif.org.ua', 'vesum.nlp.net.ua', 'puls.peremova.org'].includes(url.hostname);
+      } catch {
+        return false;
+      }
+    };
+    expect(hrefs.length).toBeGreaterThan(0);
+    expect(hrefs.filter(h => !isAllowlistedHref(h))).toEqual([]);
     expect(dom.querySelector('[data-entry] h2')?.textContent).toBe('<script>alert(1)</script>');
     expect(dom.querySelector('[data-fact="definition_uk"] [data-fact-value]')?.textContent).toBe('<img src=x onerror=alert(1)>');
   });
