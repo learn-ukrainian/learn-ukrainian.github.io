@@ -2195,17 +2195,25 @@ runtime, delegate, capacity, rollovers, wiki, governance, health, and session hi
 Query params:
 
 - `fresh=true` — bypass cached section values and run a single-flight fresh
-  collection per requested section (see below).
+  collection per requested `_OrientState` section, waiting up to that
+  section's inline deadline (see below). Exception: `idle_prs` clears its
+  TTL cache entry (`orient_idle_prs`) but stays cache-first and detached —
+  it never waits inline and continues to serve its project-root-scoped
+  last-good value and 30 s retry backoff.
 - `lean=true` — use the lightweight cold-start preset and omit the heavy
   `pipeline`, `issues`, `idle_prs`, and `wiki` sections. An explicit `sections`
   list wins. `capacity`, `health`, `delegate`, `rollovers`, and product
   `governance` stay in the lean preset as cache-first detached sections
   (#6983, #10866): a hung or failing collector never stalls the rest of the
-  gather. When a prior measurement exists, non-`fresh` reads serve it
-  immediately labelled `meta.<section>.stale: true` while a background refresh
-  runs; when no measurement exists yet (or a `fresh=true` read fails or times
-  out), the section payload is `null` and `meta.<section>.error` states why —
-  never a fabricated zero or empty fallback.
+  gather. On non-`fresh` reads, a prior measurement within its TTL is served
+  immediately as `cache: "hit"` with no refresh; once past its TTL, the read
+  skips the inline wait, schedules a single-flight background refresh, and
+  returns whichever snapshot is present when the response is assembled (the
+  aged value with `stale: true` if refresh is still pending, or the newly
+  published value with `stale: false` if refresh finished first). When no
+  measurement exists yet (or a `fresh=true` read fails or times out), the
+  section payload is `null` and `meta.<section>.error` states why — never a
+  fabricated zero or empty fallback.
 - `sections=git,runtime` — comma-separated subset of section keys to
   collect. Valid keys: `git`, `issues`, `idle_prs`, `pipeline`, `runtime`,
   `delegate`, `capacity`, `rollovers`, `wiki`, `governance`, `health`,
@@ -2258,20 +2266,29 @@ context's per-section snapshot store (`_orient_state(ctx)`).
   immediately on non-`fresh` reads with `cache: "hit"`.
 - **Cache-first aged measurement**: once a stored measurement is at or past
   its TTL (including `stale_after_s: 0`, such as `pipeline`), a non-`fresh`
-  read returns that stored measurement immediately with its original
-  `generated_at`, `cache: "miss"`, `stale: true`, and `refreshing: true`
-  while one single-flight background refresh runs. If a prior refresh failed
-  after that measurement was stored, `meta.<section>.error` is attached
-  alongside the aged value.
+  read skips the inline wait, starts or joins one single-flight background
+  refresh, and then reads the current snapshot when assembling the response.
+  If the refresh has not yet published, the response returns the prior aged
+  measurement with its original `generated_at`, `cache: "miss"`, and
+  `stale: true`. If the background refresh finishes and publishes before the
+  response reads the snapshot, the response returns that newly published
+  measurement with `cache: "miss"` and `stale: false`. Independently of
+  `stale`, `refreshing` is `true` only while a background refresh is still
+  pending (`false` once finished). If a prior refresh failed after the
+  returned measurement was stored, `meta.<section>.error` is attached
+  alongside it.
 - **Unavailable section (`null` + `meta.<section>.error`)**: if no
-  measurement has ever been stored and the initial wait expires or fails, or
-  if a `?fresh=true` collection fails or times out, the section value is
-  `null` (never an empty/zero fallback) and `meta.<section>.error` names the
-  reason (`"refreshing"`, `"section_timeout_<wait_s>s"`, or the exception
-  text). For `issues` and `idle_prs`, top-level `issues_error` /
-  `idle_prs_error` mirrors `meta.<section>.error`. For `governance`
-  (`merge_meta=True`), section fields are merged into `meta.governance` only
-  when the value is a mapping (not `null`).
+  measurement has ever been stored and the initial inline wait expires or
+  fails, or if a `?fresh=true` collection fails or reaches its deadline, the
+  section value is `null` (never an empty/zero fallback) and
+  `meta.<section>.error` states why: `"refreshing"` when a cold non-`fresh`
+  inline wait expires while collection continues (and no earlier error was
+  recorded), `"section_timeout_<wait_s>s"` when a `?fresh=true` wait expires
+  while the fresh worker is still running, or the exception text
+  (`str(exc) or type(exc).__name__`). For `issues` and `idle_prs`, top-level
+  `issues_error` / `idle_prs_error` mirrors `meta.<section>.error`. For
+  `governance` (`merge_meta=True`), section fields are merged into
+  `meta.governance` only when the value is a mapping (not `null`).
 - **Monotonic compare-and-set publishing**: collections record the monotonic
   start timestamp (`_orient_clock()`) when work begins; a slower older
   collection never overwrites a newer measurement, and errors are not cached
@@ -2298,9 +2315,11 @@ context's per-section snapshot store (`_orient_state(ctx)`).
 
 Every section is mirrored under `response.meta.<section>` with:
 
-- `generated_at` — ISO timestamp of the underlying collector run (when
-  `cache: "hit"` or `stale: true`, this is the age of the stored
-  measurement, not request time).
+- `generated_at` — for measured results (`cache: "hit"`, fresh collections,
+  or aged snapshots), the ISO timestamp when the underlying collector began
+  running. For unavailable (`null`) sections, the endpoint assigns the
+  response-assembly timestamp (`datetime.now(UTC)`), which does **not**
+  attest to a measurement.
 - `stale_after_s` — TTL window, so clients know when a measurement ages.
   `0` means no freshness window at the orient layer (every read schedules a
   refresh and downstream caching, if any, is documented in the source
@@ -2308,37 +2327,52 @@ Every section is mirrored under `response.meta.<section>` with:
 - `source` — origin class (`git` / `gh` / `fs` / `probe`) for quick
   provenance decisions.
 - `cache` — `"hit"` (current stored value served without scheduling work) or
-  `"miss"` (cold load, stale-while-refresh, or `?fresh=true`). Sections with
+  `"miss"` (cold load, aged read, or `?fresh=true`). Sections with
   `stale_after_s: 0` always report `"miss"`.
 - `stale` — present on non-hit responses that return a value: `false` when
-  the measurement is current (collection started during this read or is
-  younger than TTL), `true` when an older cached measurement is served while
-  refreshing.
+  the returned measurement is current (collection started during this read
+  — including an aged refresh that published before response assembly — or
+  is younger than TTL), `true` when an older cached measurement is returned.
 - `refreshing` — present on non-hit responses: `true` while a background
-  refresh thread is still active for the section.
-- `error` — present when the collector raised, timed out
-  (`section_timeout_<wait_s>s`), or is still `refreshing` with no stored
-  measurement. Exception errors use `str(exc) or type(exc).__name__`.
+  refresh thread is still pending for the section, `false` once it finishes
+  (or, for `idle_prs`, while suppressed during failure retry backoff).
+- `error` — present when a section is unavailable or a newer refresh failed:
+  `"refreshing"` when a cold non-`fresh` inline wait expires while work
+  continues (with no prior error), `"section_timeout_<wait_s>s"` when a
+  `?fresh=true` inline wait expires while the fresh worker is still alive,
+  `str(exc) or type(exc).__name__` on collector exceptions, or
+  `"gh_timeout"` / `"gh_unavailable"` for `idle_prs`.
 
 The top-level `response.generated_at` is the **oldest** `generated_at`
-across sections — a cached or partially stale response labels itself with
-the oldest piece of data the caller is looking at. (Before #1309 it was
-request time, which lied to consumers about freshness.)
+across all returned `meta` entries — both measured sections and unavailable
+(`null`) sections enter that minimum, so a response containing an aged
+measurement labels itself with the oldest section timestamp rather than
+request time. (Before #1309 it was request time, which lied to consumers
+about freshness.)
 
 #### Cache bypass: `?fresh=true`
 
-Pass `?fresh=true` to start (or join) each requested section's single-flight
-fresh collection (`_orient_state(ctx).fresh_threads`) and wait up to that
-section's inline deadline (`0.4 s` for detached sections, `5.0 s` for
-unpooled sections). Use it right after a write an agent wants to see
-immediately — a just-committed change, a just-filed issue — without
-waiting for the section TTL (up to 120 s for `issues` / `rollovers` /
-`wiki` / `governance`). If the fresh collection fails or exceeds the inline
-wait without publishing a newer measurement, that section returns `null`
-with `meta.<section>.error` rather than silently serving the stale
-pre-`fresh` value. `?fresh=true` also clears the `orient_*` TTL cache
-namespace (`orient_idle_prs`); `idle_prs` itself stays cache-first and
-detached.
+For every `_OrientState`-managed section (all sections except `idle_prs`),
+`?fresh=true` starts (or joins) that section's single-flight fresh
+collection (`_orient_state(ctx).fresh_threads`) and waits up to its inline
+deadline (`0.4 s` for detached sections, `5.0 s` for unpooled sections).
+Use it right after a write an agent wants to see immediately — a
+just-committed change, a just-filed issue — without waiting for the section
+TTL (up to 120 s for `issues` / `rollovers` / `wiki` / `governance`). If
+the fresh collection fails or reaches its inline deadline without
+publishing a newer measurement, that section returns `null` with
+`meta.<section>.error` (`"section_timeout_<wait_s>s"` on deadline expiry,
+or the exception text) rather than silently serving the stale pre-`fresh`
+value.
+
+**Exception — `idle_prs`**: `?fresh=true` invalidates the `orient_*` TTL
+cache namespace (`orient_idle_prs`), but `idle_prs` bypasses
+`_OrientState.fresh_threads` and never waits inline. It attempts to
+schedule its detached background worker (subject to its 30 s per-scope
+failure retry backoff) and immediately returns the project-root-scoped
+last-good value (`stale: true`, original `generated_at`, plus `error` and
+`refreshing: false` during retry backoff), or `null` with `idle_prs_error`
+and `meta.idle_prs.error` when no last-good value exists.
 
 ```bash
 # Normal call — honours each section's TTL (and serves aged values stale while refreshing).
@@ -2404,9 +2438,11 @@ The full response includes `idle_prs`, a compact list of open PRs whose latest
 non-advisory checks are green, review-gate evidence is present, and GitHub
 activity has been idle for more than one hour. Each row contains `number`, the
 head `branch`, and `minutes_idle`. The `gh` refresh is cache-first and detached
-(keyed by project-root scope `_ctx_cache_scope`): when GitHub is slow or
-unavailable, the request serves the last successful value marked `stale: true`
-immediately, or `null` with `idle_prs_error` and `meta.idle_prs.error` when no
+(keyed by project-root scope `_ctx_cache_scope`, with a 30 s retry backoff
+after `"gh_timeout"` or `"gh_unavailable"`): even on `?fresh=true`, the
+request never waits inline and serves the last successful value marked
+`stale: true` immediately (with `error` and `refreshing: false` during retry
+backoff), or `null` with `idle_prs_error` and `meta.idle_prs.error` when no
 prior measurement exists. `?lean=true` omits this section; request
 `?sections=idle_prs` when it is needed explicitly.
 

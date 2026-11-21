@@ -115,6 +115,12 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
     calls = {"pipeline": 0}
     release_run2 = threading.Event()
     release_run3 = threading.Event()
+    wait_calls: list[tuple[str, float]] = []
+    real_await_thread = api_main._await_thread
+
+    async def spy_await_thread(thread: threading.Thread, timeout: float) -> None:
+        wait_calls.append((thread.name, timeout))
+        await real_await_thread(thread, timeout)
 
     async def counting_pipeline(ctx=None):
         calls["pipeline"] += 1
@@ -136,6 +142,8 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
         assert first_data["meta"]["pipeline"]["stale"] is False
         _join_orient_refresh_threads()
 
+        monkeypatch.setattr(api_main, "_await_thread", spy_await_thread)
+
         second = client.get("/api/orient?sections=pipeline")
         assert second.status_code == 200
         second_data = second.json()
@@ -143,6 +151,7 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
         assert second_data["meta"]["pipeline"]["cache"] == "miss"
         assert second_data["meta"]["pipeline"]["stale"] is True
         assert second_data["meta"]["pipeline"]["refreshing"] is True
+        assert wait_calls == [], "aged non-fresh read must not wait inline for background refresh"
         release_run2.set()
         _join_orient_refresh_threads()
 
@@ -153,11 +162,13 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
         assert third_data["meta"]["pipeline"]["cache"] == "miss"
         assert third_data["meta"]["pipeline"]["stale"] is True
         assert third_data["meta"]["pipeline"]["refreshing"] is True
+        assert wait_calls == [], "aged non-fresh read must not wait inline for background refresh"
         release_run3.set()
         _join_orient_refresh_threads()
     finally:
         release_run2.set()
         release_run3.set()
+        _join_orient_refresh_threads()
 
     assert calls["pipeline"] == 3
 
@@ -170,28 +181,37 @@ def test_orient_generated_at_floor_reflects_oldest_section(monkeypatch):
     (``pipeline``, TTL 0 s) must label the response with the oldest section's
     ``generated_at``, not request time.
     """
-    monkeypatch.setattr(
-        product_orient,
-        "collect_wiki_orient_data",
-        lambda ctx=None: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}},
-    )
+    wiki_payload = {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
+    pipeline_payload = {"summary": {"totals": {"total": 1}}}
+    current_ts = {"value": "2026-11-21T00:00:01Z"}
+
+    monkeypatch.setattr(api_main, "_isoformat_z", lambda _dt: current_ts["value"])
+    monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda ctx=None: wiki_payload)
 
     async def fake_pipeline(ctx=None):
-        return {"summary": {"totals": {"total": 1}}}
+        return pipeline_payload
 
     monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
 
     warm = client.get("/api/orient?sections=wiki")
     assert warm.status_code == 200
     wiki_ts = warm.json()["meta"]["wiki"]["generated_at"]
+    assert wiki_ts == "2026-11-21T00:00:01Z"
 
+    current_ts["value"] = "2026-11-21T00:00:05Z"
     combined = client.get("/api/orient?sections=wiki,pipeline")
     assert combined.status_code == 200
     data = combined.json()
+    assert data["wiki"] == wiki_payload
+    assert data["pipeline"] == pipeline_payload
+    assert "error" not in data["meta"]["wiki"]
+    assert "error" not in data["meta"]["pipeline"]
     assert data["meta"]["wiki"]["cache"] == "hit"
     assert data["meta"]["wiki"]["generated_at"] == wiki_ts
     assert data["meta"]["pipeline"]["cache"] == "miss"
+    assert data["meta"]["pipeline"]["generated_at"] == "2026-11-21T00:00:05Z"
 
     section_timestamps = [m["generated_at"] for m in data["meta"].values() if m.get("generated_at")]
-    assert len(section_timestamps) == 2
+    assert section_timestamps == ["2026-11-21T00:00:01Z", "2026-11-21T00:00:05Z"]
+    assert data["generated_at"] == wiki_ts
     assert data["generated_at"] == min(section_timestamps)
