@@ -26016,20 +26016,6 @@
       "scope_key": "wc_pjpsnj7c7ctd/ws_0tp6dp7ap1zq/textbook-example"
     },
     {
-      "card_id": "wc_dth7czyfjmea",
-      "entry_id": 161722,
-      "field": "examples",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0038",
-      "pointer": "/text",
-      "span": [
-        1662,
-        1700
-      ],
-      "sense_id": "ws_8fpavqf5ggb9",
-      "source_sense_key": "vts:картка#1",
-      "scope_key": "wc_dth7czyfjmea/ws_8fpavqf5ggb9/textbook-example"
-    },
-    {
       "card_id": "wc_fvm1n8sbx652",
       "entry_id": 157054,
       "field": "examples",
@@ -26076,7 +26062,8 @@
     "wr_e8553173a579eace18d0835bfa68f1b1bbbb4a8608253115b53a501a0cad229a": {"entry_id":157359,"quotation":"Їдь до нас на дачу!","receipt_sha256":"edfc9b18150c125302f9fc0e82948f6d53030f40d75c598ce28b5e41127b29fe","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rfge5tc2ac2x","source_sense_key":"vts:їхати#1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[178,197],"verdict":"APPROVE"},
     "wr_e6ec3e6c17de3007bc443111490f363cbb1afee0f156ec6b2b88785f4f7dd6b2": {"entry_id":308350,"quotation":"Через\nгодину пішла на пошту з величезним конвертом.","receipt_sha256":"7c64f2a9a4e5c2b7ceeb5e2764fe4c65200950be0f38ed94f368e85c689ce495","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_jth9jfdwvw5z","source_sense_key":"vts:пошта#1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[177,228],"verdict":"APPROVE"},
     "wr_b15bc285ded1f96419a93903a36261cd49b83662a783985f6f160873e1629df0": {"entry_id":411582,"quotation":"Сьома година п’ятнадцять хвилин, або чверть\nна восьму.","receipt_sha256":"5e5b1f17c23139d3f2eb1e273cbfbcc72aa2b4358ca6ea44d722c74ad428b00e","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_efkqq3238yq6","source_sense_key":"vts:хвилина#1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[417,471],"verdict":"APPROVE"},
-    "wr_b74e13cbf927f0107229dc5e5c509fd6c32b36f95292fc8f1d2c94b1bd50110c": {"entry_id":200835,"quotation":"Що ти знаєш про метро?","receipt_sha256":"3dfb0f86540c792d1fa00032a38340fb28effef5d5eecd50d2aec09fc8562a84","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_0tp6dp7ap1zq","source_sense_key":"vts:метро#unnumbered/1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[320,342],"verdict":"APPROVE"}
+    "wr_b74e13cbf927f0107229dc5e5c509fd6c32b36f95292fc8f1d2c94b1bd50110c": {"entry_id":200835,"quotation":"Що ти знаєш про метро?","receipt_sha256":"3dfb0f86540c792d1fa00032a38340fb28effef5d5eecd50d2aec09fc8562a84","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_0tp6dp7ap1zq","source_sense_key":"vts:метро#unnumbered/1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[320,342],"verdict":"APPROVE"},
+    "wr_8f03ec6ca64b1137095f987c65598eb41c37de366df0cf68361f4549ba1ac54c": {"entry_id":157054,"quotation":"Хто з хлопчиком іде\nдо школи?","receipt_sha256":"260b7be42246477ccd445dbe6791a211e9788c08d4ef6405780919210a5973ee","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_a69dmf2744q4","source_sense_key":"vts:іти#1","sources_sha256":"bc0f5d680803168dcf7fc22675e23065b6ae1733f7ee5d6fa29776b36b690618","span":[148,177],"verdict":"APPROVE"}
   },
   "field_dependencies": {
     "antonyms": "exact authority claim and entry/sense correspondence, with independent review where required",
@@ -28556,17 +28543,6 @@
       "span": [
         320,
         342
-      ]
-    },
-    "wc_dth7czyfjmea/ws_8fpavqf5ggb9/textbook-example": {
-      "card_id": "wc_dth7czyfjmea",
-      "sense_id": "ws_8fpavqf5ggb9",
-      "source_sense_key": "vts:картка#1",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-kravtsova-2021-1_s0038",
-      "pointer": "/text",
-      "span": [
-        1662,
-        1700
       ]
     },
     "wc_fvm1n8sbx652/ws_a69dmf2744q4/textbook-example": {
