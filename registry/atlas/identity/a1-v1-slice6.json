@@ -1,5 +1,5 @@
 {
-  "base_sha256": "b6385ab3e982a49451f44898d894d5f514847db7c95ef07f595675015a1101f1",
+  "base_sha256": "e315c412a503dd5e23027d86bb81a333efe14c29120798dea34589b95662a8b6",
   "entries": [
     {
       "card_id": "wc_v3w185cm66rw",
@@ -4251,6 +4251,33 @@
         "sr_wtrk385f5466"
       ],
       "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-bolshakova-2019-1_s0087\",\"snapshot_id\":\"textbooks@sha256:fa63b5ed5f5bed28820ee6ac2e8c52961afef58da449a6def075ee52d4f7eabf\",\"source_id\":\"textbooks\"}"
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2509",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:61774\",\"snapshot_id\":\"balla@sha256:7c97edba102fd49d50c0e6987b3f3e8bb27c8e14ebc35104c99f104557a8578d\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_r67ktcjwj4g2"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2510",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:67429\",\"snapshot_id\":\"balla@sha256:5cfdb935992f64ae9cd21596c80e4d89ab9b8288f8717851a7ccd886145d625a\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_nssdgddaze4n"
+      ]
+    },
+    {
+      "build_id": "a1-gloss2-allocation-12638",
+      "event_id": "ie_2511",
+      "evidence": "{\"locator\":\"balla:balla_en_uk:id:69392\",\"snapshot_id\":\"balla@sha256:0f8a0fac477a62b2745a0974d2578cc90477c8939a414c2d141ccd14d9a8c9b0\",\"source_id\":\"balla\"}",
+      "kind": "source_record_mint",
+      "to": [
+        "sr_twjk43gcz6hp"
+      ]
     }
   ],
   "schema_version": "atlas-a1-slice6-allocation.v1",
@@ -10568,6 +10595,63 @@
           "matched_by": "actual_Sources_tool_response"
         }
       ]
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:61774",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:7c97edba102fd49d50c0e6987b3f3e8bb27c8e14ebc35104c99f104557a8578d"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:61774",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:7c97edba102fd49d50c0e6987b3f3e8bb27c8e14ebc35104c99f104557a8578d",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_r67ktcjwj4g2"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:67429",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:5cfdb935992f64ae9cd21596c80e4d89ab9b8288f8717851a7ccd886145d625a"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:67429",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:5cfdb935992f64ae9cd21596c80e4d89ab9b8288f8717851a7ccd886145d625a",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_nssdgddaze4n"
+    },
+    {
+      "aliases": [
+        {
+          "key": "balla:balla_en_uk:id:69392",
+          "kind": "uid",
+          "snapshot_id": "balla@sha256:0f8a0fac477a62b2745a0974d2578cc90477c8939a414c2d141ccd14d9a8c9b0"
+        }
+      ],
+      "correspondence": [
+        {
+          "locator": "balla:balla_en_uk:id:69392",
+          "matched_by": "actual_Sources_tool_response",
+          "snapshot_id": "balla@sha256:0f8a0fac477a62b2745a0974d2578cc90477c8939a414c2d141ccd14d9a8c9b0",
+          "status": "unique"
+        }
+      ],
+      "source_id": "balla",
+      "source_record_id": "sr_twjk43gcz6hp"
     }
   ]
 }

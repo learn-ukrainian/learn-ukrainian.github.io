@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas-a1-slice3-allocation.v1",
-  "base_sha256": "13305ab0596192d25f1125d7134f3d5d869648b323fc3b87e392696952fdb686",
+  "base_sha256": "98a69abfcd91247b5c26a174da988f27d61ef2d067033c794e08ddd33fabdf0f",
   "entries": [
     {"card_id":"wc_2qm4y2v41d81","card_kind":"lexeme","state":"active","key_at_creation":{"spelling":"ти","pos":"noun","source_keys":[{"source_id":"vesum","key":"vesum:entry:386161","snapshot_id":"vesum@sha256:6620b30647bbc94e0c3443639e830834083ad41419953fcf9e048479d7538a26"}]},"created_in_build":"a1-slice3-allocation@sha256:dc82acb4b1561c7ce897e05e00dfd193396fa731b67506fb689877b7b29ef273","senses":[]},
     {"card_id":"wc_3n0n401kcgyz","card_kind":"lexeme","state":"active","key_at_creation":{"spelling":"день","pos":"noun","source_keys":[{"source_id":"vesum","key":"vesum:entry:92026","snapshot_id":"vesum@sha256:dbfdfe7d7e74b657c24f09887b7e84e5df6e2d8a72d899fa0290e48d36cb734f"}]},"created_in_build":"a1-slice3-allocation@sha256:dc82acb4b1561c7ce897e05e00dfd193396fa731b67506fb689877b7b29ef273","senses":[]},
@@ -490,7 +490,12 @@
           "matched_by": "actual_Sources_tool_response"
         }
       ]
-    }
+    },
+    {"aliases":[{"key":"balla:balla_en_uk:id:60408","kind":"uid","snapshot_id":"balla@sha256:343539b3e0075dc974ed6d9a46dad9943182fede6ce4d642424cee67da1bfaba"}],"correspondence":[{"locator":"balla:balla_en_uk:id:60408","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:343539b3e0075dc974ed6d9a46dad9943182fede6ce4d642424cee67da1bfaba","status":"unique"}],"source_id":"balla","source_record_id":"sr_pkmzyqf5w99z"},
+    {"aliases":[{"key":"balla:balla_en_uk:id:29475","kind":"uid","snapshot_id":"balla@sha256:9f09daaca48aea4ab6385114f1568c92f316585bd751d6502cc4bee5ba8086e3"}],"correspondence":[{"locator":"balla:balla_en_uk:id:29475","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:9f09daaca48aea4ab6385114f1568c92f316585bd751d6502cc4bee5ba8086e3","status":"unique"}],"source_id":"balla","source_record_id":"sr_8x0rdj4sgnsp"},
+    {"aliases":[{"key":"balla:ukreng:вишиванка","kind":"uid","snapshot_id":"balla@sha256:6e421a32e51dc64d582bc48e29429250350d2b0d9af485c50b009204ce3cef41"}],"correspondence":[{"locator":"balla:ukreng:вишиванка","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:6e421a32e51dc64d582bc48e29429250350d2b0d9af485c50b009204ce3cef41","status":"unique"}],"source_id":"balla","source_record_id":"sr_ffxpahgqr8cy"},
+    {"aliases":[{"key":"balla:balla_en_uk:id:43002","kind":"uid","snapshot_id":"balla@sha256:d01b72783f57b3e96fcb45ca3ceb339e0fa71d4aafface5b6535b803a6ddd91b"}],"correspondence":[{"locator":"balla:balla_en_uk:id:43002","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:d01b72783f57b3e96fcb45ca3ceb339e0fa71d4aafface5b6535b803a6ddd91b","status":"unique"}],"source_id":"balla","source_record_id":"sr_4ps70t4pbsjm"},
+    {"aliases":[{"key":"balla:balla_en_uk:id:78449","kind":"uid","snapshot_id":"balla@sha256:4db53f2ded6df754bfa77ac78104ebb083542aba70b401cde0bc2c2adb740321"}],"correspondence":[{"locator":"balla:balla_en_uk:id:78449","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:4db53f2ded6df754bfa77ac78104ebb083542aba70b401cde0bc2c2adb740321","status":"unique"}],"source_id":"balla","source_record_id":"sr_hpn0dadn9kk6"}
   ],
   "events": [
     {"event_id":"ie_0840","kind":"mint","build_id":"a1-slice3-allocation@sha256:dc82acb4b1561c7ce897e05e00dfd193396fa731b67506fb689877b7b29ef273","cards":["wc_2qm4y2v41d81"],"evidence":"{\"entry_id\":386161,\"key_at_creation\":{\"pos\":\"noun\",\"source_keys\":[{\"key\":\"vesum:entry:386161\",\"snapshot_id\":\"vesum@sha256:6620b30647bbc94e0c3443639e830834083ad41419953fcf9e048479d7538a26\",\"source_id\":\"vesum\"}],\"spelling\":\"ти\"}}"},
@@ -905,6 +910,11 @@
         "sr_00snty4zrnca"
       ],
       "evidence": "{\"locator\":\"textbook:1-klas-bukvar-zaharijchuk-2025-2_s0030\",\"snapshot_id\":\"textbooks@sha256:d1e3fe39b33101415f2957f84f75d80fac29e33d9e25253dac67cccd0ea58b93\",\"source_id\":\"textbooks\"}"
-    }
+    },
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2492","evidence":"{\"locator\":\"balla:balla_en_uk:id:60408\",\"snapshot_id\":\"balla@sha256:343539b3e0075dc974ed6d9a46dad9943182fede6ce4d642424cee67da1bfaba\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_pkmzyqf5w99z"]},
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2493","evidence":"{\"locator\":\"balla:balla_en_uk:id:29475\",\"snapshot_id\":\"balla@sha256:9f09daaca48aea4ab6385114f1568c92f316585bd751d6502cc4bee5ba8086e3\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_8x0rdj4sgnsp"]},
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2494","evidence":"{\"locator\":\"balla:ukreng:вишиванка\",\"snapshot_id\":\"balla@sha256:6e421a32e51dc64d582bc48e29429250350d2b0d9af485c50b009204ce3cef41\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_ffxpahgqr8cy"]},
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2495","evidence":"{\"locator\":\"balla:balla_en_uk:id:43002\",\"snapshot_id\":\"balla@sha256:d01b72783f57b3e96fcb45ca3ceb339e0fa71d4aafface5b6535b803a6ddd91b\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_4ps70t4pbsjm"]},
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2496","evidence":"{\"locator\":\"balla:balla_en_uk:id:78449\",\"snapshot_id\":\"balla@sha256:4db53f2ded6df754bfa77ac78104ebb083542aba70b401cde0bc2c2adb740321\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_hpn0dadn9kk6"]}
   ]
 }

@@ -107,7 +107,8 @@
         "sr_xdkpmac6wmq1"
       ],
       "evidence": "{\"locator\":\"textbook:2-klas-ukrmova-vashulenko-2019-2_s0043\",\"snapshot_id\":\"textbooks@sha256:a502071a234bd287b24db3f81ef6a810c123d998290ecf9919ce8a24efb405b8\",\"source_id\":\"textbooks\"}"
-    }
+    },
+    {"build_id":"a1-gloss2-allocation-12638","event_id":"ie_2491","evidence":"{\"locator\":\"balla:ukreng:ясно\",\"snapshot_id\":\"balla@sha256:d7c0a84d4256d69b0354668bce5bb7f114cba27d14f11af560da5438297e617d\",\"source_id\":\"balla\"}","kind":"source_record_mint","to":["sr_ee4s6rsq6yzj"]}
   ],
   "schema_version": "atlas-a1-slice2-allocation.v1",
   "senses": [
@@ -285,6 +286,7 @@
           "matched_by": "actual_Sources_tool_response"
         }
       ]
-    }
+    },
+    {"aliases":[{"key":"balla:ukreng:ясно","kind":"uid","snapshot_id":"balla@sha256:d7c0a84d4256d69b0354668bce5bb7f114cba27d14f11af560da5438297e617d"}],"correspondence":[{"locator":"balla:ukreng:ясно","matched_by":"actual_Sources_tool_response","snapshot_id":"balla@sha256:d7c0a84d4256d69b0354668bce5bb7f114cba27d14f11af560da5438297e617d","status":"unique"}],"source_id":"balla","source_record_id":"sr_ee4s6rsq6yzj"}
   ]
 }

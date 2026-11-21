@@ -36,9 +36,9 @@ from scripts.atlas.a1_card_receipts import (
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "registry/atlas/a1-v1-slice2.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice2.json"
-MANIFEST_SHA256 = "3ddc189696fc9127a830be4cbbf05a062cb09c7e8fcf2e0940d7e950e608a12e"
-MANIFEST_FILE_SHA256 = "0aca5c805f5ace1f2721ec447e49fe6f1f944868c2848e0f71c39f768b5a14ec"
-COMPANION_FILE_SHA256 = "c72cf5996026a5c2cde2b506d0f626c9624282dc9858bd1c2a795ec19952bb12"
+MANIFEST_SHA256 = "235ce3784b6c312f5cc6df6b74df5aa782e837361859440e7005f0e2fd005b61"
+MANIFEST_FILE_SHA256 = "75044b51a339e757df7a1dc75c07f4c5dc1ff4b05317d5498ce85d61a6d04e9d"
+COMPANION_FILE_SHA256 = "97b458bee6bbd35b1f45118754c9694bffb51bd374b5dd040aee04f39d0d8202"
 VERSION = "a1-slice2-v1"
 CARD_FIELDS = (*assembly.CARD_FIELDS, "mwe_form", "mwe_frame")
 SENSE_FIELDS = assembly.SENSE_FIELDS
@@ -220,7 +220,7 @@ def _supporting_receipts(claim, records):
 
 
 def _lexeme(claim, receipt, record, lemma):
-    if record["source_id"] not in {"balla", "textbooks"}:
+    if record["source_id"] not in {"balla", "textbooks"} or claim.get("translation_direction") == "uk-en":
         require(claim["record_key"].rsplit(":", 1)[-1] == lemma, "record_lemma_mismatch")
         require_lemma_call(record, lemma)
     if record["source_id"] == "vesum":
@@ -291,17 +291,53 @@ def _form_stress(claim, receipt, sources, manifest):
             "accented_form_requires_stress")
 
 
+def _ukreng_scope(record, receipt, pair, supports):
+    """Keep gloss and evidence inside the exact queried Ukrainian article."""
+    require(record is not None and record["source_id"] == "balla" and record["tool"] == "query_slovnyk_me"
+            and record["arguments"].get("dict") == "ukreng", "bilingual_ukreng_call_mismatch")
+    word = record["arguments"]["word"]
+    url = "https://slovnyk.me/dict/ukreng/" + quote(word, safe="")
+    text = record["payload"]["text"]
+    header, separator, body = text.partition("\n\n")
+    article, footer, _ = body.partition(" Джерело: Українсько-англійський словник на Slovnyk.me")
+    require(separator and footer and article.startswith(word + " ") and record["source_url"] == url
+            and header.splitlines()[:2] == [
+                f"**Українсько-англійський словник — entry for '{word}'**", f"**URL**: {url}"],
+            "bilingual_ukreng_article_mismatch")
+    start = len(header) + len(separator)
+    left, right = receipt["span"]
+    require(receipt["payload_pointer"] == "/text" and start + len(word) < left < right <= start + len(article)
+            and all(span["pointer"] == "/text" and start <= span["span"][0] < span["span"][1] <= start + len(article)
+                    for span in supports), "bilingual_pair_outside_hit")
+    pair_left, pair_right = pair["span"]
+    require(pair_left <= left < right <= pair_right and (pair_left, pair_right) != (left, right),
+            "bilingual_pair_outside_hit")
+    require(not any(char.isalnum() or char in "_'’‐‑-" or unicodedata.category(char).startswith("M")
+                    for char in (text[left - 1], text[right])), "bilingual_gloss_partial_token")
+    letters = [char for char in receipt["quotation"] if char.isalpha()]
+    require(letters and all("LATIN" in unicodedata.name(char, "") for char in letters),
+            "bilingual_gloss_not_latin")
+
+
 def _scope(claim, manifest, receipt, *, batch=None, record=None):
     field = claim["field"]
     if field in {"gloss_en", "english_gloss"}:
-        require(claim.get("translation_direction") == "en-uk" and bool(claim.get("usage_pair")),
+        direction = claim.get("translation_direction")
+        require(direction in ("en-uk", "uk-en") and bool(claim.get("usage_pair")),
                 "bilingual_direction_or_pair_unresolved")
         pair = claim["usage_pair"]
         supports = claim.get("supporting_spans", [])
         require(isinstance(pair, dict) and pair in supports, "bilingual_pair_not_receipted")
-        hit = re.fullmatch(r"(/hits/(?:0|[1-9][0-9]*))/word", claim["pointer"])
-        require(hit is not None and all(s["pointer"] == hit[1] + "/definition" for s in supports),
-                "bilingual_pair_outside_hit")
+        if direction == "uk-en":
+            _ukreng_scope(record, receipt, pair, supports)
+        else:
+            require(record is not None and record["source_id"] == "balla" and record["tool"] == "translate_en_uk",
+                    "bilingual_en_uk_call_mismatch")
+            hit = re.fullmatch(r"(/hits/(0|[1-9][0-9]*))/word", claim["pointer"])
+            require(hit is not None and all(s["pointer"] == hit[1] + "/definition" for s in supports),
+                    "bilingual_pair_outside_hit")
+            require(receipt["span"] == [0, len(record["payload"]["hits"][int(hit[2])]["word"])],
+                    "bilingual_gloss_partial_token")
     if field in {"definition_uk", "register", "sense_label", "examples", "gloss_en", "synonyms", "antonyms", "collocations"}:
         scope = manifest["scopes"].get(claim.get("scope_key"))
         require(scope is not None, "sense_scope_missing")
