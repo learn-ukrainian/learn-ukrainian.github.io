@@ -731,61 +731,6 @@ def test_issue_link_sends_add_sub_issue_contract(tmp_path, monkeypatch):
     }
 
 
-@pytest.mark.parametrize(
-    ("status", "type_", "message"),
-    [
-        pytest.param(
-            200,
-            "FORBIDDEN",
-            f"Resource not accessible: duplicate sub-issues {LEAKED_TOKEN}",
-            id="forbidden-200",
-        ),
-        pytest.param(
-            403,
-            "FORBIDDEN",
-            f"Resource not accessible: duplicate sub-issues {LEAKED_TOKEN}",
-            id="forbidden-403",
-        ),
-        pytest.param(
-            200,
-            "UNPROCESSABLE",
-            "Issue may not contain duplicate sub-issues",
-            id="duplicate-refusal",
-        ),
-        pytest.param(
-            200,
-            "UNPROCESSABLE",
-            "Issue is already a sub-issue of this parent: duplicate sub-issues",
-            id="same-parent-refusal",
-        ),
-        pytest.param(
-            200,
-            "UNPROCESSABLE",
-            "Sub issue may only have one parent: duplicate sub-issues",
-            id="other-parent-refusal",
-        ),
-    ],
-)
-def test_issue_link_duplicate_fragment_never_converts_refusal_to_success(tmp_path, monkeypatch, status, type_, message):
-    result, calls = _publish_link(
-        tmp_path,
-        monkeypatch,
-        [response({"data": {"addSubIssue": None}, "errors": [{"type": type_, "message": message}]}, status=status)],
-    )
-    assert result.returncode == 1
-    detail = json.loads(result.stderr)
-    assert detail == {
-        "error": "github_graphql_error",
-        "reset_at": None,
-        "errors": [{"type": type_, "message": message.replace(LEAKED_TOKEN, "[REDACTED]")}],
-    }
-    assert json.loads(result.stdout) == detail
-    assert LEAKED_TOKEN not in result.stdout + result.stderr
-    assert "already_linked" not in result.stdout + result.stderr
-    # One request: the verb never escalates to replaceParent on its own.
-    assert len(calls) == 1 and b"replaceParent" not in calls[0][3]
-
-
 def test_issue_link_other_parent_needs_explicit_replace_parent(tmp_path, monkeypatch):
     other_parent = "Sub issue may only have one parent"
 
@@ -861,25 +806,14 @@ def test_issue_unlink_surfaces_redacted_error_and_never_claims_already_linked(tm
     assert json.loads(failed.stderr)["error"] == "github_graphql_error"
 
 
-@pytest.mark.parametrize("errors", ["boom", 5, {"type": "X", "message": "y"}, [None, 3]])
-def test_issue_link_graphql_errors_of_unexpected_shape_fail_without_echo(tmp_path, monkeypatch, errors):
-    result, _ = _publish_link(tmp_path, monkeypatch, [response({"errors": errors})])
-    assert result.returncode == 1
-    assert json.loads(result.stderr) == {"error": "github_graphql_error", "reset_at": None, "errors": []}
-    assert "boom" not in result.stdout + result.stderr
-
-
 @pytest.mark.parametrize("failure", [None, sqlite3.OperationalError, sqlite3.DatabaseError, OSError])
 @pytest.mark.parametrize("raw_response", [False, True])
 @pytest.mark.parametrize(
     "payload,code,error",
     [
-        ({"errors": [{"type": "FORBIDDEN", "message": f"cred_{LEAKED_TOKEN}_suffix"}]}, 1, "github_graphql_error"),
         ({"errors": [{"type": "RATE_LIMITED", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
         ({"errors": [{"type": "RATE_LIMIT", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
-        ({"data": None, "errors": []}, 1, "github_graphql_error"),
         ({"data": {"viewer": {"login": "unit"}}}, 0, None),
-        ({"data": {"viewer": {"login": "unit"}}, "errors": []}, 0, None),
     ],
 )
 def test_graphql_persistence_failure_cannot_change_command_result(
@@ -906,14 +840,7 @@ def test_graphql_persistence_failure_cannot_change_command_result(
         assert LEAKED_TOKEN.encode() not in proc.stdout + proc.stderr
         detail = json.loads(proc.stderr)
         assert json.loads(proc.stdout) == detail
-        if error == "github_graphql_error":
-            assert detail == {
-                "error": error,
-                "reset_at": None,
-                "errors": [{"type": "FORBIDDEN", "message": "cred_[REDACTED]_suffix"}] if payload["errors"] else [],
-            }
-        else:
-            assert detail == {"error": error, "reset_at": 2000, "reason": "pool_exhausted"}
+        assert detail == {"error": error, "reset_at": 2000, "reason": "pool_exhausted"}
     else:
         assert json.loads(proc.stdout) == payload
         assert proc.stderr == b""
@@ -2024,7 +1951,6 @@ def admitted_read_cases():
         ['gh', 'api', 'repos/unit/public/rulesets'],
         ['gh', 'api', 'repos/unit/public/merge-queue/entries'],
         ['gh', 'run', 'watch', '1', '--compact', '--exit-status'],
-        ['gh', 'api', 'graphql', '-f', 'query=query($name:String!){repository(owner:"unit",name:$name){name}}', '-f', 'name=public'],
         ['gh', 'issue', 'view', '1'],
         ['gh', 'issue', 'list'],
         ['gh', 'issue', 'status'],

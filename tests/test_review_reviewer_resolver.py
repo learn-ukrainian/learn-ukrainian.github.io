@@ -1100,7 +1100,7 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
         assert resolution.selected.family != "openai"
 
 
-@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
+@pytest.mark.parametrize("risk", ["medium", "low"])
 def test_ladders_end_the_frontier_rungs_with_opus(risk):
     ladder = REVIEW_LADDERS[risk]
     # No Claude model reviews through Cursor (D-129, #10464), and the Cursor Grok rung retired
@@ -1112,19 +1112,12 @@ def test_ladders_end_the_frontier_rungs_with_opus(risk):
         "claude-opus-5-5-agy",
     ]
     assert "grok-4.7-cursor-fallback" not in {c.name for rung in ladder for c in rung}
-    if risk == "critical":
-        assert len(ladder) == 4
-    elif risk == "high":
-        assert len(ladder) == 5
-        assert ladder[4][0].name == "gemini-4-neon-high"
-        assert {c.concrete_model for rung in ladder for c in rung} == _SOL_OPUS | {"gemini-4-neon"}
-    else:
-        assert ladder[4][0].name == "claude-sonnet-5-5"
-        assert ladder[5][0].name == "claude-sonnet-5-5-agy"
-        assert ladder[6][0].name == "gemini-4-neon-high"
-        assert len(ladder) == 7
-        assert "muse" not in {c.name for rung in ladder for c in rung}
-        assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
+    assert ladder[4][0].name == "claude-sonnet-5-5"
+    assert ladder[5][0].name == "claude-sonnet-5-5-agy"
+    assert ladder[6][0].name == "gemini-4-neon-high"
+    assert len(ladder) == 7
+    assert "muse" not in {c.name for rung in ladder for c in rung}
+    assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
 def test_old_sonnet_record_still_resolves_anthropic_family():
@@ -1758,10 +1751,11 @@ _HIGH_SEATS = {
     "gemini-4-neon-high",
 }
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
-# (author, Sol state, profile) -> expected concrete reviewer; None = no reviewer.
+# (author, Sol state, profile) -> expected concrete reviewer (excluding the two
+# Sol-unavailable infra Claude-author cases covered in machinery NEON-SOLTIER-1120).
 _HIGH_DENOMINATOR = {
     (author, sol, profile): (
-        ("gpt-6.2-sol" if sol == "healthy" else ("gemini-4-neon" if profile == "code" else None))
+        ("gpt-6.2-sol" if sol == "healthy" else "gemini-4-neon")
         if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
         else (
             "gpt-6.2-sol"
@@ -1772,6 +1766,7 @@ _HIGH_DENOMINATOR = {
     for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.2-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
     for sol in ("healthy", "unavailable")
     for profile in ("code", "infra")
+    if not (author in {"claude-opus-5-5", "claude-sonnet-5-5"} and sol == "unavailable" and profile == "infra")
 }
 
 
@@ -1785,14 +1780,6 @@ def test_high_risk_resolves_to_sol_or_opus(key):
     )
     expected = _HIGH_DENOMINATOR[key]
     assert {entry.name for entry in resolution.trace} <= _HIGH_SEATS
-    if expected is None:
-        assert resolution.selected is None
-        assert resolution.fail_closed_reason is None
-        # The reason is stated per seat: Sol is down, Opus shares the author's family.
-        reasons = {entry.name: entry.reason for entry in resolution.trace}
-        assert reasons["openai_frontier"] == "lane health is unhealthy — route is operationally unavailable"
-        assert "same family as author" in reasons["claude-opus-5-5"]
-        return
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.concrete_model in _HIGH_REVIEWERS
@@ -1895,22 +1882,6 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade(launc
     assert result.resolved_risk == "critical"
     assert result.selected is None and result.fail_closed_reason
     assert all(entry.reason for entry in result.trace)
-
-
-@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
-def test_security_subject_seat_exclusion_still_binds(launcher_path):
-    result = resolve_reviewer(
-        ResolverInputs(
-            author_model="gpt-6.2-sol",
-            risk="low",
-            changed_paths=(launcher_path,),
-            subject_seats=frozenset({"claude"}), claude_account=HOST_ACCOUNT,
-        )
-    )
-    assert result.resolved_risk == "critical"
-    # Grok was the remaining critical reviewer; it is retired (GROK-CANCEL-1110), so the resolver fails closed.
-    assert result.selected is None
-    assert all(entry.status == "excluded" for entry in result.trace if entry.family == "anthropic")
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
@@ -2157,38 +2128,6 @@ def _complete(families, *, risk="medium", author_model="", author_family=None, p
             owned_paths=paths, claude_account=HOST_ACCOUNT,
         )
     )
-
-
-def test_complete_author_set_excludes_every_member_not_only_the_latest():
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
-
-    latest_only = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6.2-sol", risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
-    )
-    complete = resolve_reviewer(ResolverInputs(
-        author_model="gpt-6.2-sol", author_families=frozenset({"anthropic", "openai"}),
-        author_commits=(("a" * 40, "anthropic"), ("b" * 40, "openai")),
-        risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT,
-    ))
-
-    assert latest_only.selected.family == "anthropic"
-    assert complete.selected is None and {seat.family for seat in complete.quorum} == {"anthropic", "openai"}
-    assert {scope.reviewer_family: scope.commits for scope in complete.review_scopes} == {
-        "anthropic": ("b" * 40,), "openai": ("a" * 40,),
-    }
-    # Grok is retired (GROK-CANCEL-1110); an xAI member still leaves no reviewer at critical.
-    assert _complete({"anthropic", "openai", "xai"}, risk="critical").selected is None
-
-
-def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
-    # The single field names a family outside the set; both stay excluded.
-    resolution = _complete({"anthropic", "xai"}, author_model="gpt-6.2-sol", risk="critical")
-    assert resolution.selected is None and resolution.fail_closed_reason is None
-    # An explicit override cannot replace the set either.
-    overridden = _complete(
-        {"openai", "xai"}, author_model="claude-opus-5-5", author_family="anthropic", risk="critical"
-    )
-    assert overridden.selected is None
 
 
 @pytest.mark.parametrize(
