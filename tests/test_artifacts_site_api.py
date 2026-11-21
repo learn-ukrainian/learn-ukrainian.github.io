@@ -191,7 +191,7 @@ def test_module_artifact_fails_when_final_review_missing(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------
 
 
-def test_deployments_surfaces_gh_error_gracefully(monkeypatch):
+def test_deployments_surfaces_gh_error_gracefully(monkeypatch, caplog):
     """gh not authed / not installed → error field, not 500."""
 
     class FakeProc:
@@ -205,7 +205,8 @@ def test_deployments_surfaces_gh_error_gracefully(monkeypatch):
     assert resp.status_code == 200
     body = resp.json()
     assert body["runs"] == []
-    assert "gh: command not found" in body["error"]
+    assert body["error"] == "Could not load recent deployments."
+    assert any("gh: command not found" in message for message in caplog.messages)
 
 
 def test_deployments_returns_parsed_runs(monkeypatch):

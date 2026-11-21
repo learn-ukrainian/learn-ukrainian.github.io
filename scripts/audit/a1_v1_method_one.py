@@ -32,7 +32,8 @@ COMPONENTS = re.compile(
     r"<(Quiz|FillIn|Translate|TrueFalse|MatchUp|GroupSort|Order|Unjumble|ErrorCorrection|CountSyllables|DivideWords|OddOneOut|WatchAndRepeat)\b(.*?)/>",
     re.S,
 )
-JSON_PROP = re.compile(r"(\w+)=\{JSON\.parse\(`((?:\\.|[^`])*)`\)\}")
+# Start at the property's word boundary and consume each escape as one token.
+JSON_PROP = re.compile(r"\b(\w+)=\{JSON\.parse\(`((?:\\.|[^`\\])*)`\)\}")
 TYPE_COMPONENT = dict(
     zip(
         (

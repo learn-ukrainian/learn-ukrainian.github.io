@@ -155,10 +155,8 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
             total_expected = len(modules)
         except (OSError, UnicodeDecodeError, yaml.YAMLError, AttributeError, TypeError) as exc:
             logger.warning(
-                "comms batch progress: failed to load %s for track %s: %s",
-                curriculum_yaml.name,
-                track,
-                exc,
+                "comms batch progress: failed to load curriculum.yaml (%s)",
+                type(exc).__name__,
             )
             load_errors.append(f"{track}: {curriculum_yaml.name}: {type(exc).__name__}")
 

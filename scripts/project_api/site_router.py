@@ -19,6 +19,7 @@ than returning 500.
 from __future__ import annotations
 
 import json
+import logging
 import subprocess
 from pathlib import Path
 from typing import Any, cast
@@ -28,6 +29,7 @@ from lu_machinery.api import config as api_config
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx
 from lu_machinery.common import github_client
 
+logger = logging.getLogger(__name__)
 router = APIRouter(tags=["site"])
 
 # ---------------------------------------------------------------------
@@ -135,17 +137,13 @@ def _recent_deployments(limit: int, ctx: MonitorContext | None = None) -> dict[s
         ctx=ctx,
     )
     if proc.returncode != 0:
-        return {
-            "runs": [],
-            "error": (
-                proc.stderr.strip()
-                or "gh run list failed (is gh installed + authenticated?)"
-            ),
-        }
+        logger.warning("gh run list failed (exit %d): %r", proc.returncode, proc.stderr)
+        return {"runs": [], "error": "Could not load recent deployments."}
     try:
         runs = json.loads(proc.stdout or "[]")
-    except json.JSONDecodeError as exc:
-        return {"runs": [], "error": f"invalid gh json: {exc}"}
+    except json.JSONDecodeError:
+        logger.exception("gh run list returned invalid JSON")
+        return {"runs": [], "error": "Could not load recent deployments."}
     return {"runs": runs}
 
 
