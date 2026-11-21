@@ -1873,12 +1873,29 @@ def _read_db_path() -> Path:
 # The Sources MCP server installs a subclass that also reports database errors
 # the helpers below swallow (#11115).
 _connection_factory: type[sqlite3.Connection] | None = None
+_vesum_failure_observer: Callable[[OSError | sqlite3.Error], None] | None = None
 
 
-def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
-    """Open every later ``_open_conn`` connection as ``factory`` (``None``: unobserved)."""
-    global _connection_factory
+def set_connection_factory(
+    factory: type[sqlite3.Connection] | None,
+    *,
+    observe_vesum_failure: Callable[[OSError | sqlite3.Error], None] | None = None,
+) -> None:
+    """Use ``factory`` for later Sources connections (``None``: unobserved)."""
+    global _connection_factory, _vesum_failure_observer
     _connection_factory = factory
+    _vesum_failure_observer = observe_vesum_failure
+
+
+def observe_vesum_read_failure(exc: OSError | sqlite3.Error) -> None:
+    """Report VESUM failures that the cursor observer cannot see, including open errors."""
+    if _vesum_failure_observer is not None:
+        _vesum_failure_observer(exc)
+
+
+def open_read_connection(db_path: Path) -> sqlite3.Connection:
+    """Open a shared read-only connection with the Sources error observer, if installed."""
+    return open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
 
 
 def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:
@@ -1891,9 +1908,7 @@ def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connect
 
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
     if read_only:
-        # Shared across threads: open_readonly disables the statement cache
-        # that CPython 3.12 corrupts under concurrent use (#11217).
-        conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
+        conn = open_read_connection(db_path)
     else:
         refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}

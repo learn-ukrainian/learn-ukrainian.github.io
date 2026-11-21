@@ -292,13 +292,10 @@ def _normalize_supplied_tags(pos: str | None, tags: str | list[str] | None) -> s
 
 
 def _vesum_lookup(word_form: str) -> list[dict]:
-    """Read VESUM analyses; unavailable identity proof never admits ULIF rows."""
-    try:
-        from scripts.verification.vesum import verify_word
+    """Read VESUM analyses for a successful lookup, including empty results."""
+    from scripts.verification.vesum import verify_word
 
-        return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
-    except Exception:
-        return []
+    return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
 
 
 def _attach_vesum(match: dict[str, Any], vesum_matches: list[dict]) -> None:

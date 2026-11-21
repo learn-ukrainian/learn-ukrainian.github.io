@@ -26,6 +26,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+pytestmark = pytest.mark.usefixtures("empty_vesum_db")
 
 
 def _has_pymorphy3() -> bool:

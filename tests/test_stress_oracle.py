@@ -16,6 +16,8 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
+import pytest
+
 from scripts.verification.stress import (
     STRESS_BATCH_CAP,
     _load_trie,
@@ -225,11 +227,12 @@ class TestVesumJoin:
             result = verify_stress("замок", pos="NOUN", tags="Case=Nom,Number=Sing,Gender=Masc")
         assert all(m["vesum"] is None for m in result["matches"])
 
-    def test_vesum_join_failure_does_not_crash_the_call(self):
-        with patch("scripts.verification.vesum.verify_word", side_effect=FileNotFoundError("no db")):
-            result = verify_stress("замок")
-        assert result["status"] == "ambiguous"
-        assert all(m["vesum"] is None for m in result["matches"])
+    def test_vesum_join_failure_propagates(self):
+        with (
+            patch("scripts.verification.vesum.verify_word", side_effect=FileNotFoundError("no db")),
+            pytest.raises(FileNotFoundError, match="no db"),
+        ):
+            verify_stress("замок")
 
 
 class TestSourceInfo:

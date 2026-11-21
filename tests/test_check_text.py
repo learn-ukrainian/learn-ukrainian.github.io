@@ -146,6 +146,7 @@ def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db, requi
 # ── M2: Existing Tool Output Keys Preserved ──────────────────────────────────
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_is_russian_pattern_output_keys_unchanged():
     expected_keys = {"matches_russian", "russian_lemma", "ukrainian_alternative", "confidence"}
 
@@ -1051,6 +1052,7 @@ def test_synthetic_shadow_curated_and_suspicion_split(requires_vesum_db):
 
 def test_synthetic_ua_gec_source_unavailable_when_db_missing(monkeypatch):
     monkeypatch.setenv("LU_SOURCES_DB", "/nonexistent/sources.db")
+    monkeypatch.setattr("scripts.wiki.sources_db._conn", None)
     monkeypatch.setattr(
         "scripts.verification.check_text._sources_path_resolved",
         lambda: Path("/nonexistent/sources.db"),
