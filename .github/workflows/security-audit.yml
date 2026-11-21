@@ -5,6 +5,7 @@ name: Security Audit (blocking)
 # (pip-audit over the uv.lock export, with scripts/config/pip-audit-ignore.yaml)
 # and Node.js production dependencies (npm audit with
 # scripts/config/npm-audit-ignore.yaml).
+# PRs that change the scheduled npm audit or its policy validate it here.
 #
 # Reference issue: learn-ukrainian-infra-private#703
 
@@ -22,13 +23,17 @@ on:
     # Daily 04:23 UTC — keeps the dependency-advisory tracking issue current (#9871).
     - cron: '23 4 * * *'
   workflow_dispatch: {}
+  pull_request:
+    paths:
+      - 'scripts/config/npm-audit-ignore.yaml'
+      - '.github/workflows/security-audit.yml'
 
 jobs:
   pip-audit:
     name: pip-audit (blocking)
     # Weekly Monday schedule and dispatch only. The daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
-    if: ${{ github.event.schedule != '23 4 * * *' }}
+    if: ${{ github.event_name != 'pull_request' && github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The installed release has no implicit product: name this checkout.
@@ -68,7 +73,7 @@ jobs:
 
   npm-audit:
     name: npm-audit (blocking)
-    # Weekly Monday schedule and dispatch only. The daily 04:23 UTC run
+    # Weekly Monday schedule, dispatch and audit-policy PRs. The daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
     if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-24.04
