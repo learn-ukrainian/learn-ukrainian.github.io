@@ -1,10 +1,11 @@
 name: Security Audit (blocking)
 
-# Blocking dependency-vulnerability security gate for production dependencies.
-# Enforces zero unsuppressed High or Critical vulnerabilities across Python
+# Scheduled and manually dispatched dependency advisory checks. The required
+# PR and merge-group scans run in ci.yml. This workflow checks Python
 # (pip-audit over the uv.lock export, with scripts/config/pip-audit-ignore.yaml)
 # and Node.js production dependencies (npm audit with
 # scripts/config/npm-audit-ignore.yaml).
+# PRs that change the scheduled npm audit or its policy validate it here.
 #
 # Reference issue: learn-ukrainian-infra-private#703
 
@@ -24,19 +25,15 @@ on:
   workflow_dispatch: {}
   pull_request:
     paths:
-      - 'site/package-lock.json'
-      - 'scripts/config/pip-audit-ignore.yaml'
       - 'scripts/config/npm-audit-ignore.yaml'
-      - 'uv.lock'
       - '.github/workflows/security-audit.yml'
-      - '.github/actions/python-ci-env/**'
 
 jobs:
   pip-audit:
     name: pip-audit (blocking)
-    # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
+    # Weekly Monday schedule and dispatch only. The daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
-    if: ${{ github.event.schedule != '23 4 * * *' }}
+    if: ${{ github.event_name != 'pull_request' && github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The installed release has no implicit product: name this checkout.
@@ -76,7 +73,7 @@ jobs:
 
   npm-audit:
     name: npm-audit (blocking)
-    # Weekly Monday schedule, PRs and dispatch only: the daily 04:23 UTC run
+    # Weekly Monday schedule, dispatch and audit-policy PRs. The daily 04:23 UTC run
     # exists solely to refresh the advisory tracking issue (#9871).
     if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-24.04
@@ -217,7 +214,7 @@ jobs:
   stack-currency:
     name: Stack currency (report only)
     # Weekly Monday 09:00 UTC only. The daily 04:23 UTC run refreshes advisory
-    # findings; pull_request and workflow_dispatch do not publish this report.
+    # findings. Manual dispatches skip this report.
     # Versions and repo-relative paths only, as a comment on the open
     # dependency-advisory issue. This job never opens a pull request.
     if: ${{ github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1' }}

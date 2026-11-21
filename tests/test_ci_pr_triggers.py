@@ -435,6 +435,7 @@ _GREEN = {
     "PR_AFFECTED": "success",
     "REPO_INVARIANTS": "success",
     "FRONTEND": "success",
+    "FLEET_SECURITY": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
     "PYTEST_REPORT": "success",
@@ -483,7 +484,21 @@ def _run_gate(
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"REPO_INVARIANTS": "pr-invariants", "PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan", "PR_SCOPE": "pr-scope"}
+        mapping = {
+            "REPO_INVARIANTS": "pr-invariants",
+            "PR_AFFECTED": "pr-affected",
+            "SECRET_SCAN": "secret-scan",
+            "HYDRATE": "hydrate-release-assets",
+            "CHECKS": "checks",
+            "FRONTEND": "frontend",
+            "FLEET_SECURITY": "fleet-security",
+            "DEPENDENCY_AUDIT": "dependency-audit",
+            "REFRESH": "refresh-pytest-durations",
+            "PYTEST": "pytest",
+            "PYTEST_REPORT": "pytest-report",
+            "METADATA_SCAN": "queue-metadata-scan",
+            "PR_SCOPE": "pr-scope",
+        }
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         if needs["pr-scope"]["result"] == "success":
             needs["pr-scope"]["outputs"] = {"full-suite": full_suite}
@@ -545,6 +560,13 @@ def test_gate_requires_the_shards_when_pr_scope_reports_full_suite() -> None:
 def test_gate_requires_real_event_and_candidate_identity() -> None:
     for event in ("pull_request", "merge_group", "schedule", "workflow_dispatch"):
         assert _run_gate(event).returncode == 0
+        for status in ("failure", "skipped", "cancelled", "unknown"):
+            fleet = _run_gate(event, FLEET_SECURITY=status)
+            assert fleet.returncode != 0
+            assert f"fleet-security: {status}, expected success" in fleet.stderr
+        missing_fleet = _run_gate(event, NEEDS_JSON="{}")
+        assert missing_fleet.returncode != 0
+        assert "fleet-security: None, expected success" in missing_fleet.stderr
         for key in ("SECRET_SCAN", "CHECKS", "DEPENDENCY_AUDIT", "PYTEST", "PYTEST_REPORT", "REFRESH", "FRONTEND", "REPO_INVARIANTS"):
             assert _run_gate(event, **{key: "unknown"}).returncode != 0
         for corruption in ({"GITHUB_EVENT_JSON": "{}"}, {"GITHUB_EVENT_JSON": "{"}, {"GITHUB_SHA": "f" * 40}, {"GITHUB_REF": "refs/heads/wrong\n$(false)"}):

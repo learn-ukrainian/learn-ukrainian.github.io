@@ -1,0 +1,15 @@
+vulnerabilities:
+  - id: CVE-2026-78661
+    paths: [usr/local/bin/pocketbase]
+    purls: ["pkg:golang/golang.org/x/net@v0.61.0"]
+    expired_at: 2026-12-21
+    statement: >-
+      Localhost-only Practice Hub dev image (pocketbase/compose.yaml:2).
+      Fixed upstream, awaiting a PocketBase release.
+  - id: CVE-2026-97054
+    paths: [usr/local/bin/pocketbase]
+    purls: ["pkg:golang/stdlib@v1.27.3"]
+    expired_at: 2026-12-21
+    statement: >-
+      Localhost-only Practice Hub dev image (pocketbase/compose.yaml:2).
+      Fixed upstream, awaiting a PocketBase release.

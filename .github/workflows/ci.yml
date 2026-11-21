@@ -1011,8 +1011,74 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  fleet-security:
+    name: Fleet security
+    uses: learn-ukrainian/machinery/.github/workflows/fleet-security.yml@eb5547a8e8b534e118ab8804b759c2a6f31f1905
+    permissions:
+      contents: read
+    with:
+      run-actionlint: true
+      run-shellcheck: true
+      shellcheck-severity: error
+      # Directories cover .sh files. List extensionless hooks and entry points too.
+      shellcheck-paths: |
+        .cursor
+        .githooks
+        agents_extensions
+        registry
+        scripts
+        .githooks/commit-msg
+        .githooks/post-checkout
+        .githooks/post-commit
+        .githooks/post-merge
+        .githooks/pre-commit
+        .githooks/pre-push
+        .githooks/reference-transaction
+        bin/services
+        run-dispatcher.sh
+        services.sh
+        start-claude-cto.sh
+        start-claude-driver.sh
+        start-claude.sh
+        start-codex-cto.sh
+        start-codex-driver.sh
+        start-codex.sh
+        start-gemini-driver.sh
+        start-gemini.sh
+      run-zizmor: true
+      zizmor-config: zizmor.yml
+      run-trivy-fs: true
+      trivy-fs-targets: |
+        package-lock.json
+        site/package-lock.json
+        uv.lock
+      # Optional sharp platform packages use libvips under LGPL-3.0-or-later.
+      # Match each package and its SPDX expression only in the site lock.
+      trivy-fs-license-dispositions: |
+        site/package-lock.json|@img/sharp-libvips-darwin-arm64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-darwin-x64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-arm|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-arm64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-ppc64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-riscv64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-s390x|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linux-x64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linuxmusl-arm64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-libvips-linuxmusl-x64|LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-wasm32|Apache-2.0 AND LGPL-3.0-or-later AND MIT
+        site/package-lock.json|@img/sharp-win32-arm64|Apache-2.0 AND LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-win32-ia32|Apache-2.0 AND LGPL-3.0-or-later
+        site/package-lock.json|@img/sharp-win32-x64|Apache-2.0 AND LGPL-3.0-or-later
+      run-trivy-iac: true
+      trivy-iac-scanners: dockerfile
+      trivy-iac-targets: pocketbase/Dockerfile
+      run-trivy-image: true
+      trivy-image-targets: build|pocketbase/Dockerfile|pocketbase
+      trivy-ignorefile: pocketbase/.trivyignore.yaml
+
   dependency-audit:
-    name: Dependency audit
+    name: Python advisory audit
+    # The existing Python audit blocks findings at every severity.
     if: ${{ !cancelled() }}
     # Runs the full audit only when the diff touches a dependency input
     # (scripts/ci/dependency_change_denominator.json) or the base is unknown;
@@ -1058,23 +1124,19 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m lu_machinery.ci.dependency_change_scope --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
       - if: steps.scope.outputs.run == 'true'
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: '.nvmrc'
-      - if: steps.scope.outputs.run == 'true'
-        name: Run dependency vulnerability audit
+        name: Run Python advisory audit
         env:
           LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
         run: |
           python -m pip install --upgrade pip pip-audit PyYAML
-          python -m lu_machinery.ci.audit_dependencies
+          python -m lu_machinery.ci.audit_dependencies --skip-node
 
   ci-gate:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
     # Every dependency must finish with the result required by its event tier.
-    needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, pr-invariants, pr-scope, refresh-pytest-durations, pytest, pytest-report]
+    needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, fleet-security, dependency-audit, pr-affected, pr-invariants, pr-scope, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -1144,8 +1206,8 @@ jobs:
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
-        # The locked gate knows the original job set. Validate the split-out
-        # invariants result before passing that unchanged set to it.
+        # Validate the jobs added by this workflow before passing the locked
+        # aggregator the job set it expects.
         run: |
           NEEDS_JSON="$("$PYTHON_BIN" - <<'PY'
           import json
@@ -1153,6 +1215,11 @@ jobs:
           import sys
 
           needs = json.loads(os.environ["NEEDS_JSON"])
+          fleet_result = needs.pop("fleet-security", {}).get("result")
+          print(f"fleet-security: {fleet_result}, expected success", file=sys.stderr)
+          if fleet_result != "success":
+              sys.exit(1)
+
           result = needs.pop("pr-invariants")["result"]
           expected = "success" if os.environ["EVENT_NAME"] == "pull_request" else "skipped"
           print(f"pr-invariants: {result}, expected {expected}", file=sys.stderr)
