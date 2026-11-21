@@ -78,9 +78,10 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
       expect(lexicalCard).toHaveTextContent('Лексична норма');
       expect(lexicalCard).toHaveTextContent('Lexical Norms & Calques');
 
-      // Culture of speech card: "Культура мовлення" with "Error Correction"
+      // Culture of speech card: "Culture of Speech" with "Error Correction" on EN locale
       const cultureCard = screen.getByTestId('practice-card-culture');
-      expect(cultureCard).toHaveTextContent('Культура мовлення');
+      expect(cultureCard).toHaveTextContent('Culture of Speech');
+      expect(cultureCard).not.toHaveTextContent('Культура мовлення');
       expect(cultureCard).toHaveTextContent('Error Correction');
     });
   });
@@ -170,6 +171,8 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
       }
 
       const cultureCard = screen.getByTestId('practice-card-culture');
+      expect(cultureCard).toHaveTextContent(CULTURE_DECK_META.title); // 'Культура мовлення'
+      expect(cultureCard).not.toHaveTextContent(CULTURE_DECK_META.en); // 'Culture of Speech'
       expect(cultureCard).toHaveTextContent(CULTURE_DECK_META.step); // 'Збагачення'
       expect(cultureCard).not.toHaveTextContent(CULTURE_DECK_META.stepEn); // 'Enrichment'
     });
