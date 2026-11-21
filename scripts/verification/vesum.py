@@ -55,6 +55,10 @@ class InspectionStatus(StrEnum):
     UNAVAILABLE = "UNAVAILABLE"
 
 
+class VesumStoreMissing(FileNotFoundError):
+    """The configured VESUM store does not exist."""
+
+
 @dataclass(frozen=True)
 class WordInspection:
     """Inspection result for a single word form."""
@@ -114,7 +118,7 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     result = resolve_store("vesum", PROJECT_ROOT, binding=binding)
     if isinstance(result, StoreRefusal):
         if result.reason == "store_missing":
-            raise FileNotFoundError("VESUM database not found: store_missing") from None
+            raise VesumStoreMissing("VESUM database not found: store_missing") from None
         raise FileNotFoundError(result.reason) from None
     return result.path
 

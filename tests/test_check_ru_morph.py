@@ -34,6 +34,7 @@ def sources_with_malformed_vesum(tmp_path, monkeypatch):
     vesum_db.write_bytes(b"not a SQLite database")
     monkeypatch.setenv("LU_VESUM_DB", str(vesum_db))
     monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent-sources.db"))
+    monkeypatch.setattr("scripts.wiki.sources_db._conn", None)
     return load_server()
 
 

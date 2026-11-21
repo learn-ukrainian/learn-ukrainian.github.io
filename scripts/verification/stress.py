@@ -292,10 +292,13 @@ def _normalize_supplied_tags(pos: str | None, tags: str | list[str] | None) -> s
 
 
 def _vesum_lookup(word_form: str) -> list[dict]:
-    """Read VESUM analyses for a successful lookup, including empty results."""
-    from scripts.verification.vesum import verify_word
+    """Read VESUM analyses, allowing offline stress lookups without a store."""
+    from scripts.verification.vesum import VesumStoreMissing, verify_word
 
-    return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
+    try:
+        return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
+    except VesumStoreMissing:
+        return []
 
 
 def _attach_vesum(match: dict[str, Any], vesum_matches: list[dict]) -> None:
