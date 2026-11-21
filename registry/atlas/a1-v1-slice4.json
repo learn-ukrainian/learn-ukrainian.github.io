@@ -1,11 +1,11 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "e92e91e5aae6c2547805d7a72c114ce93e62072f5b36c3d0b59c640b28c2e073",
-    "companion_sha256": "11dd7026406ca5293d83db64cb43fac1b85a8a0fb299b76c1724fd8e89e82de9",
-    "consumed_sha256": "3ee11d9d0535068c5ccf372a56b4b9e99176b81c484104d3007ac6663c2c92d4",
-    "slice2_companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293",
-    "slice3_companion_sha256": "1217b8f71a011733a9df701f67f4a70dc7e84f4c8ae8b218e96d1611d64a321c"
+    "combined_sha256": "39834ef08dde1735f9310701da788711cda3125d36b24d52ea7510a0797a48c7",
+    "companion_sha256": "a0f11ff75cbf2b47040f4b53b3a60d1565aab3419c401eb2d405e82c2e1549ce",
+    "consumed_sha256": "6f2a7f9a7fd107c685ed839927bcf2ab8299904b05db689192b1f42d78f81638",
+    "slice2_companion_sha256": "b23f417ec7e1e4dafb9beeda56dd5a795594f495cdac4b02699b9b689fbf5109",
+    "slice3_companion_sha256": "cb6fdef7407cf3a352c958918ebf25a2104cb0d5d14afe97aefa245fd27a5848"
   },
   "approval_ref": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/11943#issuecomment-6543101302",
   "approved_plan_sha256": "92e3ed73156de99cfbfa9566cb927fe70d50ab8c5d192f98dc2822eceae883ac",
@@ -24173,6 +24173,1525 @@
         26,
         101
       ]
+    },
+    {
+      "card_id": "wc_0nrnjzb8y2hr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вокзал",
+      "sense_id": "ws_1g0bby7y8kkm",
+      "source_sense_key": "vts:вокзал#unnumbered/1",
+      "span": [
+        0,
+        7
+      ],
+      "entry_id": 64973,
+      "field": "gloss_en",
+      "scope_key": "wc_0nrnjzb8y2hr:ws_1g0bby7y8kkm:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            292,
+            318
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          292,
+          318
+        ]
+      }
+    },
+    {
+      "card_id": "wc_1mh9dbb9ab1j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:70244",
+      "sense_id": "ws_kj4nnvz733rw",
+      "source_sense_key": "vts:подорожувати#unnumbered/1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 289933,
+      "field": "gloss_en",
+      "scope_key": "wc_1mh9dbb9ab1j:ws_kj4nnvz733rw:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            366,
+            401
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          366,
+          401
+        ]
+      }
+    },
+    {
+      "card_id": "wc_1p9kn1hp3xkw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:сувенір",
+      "sense_id": "ws_eqmyfj2rvahm",
+      "source_sense_key": "vts:сувенір#unnumbered/1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 376940,
+      "field": "gloss_en",
+      "scope_key": "wc_1p9kn1hp3xkw:ws_eqmyfj2rvahm:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            34
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          34
+        ]
+      }
+    },
+    {
+      "card_id": "wc_1yzz2t6w3bts",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:магніт",
+      "sense_id": "ws_h2nj84ta45r0",
+      "source_sense_key": "vts:магніт#unnumbered/1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 192553,
+      "field": "gloss_en",
+      "scope_key": "wc_1yzz2t6w3bts:ws_h2nj84ta45r0:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            11
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          11
+        ]
+      }
+    },
+    {
+      "card_id": "wc_30z8t6qeba6j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:37516",
+      "sense_id": "ws_a6v1q517vb3f",
+      "source_sense_key": "vts:наліво#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 219768,
+      "field": "gloss_en",
+      "scope_key": "wc_30z8t6qeba6j:ws_a6v1q517vb3f:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            489,
+            546
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          489,
+          546
+        ]
+      }
+    },
+    {
+      "card_id": "wc_4kbzt0zq0emw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:56682",
+      "sense_id": "ws_hdtbt7xqj1yj",
+      "source_sense_key": "vts:направо#unnumbered/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 222512,
+      "field": "gloss_en",
+      "scope_key": "wc_4kbzt0zq0emw:ws_hdtbt7xqj1yj:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2776,
+            2796
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2776,
+          2796
+        ]
+      }
+    },
+    {
+      "card_id": "wc_4r15bhx0tzq9",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:ресторан",
+      "sense_id": "ws_z9pc3vv0x6g9",
+      "source_sense_key": "vts:ресторан#unnumbered/1",
+      "span": [
+        0,
+        10
+      ],
+      "entry_id": 334224,
+      "field": "gloss_en",
+      "scope_key": "wc_4r15bhx0tzq9:ws_z9pc3vv0x6g9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            14
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          14
+        ]
+      }
+    },
+    {
+      "card_id": "wc_4ykc55b9hn1n",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:Карпати",
+      "sense_id": "ws_n7bzb649hmc8",
+      "source_sense_key": "ulif:94176#sense_gloss",
+      "span": [
+        0,
+        11
+      ],
+      "entry_id": 161525,
+      "field": "gloss_en",
+      "scope_key": "wc_4ykc55b9hn1n:ws_n7bzb649hmc8:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            26
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          26
+        ]
+      }
+    },
+    {
+      "card_id": "wc_53j9factb4yn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:музей",
+      "sense_id": "ws_012t5q5pb9zv",
+      "source_sense_key": "vts:музей#1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 208868,
+      "field": "gloss_en",
+      "scope_key": "wc_53j9factb4yn:ws_012t5q5pb9zv:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            7
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          7
+        ]
+      }
+    },
+    {
+      "card_id": "wc_54p08hqyn4xf",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:листівка",
+      "sense_id": "ws_8jyjxp5xybp9",
+      "source_sense_key": "vts:листівка#1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 186992,
+      "field": "gloss_en",
+      "scope_key": "wc_54p08hqyn4xf:ws_8jyjxp5xybp9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            7,
+            25
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          7,
+          25
+        ]
+      }
+    },
+    {
+      "card_id": "wc_5fvqcbekewx7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:65009",
+      "sense_id": "ws_bb856en3v3v2",
+      "source_sense_key": "vts:прямо#1/subsense-direction",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 325891,
+      "field": "gloss_en",
+      "scope_key": "wc_5fvqcbekewx7:ws_bb856en3v3v2:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            1333,
+            1358
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          1333,
+          1358
+        ]
+      }
+    },
+    {
+      "card_id": "wc_5fxp3178p3cz",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:27210",
+      "sense_id": "ws_rfge5tc2ac2x",
+      "source_sense_key": "vts:їхати#1",
+      "span": [
+        0,
+        2
+      ],
+      "entry_id": 157359,
+      "field": "gloss_en",
+      "scope_key": "wc_5fxp3178p3cz:ws_rfge5tc2ac2x:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            1056,
+            1083
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          1056,
+          1083
+        ]
+      }
+    },
+    {
+      "card_id": "wc_5gwdm0yb49w1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:трамвай",
+      "sense_id": "ws_a73k370jtxxb",
+      "source_sense_key": "vts:трамвай#unnumbered/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 389885,
+      "field": "gloss_en",
+      "scope_key": "wc_5gwdm0yb49w1:ws_a73k370jtxxb:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            19
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          19
+        ]
+      }
+    },
+    {
+      "card_id": "wc_5ry3h88g44jk",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10795",
+      "sense_id": "ws_tsctbhdyvv7m",
+      "source_sense_key": "vts:кінотеатр#unnumbered/1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 166795,
+      "field": "gloss_en",
+      "scope_key": "wc_5ry3h88g44jk:ws_tsctbhdyvv7m:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            48,
+            75
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          48,
+          75
+        ]
+      }
+    },
+    {
+      "card_id": "wc_674sq3vqjaq7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:лікарня",
+      "sense_id": "ws_8hc1fkngd0aa",
+      "source_sense_key": "vts:лікарня#unnumbered/1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 187818,
+      "field": "gloss_en",
+      "scope_key": "wc_674sq3vqjaq7:ws_8hc1fkngd0aa:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            12
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          12
+        ]
+      }
+    },
+    {
+      "card_id": "wc_8c9yzekq4n31",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:56392",
+      "sense_id": "ws_77yemr3pk8ts",
+      "source_sense_key": "vts:повторювати#3",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 288308,
+      "field": "gloss_en",
+      "scope_key": "wc_8c9yzekq4n31:ws_77yemr3pk8ts:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            755,
+            791
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          755,
+          791
+        ]
+      }
+    },
+    {
+      "card_id": "wc_8zw060wac5qa",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:аптека",
+      "sense_id": "ws_msp3t05fjgyr",
+      "source_sense_key": "vts:аптека#unnumbered/1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 10756,
+      "field": "gloss_en",
+      "scope_key": "wc_8zw060wac5qa:ws_msp3t05fjgyr:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            30,
+            39
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          30,
+          39
+        ]
+      }
+    },
+    {
+      "card_id": "wc_9ph0a8218wp1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:бібліотека",
+      "sense_id": "ws_xdnezt8w3qr0",
+      "source_sense_key": "vts:бібліотека#1",
+      "span": [
+        0,
+        7
+      ],
+      "entry_id": 23312,
+      "field": "gloss_en",
+      "scope_key": "wc_9ph0a8218wp1:ws_xdnezt8w3qr0:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            15
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          15
+        ]
+      }
+    },
+    {
+      "card_id": "wc_9whseb1sqhjh",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:46003",
+      "sense_id": "ws_4r96xcgz7hrm",
+      "source_sense_key": "vts:замовляти#1/subsense-food",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 128908,
+      "field": "gloss_en",
+      "scope_key": "wc_9whseb1sqhjh:ws_4r96xcgz7hrm:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            1962,
+            1974
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          1962,
+          1974
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ahfex5jz3eb1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10935",
+      "sense_id": "ws_1y7j6m4wmyd8",
+      "source_sense_key": "vts:місто#I/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 204813,
+      "field": "gloss_en",
+      "scope_key": "wc_ahfex5jz3eb1:ws_1y7j6m4wmyd8:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            19
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          19
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cjrys6b2wy58",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:хвилина",
+      "sense_id": "ws_efkqq3238yq6",
+      "source_sense_key": "vts:хвилина#1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 411582,
+      "field": "gloss_en",
+      "scope_key": "wc_cjrys6b2wy58:ws_efkqq3238yq6:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            15,
+            25
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          15,
+          25
+        ]
+      }
+    },
+    {
+      "card_id": "wc_cw9xb6p6y5ab",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вокзал",
+      "sense_id": "ws_49stfp83k444",
+      "source_sense_key": "vts:станція#2",
+      "span": [
+        0,
+        7
+      ],
+      "entry_id": 371920,
+      "field": "gloss_en",
+      "scope_key": "wc_cw9xb6p6y5ab:ws_49stfp83k444:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            292,
+            318
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          292,
+          318
+        ]
+      }
+    },
+    {
+      "card_id": "wc_d0xg7qef12zs",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:меню",
+      "sense_id": "ws_63kfe93egbjd",
+      "source_sense_key": "vts:меню#2",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 199761,
+      "field": "gloss_en",
+      "scope_key": "wc_d0xg7qef12zs:ws_63kfe93egbjd:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            10
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          10
+        ]
+      }
+    },
+    {
+      "card_id": "wc_d7h0hpjer9vn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:готовий",
+      "sense_id": "ws_12gx6wjpb0mq",
+      "source_sense_key": "vts:готовий#1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 82422,
+      "field": "gloss_en",
+      "scope_key": "wc_d7h0hpjer9vn:ws_12gx6wjpb0mq:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            154,
+            194
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          154,
+          194
+        ]
+      }
+    },
+    {
+      "card_id": "wc_d7ry67zc2hd1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68200",
+      "sense_id": "ws_k8bhv4srszn2",
+      "source_sense_key": "vts:театр#3",
+      "span": [
+        0,
+        7
+      ],
+      "entry_id": 382610,
+      "field": "gloss_en",
+      "scope_key": "wc_d7ry67zc2hd1:ws_k8bhv4srszn2:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            44
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          44
+        ]
+      }
+    },
+    {
+      "card_id": "wc_dth7czyfjmea",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:картка",
+      "sense_id": "ws_8fpavqf5ggb9",
+      "source_sense_key": "vts:картка#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 161722,
+      "field": "gloss_en",
+      "scope_key": "wc_dth7czyfjmea:ws_8fpavqf5ggb9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            53,
+            62
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          53,
+          62
+        ]
+      }
+    },
+    {
+      "card_id": "wc_dw09kw717k9v",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:51576",
+      "sense_id": "ws_jth9jfdwvw5z",
+      "source_sense_key": "vts:пошта#1",
+      "span": [
+        0,
+        11
+      ],
+      "entry_id": 308350,
+      "field": "gloss_en",
+      "scope_key": "wc_dw09kw717k9v:ws_jth9jfdwvw5z:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            10
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          10
+        ]
+      }
+    },
+    {
+      "card_id": "wc_e4k85rw13arn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:офіціант",
+      "sense_id": "ws_ez436kxgc1jw",
+      "source_sense_key": "vts:офіціант#unnumbered/1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 258576,
+      "field": "gloss_en",
+      "scope_key": "wc_e4k85rw13arn:ws_ez436kxgc1jw:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            13
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          13
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ecmfacpw1qwr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:17266",
+      "sense_id": "ws_5azvq26vhkeh",
+      "source_sense_key": "vts:район#1",
+      "span": [
+        0,
+        8
+      ],
+      "entry_id": 330413,
+      "field": "gloss_en",
+      "scope_key": "wc_ecmfacpw1qwr:ws_5azvq26vhkeh:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            44
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          44
+        ]
+      }
+    },
+    {
+      "card_id": "wc_f6ahhhn44ewg",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:далеко",
+      "sense_id": "ws_62wr1b6nnzn1",
+      "source_sense_key": "vts:далеко#3",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 87402,
+      "field": "gloss_en",
+      "scope_key": "wc_f6ahhhn44ewg:ws_62wr1b6nnzn1:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            368,
+            398
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          368,
+          398
+        ]
+      }
+    },
+    {
+      "card_id": "wc_fgy7j6amz988",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:стадіон",
+      "sense_id": "ws_0f5vqd10a7m7",
+      "source_sense_key": "vts:стадіон#unnumbered/1",
+      "span": [
+        0,
+        7
+      ],
+      "entry_id": 371580,
+      "field": "gloss_en",
+      "scope_key": "wc_fgy7j6amz988:ws_0f5vqd10a7m7:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            14,
+            24
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          14,
+          24
+        ]
+      }
+    },
+    {
+      "card_id": "wc_fvm1n8sbx652",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:75751",
+      "sense_id": "ws_a69dmf2744q4",
+      "source_sense_key": "vts:іти#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 157054,
+      "field": "gloss_en",
+      "scope_key": "wc_fvm1n8sbx652:ws_a69dmf2744q4:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            770,
+            792
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          770,
+          792
+        ]
+      }
+    },
+    {
+      "card_id": "wc_gfj772dsjrj6",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:готель",
+      "sense_id": "ws_nygjcecpca2f",
+      "source_sense_key": "vts:готель#unnumbered/1",
+      "span": [
+        0,
+        5
+      ],
+      "entry_id": 82385,
+      "field": "gloss_en",
+      "scope_key": "wc_gfj772dsjrj6:ws_nygjcecpca2f:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            8
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          8
+        ]
+      }
+    },
+    {
+      "card_id": "wc_h7wrwbz8j9wv",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:автобус",
+      "sense_id": "ws_w9m9kwt248fh",
+      "source_sense_key": "vts:автобус#unnumbered/1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 1559,
+      "field": "gloss_en",
+      "scope_key": "wc_h7wrwbz8j9wv:ws_w9m9kwt248fh:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            23,
+            61
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          23,
+          61
+        ]
+      }
+    },
+    {
+      "card_id": "wc_j05amz5bncmy",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:парк",
+      "sense_id": "ws_56aexaeyp8d4",
+      "source_sense_key": "vts:парк#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 262017,
+      "field": "gloss_en",
+      "scope_key": "wc_j05amz5bncmy:ws_56aexaeyp8d4:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            35
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          35
+        ]
+      }
+    },
+    {
+      "card_id": "wc_j2q1dhp7e7gx",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:фільм",
+      "sense_id": "ws_zreqhwekzn44",
+      "source_sense_key": "vts:фільм#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 406358,
+      "field": "gloss_en",
+      "scope_key": "wc_j2q1dhp7e7gx:ws_zreqhwekzn44:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            61
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          61
+        ]
+      }
+    },
+    {
+      "card_id": "wc_m3m8szjcrpwb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:30743",
+      "sense_id": "ws_7egs9677vp6x",
+      "source_sense_key": "vts:додому#unnumbered/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 99875,
+      "field": "gloss_en",
+      "scope_key": "wc_m3m8szjcrpwb:ws_7egs9677vp6x:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            1577,
+            1615
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          1577,
+          1615
+        ]
+      }
+    },
+    {
+      "card_id": "wc_n2m7cvpfktaw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:супермаркет",
+      "sense_id": "ws_kvskf0335jpx",
+      "source_sense_key": "vts:супермаркет#unnumbered/1",
+      "span": [
+        0,
+        11
+      ],
+      "entry_id": 378248,
+      "field": "gloss_en",
+      "scope_key": "wc_n2m7cvpfktaw:ws_kvskf0335jpx:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            38,
+            60
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          38,
+          60
+        ]
+      }
+    },
+    {
+      "card_id": "wc_prm2xskze7gs",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вулиця",
+      "sense_id": "ws_yb93aev8c4ap",
+      "source_sense_key": "vts:вулиця#1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 70080,
+      "field": "gloss_en",
+      "scope_key": "wc_prm2xskze7gs:ws_yb93aev8c4ap:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            2,
+            32
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          2,
+          32
+        ]
+      }
+    },
+    {
+      "card_id": "wc_qaydrgk69gnq",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:зупинка",
+      "sense_id": "ws_2g7gyxcsjfm7",
+      "source_sense_key": "vts:зупинка#2",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 150918,
+      "field": "gloss_en",
+      "scope_key": "wc_qaydrgk69gnq:ws_2g7gyxcsjfm7:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            232,
+            257
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          232,
+          257
+        ]
+      }
+    },
+    {
+      "card_id": "wc_qy7beytbbd3g",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:площа",
+      "sense_id": "ws_9y864ea1crpf",
+      "source_sense_key": "vts:площа#2",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 285033,
+      "field": "gloss_en",
+      "scope_key": "wc_qy7beytbbd3g:ws_9y864ea1crpf:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            88,
+            132
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          88,
+          132
+        ]
+      }
+    },
+    {
+      "card_id": "wc_t5gwhx1baqvb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43332",
+      "sense_id": "ws_xseh2zhfgab9",
+      "source_sense_key": "vts:близько#1/subsense-predicative",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 25953,
+      "field": "gloss_en",
+      "scope_key": "wc_t5gwhx1baqvb:ws_xseh2zhfgab9:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            641,
+            676
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          641,
+          676
+        ]
+      }
+    },
+    {
+      "card_id": "wc_w540mrackgay",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:карта",
+      "sense_id": "ws_vcwhbke16cdw",
+      "source_sense_key": "vts:карта#1",
+      "span": [
+        0,
+        3
+      ],
+      "entry_id": 161650,
+      "field": "gloss_en",
+      "scope_key": "wc_w540mrackgay:ws_vcwhbke16cdw:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            23
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          23
+        ]
+      }
+    },
+    {
+      "card_id": "wc_xbw7msqev2mz",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:банк",
+      "sense_id": "ws_h1x8n7z5nd64",
+      "source_sense_key": "vts:банк#I/1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 17025,
+      "field": "gloss_en",
+      "scope_key": "wc_xbw7msqev2mz:ws_h1x8n7z5nd64:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            169,
+            176
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          169,
+          176
+        ]
+      }
+    },
+    {
+      "card_id": "wc_xhzws68qph50",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11539",
+      "sense_id": "ws_6nz17rc3jtw0",
+      "source_sense_key": "vts:кав'ярня#unnumbered/1",
+      "span": [
+        0,
+        12
+      ],
+      "entry_id": 158130,
+      "field": "gloss_en",
+      "scope_key": "wc_xhzws68qph50:ws_6nz17rc3jtw0:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            0,
+            16
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          0,
+          16
+        ]
+      }
+    },
+    {
+      "card_id": "wc_y80dbz6xjmfm",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:лінія",
+      "sense_id": "ws_jt8ath1em4r8",
+      "source_sense_key": "vts:лінія#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 188280,
+      "field": "gloss_en",
+      "scope_key": "wc_y80dbz6xjmfm:ws_jt8ath1em4r8:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            42
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          42
+        ]
+      }
+    },
+    {
+      "card_id": "wc_ycr0jrc7823x",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:квиток",
+      "sense_id": "ws_xz4skcq0zx71",
+      "source_sense_key": "vts:квиток#1",
+      "span": [
+        0,
+        6
+      ],
+      "entry_id": 163594,
+      "field": "gloss_en",
+      "scope_key": "wc_ycr0jrc7823x:ws_xz4skcq0zx71:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            9,
+            47
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          9,
+          47
+        ]
+      }
+    },
+    {
+      "card_id": "wc_yd5ekty2j7kb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:21389",
+      "sense_id": "ws_a4rrgjwcmprb",
+      "source_sense_key": "vts:чудовий#1",
+      "span": [
+        0,
+        9
+      ],
+      "entry_id": 422190,
+      "field": "gloss_en",
+      "scope_key": "wc_yd5ekty2j7kb:ws_a4rrgjwcmprb:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            4,
+            37
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          4,
+          37
+        ]
+      }
+    },
+    {
+      "card_id": "wc_yzbzta7v5f50",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:37516",
+      "sense_id": "ws_r578d35x6pvf",
+      "source_sense_key": "vts:ліворуч#1",
+      "span": [
+        0,
+        4
+      ],
+      "entry_id": 187623,
+      "field": "gloss_en",
+      "scope_key": "wc_yzbzta7v5f50:ws_r578d35x6pvf:gloss_en",
+      "supporting_spans": [
+        {
+          "pointer": "/hits/0/definition",
+          "span": [
+            489,
+            515
+          ]
+        }
+      ],
+      "translation_direction": "en-uk",
+      "usage_pair": {
+        "pointer": "/hits/0/definition",
+        "span": [
+          489,
+          515
+        ]
+      }
     }
   ],
   "denominator": {
@@ -24242,7 +25761,18 @@
     "wc_g59eyf8q3f8b/wc_g59eyf8q3f8b/definition_uk": "reference_only_or_no_unique_admitted_sense",
     "wc_jzn5f3w88gz6/wc_jzn5f3w88gz6/definition_uk": "reference_only_or_no_unique_admitted_sense",
     "wc_pjpsnj7c7ctd/ws_0tp6dp7ap1zq/definition_uk": "reference_only_non_definitional_meaning",
-    "wc_tjwe015jd9zr/ws_6fx9yb2jkse4/definition_uk": "reference_only_non_definitional_meaning"
+    "wc_tjwe015jd9zr/ws_6fx9yb2jkse4/definition_uk": "reference_only_non_definitional_meaning",
+    "wc_21rpwhsdp9xm/ws_azp477g26kfx/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_59qaqh2n5ddc/ws_x4q73sr0pqaj/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_8syxw71fkym0/wc_8syxw71fkym0/gloss_en": "gloss_no_allocated_sense",
+    "wc_g59eyf8q3f8b/wc_g59eyf8q3f8b/gloss_en": "gloss_no_allocated_sense",
+    "wc_jzn5f3w88gz6/wc_jzn5f3w88gz6/gloss_en": "gloss_no_allocated_sense",
+    "wc_p4r6ndg6y331/ws_sq83caz1vkrj/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_pjpsnj7c7ctd/ws_0tp6dp7ap1zq/gloss_en": "gloss_no_qualified_sense_witness",
+    "wc_qv26p84e5s2a/ws_ybwy56wnt29h/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_tjwe015jd9zr/ws_6fx9yb2jkse4/gloss_en": "gloss_no_qualified_sense_witness",
+    "wc_wan2nqn6vk04/ws_31ygee7xmjha/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_z8f8wqmqpgxh/ws_5rjwkcvfs3nc/gloss_en": "gloss_no_sense_aligned_balla_witness"
   },
   "held_units": [
     {
@@ -25823,6 +27353,545 @@
         23,
         98
       ]
+    },
+    "wc_0nrnjzb8y2hr:ws_1g0bby7y8kkm:gloss_en": {
+      "card_id": "wc_0nrnjzb8y2hr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вокзал",
+      "sense_id": "ws_1g0bby7y8kkm",
+      "source_sense_key": "vts:вокзал#unnumbered/1",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_1mh9dbb9ab1j:ws_kj4nnvz733rw:gloss_en": {
+      "card_id": "wc_1mh9dbb9ab1j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:70244",
+      "sense_id": "ws_kj4nnvz733rw",
+      "source_sense_key": "vts:подорожувати#unnumbered/1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_1p9kn1hp3xkw:ws_eqmyfj2rvahm:gloss_en": {
+      "card_id": "wc_1p9kn1hp3xkw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:сувенір",
+      "sense_id": "ws_eqmyfj2rvahm",
+      "source_sense_key": "vts:сувенір#unnumbered/1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_1yzz2t6w3bts:ws_h2nj84ta45r0:gloss_en": {
+      "card_id": "wc_1yzz2t6w3bts",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:магніт",
+      "sense_id": "ws_h2nj84ta45r0",
+      "source_sense_key": "vts:магніт#unnumbered/1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_30z8t6qeba6j:ws_a6v1q517vb3f:gloss_en": {
+      "card_id": "wc_30z8t6qeba6j",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:37516",
+      "sense_id": "ws_a6v1q517vb3f",
+      "source_sense_key": "vts:наліво#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_4kbzt0zq0emw:ws_hdtbt7xqj1yj:gloss_en": {
+      "card_id": "wc_4kbzt0zq0emw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:56682",
+      "sense_id": "ws_hdtbt7xqj1yj",
+      "source_sense_key": "vts:направо#unnumbered/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_4r15bhx0tzq9:ws_z9pc3vv0x6g9:gloss_en": {
+      "card_id": "wc_4r15bhx0tzq9",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:ресторан",
+      "sense_id": "ws_z9pc3vv0x6g9",
+      "source_sense_key": "vts:ресторан#unnumbered/1",
+      "span": [
+        0,
+        10
+      ]
+    },
+    "wc_4ykc55b9hn1n:ws_n7bzb649hmc8:gloss_en": {
+      "card_id": "wc_4ykc55b9hn1n",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:Карпати",
+      "sense_id": "ws_n7bzb649hmc8",
+      "source_sense_key": "ulif:94176#sense_gloss",
+      "span": [
+        0,
+        11
+      ]
+    },
+    "wc_53j9factb4yn:ws_012t5q5pb9zv:gloss_en": {
+      "card_id": "wc_53j9factb4yn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:музей",
+      "sense_id": "ws_012t5q5pb9zv",
+      "source_sense_key": "vts:музей#1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_54p08hqyn4xf:ws_8jyjxp5xybp9:gloss_en": {
+      "card_id": "wc_54p08hqyn4xf",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:листівка",
+      "sense_id": "ws_8jyjxp5xybp9",
+      "source_sense_key": "vts:листівка#1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_5fvqcbekewx7:ws_bb856en3v3v2:gloss_en": {
+      "card_id": "wc_5fvqcbekewx7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:65009",
+      "sense_id": "ws_bb856en3v3v2",
+      "source_sense_key": "vts:прямо#1/subsense-direction",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_5fxp3178p3cz:ws_rfge5tc2ac2x:gloss_en": {
+      "card_id": "wc_5fxp3178p3cz",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:27210",
+      "sense_id": "ws_rfge5tc2ac2x",
+      "source_sense_key": "vts:їхати#1",
+      "span": [
+        0,
+        2
+      ]
+    },
+    "wc_5gwdm0yb49w1:ws_a73k370jtxxb:gloss_en": {
+      "card_id": "wc_5gwdm0yb49w1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:трамвай",
+      "sense_id": "ws_a73k370jtxxb",
+      "source_sense_key": "vts:трамвай#unnumbered/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_5ry3h88g44jk:ws_tsctbhdyvv7m:gloss_en": {
+      "card_id": "wc_5ry3h88g44jk",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10795",
+      "sense_id": "ws_tsctbhdyvv7m",
+      "source_sense_key": "vts:кінотеатр#unnumbered/1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_674sq3vqjaq7:ws_8hc1fkngd0aa:gloss_en": {
+      "card_id": "wc_674sq3vqjaq7",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:лікарня",
+      "sense_id": "ws_8hc1fkngd0aa",
+      "source_sense_key": "vts:лікарня#unnumbered/1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_8c9yzekq4n31:ws_77yemr3pk8ts:gloss_en": {
+      "card_id": "wc_8c9yzekq4n31",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:56392",
+      "sense_id": "ws_77yemr3pk8ts",
+      "source_sense_key": "vts:повторювати#3",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_8zw060wac5qa:ws_msp3t05fjgyr:gloss_en": {
+      "card_id": "wc_8zw060wac5qa",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:аптека",
+      "sense_id": "ws_msp3t05fjgyr",
+      "source_sense_key": "vts:аптека#unnumbered/1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_9ph0a8218wp1:ws_xdnezt8w3qr0:gloss_en": {
+      "card_id": "wc_9ph0a8218wp1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:бібліотека",
+      "sense_id": "ws_xdnezt8w3qr0",
+      "source_sense_key": "vts:бібліотека#1",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_9whseb1sqhjh:ws_4r96xcgz7hrm:gloss_en": {
+      "card_id": "wc_9whseb1sqhjh",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:46003",
+      "sense_id": "ws_4r96xcgz7hrm",
+      "source_sense_key": "vts:замовляти#1/subsense-food",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_ahfex5jz3eb1:ws_1y7j6m4wmyd8:gloss_en": {
+      "card_id": "wc_ahfex5jz3eb1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:10935",
+      "sense_id": "ws_1y7j6m4wmyd8",
+      "source_sense_key": "vts:місто#I/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_cjrys6b2wy58:ws_efkqq3238yq6:gloss_en": {
+      "card_id": "wc_cjrys6b2wy58",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:хвилина",
+      "sense_id": "ws_efkqq3238yq6",
+      "source_sense_key": "vts:хвилина#1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_cw9xb6p6y5ab:ws_49stfp83k444:gloss_en": {
+      "card_id": "wc_cw9xb6p6y5ab",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вокзал",
+      "sense_id": "ws_49stfp83k444",
+      "source_sense_key": "vts:станція#2",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_d0xg7qef12zs:ws_63kfe93egbjd:gloss_en": {
+      "card_id": "wc_d0xg7qef12zs",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:меню",
+      "sense_id": "ws_63kfe93egbjd",
+      "source_sense_key": "vts:меню#2",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_d7h0hpjer9vn:ws_12gx6wjpb0mq:gloss_en": {
+      "card_id": "wc_d7h0hpjer9vn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:готовий",
+      "sense_id": "ws_12gx6wjpb0mq",
+      "source_sense_key": "vts:готовий#1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_d7ry67zc2hd1:ws_k8bhv4srszn2:gloss_en": {
+      "card_id": "wc_d7ry67zc2hd1",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:68200",
+      "sense_id": "ws_k8bhv4srszn2",
+      "source_sense_key": "vts:театр#3",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_dth7czyfjmea:ws_8fpavqf5ggb9:gloss_en": {
+      "card_id": "wc_dth7czyfjmea",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:картка",
+      "sense_id": "ws_8fpavqf5ggb9",
+      "source_sense_key": "vts:картка#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_dw09kw717k9v:ws_jth9jfdwvw5z:gloss_en": {
+      "card_id": "wc_dw09kw717k9v",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:51576",
+      "sense_id": "ws_jth9jfdwvw5z",
+      "source_sense_key": "vts:пошта#1",
+      "span": [
+        0,
+        11
+      ]
+    },
+    "wc_e4k85rw13arn:ws_ez436kxgc1jw:gloss_en": {
+      "card_id": "wc_e4k85rw13arn",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:офіціант",
+      "sense_id": "ws_ez436kxgc1jw",
+      "source_sense_key": "vts:офіціант#unnumbered/1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_ecmfacpw1qwr:ws_5azvq26vhkeh:gloss_en": {
+      "card_id": "wc_ecmfacpw1qwr",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:17266",
+      "sense_id": "ws_5azvq26vhkeh",
+      "source_sense_key": "vts:район#1",
+      "span": [
+        0,
+        8
+      ]
+    },
+    "wc_f6ahhhn44ewg:ws_62wr1b6nnzn1:gloss_en": {
+      "card_id": "wc_f6ahhhn44ewg",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:далеко",
+      "sense_id": "ws_62wr1b6nnzn1",
+      "source_sense_key": "vts:далеко#3",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_fgy7j6amz988:ws_0f5vqd10a7m7:gloss_en": {
+      "card_id": "wc_fgy7j6amz988",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:стадіон",
+      "sense_id": "ws_0f5vqd10a7m7",
+      "source_sense_key": "vts:стадіон#unnumbered/1",
+      "span": [
+        0,
+        7
+      ]
+    },
+    "wc_fvm1n8sbx652:ws_a69dmf2744q4:gloss_en": {
+      "card_id": "wc_fvm1n8sbx652",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:75751",
+      "sense_id": "ws_a69dmf2744q4",
+      "source_sense_key": "vts:іти#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_gfj772dsjrj6:ws_nygjcecpca2f:gloss_en": {
+      "card_id": "wc_gfj772dsjrj6",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:готель",
+      "sense_id": "ws_nygjcecpca2f",
+      "source_sense_key": "vts:готель#unnumbered/1",
+      "span": [
+        0,
+        5
+      ]
+    },
+    "wc_h7wrwbz8j9wv:ws_w9m9kwt248fh:gloss_en": {
+      "card_id": "wc_h7wrwbz8j9wv",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:автобус",
+      "sense_id": "ws_w9m9kwt248fh",
+      "source_sense_key": "vts:автобус#unnumbered/1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_j05amz5bncmy:ws_56aexaeyp8d4:gloss_en": {
+      "card_id": "wc_j05amz5bncmy",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:парк",
+      "sense_id": "ws_56aexaeyp8d4",
+      "source_sense_key": "vts:парк#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_j2q1dhp7e7gx:ws_zreqhwekzn44:gloss_en": {
+      "card_id": "wc_j2q1dhp7e7gx",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:фільм",
+      "sense_id": "ws_zreqhwekzn44",
+      "source_sense_key": "vts:фільм#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_m3m8szjcrpwb:ws_7egs9677vp6x:gloss_en": {
+      "card_id": "wc_m3m8szjcrpwb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:30743",
+      "sense_id": "ws_7egs9677vp6x",
+      "source_sense_key": "vts:додому#unnumbered/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_n2m7cvpfktaw:ws_kvskf0335jpx:gloss_en": {
+      "card_id": "wc_n2m7cvpfktaw",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:супермаркет",
+      "sense_id": "ws_kvskf0335jpx",
+      "source_sense_key": "vts:супермаркет#unnumbered/1",
+      "span": [
+        0,
+        11
+      ]
+    },
+    "wc_prm2xskze7gs:ws_yb93aev8c4ap:gloss_en": {
+      "card_id": "wc_prm2xskze7gs",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:вулиця",
+      "sense_id": "ws_yb93aev8c4ap",
+      "source_sense_key": "vts:вулиця#1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_qaydrgk69gnq:ws_2g7gyxcsjfm7:gloss_en": {
+      "card_id": "wc_qaydrgk69gnq",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:зупинка",
+      "sense_id": "ws_2g7gyxcsjfm7",
+      "source_sense_key": "vts:зупинка#2",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_qy7beytbbd3g:ws_9y864ea1crpf:gloss_en": {
+      "card_id": "wc_qy7beytbbd3g",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:площа",
+      "sense_id": "ws_9y864ea1crpf",
+      "source_sense_key": "vts:площа#2",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_t5gwhx1baqvb:ws_xseh2zhfgab9:gloss_en": {
+      "card_id": "wc_t5gwhx1baqvb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:43332",
+      "sense_id": "ws_xseh2zhfgab9",
+      "source_sense_key": "vts:близько#1/subsense-predicative",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_w540mrackgay:ws_vcwhbke16cdw:gloss_en": {
+      "card_id": "wc_w540mrackgay",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:карта",
+      "sense_id": "ws_vcwhbke16cdw",
+      "source_sense_key": "vts:карта#1",
+      "span": [
+        0,
+        3
+      ]
+    },
+    "wc_xbw7msqev2mz:ws_h1x8n7z5nd64:gloss_en": {
+      "card_id": "wc_xbw7msqev2mz",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:банк",
+      "sense_id": "ws_h1x8n7z5nd64",
+      "source_sense_key": "vts:банк#I/1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_xhzws68qph50:ws_6nz17rc3jtw0:gloss_en": {
+      "card_id": "wc_xhzws68qph50",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:11539",
+      "sense_id": "ws_6nz17rc3jtw0",
+      "source_sense_key": "vts:кав'ярня#unnumbered/1",
+      "span": [
+        0,
+        12
+      ]
+    },
+    "wc_y80dbz6xjmfm:ws_jt8ath1em4r8:gloss_en": {
+      "card_id": "wc_y80dbz6xjmfm",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:лінія",
+      "sense_id": "ws_jt8ath1em4r8",
+      "source_sense_key": "vts:лінія#1",
+      "span": [
+        0,
+        4
+      ]
+    },
+    "wc_ycr0jrc7823x:ws_xz4skcq0zx71:gloss_en": {
+      "card_id": "wc_ycr0jrc7823x",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:квиток",
+      "sense_id": "ws_xz4skcq0zx71",
+      "source_sense_key": "vts:квиток#1",
+      "span": [
+        0,
+        6
+      ]
+    },
+    "wc_yd5ekty2j7kb:ws_a4rrgjwcmprb:gloss_en": {
+      "card_id": "wc_yd5ekty2j7kb",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:21389",
+      "sense_id": "ws_a4rrgjwcmprb",
+      "source_sense_key": "vts:чудовий#1",
+      "span": [
+        0,
+        9
+      ]
+    },
+    "wc_yzbzta7v5f50:ws_r578d35x6pvf:gloss_en": {
+      "card_id": "wc_yzbzta7v5f50",
+      "pointer": "/hits/0/word",
+      "record_key": "balla:en-uk:row:37516",
+      "sense_id": "ws_r578d35x6pvf",
+      "source_sense_key": "vts:ліворуч#1",
+      "span": [
+        0,
+        4
+      ]
     }
   },
   "selection": {
@@ -27077,9 +29146,56 @@
     "vts:хвилина": "sr_x6z3tc9wfawj",
     "vts:чудовий": "sr_xjz17vcwjy31",
     "vts:іти": "sr_brf4b2fj8qed",
-    "vts:їхати": "sr_p9fk8j71rqen"
+    "vts:їхати": "sr_p9fk8j71rqen",
+    "balla:вокзал": "sr_p4s7pc5m1j5s",
+    "balla:en-uk:row:70244": "sr_m964bcqwjqtq",
+    "balla:сувенір": "sr_6mgsgje29ahv",
+    "balla:магніт": "sr_jm12xb91ypnm",
+    "balla:en-uk:row:37516": "sr_cbh5vv169cgj",
+    "balla:en-uk:row:56682": "sr_997chh7m6daq",
+    "balla:ресторан": "sr_337kqpem2qvk",
+    "balla:Карпати": "sr_6zrgr547arqe",
+    "balla:музей": "sr_676jdvssvmbj",
+    "balla:листівка": "sr_wejf106thn5c",
+    "balla:en-uk:row:65009": "sr_hem4b4x2nsds",
+    "balla:en-uk:row:27210": "sr_9jysxt8mvrth",
+    "balla:трамвай": "sr_76eh505xr2y5",
+    "balla:en-uk:row:10795": "sr_d3hjtgyq5pd7",
+    "balla:лікарня": "sr_jv0m7cz8cwm3",
+    "balla:en-uk:row:56392": "sr_tapyb08ce83w",
+    "balla:аптека": "sr_1jb9vpzxjdsf",
+    "balla:бібліотека": "sr_5td4avw25x90",
+    "balla:en-uk:row:46003": "sr_kx7j14fdq6ya",
+    "balla:en-uk:row:10935": "sr_ymfd8cf2w20m",
+    "balla:хвилина": "sr_fs46aw3jwyew",
+    "balla:меню": "sr_vprqjnjdpacj",
+    "balla:готовий": "sr_8qhpqwmwr22y",
+    "balla:en-uk:row:68200": "sr_yys9hbrjpxvg",
+    "balla:картка": "sr_zm66qhzwg42f",
+    "balla:en-uk:row:51576": "sr_hbazwsxzjn1m",
+    "balla:офіціант": "sr_qsxxgrnq6cp0",
+    "balla:en-uk:row:17266": "sr_10v76efb52ye",
+    "balla:далеко": "sr_pafzd15y0ngp",
+    "balla:стадіон": "sr_jvafk72k0m0r",
+    "balla:en-uk:row:75751": "sr_tmn6ktk9eyaf",
+    "balla:готель": "sr_dtwqhqjfc86c",
+    "balla:автобус": "sr_yk764pqpg462",
+    "balla:парк": "sr_xwrv666ry33r",
+    "balla:фільм": "sr_jctxx5dms6nn",
+    "balla:en-uk:row:30743": "sr_y826nhrwt911",
+    "balla:супермаркет": "sr_c5qn98hma8nd",
+    "balla:вулиця": "sr_3t0qyhk8e3j5",
+    "balla:зупинка": "sr_qgazvng61kqj",
+    "balla:площа": "sr_b4j3e5y23d3k",
+    "balla:en-uk:row:43332": "sr_nf29f23bp39v",
+    "balla:карта": "sr_dy64k0yeeskw",
+    "balla:банк": "sr_db8pb4nj9747",
+    "balla:en-uk:row:11539": "sr_mwdn169s9f18",
+    "balla:лінія": "sr_gg5a45kafy61",
+    "balla:квиток": "sr_aw7kfk8trbw7",
+    "balla:en-uk:row:21389": "sr_pmm7tw3nph8r"
   },
-  "sources_sha256": "b2d6b4cb94e5b49bf56ba7d2a9641002acb98850726f667e45470393a9cd373c",
+  "sources_sha256": "200b645164c489a0aaec80b5c890cca6b07a53a51277d4c3534dbedbb2c30c27",
   "stress_attempts": {
     "wc_0nrnjzb8y2hr": [
       {
