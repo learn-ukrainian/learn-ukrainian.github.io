@@ -26088,7 +26088,97 @@
     "wr_623cded980e4cede636f9ca431fb694bb55b3d59919b8b9e1a206c1c2e3b1b59": {"entry_id":422190,"quotation":"Дякую за чудовий подарунок!","receipt_sha256":"29505e55d1767d220eac10d334034368625e1908dcfc3d929cf5bed63e09d2d0","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_a4rrgjwcmprb","source_sense_key":"vts:чудовий#1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[149,176],"verdict":"APPROVE"},
     "wr_e8553173a579eace18d0835bfa68f1b1bbbb4a8608253115b53a501a0cad229a": {"entry_id":157359,"quotation":"Їдь до нас на дачу!","receipt_sha256":"edfc9b18150c125302f9fc0e82948f6d53030f40d75c598ce28b5e41127b29fe","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_rfge5tc2ac2x","source_sense_key":"vts:їхати#1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[178,197],"verdict":"APPROVE"},
     "wr_b74e13cbf927f0107229dc5e5c509fd6c32b36f95292fc8f1d2c94b1bd50110c": {"entry_id":200835,"quotation":"Що ти знаєш про метро?","receipt_sha256":"3dfb0f86540c792d1fa00032a38340fb28effef5d5eecd50d2aec09fc8562a84","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_0tp6dp7ap1zq","source_sense_key":"vts:метро#unnumbered/1","sources_sha256":"7adec68c08cd2e4a720bca14596e8eee1a69fef02e7066aca4c63069b8210ffe","span":[320,342],"verdict":"APPROVE"},
-    "wr_8f03ec6ca64b1137095f987c65598eb41c37de366df0cf68361f4549ba1ac54c": {"entry_id":157054,"quotation":"Хто з хлопчиком іде\nдо школи?","receipt_sha256":"260b7be42246477ccd445dbe6791a211e9788c08d4ef6405780919210a5973ee","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_a69dmf2744q4","source_sense_key":"vts:іти#1","sources_sha256":"bc0f5d680803168dcf7fc22675e23065b6ae1733f7ee5d6fa29776b36b690618","span":[148,177],"verdict":"APPROVE"}
+    "wr_8f03ec6ca64b1137095f987c65598eb41c37de366df0cf68361f4549ba1ac54c": {"entry_id":157054,"quotation":"Хто з хлопчиком іде\nдо школи?","receipt_sha256":"260b7be42246477ccd445dbe6791a211e9788c08d4ef6405780919210a5973ee","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_a69dmf2744q4","source_sense_key":"vts:іти#1","sources_sha256":"bc0f5d680803168dcf7fc22675e23065b6ae1733f7ee5d6fa29776b36b690618","span":[148,177],"verdict":"APPROVE"},
+    "wr_ceaa0c93d9735835a162abf5c5b5dff2b089873f0950f6acc475f98f7140f733": {
+      "entry_id": 411582,
+      "quotation": "І за кілька хвилин він із радістю\nзняв із себе курточку.",
+      "receipt_sha256": "4d49bdc4d2655db58f00f1b73b657453f94538e1f138135ab7d438aed9f67d5e",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_efkqq3238yq6",
+      "source_sense_key": "vts:хвилина#1",
+      "sources_sha256": "10a426c819f279fd91a5c439ac876fe3af11e6951a3ecbfd677084efb7725c51",
+      "span": [
+        1077,
+        1133
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_aaf06099a84df24a15508699af2fe14ee6d80439575b8fb5cb88838601a0ede7": {
+      "entry_id": 371580,
+      "quotation": "Чи часто ти ходиш на стадіон або спортивний майданчик?",
+      "receipt_sha256": "ca9ce40a2715bf099f7961cb21f7ea69c323466277eb657243ed28074266e7e9",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_0f5vqd10a7m7",
+      "source_sense_key": "vts:стадіон#unnumbered/1",
+      "sources_sha256": "10a426c819f279fd91a5c439ac876fe3af11e6951a3ecbfd677084efb7725c51",
+      "span": [
+        721,
+        775
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_39721d4cade16d54fcf6612e74a87d972a73371cd096b294342bf7e74855358d": {
+      "entry_id": 285033,
+      "quotation": "Він прийшов на головну площу міста та почав\nголосно читати свою улюблену книжку.",
+      "receipt_sha256": "50d53dc33a66516c0008f5158636db973d73e0927f735816aad44cf6afab38f4",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_9y864ea1crpf",
+      "source_sense_key": "vts:площа#2",
+      "sources_sha256": "10a426c819f279fd91a5c439ac876fe3af11e6951a3ecbfd677084efb7725c51",
+      "span": [
+        773,
+        853
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_ba0040e829ba5f057a272a5fe93288a83b1b7dac9cb7bb70be126a31344a77f6": {
+      "entry_id": 163594,
+      "quotation": "Не пущу без квитка!",
+      "receipt_sha256": "924fa32af847c929b5c1cd45746db96231852373414561b7f9ef9c1f715d2ef8",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_xz4skcq0zx71",
+      "source_sense_key": "vts:квиток#1",
+      "sources_sha256": "10a426c819f279fd91a5c439ac876fe3af11e6951a3ecbfd677084efb7725c51",
+      "span": [
+        914,
+        933
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_ad163e25ad5aa5dc5e3008810ae704f1e2f2ef1ca7bc9c321b7f861e27e64aa3": {
+      "entry_id": 303252,
+      "quotation": "А поруч текли\nструмки.",
+      "receipt_sha256": "271954024244613fcdacd54945f7cc6d05e91d3c7b3a7a07c46ea04fd933ba0a",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_5rjwkcvfs3nc",
+      "source_sense_key": "vts:поруч#1",
+      "sources_sha256": "10a426c819f279fd91a5c439ac876fe3af11e6951a3ecbfd677084efb7725c51",
+      "span": [
+        321,
+        343
+      ],
+      "verdict": "APPROVE"
+    }
   },
   "field_dependencies": {
     "antonyms": "exact authority claim and entry/sense correspondence, with independent review where required",
@@ -26175,13 +26265,11 @@
     "wc_4kbzt0zq0emw/ws_hdtbt7xqj1yj/examples": "example_no_complete_textbook_sentence_found",
     "wc_e4k85rw13arn/ws_ez436kxgc1jw/examples": "example_no_complete_textbook_sentence_found",
     "wc_8c9yzekq4n31/ws_77yemr3pk8ts/examples": "example_no_sense_matched_a1_sentence_found",
-    "wc_z8f8wqmqpgxh/ws_5rjwkcvfs3nc/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_qv26p84e5s2a/ws_ybwy56wnt29h/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_5fvqcbekewx7/ws_bb856en3v3v2/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_59qaqh2n5ddc/ws_x4q73sr0pqaj/examples": "example_no_complete_textbook_sentence_found",
     "wc_ecmfacpw1qwr/ws_5azvq26vhkeh/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_4r15bhx0tzq9/ws_z9pc3vv0x6g9/examples": "example_no_complete_textbook_sentence_found",
-    "wc_fgy7j6amz988/ws_0f5vqd10a7m7/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_cw9xb6p6y5ab/ws_49stfp83k444/examples": "example_no_complete_textbook_sentence_found",
     "wc_1p9kn1hp3xkw/ws_eqmyfj2rvahm/examples": "example_no_complete_textbook_sentence_found",
     "wc_n2m7cvpfktaw/ws_kvskf0335jpx/examples": "example_no_complete_textbook_sentence_found",
@@ -26195,10 +26283,7 @@
     "wc_d0xg7qef12zs/ws_63kfe93egbjd/examples": "example_independent_review_rejected",
     "wc_qaydrgk69gnq/ws_2g7gyxcsjfm7/examples": "example_independent_review_rejected",
     "wc_y80dbz6xjmfm/ws_jt8ath1em4r8/examples": "example_independent_review_rejected",
-    "wc_qy7beytbbd3g/ws_9y864ea1crpf/examples": "example_independent_review_rejected",
-    "wc_ycr0jrc7823x/ws_xz4skcq0zx71/examples": "rejected at exact-head Ukrainian review",
-    "wc_dw09kw717k9v/ws_jth9jfdwvw5z/examples": "rejected at exact-head Ukrainian review",
-    "wc_cjrys6b2wy58/ws_efkqq3238yq6/examples": "rejected at exact-head Ukrainian review"
+    "wc_dw09kw717k9v/ws_jth9jfdwvw5z/examples": "rejected at exact-head Ukrainian review"
   },
   "held_units": [
     {

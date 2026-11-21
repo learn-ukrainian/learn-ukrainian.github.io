@@ -38656,20 +38656,6 @@
       "entry_id": 283856,
       "field": "examples",
       "scope_key": "wc_pnye70yqdqxy/ws_xpwspgr73c2y/textbook-example-wave2"
-    },
-    {
-      "card_id": "wc_v7385p2vfmd7",
-      "sense_id": "ws_xzn6340fsvh0",
-      "source_sense_key": "vts:напій#article/0",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
-      "pointer": "/text",
-      "span": [
-        5,
-        49
-      ],
-      "entry_id": 222139,
-      "field": "examples",
-      "scope_key": "wc_v7385p2vfmd7/ws_xzn6340fsvh0/textbook-example-wave2"
     }
   ],
   "denominator": {
@@ -38711,7 +38697,25 @@
     "wr_7955ab415ef0d216c734d1257b2f03e3df1d1f8ba58391467fff1cddf3952aa6": {"entry_id":209599,"quotation":"Я мушу додому\nнегайно іти.","receipt_sha256":"36daef7a0b9723bbbba08aeffe281a5d2c7500494305b9c0104685cf8d1d12f6","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_brm3c1wfegdn","source_sense_key":"vts:мусити#article/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[142,168],"verdict":"APPROVE"},
     "wr_243fe41a877b5c18403a3b058c20cc7355ed33f4928362cd171ff7c88ac31c00": {"entry_id":319823,"quotation":"Засинай і прокидайся\nзавтра здоровою.","receipt_sha256":"4594ce936cafa11e8335c5f37e9ddda3a62c685fcf1e0d8988b2a6d570a24371","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_yx2bpdp01cy6","source_sense_key":"vts:прокидатися#II/1","sources_sha256":"aa992a4913a59b2f7e78dfc3290504caf05e9d1ec8522a168e932ae6dfb5d50a","span":[112,149],"verdict":"APPROVE"},
     "wr_2733666fb4654906ba239c64125a7be5603a8545a0566c08b7140978e2172083": {"entry_id":85475,"quotation":"Я гуляю з собакою.","receipt_sha256":"4daf41dbc4089a63d8e1c72cb4b367b4946572475fea04e7593772213d7fa662","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_np3aywv7t5f9","source_sense_key":"vts:гуляти#article/1","sources_sha256":"3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3","span":[339,357],"verdict":"APPROVE"},
-    "wr_df9f42d712eb1d93589669fca51edfcb98c2ea64496592bde96f41d3f3873859": {"entry_id":205889,"quotation":"Які з них ти можеш прочитати?","receipt_sha256":"f89576da691a4e7f8f83c4a67a5da9bd77077eaad5b8ce41b500356b9e8a8676","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3ax4c8wz66xb","source_sense_key":"vts:могти#article/1","sources_sha256":"3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3","span":[366,395],"verdict":"APPROVE"}
+    "wr_df9f42d712eb1d93589669fca51edfcb98c2ea64496592bde96f41d3f3873859": {"entry_id":205889,"quotation":"Які з них ти можеш прочитати?","receipt_sha256":"f89576da691a4e7f8f83c4a67a5da9bd77077eaad5b8ce41b500356b9e8a8676","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3ax4c8wz66xb","source_sense_key":"vts:могти#article/1","sources_sha256":"3c9c499bb6e9b0a71f2fc3ba4e4daeafaa33f6561680135ecf226553c117cdf3","span":[366,395],"verdict":"APPROVE"},
+    "wr_651bbca5d801691d113ab03033b861702c52d0ac75951624571c063f2ae296a4": {
+      "entry_id": 283856,
+      "quotation": "Розглянь рекламний плакат.",
+      "receipt_sha256": "88cf8f4deebbf0d493503461bfdc803dc3b41d0bd4ed99e47fefd4b765ba565e",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_xpwspgr73c2y",
+      "source_sense_key": "vts:плакат#article/1",
+      "sources_sha256": "868e06511dacc974a09e0114e424cbafe11c0561b4c2bc26dbb35bfb232d0e0a",
+      "span": [
+        3,
+        29
+      ],
+      "verdict": "APPROVE"
+    }
   },
   "field_dependencies": {
     "antonyms": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
@@ -38796,9 +38800,8 @@
     "wc_zswwf0b1r8s1/ws_fkntkngmqt79/examples": "example_no_complete_textbook_sentence_found",
     "wc_39m7asavdtt3/ws_tpvktyaq7nwe/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_t5mkqe7v31x3/ws_fddbgjterr9v/examples": "example_no_sense_matched_a1_sentence_found",
-    "wc_v7385p2vfmd7/ws_xzn6340fsvh0/examples": "example_no_complete_textbook_sentence_found",
+    "wc_v7385p2vfmd7/ws_xzn6340fsvh0/examples": "rejected at exact-head Ukrainian review",
     "wc_hbtnjcpx6vxd/ws_3pa8f4my4qt8/examples": "example_no_complete_textbook_sentence_found",
-    "wc_pnye70yqdqxy/ws_xpwspgr73c2y/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_yx5tjedf0xte/ws_cd47mmbnv00f/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_7cq5e13zagb0/ws_t3516zz44re6/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_9cv96acr1frj/ws_9bwacnh6cd6z/examples": "example_no_sense_matched_a1_sentence_found",
@@ -41425,17 +41428,6 @@
       "span": [
         3,
         29
-      ]
-    },
-    "wc_v7385p2vfmd7/ws_xzn6340fsvh0/textbook-example-wave2": {
-      "card_id": "wc_v7385p2vfmd7",
-      "sense_id": "ws_xzn6340fsvh0",
-      "source_sense_key": "vts:напій#article/0",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0107",
-      "pointer": "/text",
-      "span": [
-        5,
-        49
       ]
     }
   },

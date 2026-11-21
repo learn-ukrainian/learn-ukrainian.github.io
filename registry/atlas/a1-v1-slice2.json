@@ -295,7 +295,25 @@
     "wr_f52e53bf0a0ab359997769e361d839bfb3b51aff159f287a3416a09cfa580c47": {"entry_id":429081,"quotation":"Я кажу це щодня.","receipt_sha256":"e099731947afd97a161e59ef635c946e0a206223388ac9b50b148c6d0a566028","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_s1qye56c79fj","source_sense_key":"vts:щодня#unnumbered/1","sources_sha256":"c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88","span":[102,118],"verdict":"APPROVE"},
     "wr_98664e12a66fb28e9647af41577bff945d6e3a74b11dab5da0f4fff56cbbddcd": {"entry_id":441799,"quotation":"Чи знаєте ви, що таке ярмарок?","receipt_sha256":"1d536753ae05040b4b3df347b0368570264300ddce4e8fbf2ef743e2475204aa","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_d00nn55n2c4j","source_sense_key":"vts:ярмарок#unnumbered/1","sources_sha256":"c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88","span":[0,30],"verdict":"APPROVE"},
     "wr_30874bda3f064e60262e6d8b600a76bfab844448914c377e948fb1ce01722f28": {"entry_id":423808,"quotation":"Двері швидко відчиняються.","receipt_sha256":"c240007b18604286d06fd186c75cf99d254a794c54dee6c68e4af13a12ac8577","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_s3rt3g7whc27","source_sense_key":"vts:швидко#unnumbered/1","sources_sha256":"c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88","span":[361,387],"verdict":"APPROVE"},
-    "wr_5a47294c7fda1c1524fcff3a0ef4aaceecdaeef9b3c8591aedec7de413084b0a": {"entry_id":441309,"quotation":"Важко жити,\nякщо в тебе немає друга.","receipt_sha256":"e5edfe59a5d02f5ea389a710e65d102faf6af181ed1d86b78269ec8339678c85","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","sources_sha256":"c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88","span":[152,188],"verdict":"APPROVE"}
+    "wr_5a47294c7fda1c1524fcff3a0ef4aaceecdaeef9b3c8591aedec7de413084b0a": {"entry_id":441309,"quotation":"Важко жити,\nякщо в тебе немає друга.","receipt_sha256":"e5edfe59a5d02f5ea389a710e65d102faf6af181ed1d86b78269ec8339678c85","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","sources_sha256":"c38b4e1417a2452fcb7eb18ec24e18183e75116ffc2194213540d896c86cac88","span":[152,188],"verdict":"APPROVE"},
+    "wr_1b162c0d1bb548453f8cb764f73f8425157c9c6b17ad8b5805b945e01616f2d4": {
+      "entry_id": 428619,
+      "quotation": "Щедрівка — це пісня-привітання зі Щедрим\nвечором.",
+      "receipt_sha256": "18cb3c0fa9f183fe4cc45935de60fd4ae2ccec46d6e53ac969221378fe8416ac",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_v6f1shn82zy4",
+      "source_sense_key": "vts:щедрівка#unnumbered/1",
+      "sources_sha256": "3925eafb29001a611a956318e66786c91ddaef5f512924d37877c8d4179d7386",
+      "span": [
+        363,
+        412
+      ],
+      "verdict": "APPROVE"
+    }
   },
   "field_dependencies": {
     "antonyms": "exact source antonym group and reviewed sense alignment",
@@ -339,7 +357,6 @@
     "wc_ppr39m6qsr4e/ws_r95hf8x263vg/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_ppr39m6qsr4e/ws_vy9zdtd0njhc/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_n1g44brn5vs2/ws_j9t3p50c44n2/examples": "example_no_sense_matched_a1_sentence_found",
-    "wc_n1g44brn5vs2/ws_v6f1shn82zy4/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_6bt62wd6zzzf/ws_dgm63stvhnhd/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_6bt62wd6zzzf/ws_ty24heczf9mj/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_6bt62wd6zzzf/ws_gg0pn4f9nc08/examples": "example_no_sense_matched_a1_sentence_found",

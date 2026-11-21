@@ -44875,20 +44875,6 @@
       "scope_key": "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/textbook-example-wave2"
     },
     {
-      "card_id": "wc_bgkyf53yfr86",
-      "sense_id": "ws_938zczetnamg",
-      "source_sense_key": "vts:помідор#article/2",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067",
-      "pointer": "/text",
-      "span": [
-        334,
-        405
-      ],
-      "entry_id": 296250,
-      "field": "examples",
-      "scope_key": "wc_bgkyf53yfr86/ws_938zczetnamg/textbook-example-wave2"
-    },
-    {
       "card_id": "wc_cxjtr6481e7t",
       "sense_id": "ws_v2e8s53d12wq",
       "source_sense_key": "vts:новий#article/1",
@@ -44915,20 +44901,6 @@
       "entry_id": 387967,
       "field": "examples",
       "scope_key": "wc_hqegd3tewbkh/ws_v0r72qwhbz8r/textbook-example-wave2"
-    },
-    {
-      "card_id": "wc_q60sbpjxcy9n",
-      "sense_id": "ws_9ann5n924zmc",
-      "source_sense_key": "vts:салат#I/3",
-      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0087",
-      "pointer": "/text",
-      "span": [
-        796,
-        836
-      ],
-      "entry_id": 349411,
-      "field": "examples",
-      "scope_key": "wc_q60sbpjxcy9n/ws_9ann5n924zmc/textbook-example-wave2"
     }
   ],
   "denominator": {
@@ -44971,7 +44943,61 @@
     "wr_7fec3f85214a8010b44ed2591a57f58e69d0189fb03809acd895a82ad3aa10cf": {"entry_id":157343,"quotation":"Собака їв м’ясо.","receipt_sha256":"380ba67dd4fc386a788305834eb57c61897177d256189f18af193da399f101ca","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_d554k8w7czxw","source_sense_key":"vts:їсти#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[726,742],"verdict":"APPROVE"},
     "wr_34c7237594d155c6034395163995fea3770cb480d7deda9ac3240ca7e93fffb3": {"entry_id":377643,"quotation":"Треба було брати\nсумку з тканини.","receipt_sha256":"610c9fd54879cbed67c83280cb81ec0e476bbf62d41e1ac530c9cc3520bbc721","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057672662","review_result_sha256":"8d86026cf600652660eb30185651fef54f1714ef084cc02cd833fd75ab0984d4","reviewed_head":"157e5e299b9bbc7483de8e60c30cc8e93aed16f2","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_m3cbpb9xp3ba","source_sense_key":"vts:сумка#article/1","sources_sha256":"c1c47ed663c631a78125bd7edb9c9b413f8e9f2042b7d33e0bda5377ca541f71","span":[456,489],"verdict":"APPROVE"},
     "wr_b0c18f6c1ee8a95761a55e9a3a669b8faecae9b89cab98b4ae807dd3382ac912": {"entry_id":18381,"quotation":"Які ти бачиш предмети?","receipt_sha256":"28fbd71984d3d69a5c2d305293607f44083ae331b364c612017a31f831e6abff","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_3f4zrg016vrx","source_sense_key":"vts:бачити#article/2","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[0,22],"verdict":"APPROVE"},
-    "wr_d46f4aff650ad54a925034610463f8beba9f82f545af9b872b497dc3412836fc": {"entry_id":25726,"quotation":"Блакитні\nхмари повільно пливуть по небу.","receipt_sha256":"fb8bb60c618be0b7871cdd6f3d778be745c6579675d10d125c6473f70192e979","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xtx2ak3gj0ze","source_sense_key":"vts:блакитний#article/0","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[1056,1096],"verdict":"APPROVE"}
+    "wr_d46f4aff650ad54a925034610463f8beba9f82f545af9b872b497dc3412836fc": {"entry_id":25726,"quotation":"Блакитні\nхмари повільно пливуть по небу.","receipt_sha256":"fb8bb60c618be0b7871cdd6f3d778be745c6579675d10d125c6473f70192e979","record":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13257#issuecomment-7057834634","review_result_sha256":"23945a5bbff61aac099c316c4614aa907ce00d724b2330c2725d8bd5db4a9705","reviewed_head":"eb57571490a620dac7eb6b523472e57ec6354803","reviewer_family":"google","reviewer_model":"gemini-4-neon-high","sense_id":"ws_xtx2ak3gj0ze","source_sense_key":"vts:блакитний#article/0","sources_sha256":"4581cdcaaa26aef9a5124bfc5c8153dc13d3ae545c69054cc0b921678a3a3bb5","span":[1056,1096],"verdict":"APPROVE"},
+    "wr_3684641effe60c2bd8493c82ce475affc2f9ee6faf0f6f9e12b197cb15a05220": {
+      "entry_id": 418239,
+      "quotation": "Одного разу Оленка прийшла зі школи, а на кухні пив\nчай дракон.",
+      "receipt_sha256": "6dbd4578a403ec495e8562ede4dcdcbb6f6e7e021d508354856456181d394ac0",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_wwqf7yd6mfsg",
+      "source_sense_key": "vts:чай#article/3",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        509,
+        572
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_7008032ea1a3e3c0c9cfba40d34805836f448eac071b70e2ef234d8b4c7d7167": {
+      "entry_id": 239967,
+      "quotation": "У мене нове взуття.",
+      "receipt_sha256": "7db5b77081f64e8503efe0deccf10a1467bd920e605b9400581fce1c958d9201",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_v2e8s53d12wq",
+      "source_sense_key": "vts:новий#article/1",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        659,
+        678
+      ],
+      "verdict": "APPROVE"
+    },
+    "wr_87c067516009337c785a49aaf112670cb536d96311d81a46b974954666d17166": {
+      "entry_id": 387967,
+      "quotation": "Це\nпо той бік ставка.",
+      "receipt_sha256": "ab73b616b6b830027bb49987e89e49984ac88074f133744ab653255309ab6767",
+      "record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/13264#issuecomment-7059746636",
+      "review_result_sha256": "7d444712f241b54884f45f90f2eb339128fc9239900524ba2e875cc26062d480",
+      "reviewed_head": "b5bdbcb0caca8977dcac9d916863633590f42081",
+      "reviewer_family": "google",
+      "reviewer_model": "gemini-4-neon-high",
+      "sense_id": "ws_v0r72qwhbz8r",
+      "source_sense_key": "vts:той#I/1",
+      "sources_sha256": "1ae4fd7f87dddfa9d9be845e78426847eb0473fdb8e40dab6ea24defa9a64965",
+      "span": [
+        160,
+        181
+      ],
+      "verdict": "APPROVE"
+    }
   },
   "field_dependencies": {
     "antonyms": "Atlas supplies literal qualified source evidence and entry/sense correspondence",
@@ -45054,13 +45080,12 @@
     "wc_6qh6expdm912/ws_2tcmrwbn1sdc/examples": "example_no_complete_textbook_sentence_found",
     "wc_v3nzetykq0v7/ws_k9vs2m5m7f34/examples": "example_no_complete_textbook_sentence_found",
     "wc_pqaqagyk9vh7/ws_4hxydfgef3j8/examples": "example_no_complete_textbook_sentence_found",
-    "wc_q60sbpjxcy9n/ws_9ann5n924zmc/examples": "example_no_sense_matched_a1_sentence_found",
+    "wc_q60sbpjxcy9n/ws_9ann5n924zmc/examples": "rejected at exact-head Ukrainian review",
     "wc_q3sh7s4k42za/ws_3g96nz7yqmmv/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_fgmd4vag1zry/ws_y71sjv5hbrp9/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_fgmd4vag1zry/ws_5zkdvca1t3bj/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_q5nda40qxatn/ws_eb9qmfbqnm52/examples": "example_no_complete_textbook_sentence_found",
     "wc_3yy18dm7bfjn/ws_msczwzfvcy4s/examples": "example_no_sense_matched_a1_sentence_found",
-    "wc_hqegd3tewbkh/ws_v0r72qwhbz8r/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_crtdb1jnzqmw/ws_9bqqzachsz34/examples": "example_no_complete_textbook_sentence_found",
     "wc_jqew4381q230/ws_jq8zh4vv8xw9/examples": "example_no_sense_matched_a1_sentence_found",
     "wc_v3w185cm66rw/wc_v3w185cm66rw/examples": "example_no_allocated_sense",
@@ -45069,14 +45094,12 @@
     "wc_zjbdpzen17s3/wc_zjbdpzen17s3/examples": "example_no_allocated_sense",
     "wc_e4z1pzzscypr/wc_e4z1pzzscypr/examples": "example_no_allocated_sense",
     "wc_hwer5kzzm1yv/wc_hwer5kzzm1yv/examples": "example_no_allocated_sense",
-    "wc_bgkyf53yfr86/ws_938zczetnamg/examples": "example_no_unambiguous_a1_sentence_for_sourced_sense",
+    "wc_bgkyf53yfr86/ws_938zczetnamg/examples": "rejected at exact-head Ukrainian review",
     "wc_s7hwf2ecgcn7/wc_s7hwf2ecgcn7/examples": "example_no_allocated_sense",
     "wc_ypzn1h33by3s/ws_ft7y8t0t9qfx/examples": "no_captured_qualified_source_example",
     "wc_v4vzfzx2bhhc/ws_5mavrnxp83k2/examples": "example_independent_review_rejected",
-    "wc_9sx49mn7gh14/ws_wwqf7yd6mfsg/examples": "example_independent_review_rejected",
     "wc_2v18q0e9cqh3/ws_phbxbhs2ypwr/examples": "example_independent_review_rejected",
-    "wc_04tmbj6y1v3y/ws_g744f7jcbwym/examples": "example_independent_review_rejected",
-    "wc_cxjtr6481e7t/ws_v2e8s53d12wq/examples": "rejected at exact-head Ukrainian review"
+    "wc_04tmbj6y1v3y/ws_g744f7jcbwym/examples": "example_independent_review_rejected"
   },
   "held_units": [
     {
@@ -47840,17 +47863,6 @@
         572
       ]
     },
-    "wc_bgkyf53yfr86/ws_938zczetnamg/textbook-example-wave2": {
-      "card_id": "wc_bgkyf53yfr86",
-      "sense_id": "ws_938zczetnamg",
-      "source_sense_key": "vts:помідор#article/2",
-      "record_key": "textbook:chunk:4-klas-ukrayinska-mova-ponomarova-2021-1_s0067",
-      "pointer": "/text",
-      "span": [
-        334,
-        405
-      ]
-    },
     "wc_cxjtr6481e7t/ws_v2e8s53d12wq/textbook-example-wave2": {
       "card_id": "wc_cxjtr6481e7t",
       "sense_id": "ws_v2e8s53d12wq",
@@ -47871,17 +47883,6 @@
       "span": [
         160,
         181
-      ]
-    },
-    "wc_q60sbpjxcy9n/ws_9ann5n924zmc/textbook-example-wave2": {
-      "card_id": "wc_q60sbpjxcy9n",
-      "sense_id": "ws_9ann5n924zmc",
-      "source_sense_key": "vts:салат#I/3",
-      "record_key": "textbook:chunk:2-klas-ukrmova-bolshakova-2019-1_s0087",
-      "pointer": "/text",
-      "span": [
-        796,
-        836
       ]
     }
   },

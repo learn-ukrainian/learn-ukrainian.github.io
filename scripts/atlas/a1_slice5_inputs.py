@@ -26,9 +26,9 @@ MANIFEST = "registry/atlas/a1-v1-slice5.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice5.json"
 INPUTS = "registry/atlas/a1-v1-slice5-inputs.json"
 INPUTS_SHA256 = "584d3fa472b7973fbe896e9317437b101f11a46fbf635896780551fffcaacc14"
-MANIFEST_SHA256 = "2d57ecce1c3304ca0925b7254c220577965bd3ffa7c96323763ef04394a2bcaa"
+MANIFEST_SHA256 = "a1815ee5e67dbb1f4f4c0cc915b22dec0b150d6d40e8ff65c31dc9bb3704206c"
 COMPANION_FILE_SHA256 = "edb9ee640f813289293e85c0a9d0e603d2780414f1b8101bee0acaf885bb6d63"
-MANIFEST_FILE_SHA256 = "23d42899da3d1f150403353a834467e6deb63ad72796df4952abecfb4ad57a9d"
+MANIFEST_FILE_SHA256 = "86f86d04e75481fbd4a4e9b4a9cefef183d8992ddd99e2c8e51e3917198377b1"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
