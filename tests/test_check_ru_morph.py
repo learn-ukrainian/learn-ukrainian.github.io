@@ -1,10 +1,65 @@
 
+import asyncio
+import sqlite3
+from contextlib import closing
+
+import pytest
+
 from scripts.verification.check_ru_morph import (
     _morph_ru,
     check_russian_patterns_batch,
     get_ru_confidence,
     is_russian_pattern,
 )
+from tests.mcp.sources_golden_set import load_server
+
+
+@pytest.fixture(autouse=True)
+def healthy_vesum(empty_vesum_db):
+    attested_words = (
+        "минулий", "сплячий", "сидячий", "стоячий", "получити", "здача", "книга",
+        "вода", "день", "сонце", "стіл", "привіт", "котрий",
+    )
+    with closing(sqlite3.connect(empty_vesum_db)) as conn:
+        conn.executemany(
+            "INSERT INTO forms VALUES (?, ?, '', '')",
+            [(word, word) for word in attested_words],
+        )
+        conn.commit()
+
+
+@pytest.fixture
+def sources_with_malformed_vesum(tmp_path, monkeypatch):
+    vesum_db = tmp_path / "vesum.db"
+    vesum_db.write_bytes(b"not a SQLite database")
+    monkeypatch.setenv("LU_VESUM_DB", str(vesum_db))
+    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent-sources.db"))
+    monkeypatch.setattr("scripts.wiki.sources_db._conn", None)
+    return load_server()
+
+
+def test_check_russian_shadow_reports_database_unavailable_on_malformed_vesum(sources_with_malformed_vesum):
+    server = sources_with_malformed_vesum
+    params = server.CallToolRequestParams(name="check_russian_shadow", arguments={"word": "спасибо"})
+    result = asyncio.run(server._on_call_tool(None, params))
+
+    assert result.is_error is True
+    assert result.structured_content["status"] == "error"
+    assert result.structured_content["error_code"] == "database_unavailable"
+    assert result.structured_content["database"] == "vesum.db"
+    assert "matches_russian" not in result.structured_content
+
+
+def test_verify_stress_reports_database_unavailable_on_malformed_vesum(sources_with_malformed_vesum):
+    server = sources_with_malformed_vesum
+    params = server.CallToolRequestParams(name="verify_stress", arguments={"word": "село"})
+    result = asyncio.run(server._on_call_tool(None, params))
+
+    assert result.is_error is True
+    assert result.structured_content["status"] == "error"
+    assert result.structured_content["error_code"] == "database_unavailable"
+    assert result.structured_content["database"] == "vesum.db"
+    assert "result" not in result.structured_content
 
 
 def test_get_ru_confidence():
@@ -68,7 +123,7 @@ def test_vesum_attested_permanent_quality_adjectives_stay_clean():
         assert res["confidence"] == 0.0
 
 
-def test_documented_calques_still_flag_without_vesum():
+def test_documented_calques_still_flag_when_vesum_has_no_match():
     # Real calques (not VESUM-attested) must still flag despite the VESUM gate
     # on the actv/Dist heuristic.
     for word in ["слідуючий", "учбовий"]:

@@ -2,9 +2,20 @@
 
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 import pytest
+
+
+@pytest.fixture
+def empty_vesum_db(tmp_path, monkeypatch):
+    """Bind a readable VESUM fixture that attests none of the queried forms."""
+    path = tmp_path / "vesum-fixture.sqlite"
+    with closing(sqlite3.connect(path)) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    monkeypatch.setenv("LU_VESUM_DB", str(path))
+    return path
 
 
 @pytest.fixture(autouse=True)
@@ -14,6 +25,7 @@ def isolated_stress_sources(request, tmp_path, monkeypatch):
         return
     from scripts.wiki import sources_db
 
+    request.getfixturevalue("empty_vesum_db")
     monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent-sources.sqlite"))
     monkeypatch.setattr(sources_db, "_conn", None)
 

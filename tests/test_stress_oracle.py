@@ -225,11 +225,13 @@ class TestVesumJoin:
             result = verify_stress("замок", pos="NOUN", tags="Case=Nom,Number=Sing,Gender=Masc")
         assert all(m["vesum"] is None for m in result["matches"])
 
-    def test_vesum_join_failure_does_not_crash_the_call(self):
-        with patch("scripts.verification.vesum.verify_word", side_effect=FileNotFoundError("no db")):
-            result = verify_stress("замок")
+    def test_absent_vesum_preserves_offline_trie_readings(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("LU_VESUM_DB", str(tmp_path / "absent-vesum.db"))
+        result = verify_stress("замок")
         assert result["status"] == "ambiguous"
-        assert all(m["vesum"] is None for m in result["matches"])
+        assert result["stress_source"] == "trie"
+        assert {match["stressed_form"] for match in result["matches"]} == {"за́мок", "замо́к"}
+        assert all(match["vesum"] is None for match in result["matches"])
 
 
 class TestSourceInfo:
