@@ -78,11 +78,19 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
       expect(lexicalCard).toHaveTextContent('Лексична норма');
       expect(lexicalCard).toHaveTextContent('Lexical Norms & Calques');
 
-      // Culture of speech card: "Culture of Speech" with "Error Correction" on EN locale
+      // Culture of speech: the title and subtitle slots carry the English strings.
+      // Absence stays on the card so the other locale cannot hide in the description or badge.
       const cultureCard = screen.getByTestId('practice-card-culture');
-      expect(cultureCard).toHaveTextContent('Culture of Speech');
+      const cultureTitle = screen.getByTestId(
+        'practice-course-title-culture-error-correction',
+      );
+      expect(cultureTitle).toHaveTextContent('Culture of Speech');
+      expect(cultureTitle).not.toHaveTextContent('Культура мовлення');
       expect(cultureCard).not.toHaveTextContent('Культура мовлення');
-      expect(cultureCard).toHaveTextContent('Error Correction');
+      const cultureSubtitle = screen.getByTestId(
+        'practice-course-subtitle-culture-error-correction',
+      );
+      expect(cultureSubtitle).toHaveTextContent('Error Correction');
     });
   });
 
@@ -170,10 +178,20 @@ describe('Practice Hub Course & Exam Tiles (#8381)', () => {
         expect(card).not.toHaveTextContent('Exam prep');
       }
 
+      // Title and step presence is on those slots. The badge repeats the Ukrainian
+      // title, so a whole-card presence check would pass with an empty title slot.
       const cultureCard = screen.getByTestId('practice-card-culture');
-      expect(cultureCard).toHaveTextContent(CULTURE_DECK_META.title); // 'Культура мовлення'
+      const cultureTitle = screen.getByTestId(
+        'practice-course-title-culture-error-correction',
+      );
+      expect(cultureTitle).toHaveTextContent(CULTURE_DECK_META.title); // 'Культура мовлення'
+      expect(cultureTitle).not.toHaveTextContent(CULTURE_DECK_META.en); // 'Culture of Speech'
       expect(cultureCard).not.toHaveTextContent(CULTURE_DECK_META.en); // 'Culture of Speech'
-      expect(cultureCard).toHaveTextContent(CULTURE_DECK_META.step); // 'Збагачення'
+      const cultureStep = screen.getByTestId(
+        'practice-course-step-culture-error-correction',
+      );
+      expect(cultureStep).toHaveTextContent(CULTURE_DECK_META.step); // 'Збагачення'
+      expect(cultureStep).not.toHaveTextContent(CULTURE_DECK_META.stepEn); // 'Enrichment'
       expect(cultureCard).not.toHaveTextContent(CULTURE_DECK_META.stepEn); // 'Enrichment'
     });
   });
