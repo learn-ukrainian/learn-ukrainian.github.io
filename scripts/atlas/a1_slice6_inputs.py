@@ -27,7 +27,7 @@ MANIFEST = "registry/atlas/a1-v1-slice6.json"
 COMPANION = "registry/atlas/identity/a1-v1-slice6.json"
 INPUTS = "registry/atlas/a1-v1-slice6-inputs.json"
 INPUTS_SHA256 = "05542e67e4f80c716a787558c36d8cfffce82992f2b5b065c581ae3548d10197"
-MANIFEST_SHA256 = "34e592ebf01c28524e52e86390d7fce873c108cedd7b92fdcf626f6a1ca0916b"
+MANIFEST_SHA256 = "945ff46f5cdc6574e7f0236b72e11af6f7dd8fd5222ce18f2b7e2dbb71ff11ac"
 # Independent raw-byte pins for the already-checked-in portable inputs. The
 # snapshot and manifest repeat these pins; neither can replace this layer.
 FILE_SHA256 = {
@@ -113,12 +113,14 @@ def select(inventory, slice3, slice4, slice5, snapshot):
 def frozen_selection(root):
     snapshot = cards.load(root / INPUTS)
     cards.require(digest(snapshot) == INPUTS_SHA256, "slice6_snapshot_digest_mismatch")
-    # Keep the selection snapshot's historical inputs and verify the repaired
-    # predecessor against its current, independently pinned manifest bytes.
+    # Verify the current predecessor manifests and companions separately from
+    # the historical file digests recorded in the selection snapshot.
     file_pins = {
         **FILE_SHA256,
         cards.MANIFEST: cards.MANIFEST_FILE_SHA256,
         slice3_inputs.MANIFEST: slice3_inputs.MANIFEST_FILE_SHA256,
+        cards.COMPANION: cards.COMPANION_FILE_SHA256,
+        slice3_inputs.COMPANION: slice3_inputs.COMPANION_FILE_SHA256,
         slice4_inputs.MANIFEST: slice4_inputs.MANIFEST_FILE_SHA256,
         slice4_inputs.COMPANION: slice4_inputs.COMPANION_FILE_SHA256,
         previous.MANIFEST: previous.MANIFEST_FILE_SHA256,
@@ -219,6 +221,9 @@ def response_payload(record, call):
         return {"text": text.split("\n\n", 1)[1].split("Джерело:", 1)[0].rstrip()}
     if source == "textbooks":
         return call["response"]["structuredContent"]["hits"][0]
+    if source == "balla":
+        cards.require(call["tool"] == "translate_en_uk", "slice6_balla_call_mismatch")
+        return call["response"]["structuredContent"]
     cards.require(source in {"puls", "grac", "heritage"}, "slice6_unexpected_source")
     return call["response"].get("structuredContent") or {"text": text}
 

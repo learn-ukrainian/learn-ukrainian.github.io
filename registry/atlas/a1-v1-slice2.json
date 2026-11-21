@@ -1,8 +1,8 @@
 {
   "allocation_pins": {
     "base_sha256": "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a",
-    "combined_sha256": "0a95b6e0431ed6e16d860126f0144dbab51343ab74ca2d3c39978d4c7be8ea57",
-    "companion_sha256": "a4251320c43ab9f780bdcecf3e4aed1060123558e55600375e589aa0268f1293"
+    "combined_sha256": "f8de1a8c61ad89669f6ab40c726ca3a0e7489ae188d184554dfe71f52bb0935d",
+    "companion_sha256": "b23f417ec7e1e4dafb9beeda56dd5a795594f495cdac4b02699b9b689fbf5109"
   },
   "approved_plan_sha256": "51da87dc0fe1c079468d9c3a86f4ebfa67ac4f432acc73a2871ee8d9c39bba9b",
   "card_ids": [
@@ -255,7 +255,13 @@
     {"card_id":"wc_8mhjfw05sm0t","entry_id":421145,"field":"gloss_en","pointer":"/hits/0/word","record_key":"balla-why","scope_key":"bilingual:vts:чому#2/1","sense_id":"ws_t7mcsy692ya7","source_sense_key":"vts:чому#2/1","span":[0,3],"supporting_spans":[{"pointer":"/hits/0/definition","span":[97,112]},{"pointer":"/hits/0/definition","span":[113,151]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[113,151]}},
     {"card_id":"wc_qpcdgkctp7ne","entry_id":425814,"field":"gloss_en","pointer":"/hits/0/word","record_key":"balla-school","scope_key":"bilingual:vts:школа#1/1","sense_id":"ws_bh5c8d2m67jf","source_sense_key":"vts:школа#1/1","span":[0,6],"supporting_spans":[{"pointer":"/hits/0/definition","span":[9,36]},{"pointer":"/hits/0/definition","span":[549,596]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[549,596]}},
     {"card_id":"wc_6bt62wd6zzzf","entry_id":436914,"field":"gloss_en","pointer":"/hits/0/word","record_key":"balla-egg","scope_key":"bilingual:vts:яйце#1/1","sense_id":"ws_ty24heczf9mj","source_sense_key":"vts:яйце#1/1","span":[0,3],"supporting_spans":[{"pointer":"/hits/0/definition","span":[9,16]},{"pointer":"/hits/0/definition","span":[17,74]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[17,74]}},
-    {"card_id":"wc_da7t5vpprjw3","entry_id":441309,"field":"gloss_en","pointer":"/hits/0/word","record_key":"balla-if","scope_key":"bilingual:vts:якщо#unnumbered/1","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","span":[0,2],"supporting_spans":[{"pointer":"/hits/0/definition","span":[5,45]},{"pointer":"/hits/0/definition","span":[46,104]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[46,104]}}
+    {"card_id":"wc_da7t5vpprjw3","entry_id":441309,"field":"gloss_en","pointer":"/hits/0/word","record_key":"balla-if","scope_key":"bilingual:vts:якщо#unnumbered/1","sense_id":"ws_30rcqnyr84d2","source_sense_key":"vts:якщо#unnumbered/1","span":[0,2],"supporting_spans":[{"pointer":"/hits/0/definition","span":[5,45]},{"pointer":"/hits/0/definition","span":[46,104]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[46,104]}},
+    {"card_id":"wc_08svjhdbe0fq","pointer":"/hits/0/word","record_key":"balla:en-uk:row:64706","sense_id":"ws_5743402e32kj","source_sense_key":"vts:ще#2/1","span":[0,5],"entry_id":428572,"field":"gloss_en","scope_key":"wc_08svjhdbe0fq:ws_5743402e32kj:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[1179,1207]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[1179,1207]}},
+    {"card_id":"wc_08svjhdbe0fq","pointer":"/hits/0/word","record_key":"balla:en-uk:row:21220","sense_id":"ws_kxq6jqve877n","source_sense_key":"vts:ще#5/1","span":[0,4],"entry_id":428572,"field":"gloss_en","scope_key":"wc_08svjhdbe0fq:ws_kxq6jqve877n:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[821,859]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[821,859]}},
+    {"card_id":"wc_0r1cdw5z36cd","pointer":"/hits/0/word","record_key":"balla:en-uk:row:62868","sense_id":"ws_ptvmr6hd00wx","source_sense_key":"vts:швидко#unnumbered/2","span":[0,4],"entry_id":423808,"field":"gloss_en","scope_key":"wc_0r1cdw5z36cd:ws_ptvmr6hd00wx:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[4,41]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[4,41]}},
+    {"card_id":"wc_5b36dst0her6","pointer":"/hits/0/word","record_key":"balla:en-uk:row:14358","sense_id":"ws_s1qye56c79fj","source_sense_key":"vts:щодня#unnumbered/1","span":[0,5],"entry_id":429081,"field":"gloss_en","scope_key":"wc_5b36dst0her6:ws_s1qye56c79fj:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[210,231]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[210,231]}},
+    {"card_id":"wc_vq34ms5wtfev","pointer":"/hits/0/word","record_key":"balla-fair","sense_id":"ws_d00nn55n2c4j","source_sense_key":"vts:ярмарок#unnumbered/1","span":[0,4],"entry_id":441799,"field":"gloss_en","scope_key":"wc_vq34ms5wtfev:ws_d00nn55n2c4j:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[9,20]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[9,20]}},
+    {"card_id":"wc_ppr39m6qsr4e","pointer":"/hits/0/word","record_key":"balla-ambulance","sense_id":"ws_vy9zdtd0njhc","source_sense_key":"vts:швидка#2/1","span":[0,9],"entry_id":423800,"field":"gloss_en","scope_key":"wc_ppr39m6qsr4e:ws_vy9zdtd0njhc:gloss_en","supporting_spans":[{"pointer":"/hits/0/definition","span":[226,266]}],"translation_direction":"en-uk","usage_pair":{"pointer":"/hits/0/definition","span":[226,266]}}
   ],
   "denominator": {
     "all_rows": 2144,
@@ -292,7 +298,15 @@
     "spelling_variants": "no_identity_bound_variant_receipt",
     "stress": "no_explicit_stress_receipt",
     "synonyms": "cross_source_sense_alignment_required",
-    "transliteration": "no_admitted_transliteration_producer"
+    "transliteration": "no_admitted_transliteration_producer",
+    "wc_5btr8jkdzvd1/ws_eh5cv3zjsx46/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_5btr8jkdzvd1/ws_yb501mhmj1es/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_5btr8jkdzvd1/ws_f0s41epq6taq/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_5btr8jkdzvd1/ws_zwsxtdzt1cnx/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_5btr8jkdzvd1/ws_jgsdj5r6xvg9/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_5btr8jkdzvd1/ws_vhddxeq6x5ch/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_n1g44brn5vs2/ws_j9t3p50c44n2/gloss_en": "gloss_no_sense_aligned_balla_witness",
+    "wc_n1g44brn5vs2/ws_v6f1shn82zy4/gloss_en": "gloss_no_sense_aligned_balla_witness"
   },
   "held_units": [
     {"card_id":"wc_8mhjfw05sm0t","dependency":"none; exclude this source unit for the selected lexeme","excluded_source_unit":{"quotation":"займ., див. що I.","span":[14,31]},"owner":"Atlas coordinator","reason":"wrong_lexeme: source pronoun cross-reference belongs to an inflected pronoun, whereas selected VESUM entry 421145 is adv:pron:int:rel and ULIF is an adverb.","source_sense_key":"vts:чому#1/1"},
@@ -406,7 +420,13 @@
     "definition:vts:ясно#2/2": {"card_id":"wc_5btr8jkdzvd1","label_spans":[{"pointer":"/text","span":[39,59]}],"pointer":"/text","record_key":"vts:ясно","sense_id":"ws_zwsxtdzt1cnx","source_sense_key":"vts:ясно#2/2","span":[93,132]},
     "definition:vts:ясно#3/1": {"card_id":"wc_5btr8jkdzvd1","label_spans":[{"pointer":"/text","span":[136,156]}],"pointer":"/text","record_key":"vts:ясно","sense_id":"ws_jgsdj5r6xvg9","source_sense_key":"vts:ясно#3/1","span":[157,182]},
     "definition:vts:ясно#4/1": {"card_id":"wc_5btr8jkdzvd1","label_spans":[{"pointer":"/text","span":[186,212]}],"pointer":"/text","record_key":"vts:ясно","sense_id":"ws_vhddxeq6x5ch","source_sense_key":"vts:ясно#4/1","span":[213,269]},
-    "example:school": {"card_id":"wc_qpcdgkctp7ne","pointer":"/text","record_key":"textbook:school","sense_id":"ws_bh5c8d2m67jf","source_sense_key":"vts:школа#1/1","span":[617,627]}
+    "example:school": {"card_id":"wc_qpcdgkctp7ne","pointer":"/text","record_key":"textbook:school","sense_id":"ws_bh5c8d2m67jf","source_sense_key":"vts:школа#1/1","span":[617,627]},
+    "wc_08svjhdbe0fq:ws_5743402e32kj:gloss_en": {"card_id":"wc_08svjhdbe0fq","pointer":"/hits/0/word","record_key":"balla:en-uk:row:64706","sense_id":"ws_5743402e32kj","source_sense_key":"vts:ще#2/1","span":[0,5]},
+    "wc_08svjhdbe0fq:ws_kxq6jqve877n:gloss_en": {"card_id":"wc_08svjhdbe0fq","pointer":"/hits/0/word","record_key":"balla:en-uk:row:21220","sense_id":"ws_kxq6jqve877n","source_sense_key":"vts:ще#5/1","span":[0,4]},
+    "wc_0r1cdw5z36cd:ws_ptvmr6hd00wx:gloss_en": {"card_id":"wc_0r1cdw5z36cd","pointer":"/hits/0/word","record_key":"balla:en-uk:row:62868","sense_id":"ws_ptvmr6hd00wx","source_sense_key":"vts:швидко#unnumbered/2","span":[0,4]},
+    "wc_5b36dst0her6:ws_s1qye56c79fj:gloss_en": {"card_id":"wc_5b36dst0her6","pointer":"/hits/0/word","record_key":"balla:en-uk:row:14358","sense_id":"ws_s1qye56c79fj","source_sense_key":"vts:щодня#unnumbered/1","span":[0,5]},
+    "wc_vq34ms5wtfev:ws_d00nn55n2c4j:gloss_en": {"card_id":"wc_vq34ms5wtfev","pointer":"/hits/0/word","record_key":"balla-fair","sense_id":"ws_d00nn55n2c4j","source_sense_key":"vts:ярмарок#unnumbered/1","span":[0,4]},
+    "wc_ppr39m6qsr4e:ws_vy9zdtd0njhc:gloss_en": {"card_id":"wc_ppr39m6qsr4e","pointer":"/hits/0/word","record_key":"balla-ambulance","sense_id":"ws_vy9zdtd0njhc","source_sense_key":"vts:швидка#2/1","span":[0,9]}
   },
   "source_record_ids": {
     "balla-ambulance": "sr_b0mm6jnrr7at",
@@ -496,9 +516,13 @@
     "vts:яйце": "sr_w7zw130mwwfh",
     "vts:якщо": "sr_d4vg4t9hf5m8",
     "vts:ярмарок": "sr_bvcv98jn48kk",
-    "vts:ясно": "sr_ghm1dw8br5yr"
+    "vts:ясно": "sr_ghm1dw8br5yr",
+    "balla:en-uk:row:64706": "sr_3zd8wpanq0c6",
+    "balla:en-uk:row:21220": "sr_warsvcnma1mp",
+    "balla:en-uk:row:62868": "sr_3p0vsgq41j3v",
+    "balla:en-uk:row:14358": "sr_41rhdp1pqjka"
   },
-  "sources_sha256": "0c1b4bd2cceb593f569c8d3e5f091a25413e60e1892b65d59cfd495204bc33ae",
+  "sources_sha256": "5f97a27571f10325c3f071bea583ecb0920eb433e702dfdd795c0afd0e862b78",
   "stress_attempts": {
     "wc_08svjhdbe0fq": [{"source_id":"ulif","state":"unmarked"},{"evidence_call":"4-sum20","source_id":"sum20","state":"not_found"},{"reason":"admitted_header_has_no_explicit_mark","source_id":"vts_busel_slovnyk_me","state":"unmarked"}],
     "wc_0r1cdw5z36cd": [{"claim":{"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"stress","pointer":"/canonical_headword","record_key":"ulif:швидко","span":[0,7]},"source_id":"ulif","state":"supported"},{"evidence_call":"2-sum20","source_id":"sum20","state":"not_found"},{"reason":"not_consumed_after_ULIF_receipt","source_id":"vts_busel_slovnyk_me","state":"unavailable"}],
