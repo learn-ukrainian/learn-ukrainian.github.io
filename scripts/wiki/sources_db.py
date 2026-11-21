@@ -1893,11 +1893,6 @@ def observe_vesum_read_failure(exc: OSError | sqlite3.Error) -> None:
         _vesum_failure_observer(exc)
 
 
-def open_read_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a shared read-only connection with the Sources error observer, if installed."""
-    return open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
-
-
 def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:
     """Writable connection (schema create / migrate): never a shared reader.
 
@@ -1908,7 +1903,9 @@ def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connect
 
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
     if read_only:
-        conn = open_read_connection(db_path)
+        # Shared across threads: open_readonly disables the statement cache
+        # that CPython 3.12 corrupts under concurrent use (#11217).
+        conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
         refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}

@@ -30,7 +30,7 @@ from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 from scripts.rag import config as _rag_config
-from scripts.wiki.sources_db import observe_vesum_read_failure, open_read_connection
+from scripts.wiki.sources_db import _open_conn, observe_vesum_read_failure
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None
@@ -129,8 +129,7 @@ def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int
         or _vesum_conn_stat != current_stat
     ):
         # VESUM is a reference dictionary: every reader opens it read-only.
-        new_conn = open_read_connection(resolved_path)
-        new_conn.row_factory = sqlite3.Row
+        new_conn = _open_conn(resolved_path, read_only=True)
 
         old_conn = _vesum_conn
         _vesum_conn = new_conn

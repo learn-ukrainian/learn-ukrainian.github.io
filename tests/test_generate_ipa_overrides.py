@@ -9,6 +9,7 @@ from scripts.generate_mdx import generate_ipa as ipa_module
 from scripts.verification.stress import STRESS_OVERRIDES_PATH, pending_stress_reason
 
 
+@pytest.mark.usefixtures("empty_vesum_db")
 def test_ipa_loader_uses_both_scripts_data_files(monkeypatch):
     assert STRESS_OVERRIDES_PATH.parent == ipa_module.DATA_DIR
     assert ipa_module._load_overrides("stress_overrides.yaml")["любов"] == "любо́в"
