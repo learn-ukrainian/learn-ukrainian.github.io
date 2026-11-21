@@ -60,7 +60,6 @@
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"grammatical_label","pointer":"/grammatical_label","record_key":"ulif:швидко","span":[0,10]},
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"paradigm","pointer":"/clean_analyses/0/word_form","record_key":"vesum:швидко","slot":"adv:compb","span":[0,6],"supporting_spans":[{"pointer":"/clean_analyses/0/tags","span":[0,9]}]},
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"cefr","pointer":"/hits/0/level","record_key":"cefr:швидко","span":[0,2]},
-    {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"definition_uk","pointer":"/text","record_key":"vts:швидко","scope_key":"definition:vts:швидко#unnumbered/1","sense_id":"ws_s3rt3g7whc27","source_sense_key":"vts:швидко#unnumbered/1","span":[15,33]},
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"definition_uk","pointer":"/text","record_key":"vts:швидко","scope_key":"definition:vts:швидко#unnumbered/2","sense_id":"ws_ptvmr6hd00wx","source_sense_key":"vts:швидко#unnumbered/2","span":[58,115]},
     {"card_id":"wc_0r1cdw5z36cd","entry_id":423808,"field":"register","pointer":"/text","record_key":"vts:швидко","scope_key":"definition:vts:швидко#unnumbered/2","sense_id":"ws_ptvmr6hd00wx","source_sense_key":"vts:швидко#unnumbered/2","span":[37,57]},
     {"card_id":"wc_qpcdgkctp7ne","entry_id":425814,"field":"spelling","pointer":"/clean_analyses/3/lemma","record_key":"vesum:школа","span":[0,5]},
@@ -246,7 +245,6 @@
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"grammatical_label","pointer":"/grammatical_label","record_key":"ulif:ясно","span":[0,10]},
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"paradigm","pointer":"/clean_analyses/0/word_form","record_key":"vesum:ясно","slot":"adv:compb:insert:predic","span":[0,4],"supporting_spans":[{"pointer":"/clean_analyses/0/tags","span":[0,23]}]},
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"cefr","pointer":"/hits/0/level","record_key":"cefr:ясно","span":[0,2]},
-    {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"definition_uk","pointer":"/text","record_key":"vts:ясно","scope_key":"definition:vts:ясно#1/1","sense_id":"ws_yb501mhmj1es","source_sense_key":"vts:ясно#1/1","span":[14,35]},
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"definition_uk","pointer":"/text","record_key":"vts:ясно","scope_key":"definition:vts:ясно#2/1","sense_id":"ws_f0s41epq6taq","source_sense_key":"vts:ясно#2/1","span":[60,89]},
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"register","pointer":"/text","record_key":"vts:ясно","scope_key":"definition:vts:ясно#2/1","sense_id":"ws_f0s41epq6taq","source_sense_key":"vts:ясно#2/1","span":[39,59]},
     {"card_id":"wc_5btr8jkdzvd1","entry_id":442128,"field":"definition_uk","pointer":"/text","record_key":"vts:ясно","scope_key":"definition:vts:ясно#2/2","sense_id":"ws_zwsxtdzt1cnx","source_sense_key":"vts:ясно#2/2","span":[93,132]},
@@ -278,6 +276,8 @@
     "transliteration": "source-attested transliteration or a separately approved producer"
   },
   "field_residuals": {
+    "wc_5btr8jkdzvd1/ws_yb501mhmj1es/definition_uk": "reference_only_non_definitional_meaning",
+    "wc_0r1cdw5z36cd/ws_s3rt3g7whc27/definition_uk": "reference_only_non_definitional_meaning",
     "wc_5btr8jkdzvd1/ws_jgsdj5r6xvg9/definition_uk": "reference_only_non_definitional_meaning",
     "wc_qpcdgkctp7ne/ws_add9ccy3c9h3/definition_uk": "reference_only_non_definitional_meaning",
     "antonyms": "no_aligned_antonym_source_claim",
