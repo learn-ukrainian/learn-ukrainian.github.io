@@ -702,7 +702,11 @@ def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
     reads = []
     def snapshot(pr, target, cwd=None):
         reads.append((pr, target))
-        return {"isDraft": state == "draft"}, (["CI Gate"] if state == "red" else [], ["CI Gate"] if state == "pending" else [])
+        failing = ["CI Gate"] if state == "red" else []
+        pending = ["CI Gate"] if state == "pending" else []
+        # 0.1.47 unpacks (failing, pending, judged). judged == 0 is NO_CHECKS.
+        judged = 0 if state == "draft" else 1
+        return {"isDraft": state == "draft"}, (failing, pending, judged)
     monkeypatch.setattr(guard, "_pr_snapshot", snapshot)
     assert guard.main() == (0 if state == "ready" else 2)
     assert reads == [("1", repo)]

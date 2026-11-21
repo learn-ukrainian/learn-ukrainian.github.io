@@ -19,10 +19,10 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 @pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch, tmp_path):
-    """The real ci.yml has no advisory job; cover the rule with a fixture workflow.
+    """Stand-in ci.yml with a continue-on-error job. 0.1.47 ignores it (C-6339).
 
-    The release reads ``.github/workflows/ci.yml`` under ``product_root()``, so the
-    fixture workflow stands at that path in a stand-in product root.
+    The fixture stays so a workflow file cannot bring the old exemption back.
+    Readiness assertions below expect every check to block.
     """
     from lu_machinery.ci import advisory_checks
 
@@ -522,12 +522,21 @@ def test_ci_red_pending_and_ready():
 
 @pytest.mark.parametrize("name", ["Component shadow (advisory)"])
 @pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
-def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
+def test_advisory_named_checks_block_readiness(name, status, conclusion):
+    """C-6339 removed the ci.yml exemption: this name blocks like any other check."""
     item = pr()
     item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion, "workflowName": "CI"})
     report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
-    assert report.state == "ready"
-    assert report.blockers == ()
+    if (status, conclusion) == ("COMPLETED", "FAILURE"):
+        assert report.state == f"CI-red {name}"
+        assert report.blockers == (f"CI red {name}",)
+    elif status == "IN_PROGRESS":
+        assert report.state == "CI-pending"
+        assert report.blockers == (f"CI pending {name}",)
+    else:
+        assert (status, conclusion) == ("", "")
+        assert report.state == "unknown"
+        assert report.blockers == (f"CI unknown {name}",)
 
 
 def test_advisory_failure_does_not_hide_other_blockers():
@@ -537,7 +546,10 @@ def test_advisory_failure_does_not_hide_other_blockers():
         "conclusion": "FAILURE",
         "workflowName": "CI",
     }
-    assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
+    assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == [
+        "CI pending CI Gate",
+        "CI red Component shadow (advisory)",
+    ]
     item = pr()
     item["statusCheckRollup"].extend(
         [
@@ -546,8 +558,8 @@ def test_advisory_failure_does_not_hide_other_blockers():
         ]
     )
     report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
-    assert report.state == "CI-red Build"
-    assert report.blockers == ("CI red Build",)
+    assert report.state == "CI-red Build, Component shadow (advisory)"
+    assert report.blockers == ("CI red Build", "CI red Component shadow (advisory)")
 
 
 def test_moved_head_between_observation_and_queue_lookup_reports_unknown():
