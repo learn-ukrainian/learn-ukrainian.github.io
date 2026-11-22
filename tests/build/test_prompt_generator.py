@@ -18,27 +18,29 @@ import re
 
 import pytest
 
-from scripts.build import linear_pipeline as lp
 from scripts.build import prompt_generator as pg
 from scripts.build.phases.implementation_map import seed_implementation_map
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def m20():
-    """Real a1/my-morning plan + manifest + implementation map fixtures."""
-    level, slug = "a1", "my-morning"
-    plan_path = lp.plan_path_for(level, slug)
-    plan = lp.plan_check(plan_path)
-    plan_content = plan_path.read_text(encoding="utf-8")
-    wiki_manifest = lp.build_wiki_manifest_data(level=level, slug=slug, plan=plan)
-    implementation_map = seed_implementation_map(wiki_manifest, plan=plan)
+    """In-memory manifest. The checklist test does not open a wiki article."""
+    manifest = {
+        "slug": "fixture-module",
+        "wiki_path": "wiki/grammar/a2/aspect-concept.md",
+        "sequence_steps": [
+            {
+                "id": "step-1",
+                "heading": "Вид",
+                "step_num": 1,
+                "required_claim": "Name the two aspects.",
+                "source_lines": "10-11",
+            }
+        ],
+    }
     return {
-        "level": level,
-        "slug": slug,
-        "plan": plan,
-        "plan_content": plan_content,
-        "wiki_manifest": wiki_manifest,
-        "implementation_map": implementation_map,
+        "wiki_manifest": manifest,
+        "implementation_map": seed_implementation_map(manifest),
     }
 
 
