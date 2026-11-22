@@ -120,24 +120,24 @@ To run the build pipeline locally, start with the clone and Python setup
 in steps 1 and 2 of the [installation instructions](CONTRIBUTING.md#installation).
 
 ```bash
-# 2. Frontend
+# Frontend
 cd starlight && npm install && cd ..
 
-# 3. Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8769)
+# Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8769)
 ./services.sh start
 ./services.sh status
 # Work adapter diagnostics: ./services.sh status work && ./services.sh logs work
 
-# 4. Pre-commit hooks — mirror CI locally
+# Pre-commit hooks
 .venv/bin/pre-commit install
 
-# 5. Build a module
+# Build a module
 .venv/bin/python scripts/build/v6_build.py a1 2 --writer gemini
 
-# 6. Audit a module
+# Audit a module
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
 
-# 7. Tests
+# Tests
 .venv/bin/pytest tests/ -q
 ```
 
