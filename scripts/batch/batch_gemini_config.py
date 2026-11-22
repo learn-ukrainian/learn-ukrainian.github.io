@@ -223,7 +223,7 @@ PRO_TRACKS: set[str] = set()
 _COMMON_TEMPLATES = {
     2: PHASES_DIR / "content.md",
     3: PHASES_DIR / "activities.md",
-    5: PHASES_DIR / "review-legacy.md",
+    5: PHASES_DIR / "phase-5-review.md",
     "fix": PHASES_DIR / "fix.md",
     "fix-content": PHASES_DIR / "fix-content.md",
     "fix-activities": PHASES_DIR / "fix-activities.md",
