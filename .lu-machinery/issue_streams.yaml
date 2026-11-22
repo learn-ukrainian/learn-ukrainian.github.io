@@ -1,0 +1,77 @@
+---
+# Issue-stream registry — single source of truth for "which epic defines which stream".
+# Consumed by scripts/orchestration/issue_stream_audit.py, the session-setup hook, and
+# /api/state/issues-health. docs/WORKSTREAMS.md § Streams mirrors this table.
+#
+# Rules (binding, served via /api/rules → workflow.md § Work intake):
+# - Every OPEN issue must be a member of EXACTLY ONE stream (native descendant of a
+#   stream epic, or a #N reference in the epic body while migration is pending).
+# - New issues link their stream epic at creation time.
+# - Epic numbers identify issues in the default fleet repository. Lifecycle membership
+#   for a sibling repository uses a direct native link to a registered epic with the same owner.
+# - Active root epics themselves are exempt from membership. Closed epics may
+#   stay registered for launcher/session consumers but are not audit roots.
+# - An optional `retired: true` marker (boolean; rejected otherwise) likewise
+#   keeps a stream registered for launcher/session consumers without making it
+#   an audit root. Retired lanes are normally removed outright instead.
+schema_version: 1
+streams:
+  epics:
+    title: "Epic coordination"
+    epics: [10453, 12239, 12504, 13276]  # The first three roots reached GitHub's 100 native sub-issue limit.
+  atlas-practice:
+    title: "Word Atlas + Practice Hub product"
+    epics: [4387, 12166]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed); #12166 overflow epic for the existing stream (#4387 is at GitHub's 100 native sub-issue limit)
+  practice:
+    title: "Practice Hub, ZNO and activities"
+    epics: [11151]
+  corpus-channels:
+    title: "Corpus channels — acquisition & ingestion"
+    epics: [4706]
+  infra-harness:
+    title: "Infra & fleet reliability (hooks, dispatch, routing)"
+    epics: [6943, 9737, 11254]  # closed historical roots; stay registered so launcher selectors still resolve
+    closed_epics: [6943, 9737, 11254]
+  docs-knowledge:
+    title: "Repository knowledge system — docs authority, Astro truth, OpenWiki"
+    epics: [5535]  # closed; stays registered for launcher and session consumers
+    closed_epics: [5535]
+  devops:
+    title: "DevOps automation, CI, release & launcher reliability"
+    epics: [5703, 10844]  # closed; stay registered for launcher and session consumers
+    closed_epics: [5703, 10844]
+  monitor:
+    # Product name: Ops API + UI. Stream key stays `monitor` for launcher/handoff
+    # stability; selectors `ops-api` / `ops.api` alias here via handoff_identity.sh.
+    title: "Ops API + UI — operator API (scripts/api) & dashboards"
+    epics: [7919]  # closed successor to #7177; stays registered for launcher selectors
+    closed_epics: [7919]
+  open-model-data:
+    title: "Ukrainian open-model data infrastructure"
+    epics: [6321, 7423]  # #6321 program epic + #7423 Cyrillic-Slavic dataset-delivery epic; completed Foundry epics #6164 and #6056 are historical
+    closed_epics: [7423]
+  core-quality:
+    title: "Core-track deterministic quality"
+    epics: [4274]
+  curriculum-upgrade:
+    title: "Curriculum upgrade machinery — pipeline upgrade mode, lessons.yaml, per-lesson gates, MDX assembler"
+    epics: [7994]
+  seminars-folk:
+    title: "FOLK track re-research + rebuild"
+    epics: [2836]
+  seminars-bio:
+    title: "BIO track readiness + builds"
+    epics: [4431, 4215]  # #4215 closed; #4431 remains the audit root
+    closed_epics: [4215]
+  seminars-cross:
+    title: "Cross-seminar gates (reading links, self-convergence)"
+    epics: [3120, 3079]
+  hramatka:
+    title: "Hramatka teacher lesson service — product qualification & release"
+    epics: [4542]
+  ukrainian-llm-eval:
+    title: "Ukrainian LLM evaluation"
+    epics: [13277]
+  kube-dojo:
+    title: "kube-dojo lane — coordinating stream for kube-dojo/kube-dojo.github.io#2272"
+    epics: [12556]  # learn-ukrainian coordinating epic (hramatka pattern); the work is kube-dojo#2272
