@@ -1868,6 +1868,12 @@ def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
     refusal = core_a1_refusal(args.level, args.slug)
+    if refusal is None and getattr(args, "upgrade", False):
+        # The upgrade mode accepts only core A1, which is refused above, so it can never succeed.
+        refusal = (
+            "v7_build: refused — --upgrade is retired: it upgraded core A1 from the a1-v1 edition, "
+            "which V7 no longer builds (R-10, #13295)."
+        )
     if refusal is not None:
         print(refusal, file=sys.stderr)
         return 2
@@ -1886,16 +1892,6 @@ def main(argv: list[str] | None = None) -> int:
             "to redirect: a dry run writes nothing, so --worktree runs it in "
             "place with no telemetry sink to open (#8890). Drop --telemetry-out, "
             "--dry-run, or --worktree.",
-            file=sys.stderr,
-        )
-        return 2
-    if dry_run and worktree_requested and getattr(args, "upgrade", False):
-        print(
-            "v7_build: error — --upgrade --dry-run --worktree has writes to "
-            "avoid: an upgrade dry run saves lessons.yaml, upgrade_inputs.json "
-            "and writer_prompt.md, so it cannot run in place the way a plain "
-            "--dry-run --worktree does (#8890). Drop --worktree, --dry-run, or "
-            "--upgrade.",
             file=sys.stderr,
         )
         return 2

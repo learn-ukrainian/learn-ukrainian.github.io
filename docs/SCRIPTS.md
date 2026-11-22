@@ -1079,7 +1079,7 @@ v7_build.py emits JSONL events on stdout (`module_start`, `phase_done`, `review_
 ```
 Monitor(
     command=".venv/bin/python -u scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --resume 2>&1 | grep --line-buffered '^{\"event\"'",
-    description="A1 build events",
+    description="V7 build events",
     persistent=True,
     timeout_ms=3600000
 )

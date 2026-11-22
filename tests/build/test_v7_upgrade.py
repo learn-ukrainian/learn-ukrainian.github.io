@@ -265,7 +265,7 @@ def test_upgrade_cli_real_subprocess_refuses_core_a1(tmp_path):
         cwd=tmp_path, capture_output=True, text=True, check=False, timeout=60, env=env,
     )
     assert result.returncode == 2
-    assert "V7 does not build core A1" in result.stderr
+    assert "V7 does not build or review core A1" in result.stderr
     assert "Refusing to run v7_build in the primary checkout" not in result.stderr
     assert result.stdout == ""
     assert not out.exists()
