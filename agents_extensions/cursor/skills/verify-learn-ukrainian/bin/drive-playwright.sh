@@ -6,14 +6,17 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
-Inputs: Node 22, site dependencies, installed Google Chrome;
-        LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Inputs: Node 22, site dependencies installed by npm ci from site/package-lock.json,
+        installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Requires the locked Playwright CLI and Astro (its preview webServer) in
+site/node_modules/.bin; never npx, a registry download or another copy on PATH.
 Browser: site/playwright.config.ts runs installed Chrome with its sandbox on and
 blocks every origin except the loopback host and learn-ukrainian.github.io.
 Never downloads Playwright's bundled browsers.
 Outputs: playwright-<feature>.log and test-results copied into
 LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual).
-Exit: 0 passed, 2 invalid feature, otherwise Playwright's failure code.
+Exit: 0 passed, 2 invalid feature, 1 missing Chrome or locked binary,
+      otherwise Playwright's failure code.
 Lessons includes the legacy sidebar contract; see ../features/lessons.md.
 Related: launch.sh, doctor.sh, ../SKILL.md.
 EOF
@@ -73,10 +76,21 @@ if [[ ! -x /opt/google/chrome/chrome ]]; then
   exit 1
 fi
 
-ARGS=(npx playwright test "${SPECS[@]}")
+# Locked binaries only: those `npm ci` installed from site/package-lock.json, run by
+# absolute path, so a missing one fails here before any npx, registry or PATH fallback.
+# The Playwright webServer (`npm run preview`) runs Astro, which npm would take from the
+# rest of PATH if the local one were missing, so Astro is checked too.
+LOCAL_BIN="$ROOT/site/node_modules/.bin"
+ARGS=("$LOCAL_BIN"/playwright test "${SPECS[@]}")
 if [[ -n "$GREP_PATTERN" ]]; then
   ARGS+=(--grep "$GREP_PATTERN")
 fi
+for bin in "${ARGS[0]}" "$LOCAL_BIN/astro"; do
+  if [[ ! -f "$bin" || ! -x "$bin" ]]; then
+    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run npm ci in site/ (no npx or PATH fallback)" >&2
+    exit 1
+  fi
+done
 
 set +e
 "${ARGS[@]}" 2>&1 | tee "${EVIDENCE_DIR}/playwright-${FEATURE}.log"

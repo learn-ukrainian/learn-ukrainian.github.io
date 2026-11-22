@@ -1,12 +1,18 @@
 # Practice Hub scouting harness (#8317)
 
-Standalone Node script (not a Playwright test: no `*.spec.ts`, so `npx playwright test` never runs it).
+Standalone Node script (not a Playwright test: no `*.spec.ts`, so `playwright test` never runs it).
+Every command below runs from `site/` with the executables `npm ci` installed from
+`site/package-lock.json` (`./node_modules/.bin/…`). Never use `npx`: when the local package
+is missing it downloads an unlocked one from the registry. Astro also runs by its local path,
+not through `npm run preview` or `npm run build`: when the local `astro` is missing or not an
+executable file, npm runs any `astro` it finds on `PATH`. If an executable is missing, run
+`npm ci` in `site/`.
 
 ```bash
 cd site
 node e2e/scouting/run.mjs --help
 node e2e/scouting/run.mjs --slice C1 --live --out /tmp/scout-c1        # deployed site
-npm run preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # local (127.0.0.1:4321)
+./node_modules/.bin/astro preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # local (127.0.0.1:4321)
 ```
 
 Flags: `--slice C1..C8`, `--out <dir>`,
@@ -61,7 +67,7 @@ Output (in `--out`, gitignored under `reports/artifacts/`): `<ts>-report-<slice>
 ## Viewing traces
 
 ```bash
-npx playwright show-trace /tmp/scout-c1/<ts>-c1-desktop-t1-landing-ttfi.zip
+./node_modules/.bin/playwright show-trace /tmp/scout-c1/<ts>-c1-desktop-t1-landing-ttfi.zip
 ```
 or drag the zip into <https://trace.playwright.dev>. Baseline traces are published on the
 `practice-scouting` GitHub release (`gh release upload practice-scouting <file>`). Filenames are
@@ -90,12 +96,12 @@ to the check page to tick boxes, and reopen the window after a route departure.
 ```bash
 cd site
 # 1. Build a clean checkout at the merged SHA into managed scratch (no Astro config change).
-npm run build -- --outDir "$OUT"
+npm run hydrate && ./node_modules/.bin/astro build --outDir "$OUT"
 # 2. Bind the page to that build; refuses dirty/moved/unknown source, symlinked or non-build output.
 node e2e/scouting/native-speech-probe.mjs prepare --source <clean checkout> --source-sha <merged sha> \
   --out "$OUT" --manifest "$SCRATCH/native-manifest.json"
-# 3. Serve the same outDir on loopback only with the existing preview CLI.
-npx astro preview --outDir "$OUT" --host 127.0.0.1 --port 4321 --ignore-lock
+# 3. Serve the same outDir on loopback only with the locked preview CLI.
+./node_modules/.bin/astro preview --outDir "$OUT" --host 127.0.0.1 --port 4321 --ignore-lock
 # 4. After the evaluator pastes the JSON back:
 node e2e/scouting/native-speech-probe.mjs validate --manifest "$SCRATCH/native-manifest.json" \
   --receipt receipt.json --out "$OUT"; echo exit=$?   # 0 only for DEVICE_CONTROLS_PASSED
