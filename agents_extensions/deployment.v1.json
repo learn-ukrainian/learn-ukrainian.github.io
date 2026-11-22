@@ -1,9 +1,13 @@
 {
-  "providers": ["claude", "codex", "agy"],
+  "providers": ["claude", "codex", "agy", "cursor"],
   "sources": {
     "shared": {"path": "agents_extensions/shared", "required": true},
     "codex": {"path": "agents_extensions/codex", "required": true},
-    "agy": {"path": "agents_extensions/agy", "required": true}
+    "agy": {"path": "agents_extensions/agy", "required": true},
+    "cursor": {"path": "agents_extensions/cursor", "required": true}
   },
-  "preserve": [".claude/settings.local.json"]
+  "preserve": [
+    ".claude/settings.local.json",
+    ".cursor/skills/verify-learn-ukrainian/artifacts"
+  ]
 }

@@ -1022,7 +1022,6 @@ jobs:
       shellcheck-severity: error
       # Directories cover .sh files. List extensionless hooks and entry points too.
       shellcheck-paths: |
-        .cursor
         .githooks
         agents_extensions
         registry
