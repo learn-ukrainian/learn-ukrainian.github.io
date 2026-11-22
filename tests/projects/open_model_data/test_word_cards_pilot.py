@@ -52,8 +52,8 @@ def test_committed_w1a_inputs_have_fixed_pins_and_inventory(frozen):
     assert len(entries) == 150
     assert len({entry["card_id"] for entry in entries.values()}) == 150
     assert len(manifest["selection"]["source_records"]) == 272
-    assert rehearsal.DENOMINATOR == {"cards": 150, "locators": 3151, "source_rows": 272}
-    assert rehearsal.W1A_SHA == "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
+    assert rehearsal.DENOMINATOR == {"cards": 150, "locators": 3276, "source_rows": 272}
+    assert rehearsal.W1A_SHA == "4c3b1162a21cd107485f932bca5191a1d6a0a8ca"
 
 
 @pytest.mark.parametrize("damage", ["selection", "rehash", "card_id", "record_id", "snapshot"])

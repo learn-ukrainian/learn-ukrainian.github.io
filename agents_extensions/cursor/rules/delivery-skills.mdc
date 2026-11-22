@@ -6,7 +6,7 @@ alwaysApply: true
 # Delivery skills
 
 Cursor loads the shared skills from `.agents/skills/`. Use them by
-name. Source: `agents_extensions/cursor/rules/delivery-skills.md`.
+name. Source: `agents_extensions/cursor/rules/delivery-skills.mdc`.
 
 - `full-send` — deliver a change to MERGED and closeout. The worker that receives a brief, the
   accountable driver of the PR's stream, the integration owner or the CTO.

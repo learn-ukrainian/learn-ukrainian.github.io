@@ -7,7 +7,7 @@ description: "Drive the learn-ukrainian Astro learner site and reuse local CI Ga
 
 Project-local verification for the public learner site (`site/`, Astro) plus the CI Gate and data-contract commands developers already run. Read cold: launch an isolated preview, doctor it, drive a mapped feature with Playwright (existing `site/e2e` specs), capture evidence, clean up. Do not invent new product checks — call the repo's make/npm/pytest/scripts targets.
 
-**Public-repo rule:** never write host paths, hostnames, IPs, internal topology, or secret values into evidence filenames, commits, or PR text. Evidence under `.cursor/skills/verify-learn-ukrainian/artifacts/` is gitignored except `.gitkeep`.
+**Public-repo rule:** never write host paths, hostnames, IPs, internal topology, or secret values into evidence filenames, commits, or PR text. Evidence under `.cursor/skills/verify-learn-ukrainian/artifacts/` is gitignored and stays in place on redeploy.
 
 ## Launch
 

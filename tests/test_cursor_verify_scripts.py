@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-SKILL = Path(__file__).resolve().parents[1]
+SKILL = Path(__file__).resolve().parents[1] / "agents_extensions/cursor/skills/verify-learn-ukrainian"
 
 
 @pytest.fixture

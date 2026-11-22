@@ -17,6 +17,7 @@ on:
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
       - 'agents_extensions/agy/**'
+      - 'agents_extensions/cursor/**'
       - 'package.json'
       - 'uv.lock'
       - 'scripts/pre_commit/project_python.sh'
@@ -27,6 +28,7 @@ on:
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
+      - '.cursor/**'
   pull_request:
     paths:
       - '.github/workflows/rules-deployment-check.yml'
@@ -35,6 +37,7 @@ on:
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
       - 'agents_extensions/agy/**'
+      - 'agents_extensions/cursor/**'
       - 'package.json'
       - 'uv.lock'
       - 'scripts/pre_commit/project_python.sh'
@@ -45,6 +48,7 @@ on:
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
+      - '.cursor/**'
   workflow_dispatch:
 
 concurrency:
