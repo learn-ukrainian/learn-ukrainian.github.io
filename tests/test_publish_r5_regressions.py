@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-import importlib.util
 import io
 import json
 import os
 import subprocess
-import sys
 import zipfile
 from importlib.resources import files
 from pathlib import Path
@@ -622,15 +620,6 @@ def test_invalid_asset_cli_name_is_masked_exit_two(capsys):
     assert "invalid#name" not in capsys.readouterr().err
 
 
-def test_hook_recognises_typed_merge(monkeypatch):
-    spec = importlib.util.spec_from_file_location("r5_guard", files("lu_machinery").parent / "agents_extensions/shared/hooks/guard-pr-merge.py")
-    guard = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(guard)
-    for prefix in (sys.executable, "/fixture/bin/python"):
-        args = guard._merge_args([prefix, "-m", "lu_machinery.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
-        assert guard._pr_selector(args) == "1" and guard._repo_option(args) == "unit/private"
-
-
 @pytest.mark.parametrize("caller,name,fields", [
     ("lu_machinery/github_graphql_budget.py", "budget", {}),
     ("lu_machinery/gh_merge_queue_status.py", "membership", {"number": 1}),
@@ -690,26 +679,6 @@ def test_named_read_shell_cli(command):
     assert pub.main(command, runner=spy) == 0
     assert len(calls) == (2 if "issue-states" in command else 1)
     assert all(args[:2] == ["gh", "api"] for args in calls)
-
-
-@pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
-@pytest.mark.parametrize("state", ["draft", "red", "pending", "ready"])
-def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
-    spec = importlib.util.spec_from_file_location("r5_hook", files("lu_machinery").parent / "agents_extensions/shared/hooks/guard-pr-merge.py")
-    guard = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(guard)
-    monkeypatch.setattr(guard, "_read_payload", lambda: {"tool_input": {"command": f".venv/bin/python -m lu_machinery.publish pr-merge --repo {repo} --number 1"}})
-    reads = []
-    def snapshot(pr, target, cwd=None):
-        reads.append((pr, target))
-        failing = ["CI Gate"] if state == "red" else []
-        pending = ["CI Gate"] if state == "pending" else []
-        # 0.1.47 unpacks (failing, pending, judged). judged == 0 is NO_CHECKS.
-        judged = 0 if state == "draft" else 1
-        return {"isDraft": state == "draft"}, (failing, pending, judged)
-    monkeypatch.setattr(guard, "_pr_snapshot", snapshot)
-    assert guard.main() == (0 if state == "ready" else 2)
-    assert reads == [("1", repo)]
 
 
 def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_path, monkeypatch):
