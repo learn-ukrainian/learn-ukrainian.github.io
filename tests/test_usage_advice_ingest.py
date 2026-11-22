@@ -5,7 +5,7 @@ Tests:
 - Honest User-Agent defaults and overrides
 - Stop on HTTP 403 circuit breaker (AccessDeniedError, zero retries)
 - Exponential backoff and Retry-After handling on HTTP 429 and 5xx
-- Incremental ingest mode (skipping existing URLs in database)
+- Incremental refresh of new and changed pages and preservation of unchanged rows
 - Word-pair and usage-advice extraction across multiple categories
 - JSON export helpers
 - CLI argument parsing and error exits
@@ -14,12 +14,14 @@ Tests:
 from __future__ import annotations
 
 import email.utils
+import json
 import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
 import requests
 from lu_machinery.common.scratch import ensure_scratch_root
 
@@ -140,6 +142,15 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(session.get.call_count, 3)
         # Attempt 1: retry-after 5s; Attempt 2: delay*(2^1) = 2s; Final success: polite delay 1.0s
         self.assertEqual(sleep_calls, [5.0, 2.0, 1.0])
+
+        session.get.reset_mock()
+        r429.headers = {"Retry-After": "120"}
+        session.get.side_effect = [r429]
+        sleep_calls.clear()
+        with self.assertRaises(RateLimitOrServerError):
+            polite_get(session, "https://example.com/retry", sleep_fn=sleep_calls.append)
+        self.assertEqual(session.get.call_count, 1)
+        self.assertEqual(sleep_calls, [])
 
     def test_polite_get_exhaust_retries_raises(self) -> None:
         session = MagicMock(spec=requests.Session)
@@ -361,8 +372,8 @@ class TestUsageAdviceIngest(unittest.TestCase):
         r.text = """
         <div class="post_text">
             <h2>• 1 •</h2>
-            <p>Читач: Як правильно?</p>
-            <p>Правильно: так.</p>
+            <p>Читач: Як правильно казати: «у кінці кінців» чи «зрештою»?</p>
+            <p>Правильно вживати: зрештою.</p>
         </div>
         """
         session.get.return_value = r
@@ -382,8 +393,16 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(stats1.fetched_new, 2)
         self.assertEqual(session.get.call_count, 2)
 
-        # Pass 2: incremental pass with full manifest
+        original_rows = self.conn.execute("SELECT * FROM movne_pytannya_issues ORDER BY id").fetchall()
+        original_pair = self.conn.execute("SELECT * FROM movne_word_pairs WHERE issue_number = 1").fetchone()
+        self.assertIsNotNone(original_pair)
+
+        # Pass 2: unchanged issue 1, changed issue 2, new issue 3.
+        changed = MagicMock(spec=requests.Response)
+        changed.status_code = 200
+        changed.text = r.text.replace("Правильно вживати: зрештою.", "Правильно вживати: врешті-решт.")
         session.get.reset_mock()
+        session.get.side_effect = [r, changed, r]
         stats2 = ingest_movne_pytannya(
             self.conn,
             session=session,
@@ -394,18 +413,32 @@ class TestUsageAdviceIngest(unittest.TestCase):
         )
         self.assertEqual(stats2.total_manifest, 3)
         self.assertEqual(stats2.cached_existing, 2)
-        self.assertEqual(stats2.fetched_new, 1)  # Only issue 3 fetched!
-        self.assertEqual(session.get.call_count, 1)
+        self.assertEqual(stats2.fetched_new, 1)
+        self.assertEqual(stats2.changed, 1)
+        self.assertEqual(stats2.unchanged, 1)
+        self.assertEqual(session.get.call_count, 3)
+        rows = self.conn.execute("SELECT * FROM movne_pytannya_issues ORDER BY id").fetchall()
+        self.assertEqual(rows[0], original_rows[0])
+        self.assertEqual(rows[1][0], original_rows[1][0])
+        self.assertIn(changed.text, rows[1])
+        self.assertEqual(
+            self.conn.execute("SELECT * FROM movne_word_pairs WHERE issue_number = 1").fetchone(), original_pair
+        )
+        self.assertEqual(
+            self.conn.execute("SELECT verdict_form, url FROM movne_word_pairs WHERE issue_number = 2").fetchall(),
+            [("врешті-решт", manifest[1]["url"])],
+        )
 
     def test_ingest_movaua_incremental(self) -> None:
         manifest = [
             {"url": "https://ukr-mova.in.ua/item1", "section": "antusurzhuk"},
-            {"url": "https://ukr-mova.in.ua/item2", "section": "paronimu"},
+            {"url": "https://ukr-mova.in.ua/item2", "section": "antusurzhuk"},
+            {"url": "https://ukr-mova.in.ua/item3", "section": "antusurzhuk"},
         ]
         session = MagicMock(spec=requests.Session)
         r = MagicMock(spec=requests.Response)
         r.status_code = 200
-        r.text = "<html><title>Title | Мова – ДНК нації</title><div class='text'>Body</div></html>"
+        r.text = "<title>Більшість членів чи більшість члени?</title><div class='text'>Більшість членів</div>"
         session.get.return_value = r
 
         stats1 = ingest_movaua(
@@ -413,15 +446,24 @@ class TestUsageAdviceIngest(unittest.TestCase):
             session=session,
             manifest=manifest,
             incremental=True,
-            limit=1,
+            limit=2,
             delay=0,
             sleep_fn=lambda _: None,
         )
-        self.assertEqual(stats1.fetched_new, 1)
-        self.assertEqual(session.get.call_count, 1)
+        self.assertEqual(stats1.fetched_new, 2)
+        self.assertEqual(session.get.call_count, 2)
+        original_rows = self.conn.execute("SELECT * FROM movaua_articles ORDER BY id").fetchall()
+        original_pair = self.conn.execute("SELECT * FROM movaua_usage_pairs WHERE article_id = 1").fetchone()
+        self.assertIsNotNone(original_pair)
 
-        # Run 2: Item 1 cached, only Item 2 fetched
+        # Run 2: unchanged article 1, changed article 2, new article 3.
+        changed = MagicMock(spec=requests.Response)
+        changed.status_code = 200
+        changed.text = (
+            "<title>Протягом року чи на протязі року?</title><div class='text'>Правильно вживати: протягом року.</div>"
+        )
         session.get.reset_mock()
+        session.get.side_effect = [r, changed, r]
         stats2 = ingest_movaua(
             self.conn,
             session=session,
@@ -430,9 +472,22 @@ class TestUsageAdviceIngest(unittest.TestCase):
             delay=0,
             sleep_fn=lambda _: None,
         )
-        self.assertEqual(stats2.cached_existing, 1)
+        self.assertEqual(stats2.cached_existing, 2)
         self.assertEqual(stats2.fetched_new, 1)
-        self.assertEqual(session.get.call_count, 1)
+        self.assertEqual(stats2.changed, 1)
+        self.assertEqual(stats2.unchanged, 1)
+        self.assertEqual(session.get.call_count, 3)
+        rows = self.conn.execute("SELECT * FROM movaua_articles ORDER BY id").fetchall()
+        self.assertEqual(rows[0], original_rows[0])
+        self.assertEqual(rows[1][0], original_rows[1][0])
+        self.assertIn(changed.text, rows[1])
+        self.assertEqual(
+            self.conn.execute("SELECT * FROM movaua_usage_pairs WHERE article_id = 1").fetchone(), original_pair
+        )
+        self.assertEqual(
+            self.conn.execute("SELECT recommended_form, url FROM movaua_usage_pairs WHERE article_id = 2").fetchall(),
+            [("Протягом року", manifest[1]["url"])],
+        )
 
     def test_export_summaries_json(self, tmp_path: Path | None = None) -> None:
         ensure_movne_schema(self.conn)
@@ -490,6 +545,11 @@ class TestUsageAdviceIngest(unittest.TestCase):
 
     @patch("scripts.ingest.usage_advice_ingest.ingest_movne_pytannya")
     def test_cli_main_exit_codes(self, mock_movne: MagicMock) -> None:
+        with self.assertRaises(SystemExit) as bad_limit:
+            main(["--source", "movne", "--limit", "-1"])
+        self.assertEqual(bad_limit.exception.code, 2)
+        mock_movne.assert_not_called()
+
         mock_movne.side_effect = AccessDeniedError("403 Forbidden")
         code = main(["--source", "movne_pytannya", "--db-movne", ":memory:"])
         self.assertEqual(code, EXIT_HTTP_403_FORBIDDEN)
@@ -1338,6 +1398,103 @@ class TestUsageAdviceIngest(unittest.TestCase):
             self.assertEqual(stats_movaua.errors, 0)
         finally:
             uai._STOP_REQUESTED = old_stop
+
+
+@pytest.mark.parametrize(
+    ("source", "db_flag", "discover", "base_url", "item_fields", "html", "table", "pairs_table"),
+    [
+        (
+            "movne",
+            "--db-movne",
+            "discover_movne_manifest",
+            "https://glavcom.ua",
+            {"issue_number": 1},
+            """
+            <div class="post_text">
+                <h2>• 1 •</h2>
+                <p>Читач: Як правильно казати: «у кінці кінців» чи «зрештою»?</p>
+                <p>Правильно вживати: зрештою.</p>
+            </div>
+            """,
+            "movne_pytannya_issues",
+            "movne_word_pairs",
+        ),
+        (
+            "mova_ua",
+            "--db-movaua",
+            "discover_movaua_manifest",
+            "https://ukr-mova.in.ua",
+            {"section": "antusurzhuk"},
+            "<title>Більшість членів чи більшість члени?</title><div class='text'>Більшість членів</div>",
+            "movaua_articles",
+            "movaua_usage_pairs",
+        ),
+    ],
+    ids=["movne", "mova_ua"],
+)
+def test_consumer_cli_reports_exact_source_outcome_and_committed_counts(
+    source, db_flag, discover, base_url, item_fields, html, table, pairs_table, tmp_path, capsys, requests_mock
+):
+    """A wrong source echo, exit/status pair or counter misclassifies a scheduled ingest."""
+    first, second, third = (f"{base_url}/item{idx}" for idx in range(1, 4))
+    db = tmp_path / "fixture archive.db"
+    argv = ["--source", source, "--incremental", db_flag, str(db), "--delay", "0", "--max-retries", "0"]
+
+    with patch(f"scripts.ingest.usage_advice_ingest.{discover}") as discover_manifest:
+        discover_manifest.return_value = [{"url": first, **item_fields}]
+        requests_mock.get(first, text=html)
+        assert main(argv) == 0
+        assert json.loads(capsys.readouterr().out) == {
+            "source": source,
+            "status": "ok",
+            "new": 1,
+            "changed": 0,
+            "unchanged": 0,
+            "pairs_added": 1,
+        }
+
+        with sqlite3.connect(db) as conn:
+            archive_before = conn.execute(
+                f"SELECT id, raw_html, fetched_at, content_sha256 FROM {table} WHERE url = ?", (first,)
+            ).fetchone()
+            pairs_before = conn.execute(f"SELECT * FROM {pairs_table} WHERE url = ?", (first,)).fetchall()
+
+        requests_mock.get(first, status_code=503)
+        assert main(argv) == 1
+        assert json.loads(capsys.readouterr().out) == {
+            "source": source,
+            "status": "error",
+            "new": 0,
+            "changed": 0,
+            "unchanged": 0,
+            "pairs_added": 0,
+        }
+
+        discover_manifest.return_value = [{"url": url, **item_fields} for url in (second, first, third)]
+        requests_mock.get(second, text=html)
+        refused = requests_mock.get(first, status_code=403)
+        never_called = requests_mock.get(third, text=html)
+        assert main(argv) == 2
+        assert json.loads(capsys.readouterr().out) == {
+            "source": source,
+            "status": "forbidden",
+            "new": 1,
+            "changed": 0,
+            "unchanged": 0,
+            "pairs_added": 1,
+        }
+        assert refused.call_count == 1
+        assert never_called.call_count == 0
+
+        with sqlite3.connect(db) as conn:
+            assert (
+                conn.execute(
+                    f"SELECT id, raw_html, fetched_at, content_sha256 FROM {table} WHERE url = ?", (first,)
+                ).fetchone()
+                == archive_before
+            )
+            assert conn.execute(f"SELECT * FROM {pairs_table} WHERE url = ?", (first,)).fetchall() == pairs_before
+            assert conn.execute(f"SELECT url FROM {table} ORDER BY id").fetchall() == [(first,), (second,)]
 
 
 if __name__ == "__main__":

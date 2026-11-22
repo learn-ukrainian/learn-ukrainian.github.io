@@ -206,20 +206,43 @@
   custody/register updates belong to later #9604
   steps. These tools and synthetic tests do not establish those acceptance criteria.
 
-- `usage_advice_ingest.py` (#857): incremental ingest and word/usage-pair extractor for Ukrainian language usage sources:
-  1. Glavcom «Мовне питання» (Olha Vasylieva column archive) into `data/movne_pytannya.db`.
-  2. Мова – ДНК нації (mova.ua / ukr-mova.in.ua, ~582 articles across anti-surzhyk, paronyms, orthography, stress, synonyms, idioms) into `data/movaua.db`.
+## Usage advice ingest
 
-  Features:
-  - Honest identifying User-Agent by default (`learn-ukrainian-usage-ingest/1.0 ...`) with CLI `--user-agent` override.
-  - Immediate circuit-breaker stop on HTTP 403 (marks `error_status = 'http_403'` in SQLite to skip on subsequent incremental runs; zero retries).
-  - Exponential backoff on HTTP 429 and 5xx, respecting standard `Retry-After` headers.
-  - Incremental mode (`--incremental`, default true) querying existing SQLite tables.
-  - Full-fidelity retention: untruncated raw HTML, article text, content SHA-256 digest, and metadata.
-  - `--re-extract` / `--reextract` CLI flag to re-run extraction over stored SQLite `raw_html` without network requests.
-  - Summary JSON export (`--export-json-movne` / `--export-json-movaua`) for downstream lexicon review.
+`usage_advice_ingest.py` archives Glavcom's «Мовне питання» in
+`data/movne_pytannya.db` and Мова – ДНК нації in `data/movaua.db`.
 
-  ```bash
-  .venv/bin/python -m scripts.ingest.usage_advice_ingest --source all
-  .venv/bin/python -m scripts.ingest.usage_advice_ingest --re-extract --source all
-  ```
+```bash
+.venv/bin/python -m scripts.ingest.usage_advice_ingest --source movne --incremental
+.venv/bin/python -m scripts.ingest.usage_advice_ingest --source mova_ua --incremental
+.venv/bin/python -m scripts.ingest.usage_advice_ingest --source all --re-extract
+```
+
+Incremental mode fetches eligible discovered pages and compares the SHA-256 of
+their HTML with the digest already in SQLite. New and changed pages update the
+archive and their word pairs in one transaction. A changed page keeps its
+archive ID and citation URL. An identical response keeps the saved HTML, pairs
+and timestamps. Pages absent from discovery stay in the archive.
+
+Each fetch uses an identifying User-Agent, which `--user-agent` can override.
+HTTP 403 stops the invocation immediately. If an article returns 403, the
+ingest records the refusal and parks that URL for future incremental runs.
+Use `--retry-errors` once access is restored. HTTP 429 and 5xx use exponential
+backoff. The ingest stops if `Retry-After` requests more than 60 seconds.
+
+`--limit N` caps candidate articles per source and prioritizes pages without
+saved content in incremental mode. `--no-incremental` forces re-extraction of
+every fetched article. `--re-extract` or `--reextract` rebuilds pairs offline
+from stored HTML. The optional `--export-json-movne` and `--export-json-movaua`
+flags write separate lexicon exports.
+
+The final stdout line is a JSON object. `source` echoes the requested source.
+`new`, `changed`, `unchanged` and `pairs_added` count work completed during
+the invocation. `pairs_added` includes replacement pairs written on refresh
+and offline re-extraction. `all` sums both sources. Diagnostics go to stderr.
+
+| Source argument | Success (`ok`) | Failure (`error`) | HTTP 403 (`forbidden`) |
+| --- | --- | --- | --- |
+| `movne`, `mova_ua` | 0 | 1 | 2 |
+| `movne_pytannya`, `movaua`, `all` (default) | 0 | 4 for unexpected failure, 5 for fetch errors or interruption | 3 |
+
+Invalid command syntax exits with argparse's code 2 before the ingest runs.
