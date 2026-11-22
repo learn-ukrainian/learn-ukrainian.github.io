@@ -5,13 +5,11 @@ constraints apply together, so it is read with ``packaging.specifiers`` rather
 than by picking out ``>=`` parts. The invariants:
 
 * the pinned interpreter in ``.python-version`` satisfies the whole set (this
-  is what rejects ``>=3.12,>3.13`` and ``>=3.12,!=3.12.*``);
+  is what rejects ``>=3.14,<3.14.5`` and ``>=3.14,!=3.14.*`` for a 3.14.10 pin);
 * the declared lower bound is exactly ``PROJECT_FLOOR``;
 * neither the ruff target nor the mypy ``python_version`` is below it.
 
-The floor is deliberately *not* required to equal the pinned interpreter: the
-pin may move ahead of the floor (e.g. 3.14.x against ``>=3.12``), so the
-invariant is floor <= pinned and pinned contained in the set.
+The pin may move ahead of the floor (e.g. 3.15.x against ``>=3.14``).
 """
 
 from __future__ import annotations
@@ -27,17 +25,16 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 MinorVersion = tuple[int, int]
 
-# The documented project floor (the code uses 3.12-only syntax such as PEP 695
-# ``type`` aliases). Raising it is a deliberate edit to this constant together
-# with ``requires-python``, the ruff target and the mypy ``python_version``.
-PROJECT_FLOOR: MinorVersion = (3, 12)
+# When the project floor moves, update this expectation with ``requires-python``,
+# the Ruff target and the mypy ``python_version``.
+PROJECT_FLOOR: MinorVersion = (3, 14)
 
 # Operators that establish a lower bound on the interpreter version.
 _LOWER_BOUND_OPERATORS = frozenset({">=", ">", "~=", "==", "==="})
 
 
 def _parse_minor(text: str) -> MinorVersion:
-    """``"3.12"``, ``"3.12.15"`` or ``"py312"`` -> ``(3, 12)``."""
+    """``"3.14"``, ``"3.14.10"`` or ``"py314"`` -> ``(3, 14)``."""
     text = text.strip().removeprefix("py")
     if "." not in text:
         return int(text[0]), int(text[1:])
@@ -90,48 +87,48 @@ def test_repo_declares_documented_floor_and_admits_pinned_interpreter() -> None:
 @pytest.mark.parametrize(
     ("requires_python", "pinned"),
     [
-        (">=3.12", "3.12.15"),
-        (">=3.12,<4", "3.12.15"),
-        (">= 3.12 , < 4", "3.12.15"),
-        ("<4,>=3.12.1", "3.12.15"),
-        # The pin may run ahead of the floor (#10742): patch-level pin, floor 3.12.
-        (">=3.12", "3.14.8"),
-        (">=3.12", "3.12"),
+        (">=3.14", "3.14.10"),
+        (">=3.14,<4", "3.14.10"),
+        (">= 3.14 , < 4", "3.14.10"),
+        ("<4,>=3.14.1", "3.14.10"),
+        # The pin may run ahead of the floor (#10742).
+        (">=3.14", "3.15.1"),
+        (">=3.14", "3.14"),
     ],
 )
 def test_accepted_specifier_shapes(requires_python: str, pinned: str) -> None:
-    _check_floor_contract(requires_python, pinned, "py312", "3.12")
+    _check_floor_contract(requires_python, pinned, "py314", "3.14")
 
 
 @pytest.mark.parametrize(
     ("requires_python", "pinned", "message"),
     [
-        # Reviewer probes: both reject the pinned 3.12.15 although ``>=3.12`` is present.
-        (">=3.12,>3.13", "3.12.15", "not the documented floor|rejected"),
-        (">=3.12,!=3.12.*", "3.12.15", "rejected"),
-        (">=3.12,<3.12.5", "3.12.15", "rejected"),
+        # The whole set applies even when ``>=3.14`` is present.
+        (">=3.14,>3.15", "3.14.10", "not the documented floor|rejected"),
+        (">=3.14,!=3.14.*", "3.14.10", "rejected"),
+        (">=3.14,<3.14.5", "3.14.10", "rejected"),
         # No lower bound at all.
-        ("<4", "3.12.15", "no lower bound"),
-        ("!=3.11.*", "3.12.15", "no lower bound"),
+        ("<4", "3.14.10", "no lower bound"),
+        ("!=3.13.*", "3.14.10", "no lower bound"),
         # Lower bound is not the documented floor.
-        (">=3.11", "3.12.15", "not the documented floor"),
-        (">=3.13", "3.14.8", "not the documented floor"),
+        (">=3.12", "3.14.10", "not the documented floor"),
+        (">=3.13", "3.15.1", "not the documented floor"),
         # Pinned interpreter below the floor.
-        (">=3.12", "3.11.9", "rejected"),
+        (">=3.14", "3.13.9", "rejected"),
     ],
 )
 def test_rejected_specifier_shapes(requires_python: str, pinned: str, message: str) -> None:
     with pytest.raises(AssertionError, match=message):
-        _check_floor_contract(requires_python, pinned, "py312", "3.12")
+        _check_floor_contract(requires_python, pinned, "py314", "3.14")
 
 
 @pytest.mark.parametrize(
     ("ruff_target", "mypy_target", "message"),
     [
-        ("py311", "3.12", "ruff target-version"),
-        ("py312", "3.11", "mypy python_version"),
+        ("py313", "3.14", "ruff target-version"),
+        ("py314", "3.13", "mypy python_version"),
     ],
 )
 def test_tool_targets_below_floor_are_rejected(ruff_target: str, mypy_target: str, message: str) -> None:
     with pytest.raises(AssertionError, match=message):
-        _check_floor_contract(">=3.12", "3.12.15", ruff_target, mypy_target)
+        _check_floor_contract(">=3.14", "3.14.10", ruff_target, mypy_target)

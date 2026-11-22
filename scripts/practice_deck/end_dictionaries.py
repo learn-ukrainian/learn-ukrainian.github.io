@@ -304,7 +304,7 @@ def classify_section_row(row: Mapping[str, Any]) -> EndDictionarySection | None:
     full_text = str(row.get("full_text") or "")
     layout = infer_layout(kind, full_text, section_title=title)
     grade_raw = row.get("grade")
-    grade = int(grade_raw) if isinstance(grade_raw, int) or str(grade_raw).isdigit() else None
+    grade = int(grade_raw) if grade_raw is not None and (isinstance(grade_raw, int) or str(grade_raw).isdigit()) else None
     page_start = row.get("page_start")
     page_end = row.get("page_end")
     return EndDictionarySection(

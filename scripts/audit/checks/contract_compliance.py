@@ -384,7 +384,8 @@ def check_archetype_fit(
     module = dict((contract or {}).get("module") or {}) if isinstance(contract, Mapping) else {}
     resolved_level = str(level or module.get("level") or "").lower()
     try:
-        resolved_module_num = int(module_num if module_num is not None else module.get("module_num"))
+        raw_module_num = module_num if module_num is not None else module.get("module_num")
+        resolved_module_num = int(raw_module_num) if raw_module_num is not None else 0
     except (TypeError, ValueError):
         resolved_module_num = 0
 

@@ -208,7 +208,7 @@ def _isolate_api_directory_when_pytest_recollects(request: pytest.FixtureRequest
 
 
 @pytest.fixture(scope="session", autouse=True)
-def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path, None, None]:
+def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path]:
     """Keep sources request logs outside the checkout in each pytest worker."""
     log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
     with pytest.MonkeyPatch.context() as mp:
@@ -294,7 +294,7 @@ _install_sources_free_disk_hook()
 
 
 @pytest.fixture(scope="session", autouse=True)
-def no_free_disk_floor() -> Generator[None, None, None]:
+def no_free_disk_floor() -> Generator[None]:
     """Keep evidence ``Sources`` snapshots off the runner's free disk (#12640).
 
     One fixture replaces the copies under ``tests/build`` and
@@ -325,7 +325,7 @@ def pytest_runtest_call(item: pytest.Item) -> Generator[None, object, object]:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
+def _lexicon_cap_test_unit_prefix() -> Generator[None]:
     """Name scopes created by the suite ``lexicon-captest-*`` (#9624).
 
     The cap tests OOM-kill real scopes on purpose; under the production prefix
@@ -962,7 +962,7 @@ _LIVE_GITHUB_ALLOWED = False
 
 
 @pytest.fixture(autouse=True)
-def _restore_process_umask() -> Generator[None, None, None]:
+def _restore_process_umask() -> Generator[None]:
     """Give every test the umask it started with.
 
     The umask is process-wide, and code run in-process can narrow it for good
@@ -1119,7 +1119,7 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
 
 
 @pytest.fixture(autouse=True)
-def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None, None, None]:
+def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None]:
     """Permit real ``gh`` only for tests explicitly marked as integrations."""
     global _LIVE_GITHUB_ALLOWED
     previous = _LIVE_GITHUB_ALLOWED
@@ -3174,7 +3174,7 @@ def pytest_runtest_teardown(item: pytest.Item, nextitem: pytest.Item | None) -> 
 
 
 @pytest.fixture(autouse=True)
-def _socket_guard(request: pytest.FixtureRequest) -> Generator[None, None, None]:
+def _socket_guard(request: pytest.FixtureRequest) -> Generator[None]:
     """Ensure per-test live_network marker status is respected and always reset (#6968)."""
     is_live = bool(request.node.get_closest_marker("live_network"))
     _set_live_network_allowed(is_live)
@@ -4048,7 +4048,7 @@ def _worktree_guard_teardown_message() -> str | None:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _guard_real_worktree_entries() -> Generator[None, None, None]:
+def _guard_real_worktree_entries() -> Generator[None]:
     """Fail the session if this process created a worktree entry on the real tree.
 
     Live agents add checkouts under ``.worktrees/`` for the whole time the suite
