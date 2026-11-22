@@ -93,8 +93,10 @@ open-dataset-publish: open-dataset
 PRONUNCIATION_LIMIT ?= 200
 .PHONY: pronunciation-audio pronunciation-setup
 pronunciation-setup:
-	$(PYTHON) -m pip install --target batch_state/tts-runtime piper-tts==1.3.0 marisa-trie==1.4.1 PyYAML==6.0.3
-	$(PYTHON) -m pip install --target batch_state/tts-runtime --no-deps ukrainian-word-stress==2.1.0
+	"$(PYTHON)" -m pip install --target batch_state/tts-runtime --require-hashes --only-binary :all: \
+		--uploaded-prior-to P7D -r requirements-tts.txt
+	"$(PYTHON)" -m pip install --target batch_state/tts-runtime --no-deps --require-hashes --only-binary :all: \
+		--uploaded-prior-to P7D -r requirements-tts-stress.txt
 
 pronunciation-audio:
 	npm --prefix site run hydrate:practice
