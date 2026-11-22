@@ -26,7 +26,7 @@ def _fake_runner(calls: list[list[str]], slug: str = "my-morning"):
             out_dir.mkdir(parents=True, exist_ok=True)
             telemetry.parent.mkdir(parents=True, exist_ok=True)
             (out_dir / f"{slug}.mdx").write_text(
-                "---\nlevel: A1\nslug: my-morning\n---\n\n# Мій ранок\n",
+                "---\nlevel: A2\nslug: my-morning\n---\n\n# Мій ранок\n",
                 encoding="utf-8",
             )
             with telemetry.open("a", encoding="utf-8") as handle:
@@ -46,8 +46,8 @@ def _fake_runner(calls: list[list[str]], slug: str = "my-morning"):
 
 def _plan_payload() -> dict[str, object]:
     return {
-        "module": "a1-020",
-        "level": "A1",
+        "module": "a2-020",
+        "level": "A2",
         "sequence": 20,
         "slug": "my-morning",
         "title": "Мій ранок",
@@ -64,6 +64,19 @@ def _plan_payload() -> dict[str, object]:
     }
 
 
+@pytest.fixture(autouse=True)
+def _owned_module_inputs(tmp_path: Path, monkeypatch) -> None:
+    """The tests own their plan and wiki packet; no real curriculum or wiki file is read (#13295)."""
+    plan_path = tmp_path / "my-morning.yaml"
+    plan_path.write_text(yaml.safe_dump(_plan_payload()), encoding="utf-8")
+    monkeypatch.setattr(bakeoff_run.linear_pipeline, "plan_path_for", lambda _level, _slug: plan_path)
+    monkeypatch.setattr(
+        bakeoff_run.linear_pipeline,
+        "_wiki_article_paths",
+        lambda *_args: [tmp_path / "my-morning.md"],
+    )
+
+
 def test_bakeoff_run_invokes_write_and_review_steps_in_order(
     tmp_path: Path,
     monkeypatch,
@@ -77,7 +90,7 @@ def test_bakeoff_run_invokes_write_and_review_steps_in_order(
             "--bakeoff-dir",
             str(bakeoff_dir),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -137,7 +150,7 @@ def test_bakeoff_run_resume_writer_requires_terminal_event(
             "--bakeoff-dir",
             str(bakeoff_dir),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -195,7 +208,7 @@ def test_bakeoff_run_resume_review_requires_terminal_event(
             "--bakeoff-dir",
             str(bakeoff_dir),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -263,7 +276,7 @@ def test_bakeoff_run_writer_timeout_continues_next_writer(
             "--bakeoff-dir",
             str(bakeoff_dir),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -306,7 +319,7 @@ def test_bakeoff_run_preflight_missing_plan_exits_1(
             "--bakeoff-dir",
             str(tmp_path / "bakeoff"),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -337,7 +350,7 @@ def test_bakeoff_run_preflight_missing_packet_exits_1(
             "--bakeoff-dir",
             str(tmp_path / "bakeoff"),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -367,7 +380,7 @@ def test_bakeoff_run_preflight_unknown_writer_exits_1(
             "--bakeoff-dir",
             str(tmp_path / "bakeoff"),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -394,7 +407,7 @@ def test_bakeoff_run_aggregate_gets_normalized_writer_list(
             "--bakeoff-dir",
             str(bakeoff_dir),
             "--level",
-            "a1",
+            "a2",
             "--slug",
             "my-morning",
             "--writers",
@@ -426,4 +439,4 @@ def test_bakeoff_run_preflight_accepts_fixture_plan(
         lambda *_args: [tmp_path / "my-morning.md"],
     )
 
-    assert bakeoff_run._preflight("a1", "my-morning", ["gemini-tools"]) == []
+    assert bakeoff_run._preflight("a2", "my-morning", ["gemini-tools"]) == []

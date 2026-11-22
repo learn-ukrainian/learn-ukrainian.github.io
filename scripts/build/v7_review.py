@@ -127,10 +127,10 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/build/v7_review.py a1 my-morning \\\n"
+            "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
             "    --content audit/bakeoff-2026-05-05/gemini.md \\\n"
             "    --reviewer claude-tools\n"
-            "  .venv/bin/python scripts/build/v7_review.py a1 my-morning \\\n"
+            "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
             "    --content audit/bakeoff-2026-05-05/gpt55.md \\\n"
             "    --reviewer gemini-tools \\\n"
             "    --telemetry-out audit/bakeoff-2026-05-05/gpt55-gemini.review.jsonl\n\n"
@@ -157,7 +157,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     parser.add_argument(
         "level",
-        help="Curriculum level code, for example a1, b1-pro, or hist.",
+        help="Curriculum level code, for example a2, b1-pro, or hist (core A1 is refused).",
     )
     parser.add_argument(
         "slug",

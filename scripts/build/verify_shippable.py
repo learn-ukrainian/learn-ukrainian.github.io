@@ -587,10 +587,11 @@ def main(argv: list[str] | None = None) -> int:
         help="With --fresh, require and render planned lessons whose numbers are <= N, plus the landing if present. N must be a planned number (recap included); gaps are allowed. Later lessons are excluded. Default: all planned lessons. Example: --through-lesson 1",
     )
     # Look for the retired flag before validating anything else, so a lesson-mode call with
-    # its old --source-dir, a malformed value or any other option gets the retirement reason.
+    # its old --source-dir, a malformed or attached value (--lesson=x) or any other option gets
+    # the retirement reason. The pre-parser only records that the flag was given.
     retired = argparse.ArgumentParser(add_help=False)
-    retired.add_argument("--lesson", action="store_true")
-    if retired.parse_known_args(argv)[0].lesson:
+    retired.add_argument("--lesson", nargs="?", const="", default=None)
+    if retired.parse_known_args(argv)[0].lesson is not None:
         ap.error(
             "--lesson is retired: it verified the removed V7 A1 lesson edition against the legacy plans/a1 "
             "plans and the a1-v1 edition, which R-10 and R-11 exclude (#13295); verify fresh lessons with --fresh"

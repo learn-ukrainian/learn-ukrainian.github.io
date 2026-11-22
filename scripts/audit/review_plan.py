@@ -6,9 +6,9 @@ Catches pedagogy issues, bad dialogues, wrong grammar scope, vocabulary
 problems that deterministic checks (check_plan.py) miss.
 
 Usage:
-    .venv/bin/python scripts/audit/review_plan.py a1 sounds-letters-and-hello
-    .venv/bin/python scripts/audit/review_plan.py a1 --all
-    .venv/bin/python scripts/audit/review_plan.py a1 --all --dry-run  # show prompt, skip Gemini
+    .venv/bin/python scripts/audit/review_plan.py a2 aspect-concept
+    .venv/bin/python scripts/audit/review_plan.py a2 --all
+    .venv/bin/python scripts/audit/review_plan.py a2 --all --dry-run  # show prompt, skip Gemini
 
 Issue: #984
 """
@@ -383,7 +383,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="LLM adversarial plan review via Gemini"
     )
-    parser.add_argument("level", help="Level to review (e.g., a1)")
+    parser.add_argument("level", help="Level to review (e.g., a2; core A1 plans are retired)")
     parser.add_argument("slug", nargs="?", help="Module slug (omit for --all)")
     parser.add_argument("--all", action="store_true", help="Review all plans for level")
     parser.add_argument(
