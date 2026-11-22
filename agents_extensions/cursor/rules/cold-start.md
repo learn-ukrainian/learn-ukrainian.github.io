@@ -1,76 +1,46 @@
-# Cursor cold start (200k context)
+---
+description: 200k-context cold start — Monitor API live state plus /api/rules
+alwaysApply: true
+---
 
-Cursor already loads `AGENTS.md` + `CLAUDE.md` as workspace rules (~40–60k tokens).
-Those files are digests. When the Monitor API is up, fetch
-`GET /api/rules?format=markdown` before consequential work (AGENTS.md).
-`lu_machinery.cursor_cold_start` hits `/api/rules?format=json` and prints the
-hash and source list; it does not reprint the rules blob.
+# Cold start (Cursor · 200k)
 
-## Budget
-
-| Reserve | Tokens | Purpose |
-| --- | --- | --- |
-| Workspace rules | ~50k | AGENTS + CLAUDE (Cursor-injected digests) |
-| Cold-start API | ~3–5k | manifest + rules hash/sources + condensed orient |
-| Task work | ~120–140k | reads, edits, reasoning |
-| Headroom | ~10k | tool output spikes |
-
-## Sequence (every session)
+**At session start, before other work:**
 
 ```bash
 scripts/pre_commit/project_python.sh -I -m lu_machinery.cursor_cold_start
 ```
 
-Equivalent manual calls:
+The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as workspace rules (~50k tokens); those are digests, not a substitute for `/api/rules`.
 
-```bash
-curl -s http://localhost:8765/api/state/manifest
-curl -s http://localhost:8765/api/rules?format=markdown
-curl -s http://localhost:8765/api/orient   # parse git, health, delegate, governance only
-```
+## Do not fetch at boot
 
-## Skip (orchestrator / 1M lanes)
+- `/api/session/current?agent=orchestrator` — wrong agent lane
+- `context_canary.py mint` — 1M orchestrator only
+- `Read` on `CLAUDE.md`, `AGENTS.md`
 
-- `/api/session/current?agent=orchestrator` — wrong agent
-- `context_canary.py mint` — 1M orchestrator sessions only
-- `Read` on `CLAUDE.md` or `AGENTS.md` at boot
+## Fetch at boot
 
-## Fetch on demand (task-scoped)
+| Need | Call |
+| --- | --- |
+| Canonical rules | `/api/rules?format=markdown` (script hits `/api/rules?format=json`) |
 
-| Task | Endpoint |
+## Fetch on demand
+
+| Need | Call |
 | --- | --- |
 | Fleet inbox | `/api/comms/inbox?agent=cursor` |
-| Active dispatches | `/api/delegate/active` |
-| Track / curriculum | `/api/state/summary`, `/api/state/track-health/{track}` |
+| Dispatches | `/api/delegate/active` |
+| Track state | `/api/state/summary` |
+| Track health | `/api/state/track-health/{track}` |
 | One module | `/api/state/module/{track}/slug/{slug}` |
-| Open PRs | `gh pr list` (not full orient replay) |
-| Usage limits | CodaxBar.app + `/api/runtime/agents` |
+| Open PRs | `gh pr list` |
+| Usage limits | `/api/runtime/agents` |
+| After commit | `/api/orient?fresh=true` |
 
-Fleet launchers route eligible 2-to-4-seat read-only `ab discuss` calls through
-the durable ACP controller automatically. Enabled participants are Codex,
-Grok, Claude, Cursor, and Pool (Kimi seats are refused: web, UI and backend coding only). Bridge transport is a named,
-durably recorded exception for unsupported participants/counts, model
-overrides, formal review, or non-read-only semantics; an ACP failure never
-silently replays provider calls over bridge. ACP does not replace fleet
-coordination or formal review. Follow
-`docs/runbooks/agent-seat-onboarding.md` for the direct operator command,
-busy/partial behavior, and receipt-verification contract.
+If Monitor is unavailable, run `git status --short --branch` and follow the
+offline rules loader in the installed release (`agents_extensions/shared/rules/_load-via-api.md`).
+After the rules change, fetch `/api/rules` again to refresh the session's rules.
 
-## After local writes
-
-`curl -s 'http://localhost:8765/api/orient?fresh=true'`
-
-## Offline fallback
-
-If Monitor API is down: `git status --short --branch` + read
-`agents_extensions/shared/rules/_load-via-api.md` and its ordered local
-fallback list.
-
-## Rules hash refresh (no Monitor restart)
-
-`GET /api/rules` reads rule files **live from the Monitor project checkout** on
-every request (ETag = content SHA-256). After a rules PR merges and the primary
-checkout is pulled, the next cold-start /rules fetch sees the new hash — **do not
-restart Monitor** for rule text. Long-running driver *sessions* that already
-injected an old rules blob into context must **re-fetch** `/api/rules` or start a
-new session; a TUI driver relaunch re-runs cold start and picks up the new hash.
+For read-only `ab discuss` routing and receipts, see
+`docs/runbooks/agent-seat-onboarding.md`. ACP discussion carries no formal review verdict.
