@@ -164,15 +164,12 @@ Supporting modules:
 
 **~2K LOC** | Claude↔Gemini communication via subprocess + SQLite broker
 
-### 6. Prompt Templates (`claude_extensions/phases/gemini/`)
+### 6. Gemini Phase Templates
 
-**~54 files** | Phase-specific prompts injected during pipeline execution
-
-Key templates:
-- `beginner-full-rag.md` — Beginner content (220 lines, restructured)
-- `beginner-activities.md` — Beginner activities (separate phase)
-- `review-structured.md` — Claude D.1 review
-- `review-repair.md` — Claude D.2 fix
+The [phase template inventory](../../agents_extensions/shared/phases/gemini/README.md)
+lists the prompts and their callers. The legacy pipeline uses `beginner-full-rag.md`
+for beginner content. The batch scripts use `activities.md` for activity generation,
+`phase-5-review.md` for review, and `phase-fix.md` for batch fixes.
 
 ### 7. Batch Operations, Scoring, Code Generation, Playgrounds
 
