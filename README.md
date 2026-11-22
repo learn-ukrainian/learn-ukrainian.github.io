@@ -116,13 +116,10 @@ learn-ukrainian/
 
 ## Quick Start (Developers)
 
-Want to run the build pipeline locally or contribute code? The full guide is
-in [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
+To run the build pipeline locally, start with the clone and Python setup
+in steps 1 and 2 of the [installation instructions](CONTRIBUTING.md#installation).
 
 ```bash
-# 1. Python environment — uv installs .python-version and every uv.lock pin
-uv sync --locked
-
 # 2. Frontend
 cd starlight && npm install && cd ..
 

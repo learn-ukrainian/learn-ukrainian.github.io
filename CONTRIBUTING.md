@@ -31,16 +31,21 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 
 ### Installation
 
+The uv-managed Python supports the SQLite extensions that VESUM needs.
+The `lu-machinery` wheel comes from the release URL in `[tool.uv.sources]`.
+
 ```bash
 # 1. Clone
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 
-# 2. Python environment: the CPython in .python-version (uv's managed build
-# loads SQLite extensions, which VESUM needs) and every package uv.lock pins,
-# each checked against its locked SHA-256. The lu-machinery release wheel is
-# not on PyPI; pyproject.toml [tool.uv.sources] names its release URL.
-uv sync --locked
+# 2. Python environment. Install the locked wheels before building ipa-uk
+# and learn-ukrainian-v4-runtime with the locked setuptools and wheel.
+# Clear their cached wheels so both packages use the current lock's tools.
+uv sync --locked --no-build \
+  --no-install-package ipa-uk --no-install-package learn-ukrainian-v4-runtime &&
+uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
+uv sync --locked --no-build-isolation
 
 # 3. Frontend
 cd starlight && npm install && cd ..

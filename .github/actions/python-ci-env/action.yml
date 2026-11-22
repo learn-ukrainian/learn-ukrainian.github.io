@@ -1,8 +1,8 @@
 name: 'Python CI environment'
 description: >-
   Set up uv, install the project environment into .venv with uv sync --locked
-  from uv.lock on the Python in .python-version (offline-first with an index
-  retry, #9061), install the hash-checked lu-machinery release wheel, build the
+  from uv.lock on the Python in .python-version (offline-first for registry
+  wheels, #9061), install the hash-checked lu-machinery release wheel, build the
   ./packages/v4-runtime assets, then verify the Atlas lexicon manifest. Shared by
   ci.yml and uv-cache-warm.yml so the install cannot drift between jobs (#9062).
   With machinery-wheel-only it only fetches the locked lu-machinery wheel and
@@ -234,10 +234,17 @@ runs:
           --no-install-package torch --no-install-package torchvision
           --no-install-package open-clip-torch --no-install-package stanza
           --no-install-package lu-machinery)
-        if ! "${sync[@]}" --offline; then
+        # Install the locked setuptools and wheel before running either backend.
+        wheel_only=(--no-build --no-install-package ipa-uk
+          --no-install-package learn-ukrainian-v4-runtime)
+        if ! "${sync[@]}" "${wheel_only[@]}" --offline; then
           echo 'uv cache incomplete; retrying installation from the index'
-          "${sync[@]}"
+          "${sync[@]}" "${wheel_only[@]}"
         fi
+        # A restored cache can contain wheels built with a different backend version.
+        uv cache clean ipa-uk learn-ukrainian-v4-runtime
+        # Allow a Git cache miss to fetch ipa-uk without restarting the V4 build.
+        "${sync[@]}" --no-build-isolation
         uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
           --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
         .venv/bin/python packages/v4-runtime/build_assets.py
