@@ -93,10 +93,9 @@ open-dataset-publish: open-dataset
 PRONUNCIATION_LIMIT ?= 200
 .PHONY: pronunciation-audio pronunciation-setup
 pronunciation-setup:
-	"$(PYTHON)" -m pip install --target batch_state/tts-runtime --require-hashes --only-binary :all: \
-		--uploaded-prior-to P7D -r requirements-tts.txt
-	"$(PYTHON)" -m pip install --target batch_state/tts-runtime --no-deps --require-hashes --only-binary :all: \
-		--uploaded-prior-to P7D -r requirements-tts-stress.txt
+	uv pip sync --python "$(PYTHON)" --no-python-downloads --target batch_state/tts-runtime \
+		--reinstall --require-hashes --only-binary :all: --exclude-newer '7 days' \
+		requirements-tts.txt requirements-tts-stress.txt
 
 pronunciation-audio:
 	npm --prefix site run hydrate:practice
