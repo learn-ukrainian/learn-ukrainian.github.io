@@ -609,22 +609,6 @@ def _get_content_template(track: str, module_num: int,
 
 
 
-def _get_activities_template(track: str, module_num: int,
-                             slug: str = "") -> str:
-    """Return the activities prompt filename for the given tier."""
-    tier = _get_prompt_tier(track, module_num)
-    # Checkpoint modules get dedicated activity templates
-    if slug and _is_checkpoint_module(slug):
-        if tier == "beginner":
-            return "beginner-checkpoint-activities.md"
-        return "core-checkpoint-activities.md"
-    if tier == "beginner":
-        return "beginner-activities.md"
-    if tier == "seminar":
-        return "activities.md"
-    return "core-activities.md"
-
-
 def _read_phase_file(filename: str) -> str:
     path = PHASES_DIR / filename
     if path.exists():

@@ -53,7 +53,6 @@ references is deleted (census at `6a75676ebe7`, PR body of the cleanup). The
 | `_shared-content-rules-beginner.md`, `_shared-content-rules-core.md` | `scripts/pipeline/core.py`, name built as `_shared-content-rules-{tier}.md` |
 | `review-output-format.md` | `scripts/pipeline/core.py` (`D1_OUTPUT_FORMAT`) |
 | `beginner-full-rag.md`, `beginner-checkpoint.md`, `core-content.md`, `core-checkpoint.md` | `scripts/pipeline/core.py` `_get_content_template` |
-| `beginner-activities.md`, `beginner-checkpoint-activities.md`, `core-activities.md`, `core-checkpoint-activities.md` | `scripts/pipeline/core.py` `_get_activities_template`, which currently has no caller beyond its re-export in `scripts/pipeline_lib.py` |
 | `content.md`, `activities.md`, `fix.md`, `fix-content.md`, `fix-activities.md`, `phase-5-review.md`, `research-seminar-v0.md`, `research-core.md` | `scripts/batch/batch_gemini_config.py` template tables |
 | `phase-fix.md`, `phase-5-review.md` | `scripts/batch/batch_fix_review.py` |
 | `direct-enrich.md` | `scripts/build/build_module_direct.py` |

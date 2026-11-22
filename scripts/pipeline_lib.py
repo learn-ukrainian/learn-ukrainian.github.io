@@ -33,7 +33,6 @@ from pipeline.core import (  # noqa: F401
     _dispatch_prompt,
     _extract_delimited_content,
     _gemini_output_path,
-    _get_activities_template,
     _get_checkpoint_guidance,
     _get_checkpoint_review_guidance,
     _get_content_template,
