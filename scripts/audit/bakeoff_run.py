@@ -366,14 +366,14 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
             "    --level a2 --slug aspect-concept\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
             "    --level a2 --slug aspect-concept \\\n"
             "    --writers gemini-tools,codex-tools --writers-only\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
             "    --level a2 --slug aspect-concept --resume --reviewers-only\n\n"
             "Outputs:\n"
             "  Writes <writer>.md, <writer>.write.jsonl, "
@@ -388,7 +388,6 @@ def build_parser() -> argparse.ArgumentParser:
             "  Builder: scripts/build/v7_build.py\n"
             "  Review-only CLI: scripts/build/v7_review.py\n"
             "  Aggregator: scripts/audit/bakeoff_aggregate.py\n"
-            "  Brief: docs/dispatch-briefs/2026-05-05-a1-20-bakeoff-with-new-prompts.md\n"
             "  Issue: #1703"
         ),
     )
@@ -402,7 +401,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         type=Path,
         help=(
             "Directory for bakeoff outputs; relative paths resolve from the "
-            "repository root. Example: audit/bakeoff-2026-05-05."
+            "repository root. Example: audit/bakeoff-a2-aspect-concept."
         ),
     )
     parser.add_argument(

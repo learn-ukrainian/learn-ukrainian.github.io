@@ -128,12 +128,12 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
-            "    --content audit/bakeoff-2026-05-05/gemini.md \\\n"
+            "    --content audit/bakeoff-a2-aspect-concept/gemini.md \\\n"
             "    --reviewer claude-tools\n"
             "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
-            "    --content audit/bakeoff-2026-05-05/gpt55.md \\\n"
+            "    --content audit/bakeoff-a2-aspect-concept/gpt55.md \\\n"
             "    --reviewer gemini-tools \\\n"
-            "    --telemetry-out audit/bakeoff-2026-05-05/gpt55-gemini.review.jsonl\n\n"
+            "    --telemetry-out audit/bakeoff-a2-aspect-concept/gpt55-gemini.review.jsonl\n\n"
             "Outputs:\n"
             "  Emits reviewer_dim_evidence and phase_review_summary JSONL to stdout, "
             "or appends those events to --telemetry-out. No curriculum, status, "
@@ -169,7 +169,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         metavar="PATH",
         help=(
             "Markdown or MDX lesson file to review. Relative paths resolve "
-            "from the repository root; example: audit/bakeoff-2026-05-05/gemini.md."
+            "from the repository root; example: audit/bakeoff-a2-aspect-concept/gemini.md."
         ),
     )
     parser.add_argument(

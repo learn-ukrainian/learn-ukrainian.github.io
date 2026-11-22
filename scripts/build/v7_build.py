@@ -1592,7 +1592,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --dry-run\n"
             "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree\n"
             "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --writer gemini-tools\n"
-            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --writer codex-tools --telemetry-out audit/v7-folk-narodna/codex.write.jsonl\n"
             "  .venv/bin/python scripts/build/v7_build.py b1-pro intro --out /tmp/v7-intro\n\n"
             "Core A1 (a1, a1-v1 and any level whose base level is a1) is refused, with or without --upgrade or "
             "--dry-run: A1 lessons are built by the fresh engine (scripts.build.fresh), never from the legacy "
@@ -1649,21 +1649,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--lesson-map", metavar="PATH", default=None,
-        help="Reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh); section ownership and provenance must match deterministic derivation.",
+        help="Retired with --upgrade, which is always refused (#13295). Was: reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh).",
     )
     parser.add_argument(
         "--reuse-lesson-map",
         action="store_true",
         help=(
-            "With --upgrade, load curriculum/l2-uk-en/a1/{slug}/lessons.yaml as the "
-            "lesson map (for re-upgrading an already-split module whose section map "
-            "diverged from a1-v1 derive). Still preserves a1-v1 artifacts; does not "
-            "hand-edit activities."
+            "Retired with --upgrade, which is always refused (#13295). Was: with --upgrade, "
+            "load the module's lessons.yaml as the lesson map."
         ),
     )
     parser.add_argument(
         "level",
-        help="Curriculum level code, for example a1, b1-pro, or hist.",
+        help="Curriculum level code, for example a2, b1-pro, or hist (core A1 is refused).",
     )
     parser.add_argument(
         "slug",
