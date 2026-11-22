@@ -714,12 +714,14 @@ def test_core_research_requirement_accepts_explicit_packet_or_wiki_registry(
     registry_root = tmp_path / "registry"
     _copy_contracts(registry_root)
     _write_manifest(registry_root, track, "core", slug)
-    for relative in (
-        f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml",
-        f"wiki/pedagogy/{track}/{slug}.md",
-        f"wiki/pedagogy/{track}/{slug}.sources.yaml",
-    ):
-        _copy(registry_root, relative)
+    _copy(registry_root, f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml")
+    article = registry_root / "wiki" / "pedagogy" / track / f"{slug}.md"
+    article.parent.mkdir(parents=True, exist_ok=True)
+    article.write_text("# Fixture\n\nGrounded claim [S1].\n", encoding="utf-8")
+    article.with_suffix(".sources.yaml").write_text(
+        "sources:\n  - id: S1\n    file: chunk-1\n    type: textbook\n    title: Source 1\n",
+        encoding="utf-8",
+    )
 
     registry_result = readiness.evaluate_preparation(track, slug, repo_root=registry_root)
     registry_requirement = _requirement(registry_result, "research-evidence")

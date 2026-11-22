@@ -226,7 +226,6 @@ def test_dry_run_on_real_articles_from_multiple_domains() -> None:
     from wiki.migrate_sources import migrate_article, render_diff
 
     candidate_paths = [
-        Path(_project_root) / "wiki" / "pedagogy" / "a1" / "how-many.md",
         Path(_project_root) / "wiki" / "grammar" / "a2" / "dative-nouns.md",
         Path(_project_root) / "wiki" / "periods" / "afhanistan.md",
         Path(_project_root) / "wiki" / "figures" / "ahatanhel-krymskyi.md",

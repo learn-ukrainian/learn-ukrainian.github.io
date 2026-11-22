@@ -15,11 +15,9 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
-from scripts.build.phases.wiki_manifest import extract_manifest
 
 pytestmark = pytest.mark.reads_content
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 M20_BAN_1_RULE = (
     "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено "
     "використовувати будь-які російськомовні пояснення, паралелі чи фонетичні порівняння. "
@@ -232,8 +230,13 @@ def test_seeder_is_byte_deterministic() -> None:
     assert first == second
 
 
-def test_m20_real_world_manifest_seeds_gate_obligation_count() -> None:
-    manifest = extract_manifest(PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md")
+def test_fixture_manifest_seeds_gate_obligation_count() -> None:
+    """Seeder count matches the coverage gate on a fixture manifest.
+
+    Defect class: seed_implementation_map and validate_obligations disagree
+    about how many obligations a manifest contains.
+    """
+    manifest = _fixture_manifest()
     payload = seed_implementation_map(manifest)
     gate_obligations = validate_obligations(manifest)
 

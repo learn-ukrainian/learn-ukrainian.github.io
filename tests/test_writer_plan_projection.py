@@ -8,7 +8,7 @@ import pytest
 import yaml
 
 from scripts.build import linear_pipeline
-from tests.test_writer_prompt_render_size import _pin_a1_letter_prompt_inputs
+from tests.test_writer_prompt_render_size import _pin_aspect_prompt_inputs
 
 pytestmark = pytest.mark.reads_content
 
@@ -52,9 +52,11 @@ def test_projection_omits_only_named_keys_and_preserves_unknown_data():
     ],
 )
 def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypatch, tmp_path, writer, use_generator):
-    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
-    plan_path = linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello")
+    _pin_aspect_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = linear_pipeline.plan_path_for("a2", "aspect-concept")
     plan = linear_pipeline.plan_check(plan_path)
+    for key in EDITORIAL_KEYS:
+        plan.setdefault(key, f"editorial-{key}")
     original = deepcopy(plan)
     raw = yaml.safe_dump(plan, allow_unicode=True, sort_keys=False)
     packet = linear_pipeline.build_knowledge_packet(plan=plan)
@@ -72,7 +74,7 @@ def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypat
     projected = yaml.safe_load(block)
 
     assert not (EDITORIAL_KEYS & projected.keys())
-    assert projected["references"] == plan["references"]
+    assert projected["references"] == original["references"]
     assert prompt.count("\n## Plan References\n") == 1
     reference_block = packet.split("\n## Plan References\n", 1)[1]
     for reference in plan["references"]:
@@ -81,7 +83,14 @@ def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypat
             if reference.get(key):
                 assert str(reference[key]).strip() in reference_block
     assert packet in prompt
-    assert plan == original
+    # Packet build marks a missing textbook reference. The prompt uses the
+    # plan text from before that annotation.
+    restored = deepcopy(plan)
+    for reference in restored.get("references") or []:
+        if isinstance(reference, dict):
+            reference.pop("corpus_missing", None)
+            reference.pop("corpus_missing_reason", None)
+    assert restored == original
     review = linear_pipeline.review_context(plan, raw, "Draft.", "pedagogical", manifest)
     expected_review = linear_pipeline._plan_content_for_prompt(plan, raw)
     assert review["PLAN_CONTENT"] == expected_review
@@ -91,7 +100,7 @@ def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypat
 @pytest.mark.parametrize("packet", ["Packet without references.", "\n## Plan References\n- **Shared title**\n"])
 def test_writer_context_keeps_raw_comments_and_all_reference_fields(monkeypatch, tmp_path, packet):
     """Both review blockers must fail on the original implementation's behavior."""
-    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    _pin_aspect_prompt_inputs(monkeypatch, tmp_path)
     raw = (
         "slug: fixture-module\nlevel: A1\nsequence: 1\ntitle: Fixture\nword_target: 300\n"
         "# The writer MUST preserve the instruction in this comment.\n"

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -21,14 +22,22 @@ from build.phases.wiki_compressor import compress_wiki_packet
 @pytest.mark.parametrize(
     ("level", "slug"),
     [
-        ("a1", "sounds-letters-and-hello"),
         ("a2", "a2-bridge"),
         ("b1", "verb-formation-suffixes"),
     ],
 )
 def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> None:
     plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    if plan_path.is_file():
+        plan_text = plan_path.read_text(encoding="utf-8")
+    else:
+        plan_text = subprocess.check_output(
+            ["git", "show", f"HEAD:curriculum/l2-uk-en/plans/{level}/{slug}.yaml"],
+            text=True,
+            encoding="utf-8",
+            timeout=30,
+        )
+    plan = yaml.safe_load(plan_text)
     plan.pop("word_target", None)
     for section in plan["content_outline"]:
         if isinstance(section, dict):
@@ -228,8 +237,19 @@ def test_wiki_compressor_generic_article_wins_for_non_scenario_section() -> None
 
 def test_build_contract_filters_colors_required_terms_to_learner_targets() -> None:
     plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / "a1" / "colors.yaml"
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
-    packet = _build_wiki_packet("a1", "colors")
+    if plan_path.is_file():
+        plan_text = plan_path.read_text(encoding="utf-8")
+    else:
+        plan_text = subprocess.check_output(
+            ["git", "show", "HEAD:curriculum/l2-uk-en/plans/a1/colors.yaml"],
+            text=True,
+            encoding="utf-8",
+            timeout=30,
+        )
+    plan = yaml.safe_load(plan_text)
+    # Required terms come from the plan. An empty packet avoids the retired
+    # wiki/pedagogy/a1/colors.md article.
+    packet = ""
 
     contract, _ = build_contract(
         plan,
