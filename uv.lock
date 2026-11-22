@@ -1797,7 +1797,7 @@ requires-dist = [
     { name = "jinja2", specifier = ">=3.1" },
     { name = "jsonschema", specifier = ">=4.20" },
     { name = "learn-ukrainian-v4-runtime", directory = "packages/v4-runtime" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" },
     { name = "lxml", specifier = ">=6.1" },
     { name = "markdown-it-py", specifier = ">=4.2.0" },
     { name = "mcp", specifier = ">=2.2,<3" },
@@ -1833,14 +1833,14 @@ requires-dist = [
 [package.metadata.requires-dev]
 atlas = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
     { name = "requests", extras = ["use-chardet-on-py3"], specifier = ">=2.34.2" },
     { name = "ukrainian-word-stress", specifier = ">=2,<3" },
 ]
 audit = [
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" },
     { name = "pip-audit", specifier = "==2.10.1" },
 ]
 dev = [
@@ -1858,7 +1858,7 @@ dev = [
     { name = "wheel", specifier = ">=0.48.0" },
     { name = "yamllint", specifier = ">=1.38.0" },
 ]
-machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" }]
+machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" }]
 ml = [
     { name = "av", specifier = ">=18.1.0" },
     { name = "datasets", specifier = ">=5.0.1" },
@@ -1875,7 +1875,7 @@ ml = [
 ]
 pages = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
 ]
@@ -2018,8 +2018,8 @@ wheels = [
 
 [[package]]
 name = "lu-machinery"
-version = "0.1.50"
-source = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl" }
+version = "0.1.51"
+source = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl" }
 dependencies = [
     { name = "fastapi" },
     { name = "filelock" },
@@ -2038,7 +2038,7 @@ dependencies = [
     { name = "starlette" },
 ]
 wheels = [
-    { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.50/lu_machinery-0.1.50-py3-none-any.whl", hash = "sha256:40466943d789f7cffd8a2b91857df4bf45126329c1e77187d34c0d99b15fb68d" },
+    { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.51/lu_machinery-0.1.51-py3-none-any.whl", hash = "sha256:e567d7dc995c2623d24aab4cded9c6f869d26f0ba4f6b05190ccd55c8eedfc44" },
 ]
 
 [package.optional-dependencies]
