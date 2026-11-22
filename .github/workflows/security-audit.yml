@@ -57,19 +57,22 @@ jobs:
           # The audit exports uv.lock with uv (lu_machinery.ci.audit_dependencies).
           with-uv: 'true'
 
-      - name: pip-audit (blocking with suppression)
+      - name: Install locked audit dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
-          python -m pip install --upgrade pip pip-audit pyyaml
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
-          export LU_MACHINERY_WHEELHOUSE="$wheelhouse"
-          echo "::group::pip-audit (uv.lock export)"
-          python -m lu_machinery.ci.audit_dependencies --skip-node
-          echo "::endgroup::"
+          set -euo pipefail
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group audit --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
+
+      - name: pip-audit (blocking with suppression)
+        env:
+          LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+        run: .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node
 
   npm-audit:
     name: npm-audit (blocking)
@@ -102,35 +105,37 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          with-uv: 'true'
 
-      - name: npm audit (blocking production check with suppressions)
+      - name: Install locked audit dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
-          python -m pip install --upgrade pip pyyaml packaging
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
+          set -euo pipefail
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group machinery --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
+
+      - name: npm audit (blocking production check with suppressions)
+        run: |
           echo "::group::npm audit (production deps, audited suppressions)"
-          python -m lu_machinery.ci.audit_dependencies --skip-python
+          .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-python
           echo "::endgroup::"
           echo "::group::npm audit (all, advisory summary)"
           npm audit --prefix site || true
           echo "::endgroup::"
 
-  advisory-issue:
-    name: Dependency advisory tracking issue
-    # The daily 04:23 UTC schedule (and manual dispatch) on the default branch
-    # maintains a single issue labelled dependency-advisory with unsuppressed
-    # findings, closing it when the audit comes back clean (#9871). The weekly
-    # schedule and PR runs never touch issues.
-    if: ${{ github.ref == 'refs/heads/main' && (github.event.schedule == '23 4 * * *' || github.event_name == 'workflow_dispatch') }}
+  advisory-findings:
+    name: Collect dependency advisory findings
+    # PRs and branch dispatches render the same report without publishing it.
+    if: github.event.schedule == '23 4 * * *' || github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    permissions:
-      contents: read
-      issues: write
+    outputs:
+      action: ${{ steps.plan.outputs.action }}
     # The installed release has no implicit product: name this checkout.
     env:
       LU_PRODUCT_ROOT: ${{ github.workspace }}
@@ -156,60 +161,88 @@ jobs:
           # The audit exports uv.lock with uv (lu_machinery.ci.audit_dependencies).
           with-uv: 'true'
 
-      - name: Collect unsuppressed findings
+      - name: Install locked audit dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
-          python -m pip install --upgrade pip pip-audit pyyaml
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
-          export LU_MACHINERY_WHEELHOUSE="$wheelhouse"
-          python -m lu_machinery.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json
+          set -euo pipefail
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group audit --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
-      - name: Plan tracking-issue action
-        id: plan
+      - name: Collect unsuppressed findings
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+        run: .venv/bin/python -m lu_machinery.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json
+
+      - name: Render the tracking-issue body
+        id: plan
         run: |
-          ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
-          python -m lu_machinery.ci.dependency_advisory_issue plan \
-            --findings ci-artifacts/dependency-findings.json \
-            --issue-number "$ISSUE_NUMBER" \
-            --body-out ci-artifacts/advisory-issue-body.md
+          .venv/bin/python -m lu_machinery.ci.dependency_advisory_issue plan \
+            --findings ci-artifacts/dependency-findings.json --body-out ci-artifacts/advisory-issue-body.md
+
+      - name: Upload the rendered advisory report
+        if: steps.plan.outputs.action == 'create'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-advisory-report
+          path: ci-artifacts/advisory-issue-body.md
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
+  advisory-issue:
+    name: Dependency advisory tracking issue
+    needs: advisory-findings
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Download the rendered advisory report
+        if: needs.advisory-findings.outputs.action == 'create'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dependency-advisory-report
+          path: ${{ runner.temp }}/dependency-advisory/
 
       - name: Apply tracking-issue action
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ACTION: ${{ steps.plan.outputs.action }}
-          ISSUE_NUMBER: ${{ steps.plan.outputs.issue_number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ACTION: ${{ needs.advisory-findings.outputs.action }}
         run: |
           set -euo pipefail
-          echo "advisory-issue action: $ACTION (issue: ${ISSUE_NUMBER:-none})"
           case "$ACTION" in
-            create)
-              gh label create dependency-advisory --force \
-                --description "Unsuppressed dependency advisories from the scheduled audit" --color BFD4F2
-              gh issue create --label dependency-advisory \
-                --title "Dependency advisories: unsuppressed findings (scheduled audit)" \
-                --body-file ci-artifacts/advisory-issue-body.md
-              ;;
-            update)
-              gh issue edit "$ISSUE_NUMBER" --body-file ci-artifacts/advisory-issue-body.md
-              ;;
-            close)
-              gh issue close "$ISSUE_NUMBER" \
-                --comment "Scheduled dependency audit is clean: no unsuppressed findings. Closing."
-              ;;
-            none)
-              echo "Audit clean and no open tracking issue; nothing to do."
-              ;;
+            create|none) ;;
             *)
               echo "::error::Unknown advisory-issue action: $ACTION"
               exit 1
               ;;
           esac
+          ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
+          if [[ "$ACTION" == create ]]; then
+            BODY="$RUNNER_TEMP/dependency-advisory/advisory-issue-body.md"
+            test -s "$BODY"
+            if [[ -n "$ISSUE_NUMBER" ]]; then
+              gh issue edit "$ISSUE_NUMBER" --body-file "$BODY"
+            else
+              gh label create dependency-advisory --force \
+                --description "Unsuppressed dependency advisories from the scheduled audit" --color BFD4F2
+              gh issue create --label dependency-advisory \
+                --title "Dependency advisories: unsuppressed findings (scheduled audit)" \
+                --body-file "$BODY"
+            fi
+          elif [[ -n "$ISSUE_NUMBER" ]]; then
+            gh issue close "$ISSUE_NUMBER" \
+              --comment "Scheduled dependency audit is clean: no unsuppressed findings. Closing."
+          else
+            echo "Audit clean and no open tracking issue; nothing to do."
+          fi
 
   stack-currency:
     name: Stack currency (report only)
@@ -220,9 +253,6 @@ jobs:
     if: ${{ github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    permissions:
-      contents: read
-      issues: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -237,35 +267,62 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          with-uv: 'true'
 
-      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
-      - name: Install the locked lu-machinery release
+      - name: Install locked audit dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group machinery --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
+
       - name: Collect pinned versus latest stable
         env:
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
-          python -m pip install --upgrade pip pyyaml
-          python -m lu_machinery.ci.stack_currency_report collect --out ci-artifacts/stack-currency.json
-          python -m lu_machinery.ci.stack_currency_report render --report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md
+          .venv/bin/python -m lu_machinery.ci.stack_currency_report collect --out ci-artifacts/stack-currency.json
+          .venv/bin/python -m lu_machinery.ci.stack_currency_report render --report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md
           cat ci-artifacts/stack-currency.md
+
+      - name: Upload stack currency report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: stack-currency-report
+          path: ci-artifacts/stack-currency.md
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
+  stack-currency-issue:
+    name: Comment with stack currency report
+    needs: stack-currency
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Download stack currency report
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: stack-currency-report
+          path: ${{ runner.temp }}/stack-currency/
 
       - name: Comment on the open dependency-advisory issue
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
-          if [ -z "$ISSUE_NUMBER" ]; then
-            echo "No open dependency-advisory issue; the report stays local to this job."
+          if [[ -z "$ISSUE_NUMBER" ]]; then
+            echo "No open dependency-advisory issue; the report is available as a workflow artifact."
             exit 0
           fi
-          gh issue comment "$ISSUE_NUMBER" --body-file ci-artifacts/stack-currency.md
+          gh issue comment "$ISSUE_NUMBER" --body-file "$RUNNER_TEMP/stack-currency/stack-currency.md"

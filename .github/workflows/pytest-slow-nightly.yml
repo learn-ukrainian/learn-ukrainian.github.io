@@ -25,12 +25,12 @@ jobs:
     env:
       # Same native services as the PR pytest job (nightly runs the groups moved off PRs).
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
-    # Job-scoped (zizmor excessive-permissions): only this job files/updates
-    # the failure-tracking issue.
     permissions:
       actions: read
       contents: read
-      issues: write
+      issues: read
+    outputs:
+      ledger-ready: ${{ steps.ledger.outputs.ready }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -171,7 +171,8 @@ jobs:
               --junitxml=ci-artifacts/quarantine-junit.xml
           fi
 
-      - name: Build flake ledger and update expired fix issues
+      - name: Build flake ledger
+        id: ledger
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -184,7 +185,8 @@ jobs:
             reports+=(--nightly-junit ci-artifacts/quarantine-junit.xml)
           fi
           .venv/bin/python -m lu_machinery.ci.flake_ledger "${reports[@]}" \
-            --fetch-queue --output ci-artifacts/flake-ledger.json
+            --fetch-queue --dry-run --output ci-artifacts/flake-ledger.json
+          echo "ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Upload slow pytest evidence
         if: always()
@@ -194,6 +196,90 @@ jobs:
           path: ci-artifacts/
           if-no-files-found: ignore
           retention-days: 14
+          overwrite: true
+
+  flake-issues:
+    name: Update flake fix issues
+    needs: pytest-slow
+    # A test failure can still produce a complete ledger. A setup failure cannot.
+    if: >-
+      !cancelled() && github.ref == 'refs/heads/main' &&
+      needs.pytest-slow.outputs.ledger-ready == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Download flake ledger
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pytest-slow-nightly
+          path: ${{ runner.temp }}/pytest-slow-nightly/
+
+      - name: Reconcile expired and escalated issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          ledger="$RUNNER_TEMP/pytest-slow-nightly/flake-ledger.json"
+          # Validate the whole report before any issue changes. Only fixed gh
+          # operations run here, with issue IDs and text passed as arguments.
+          rows="$(jq -cs '
+            def count: type == "number" and . == floor and . >= 0 and . <= 9007199254740991;
+            def text: type == "string" and length > 0 and (contains("\u0000") | not);
+            def row:
+              (.fix_issue | count and . > 0) and (.node_id | text) and (.owner | text)
+              and (.expires_on | text and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))
+              and (.expired | type == "boolean") and (.escalate | type == "boolean")
+              and (.queue_rerun_percent | type == "number" and . >= 0 and . <= 100);
+            if length == 1 then .[0] else error("expected one nightly flake ledger") end
+            |
+            if (.queue_run_count | count) and (.entries | type == "array" and all(.[]; row))
+            then .entries[] | select(.expired or .escalate)
+            else error("invalid nightly flake ledger")
+            end
+          ' "$ledger")"
+          total="$(jq -r '.queue_run_count' "$ledger")"
+          while IFS= read -r row; do
+            [[ -n "$row" ]] || continue
+            number="$(jq -r '.fix_issue' <<< "$row")"
+            node="$(jq -r '.node_id' <<< "$row")"
+            expiry="$(jq -r '.expires_on' <<< "$row")"
+            owner="$(jq -r '.owner' <<< "$row")"
+            expiry_marker="<!-- flake-expiry:$node:$expiry -->"
+            issue_json="$(gh issue view "$number" --json state,labels,comments)"
+            # shellcheck disable=SC2016
+            decisions="$(jq -er --arg marker "$expiry_marker" --argjson row "$row" '
+              if (.state == "OPEN" or .state == "CLOSED") and
+                (.comments | type == "array") and (.labels | type == "array")
+              then [
+                .state,
+                ($row.expired and (.comments | all(.[]; .body | contains($marker) | not))),
+                ($row.escalate and (.labels | all(.[]; .name != "priority:high")))
+              ] | @tsv
+              else error("invalid GitHub issue response")
+              end
+            ' <<< "$issue_json")"
+            IFS=$'\t' read -r state expired escalate <<< "$decisions"
+            if [[ "$expired" == true || "$escalate" == true ]]; then
+              if [[ "$state" != OPEN ]]; then
+                gh issue reopen "$number"
+              fi
+              if [[ "$expired" == true ]]; then
+                # shellcheck disable=SC2016
+                printf -v message '%s\nQuarantine expired on %s for `%s`. Reruns stop after seven grace days; owner: %s.' \
+                  "$expiry_marker" "$expiry" "$node" "$owner"
+                gh issue comment "$number" --body "$message"
+              fi
+              if [[ "$escalate" == true ]]; then
+                percent="$(jq -r '.queue_rerun_percent' <<< "$row")"
+                gh issue edit "$number" --add-label priority:high
+                gh issue comment "$number" --body \
+                  "Weekly queue rerun use exceeded D2's 5% threshold: $percent% of $total runs. Driver queue: priority:high; owner: $owner."
+              fi
+            fi
+          done <<< "$rows"
 
 # The installed release resolves its consumer explicitly.
 env:

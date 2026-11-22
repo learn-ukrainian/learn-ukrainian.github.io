@@ -28,6 +28,11 @@ def test_issue_workflow_hardening():
     assert all(re.fullmatch(r"[^@]+@[0-9a-f]{40}", action) for action in external)
     assert steps[1]["uses"].startswith("actions/setup-python@")
     assert steps[2]["uses"] == "./.github/actions/python-ci-env"
+    assert steps[2]["with"] == {"machinery-wheel-only": "true", "with-uv": "true"}
+    install = steps[3]
+    for arg in ("--locked", "--no-build", "--only-group machinery", "--require-hashes"):
+        assert arg in install["run"]
+    assert not {"GH_TOKEN", "GITHUB_TOKEN"} & install["env"].keys()
     for step in steps:
         assert "github.event." not in step.get("run", "")
     assert steps[-1]["run"] == ".venv/bin/python -m lu_machinery.ci.comment_issue_task_quality"

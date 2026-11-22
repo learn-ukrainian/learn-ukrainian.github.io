@@ -124,7 +124,7 @@ def test_version_parsers_keep_stable_tags_only() -> None:
     assert report.version_from_npm({"version": "1.2.3-rc.1"}) == "unknown"
 
 
-def test_weekly_job_permissions_are_contents_read_and_issues_write() -> None:
+def test_weekly_report_hands_data_to_an_install_free_issue_job() -> None:
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
     assert workflow["permissions"] == {"contents": "read"}
     triggers = workflow.get("on", workflow.get(True))
@@ -132,16 +132,21 @@ def test_weekly_job_permissions_are_contents_read_and_issues_write() -> None:
     assert "0 9 * * 1" in crons
     assert "23 4 * * *" in crons
 
-    job = workflow["jobs"]["stack-currency"]
-    assert job["permissions"] == {"contents": "read", "issues": "write"}
-    condition = job["if"]
+    collector = workflow["jobs"]["stack-currency"]
+    assert collector.get("permissions", workflow["permissions"]) == {"contents": "read"}
+    condition = collector["if"]
     assert "github.event_name == 'schedule'" in condition
     assert "0 9 * * 1" in condition
     assert "23 4 * * *" not in condition
     assert "pull_request" not in condition
     assert "workflow_dispatch" not in condition
 
-    script = "\n".join(step.get("run", "") for step in job["steps"])
+    publisher = workflow["jobs"]["stack-currency-issue"]
+    assert publisher["needs"] == "stack-currency"
+    assert publisher["permissions"] == {"issues": "write"}
+    assert publisher["steps"][0]["with"]["name"] == collector["steps"][-1]["with"]["name"]
+    script = "\n".join(step.get("run", "") for step in publisher["steps"])
+    assert "install" not in script
     assert "dependency-advisory" in script
     assert "gh issue comment" in script
     assert "gh issue create" not in script

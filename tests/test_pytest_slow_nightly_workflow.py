@@ -399,7 +399,7 @@ def test_slow_selection_and_failure_reporting_are_preserved() -> None:
     steps = _steps(workflow)
 
     assert workflow["permissions"] == {"contents": "read"}
-    assert job["permissions"] == {"actions": "read", "contents": "read", "issues": "write"}
+    assert job["permissions"] == {"actions": "read", "contents": "read", "issues": "read"}
     assert job["timeout-minutes"] == 120
     assert workflow["concurrency"] == {"group": "pytest-slow-nightly", "cancel-in-progress": False}
     for step in steps:
@@ -413,10 +413,18 @@ def test_slow_selection_and_failure_reporting_are_preserved() -> None:
     assert "if" not in slow
     for name in (
         "Exercise quarantined tests without reruns",
-        "Build flake ledger and update expired fix issues",
+        "Build flake ledger",
         "Upload slow pytest evidence",
     ):
         assert _step(workflow, name)["if"] == "always()"
-    assert (
-        "-m lu_machinery.ci.flake_ledger" in _step(workflow, "Build flake ledger and update expired fix issues")["run"]
-    )
+    ledger = _step(workflow, "Build flake ledger")
+    assert "-m lu_machinery.ci.flake_ledger" in ledger["run"]
+    assert "--dry-run" in ledger["run"]
+    publisher = workflow["jobs"]["flake-issues"]
+    assert publisher["permissions"] == {"issues": "write"}
+    assert publisher["needs"] == JOB
+    assert "ledger-ready == 'true'" in publisher["if"]
+    assert "!cancelled()" in publisher["if"]
+    assert publisher["steps"][0]["with"]["name"] == _step(workflow, "Upload slow pytest evidence")["with"]["name"]
+    assert "gh issue comment" in publisher["steps"][1]["run"]
+    assert "install" not in publisher["steps"][1]["run"]
