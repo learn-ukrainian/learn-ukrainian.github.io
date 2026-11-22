@@ -47,7 +47,7 @@ Core levels (A1-C2) are 100% compiled. If any are missing:
 
 ```bash
 # Modules use the slug from curriculum.yaml
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree
 ```
 
 ### Batch (Range)
@@ -58,10 +58,10 @@ V7 is single-module per invocation (no `--range`). To run a batch, use standard 
 
 ```bash
 # Default: gemini-tools writes, cross-agent reviews
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree
 
 # Explicit Gemini writes + Gemini reviews (current setup)
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree \
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree \
   --writer gemini-tools --reviewer gemini-tools
 ```
 
@@ -76,20 +76,20 @@ dispatched execution.
 
 ```bash
 # Resume an incomplete module — skips completed phases
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --resume
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --resume
 
 # Resume from a specific step (e.g., after first pass stops at review)
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step publish --resume
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --step publish --resume
 ```
 
 ### Specific Steps Only
 
 ```bash
 # Run only audit+heal+publish for a module that stopped at stress/review
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step publish --resume
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --step publish --resume
 
 # Run only review pass
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step review --resume
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --step review --resume
 ```
 
 ---

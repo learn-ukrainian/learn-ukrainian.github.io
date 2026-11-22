@@ -1051,7 +1051,7 @@ Single end-to-end build entry point.
 
 ```bash
 # Single module
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree
 
 # Resume from prior state
 .venv/bin/python scripts/build/v7_build.py hist m12-kyivan-rus --worktree --resume
@@ -1073,8 +1073,8 @@ v7_build.py emits JSONL events on stdout (`module_start`, `phase_done`, `review_
 
 ```
 Monitor(
-    command=".venv/bin/python -u scripts/build/v7_build.py a1 m01-alphabet --worktree --resume 2>&1 | grep --line-buffered '^{\"event\"'",
-    description="A1 build events",
+    command=".venv/bin/python -u scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree --resume 2>&1 | grep --line-buffered '^{\"event\"'",
+    description="V7 build events",
     persistent=True,
     timeout_ms=3600000
 )
@@ -1156,7 +1156,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 
 | Script | Purpose | Command |
 | --- | --- | --- |
-| `scripts/build/v7_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree` |
+| `scripts/build/v7_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree` |
 | `scripts/audit_level.py` | Audit a level, module, or range | `npm run audit -- b1 1-10` |
 | `scripts/audit_module.py` | Audit a single module file | `.venv/bin/python scripts/audit_module.py <file>` |
 | `scripts/pipeline.py` | Technical validation pipeline | `npm run pipeline l2-uk-en a1 5` |

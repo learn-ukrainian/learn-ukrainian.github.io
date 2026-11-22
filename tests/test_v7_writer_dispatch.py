@@ -184,11 +184,11 @@ def test_v7_build_invokes_gemini_tools_from_project_root(
     expected_cwd: Path | None,
 ) -> None:
     plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text("level: a1\nslug: my-morning\nsequence: 1\n", encoding="utf-8")
+    plan_path.write_text("level: a2\nslug: aspect-concept\nsequence: 1\n", encoding="utf-8")
     module_dir = tmp_path / "module"
     plan = {
-        "level": "a1",
-        "slug": "my-morning",
+        "level": "a2",
+        "slug": "aspect-concept",
         "sequence": 1,
         "content_outline": [],
     }
@@ -202,6 +202,15 @@ def test_v7_build_invokes_gemini_tools_from_project_root(
             "build_knowledge_packet",
             return_value="knowledge packet",
         ),
+        # The test owns its wiki inputs: no real compiled wiki article is read (#13295).
+        patch.object(
+            v7_build.linear_pipeline,
+            "build_wiki_manifest_data",
+            return_value={"slug": "aspect-concept", "wiki_path": "", "articles": []},
+        ),
+        patch.object(
+            v7_build.linear_pipeline, "run_wiki_completeness_gate", return_value={"verdict": "PASS", "checks": {}}
+        ),
         patch.object(v7_build, "_writer_prompt", return_value="writer prompt"),
         patch.object(
             v7_build.linear_pipeline,
@@ -211,8 +220,8 @@ def test_v7_build_invokes_gemini_tools_from_project_root(
     ):
         exit_code = v7_build.main(
             [
-                "a1",
-                "my-morning",
+                "a2",
+                "aspect-concept",
                 "--writer",
                 writer,
                 "--out",
@@ -277,15 +286,20 @@ def test_v7_build_core_stress_path_keeps_existing_marks(
 
 def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     telemetry = tmp_path / "out.jsonl"
+    # The test owns its wiki inputs: no real compiled wiki article is read (#13295).
+    monkeypatch.setattr(linear_pipeline, "build_knowledge_packet", lambda **_: "packet\n")
+    monkeypatch.setattr(linear_pipeline, "build_wiki_manifest_data", lambda **_: {"articles": []})
+    monkeypatch.setattr(linear_pipeline, "run_wiki_completeness_gate", lambda **_: {"verdict": "PASS", "checks": {}})
 
     # --out keeps the wiki gate artifact out of the real curriculum tree (#8631).
     exit_code = v7_build.main(
         [
-            "a1",
-            "my-morning",
+            "a2",
+            "aspect-concept",
             "--writer",
             "codex-tools",
             "--dry-run",

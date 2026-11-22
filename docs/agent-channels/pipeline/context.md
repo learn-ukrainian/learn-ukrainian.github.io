@@ -47,7 +47,7 @@ check → research → skeleton → write → activities → enrich → verify �
 ## Common commands
 
 ```bash
-.venv/bin/python scripts/build/v7_build.py a1 m03-slug --worktree               # build module 3 of A1
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree  # build one folk module
 .venv/bin/python scripts/build/v7_build.py b1 mX-slug --worktree --step write --resume  # re-run write
 .venv/bin/python -m pytest tests/test_quick_verify.py         # unit tests
 ```

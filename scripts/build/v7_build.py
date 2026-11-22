@@ -1589,18 +1589,19 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run\n"
-            "  .venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --dry-run\n"
-            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --worktree\n"
-            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools\n"
-            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --dry-run\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --writer gemini-tools\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --writer codex-tools --telemetry-out audit/v7-folk-narodna/codex.write.jsonl\n"
             "  .venv/bin/python scripts/build/v7_build.py b1-pro intro --out /tmp/v7-intro\n\n"
+            "Core A1 (a1, a1-v1 and any level whose base level is a1) is refused, with or without --upgrade or "
+            "--dry-run: A1 lessons are built by the fresh engine (scripts.build.fresh), never from the legacy "
+            "plans/a1 plans, the compiled wiki/pedagogy/a1 articles or the preserved a1-v1 edition (R-10, R-11).\n\n"
             "Outputs:\n"
             "  Emits JSONL monitor events to stdout, or appends them to --telemetry-out. Full builds write the writer "
             "artifacts, knowledge_packet.md, writer_prompt.md, python_qg.json, "
             "llm_qg.json, and {slug}.mdx under --out or "
-            "curriculum/l2-uk-en/{level}/{slug}/. Upgrade dry runs save lessons.yaml, input hashes and writer_prompt.md; "
-            "upgrade builds produce lesson-N artifacts and index.mdx plus N.mdx in canonical a1.\n\n"
+            "curriculum/l2-uk-en/{level}/{slug}/.\n\n"
             "Worktrees:\n"
             "  Pass --worktree to create .worktrees/builds/{level}-{slug}-{timestamp}/ "
             "and run this build there on a build/{level}/{slug}-{timestamp} branch. "
@@ -1644,25 +1645,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     parser.add_argument(
         "--upgrade", action="store_true",
-        help="Upgrade an existing A1 module from archived a1-v1 into canonical a1 lessons; skip wiki retrieval and plan writing (default: false).",
+        help="Retired A1 upgrade mode; always refused because it accepts only core A1, which V7 never builds (R-10, #13295; default: false).",
     )
     parser.add_argument(
         "--lesson-map", metavar="PATH", default=None,
-        help="Reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh); section ownership and provenance must match deterministic derivation.",
+        help="Retired with --upgrade, which is always refused (#13295). Was: reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh).",
     )
     parser.add_argument(
         "--reuse-lesson-map",
         action="store_true",
         help=(
-            "With --upgrade, load curriculum/l2-uk-en/a1/{slug}/lessons.yaml as the "
-            "lesson map (for re-upgrading an already-split module whose section map "
-            "diverged from a1-v1 derive). Still preserves a1-v1 artifacts; does not "
-            "hand-edit activities."
+            "Retired with --upgrade, which is always refused (#13295). Was: with --upgrade, "
+            "load the module's lessons.yaml as the lesson map."
         ),
     )
     parser.add_argument(
         "level",
-        help="Curriculum level code, for example a1, b1-pro, or hist.",
+        help="Curriculum level code, for example a2, b1-pro, or hist (core A1 is refused).",
     )
     parser.add_argument(
         "slug",
@@ -1817,9 +1816,65 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+_CORE_A1_NAME = re.compile(r"a1(?:-[a-z0-9-]+)?")
+_MODULE_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
+def core_a1_refusal(level: str, slug: str, *, tool: str = "v7_build") -> str | None:
+    """Why a V7 tool must not build or review ``level``/``slug``, or None when it may (#13295).
+
+    A V7 build of ``a1`` or of an alias such as ``a1-v1`` hands its writer and
+    reviewers the legacy ``plans/a1`` plan and the compiled ``wiki/pedagogy/a1``
+    articles; an ``a1-v1`` build also writes into the preserved baseline, and
+    ``--upgrade`` feeds the a1-v1 module bytes to the writer. R-10 and R-11 of
+    ``docs/epics/fresh-build-requirements.md`` exclude all of these, so every
+    mode is refused, dry runs included. The standalone V7 reviewers (``v7_review``,
+    ``run_llm_qg_parity``) load the same plan and wiki packet, so they call this too;
+    ``tool`` names the caller in the message. V7 joins level and slug into plan, wiki
+    and output paths, so only plain kebab-case names are accepted: otherwise
+    ``folk/../a1`` or a slug of ``../a1/<slug>`` would reach the same A1 inputs
+    under another name. When the manifest cannot be read the alias test is
+    skipped: V7 resolves every plan through the same manifest, so such a run
+    fails before any writer starts.
+    """
+    from scripts.level_config import base_level
+
+    requested, level = level, level.lower()  # V7 folds level case wherever it builds a path.
+    for name, value in (("level", level), ("slug", slug)):
+        if not _MODULE_NAME.fullmatch(value):
+            return (
+                f"{tool}: refused — {name} {value!r} is not a lowercase kebab-case name "
+                "([a-z0-9] words joined by single hyphens); V7 builds paths from it (#13295)."
+            )
+    resolved = level
+    if not _CORE_A1_NAME.fullmatch(level):
+        try:
+            resolved = base_level(level)
+        except (OSError, ValueError):
+            return None
+    if not _CORE_A1_NAME.fullmatch(resolved):
+        return None
+    return (
+        f"{tool}: refused — V7 does not build or review core A1 (level {requested!r}). Its writer and "
+        "reviewers would read the legacy plans/a1 plans, the compiled wiki/pedagogy/a1 articles and the "
+        "preserved a1-v1 edition, which R-10 and R-11 exclude (#13295). Build A1 lessons with the fresh engine: "
+        ".venv/bin/python -m scripts.build.fresh.cli (docs/epics/fresh-build-build-program.md)."
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
+    refusal = core_a1_refusal(args.level, args.slug)
+    if refusal is None and getattr(args, "upgrade", False):
+        # The upgrade mode accepts only core A1, which is refused above, so it can never succeed.
+        refusal = (
+            "v7_build: refused — --upgrade is retired: it upgraded core A1 from the a1-v1 edition, "
+            "which V7 no longer builds (R-10, #13295)."
+        )
+    if refusal is not None:
+        print(refusal, file=sys.stderr)
+        return 2
     dry_run = bool(getattr(args, "dry_run", False))
     if dry_run and args.keep_worktree:
         print(
@@ -1835,16 +1890,6 @@ def main(argv: list[str] | None = None) -> int:
             "to redirect: a dry run writes nothing, so --worktree runs it in "
             "place with no telemetry sink to open (#8890). Drop --telemetry-out, "
             "--dry-run, or --worktree.",
-            file=sys.stderr,
-        )
-        return 2
-    if dry_run and worktree_requested and getattr(args, "upgrade", False):
-        print(
-            "v7_build: error — --upgrade --dry-run --worktree has writes to "
-            "avoid: an upgrade dry run saves lessons.yaml, upgrade_inputs.json "
-            "and writer_prompt.md, so it cannot run in place the way a plain "
-            "--dry-run --worktree does (#8890). Drop --worktree, --dry-run, or "
-            "--upgrade.",
             file=sys.stderr,
         )
         return 2

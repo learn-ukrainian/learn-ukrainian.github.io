@@ -127,13 +127,13 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/build/v7_review.py a1 my-morning \\\n"
-            "    --content audit/bakeoff-2026-05-05/gemini.md \\\n"
+            "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
+            "    --content audit/bakeoff-a2-aspect-concept/gemini.md \\\n"
             "    --reviewer claude-tools\n"
-            "  .venv/bin/python scripts/build/v7_review.py a1 my-morning \\\n"
-            "    --content audit/bakeoff-2026-05-05/gpt55.md \\\n"
+            "  .venv/bin/python scripts/build/v7_review.py a2 aspect-concept \\\n"
+            "    --content audit/bakeoff-a2-aspect-concept/gpt55.md \\\n"
             "    --reviewer gemini-tools \\\n"
-            "    --telemetry-out audit/bakeoff-2026-05-05/gpt55-gemini.review.jsonl\n\n"
+            "    --telemetry-out audit/bakeoff-a2-aspect-concept/gpt55-gemini.review.jsonl\n\n"
             "Outputs:\n"
             "  Emits reviewer_dim_evidence and phase_review_summary JSONL to stdout, "
             "or appends those events to --telemetry-out. No curriculum, status, "
@@ -157,7 +157,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     parser.add_argument(
         "level",
-        help="Curriculum level code, for example a1, b1-pro, or hist.",
+        help="Curriculum level code, for example a2, b1-pro, or hist (core A1 is refused).",
     )
     parser.add_argument(
         "slug",
@@ -169,7 +169,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         metavar="PATH",
         help=(
             "Markdown or MDX lesson file to review. Relative paths resolve "
-            "from the repository root; example: audit/bakeoff-2026-05-05/gemini.md."
+            "from the repository root; example: audit/bakeoff-a2-aspect-concept/gemini.md."
         ),
     )
     parser.add_argument(
@@ -205,6 +205,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    from scripts.build.v7_build import core_a1_refusal
+
+    refusal = core_a1_refusal(args.level, args.slug, tool="v7_review")
+    if refusal is not None:
+        print(refusal, file=sys.stderr)
+        return 2
     telemetry_out = _resolve_project_path(args.telemetry_out)
     with linear_pipeline.telemetry_event_sink(telemetry_out):
         return _run(args)

@@ -6,9 +6,9 @@ Catches pedagogy issues, bad dialogues, wrong grammar scope, vocabulary
 problems that deterministic checks (check_plan.py) miss.
 
 Usage:
-    .venv/bin/python scripts/audit/review_plan.py a1 sounds-letters-and-hello
-    .venv/bin/python scripts/audit/review_plan.py a1 --all
-    .venv/bin/python scripts/audit/review_plan.py a1 --all --dry-run  # show prompt, skip Gemini
+    .venv/bin/python scripts/audit/review_plan.py a2 aspect-concept
+    .venv/bin/python scripts/audit/review_plan.py a2 --all
+    .venv/bin/python scripts/audit/review_plan.py a2 --all --dry-run  # show prompt, skip Gemini
 
 Issue: #984
 """
@@ -356,11 +356,34 @@ def review_plan(level: str, slug: str, *, dry_run: bool = False) -> dict:
 # CLI
 # ---------------------------------------------------------------------------
 
+_PLAN_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
+def _retired_plan_refusal(level: str, slug: str | None) -> str | None:
+    """Why this command must not review ``plans/<level>/<slug>.yaml``, or None (#13295).
+
+    The legacy ``plans/a1`` plans are retired inputs (fresh-build requirement R-11), and
+    so is any ``a1-*`` alias of that level;
+    current A1 plans live in ``lesson-plans/a1`` and use the plan-review skill. Level
+    and slug are joined into the plan path, so only plain kebab-case names are
+    accepted: ``a2/../a1`` or ``../a1/<slug>`` would otherwise reach the same plans.
+    """
+    for name, value in (("level", level), ("slug", slug)):
+        if value is not None and not _PLAN_NAME.fullmatch(value):
+            return f"review_plan: refused — {name} {value!r} is not a lowercase kebab-case name (#13295)."
+    if level == "a1" or level.startswith("a1-"):
+        return (
+            "review_plan: refused — the legacy plans/a1 plans are retired (R-11, #13295); "
+            "review current A1 plans in curriculum/l2-uk-en/lesson-plans/a1 with the plan-review skill."
+        )
+    return None
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="LLM adversarial plan review via Gemini"
     )
-    parser.add_argument("level", help="Level to review (e.g., a1)")
+    parser.add_argument("level", help="Level to review (e.g., a2; core A1 plans are retired)")
     parser.add_argument("slug", nargs="?", help="Module slug (omit for --all)")
     parser.add_argument("--all", action="store_true", help="Review all plans for level")
     parser.add_argument(
@@ -373,6 +396,11 @@ def main():
 
     if args.slug and args.all:
         parser.error("Cannot specify both a slug and --all")
+
+    refusal = _retired_plan_refusal(args.level, args.slug)
+    if refusal is not None:
+        print(refusal, file=sys.stderr)
+        sys.exit(2)
 
     if args.all:
         slugs = get_all_slugs(args.level)

@@ -359,21 +359,22 @@ def build_parser() -> argparse.ArgumentParser:
     return argparse.ArgumentParser(
         description=(
             "Run V7 bakeoff writes, cross-reviews, and aggregation for one module.\n"
-            "Use for the A1/20 writer bakeoff; do not use it for V6 or bulk curriculum builds."
+            "Use for V7 writer bakeoffs on tracks still built by V7; core A1 is refused (#13295). "
+            "Do not use it for V6 or bulk curriculum builds."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
-            "    --level a1 --slug my-morning\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
+            "    --level a2 --slug aspect-concept\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
-            "    --level a1 --slug my-morning \\\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
+            "    --level a2 --slug aspect-concept \\\n"
             "    --writers gemini-tools,codex-tools --writers-only\n"
             "  .venv/bin/python scripts/audit/bakeoff_run.py \\\n"
-            "    --bakeoff-dir audit/bakeoff-2026-05-05 \\\n"
-            "    --level a1 --slug my-morning --resume --reviewers-only\n\n"
+            "    --bakeoff-dir audit/bakeoff-a2-aspect-concept \\\n"
+            "    --level a2 --slug aspect-concept --resume --reviewers-only\n\n"
             "Outputs:\n"
             "  Writes <writer>.md, <writer>.write.jsonl, "
             "<writer>-<reviewer>.review.jsonl, per-writer output directories, "
@@ -382,12 +383,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Exit codes:\n"
             "  0 when requested phases and aggregation all pass or are intentionally skipped.\n"
             "  1 on pre-flight failure or any failed write, review, or aggregate step.\n"
-            "  2 on command-line usage errors from argparse.\n\n"
+            "  2 on command-line usage errors from argparse, or a refused level or slug (core A1, non-kebab).\n\n"
             "Related:\n"
             "  Builder: scripts/build/v7_build.py\n"
             "  Review-only CLI: scripts/build/v7_review.py\n"
             "  Aggregator: scripts/audit/bakeoff_aggregate.py\n"
-            "  Brief: docs/dispatch-briefs/2026-05-05-a1-20-bakeoff-with-new-prompts.md\n"
             "  Issue: #1703"
         ),
     )
@@ -401,18 +401,18 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         type=Path,
         help=(
             "Directory for bakeoff outputs; relative paths resolve from the "
-            "repository root. Example: audit/bakeoff-2026-05-05."
+            "repository root. Example: audit/bakeoff-a2-aspect-concept."
         ),
     )
     parser.add_argument(
         "--level",
         required=True,
-        help="Curriculum level code to build and review; example: a1.",
+        help="Curriculum level code to build and review; example: a2. Core A1 is refused.",
     )
     parser.add_argument(
         "--slug",
         required=True,
-        help="Module slug matching the plan and wiki packet; example: my-morning.",
+        help="Module slug matching the plan and wiki packet; example: aspect-concept.",
     )
     parser.add_argument(
         "--writers",
@@ -450,6 +450,13 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
+    from scripts.build.v7_build import core_a1_refusal
+
+    # Refuse core A1 before preflight reads the legacy plan or wiki packet (#13295).
+    refusal = core_a1_refusal(args.level, args.slug, tool="bakeoff_run")
+    if refusal is not None:
+        print(refusal, file=sys.stderr)
+        return 2
     if args.writers_only and args.reviewers_only:
         print("error: --writers-only and --reviewers-only cannot be combined", file=sys.stderr)
         return 1

@@ -131,10 +131,11 @@ def test_config_consumer_file_launches_without_pythonpath(
     if entrypoint == "scripts/audit/review_plan.py":
         plan_path = next(
             plan_path
-            for plan_path in sorted((root / "curriculum" / "l2-uk-en" / "plans" / "a1").glob("*.yaml"))
+            for plan_path in sorted((root / "curriculum" / "l2-uk-en" / "plans" / "a2").glob("*.yaml"))
             if audit.read_yaml(plan_path)
         )
-        arguments = ["a1", plan_path.stem, "--dry-run"]
+        # The legacy plans/a1 plans are retired and review_plan refuses them (#13295).
+        arguments = ["a2", plan_path.stem, "--dry-run"]
         expected_output = f"DRY RUN: {plan_path.stem}"
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)

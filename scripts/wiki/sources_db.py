@@ -2612,6 +2612,42 @@ def _search_wikipedia_candidates(
     return candidates
 
 
+# Compiled A1 pedagogy articles (wiki/pedagogy/a1/, ingested with track "a1") are
+# obsolete retrieval material: core A1 lessons are built from locked evidence packs,
+# never from the wiki (fresh-build requirements R-11, R-25 and Q10; #13295). Their
+# rows stay in sources.db; search_sources excludes them, matching either column so a
+# row with only one of them set is still excluded. Emptying both tuples restores the
+# previous behaviour.
+_EXCLUDED_UKRAINIAN_WIKI_TRACKS: tuple[str, ...] = ("a1",)
+_EXCLUDED_UKRAINIAN_WIKI_PATH_PREFIXES: tuple[str, ...] = ("wiki/pedagogy/a1/",)
+
+
+def _ukrainian_wiki_exclusion_sql(alias: str) -> tuple[str, list[str]]:
+    """SQL ``AND`` clauses and parameters dropping excluded ukrainian_wiki rows.
+
+    Track comparison ignores ASCII case and surrounding ASCII whitespace. Paths compare with
+    backslashes folded to slashes; a prefix matches as written or after one literal ``./``
+    or ``/``, so a real directory such as ``.wiki`` keeps its dot. ``LIKE`` is ASCII
+    case-insensitive, and ``%``, ``_`` and ``\\`` in a prefix are escaped.
+    """
+    clauses: list[str] = []
+    params: list[str] = []
+    if _EXCLUDED_UKRAINIAN_WIKI_TRACKS:
+        slots = ", ".join("?" for _ in _EXCLUDED_UKRAINIAN_WIKI_TRACKS)
+        clauses.append(
+            f"AND lower(trim(coalesce({alias}.track, ''), ' ' || char(9, 10, 11, 12, 13))) NOT IN ({slots})"
+        )
+        params.extend(track.strip().lower() for track in _EXCLUDED_UKRAINIAN_WIKI_TRACKS)
+    for prefix in _EXCLUDED_UKRAINIAN_WIKI_PATH_PREFIXES:
+        escaped = prefix.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        for lead in ("", "./", "/"):
+            clauses.append(
+                f"AND replace(coalesce({alias}.article_path, ''), char(92), '/') NOT LIKE ? ESCAPE char(92)"
+            )
+            params.append(lead + escaped + "%")
+    return "\n".join(clauses), params
+
+
 def _search_ukrainian_wiki_candidates(
     bucket_a_phrases: list[str],
     bucket_b_keywords: set[str],
@@ -2644,9 +2680,10 @@ def _search_ukrainian_wiki_candidates(
     if {"ukrainian_wiki", "ukrainian_wiki_fts"} - tables:
         return []
 
+    excluded_sql, excluded_params = _ukrainian_wiki_exclusion_sql("s")
     try:
         rows = conn.execute(
-            """
+            f"""
             SELECT
                 s.id,
                 s.passage_id,
@@ -2664,10 +2701,11 @@ def _search_ukrainian_wiki_candidates(
             FROM ukrainian_wiki_fts
             JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
             WHERE ukrainian_wiki_fts MATCH ?
+            {excluded_sql}
             ORDER BY rank, s.id
             LIMIT ?
             """,
-            (fts_query, candidate_k),
+            (fts_query, *excluded_params, candidate_k),
         ).fetchall()
     except (sqlite3.Error, SystemError):
         return []
@@ -2958,17 +2996,19 @@ def _expand_ukrainian_wiki_neighbors(match: dict) -> dict:
     article_slug = str(match.get("parent_key", "")).strip()
     start_paragraph = int(match.get("paragraph_start", 0))
     end_paragraph = int(match.get("paragraph_end", 0))
+    excluded_sql, excluded_params = _ukrainian_wiki_exclusion_sql("w")
     try:
         rows = conn.execute(
-            """
+            f"""
             SELECT passage_id, text
-            FROM ukrainian_wiki
+            FROM ukrainian_wiki w
             WHERE article_slug = ?
               AND paragraph_start <= ?
               AND paragraph_end >= ?
+            {excluded_sql}
             ORDER BY paragraph_start, id
             """,
-            (article_slug, end_paragraph + 1, start_paragraph - 1),
+            (article_slug, end_paragraph + 1, start_paragraph - 1, *excluded_params),
         ).fetchall()
     except (sqlite3.Error, SystemError):
         return match

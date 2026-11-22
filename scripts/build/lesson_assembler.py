@@ -191,33 +191,6 @@ def lift_landing_overview(module_md: str) -> str | None:
     return _extract_outcomes_block(opening)
 
 
-def _original_intro(module_dir: Path, slug: str) -> str | None:
-    """Usable A1 landing prose from the previous edition, or None if there is none.
-
-    Kept for hygiene tests and gate fallbacks; the Lesson tab no longer lifts
-    this body onto the landing.
-    """
-    candidates = [module_dir.parent.parent / "a1-v1" / slug / "module.md"]
-    if len(module_dir.parents) >= 4:
-        candidates.append(module_dir.parents[3] / "site/src/content/docs/a1-v1" / f"{slug}.mdx")
-    for path in candidates:
-        if not path.is_file():
-            continue
-        text = path.read_text(encoding="utf-8")
-        if path.suffix == ".mdx":
-            match = re.search(
-                r'<TabItem label="Lesson">\s*(.*?)(?=^## |^</TabItem>)',
-                text, flags=re.DOTALL | re.MULTILINE,
-            )
-            body = match.group(1) if match else ""
-        else:
-            body = re.split(r"^## ", text, maxsplit=1, flags=re.MULTILINE)[0]
-        cleaned = _clean_a1_landing_prose(body)
-        if cleaned:
-            return cleaned
-    return None
-
-
 def _writer_landing_overview(module_dir: Path) -> str | None:
     """Optional Gemini-authored overview file after landing hygiene, or None."""
     path = module_dir / "landing-overview.md"

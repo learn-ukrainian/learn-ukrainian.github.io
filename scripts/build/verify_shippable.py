@@ -539,65 +539,11 @@ def _print_human(report: dict) -> None:
     print()
 
 
-def verify_lessons(
-    level: str,
-    slug: str,
-    *,
-    module_dir: Path | None = None,
-    plan_path: Path | None = None,
-    source_dir: Path | None = None,
-) -> dict:
-    """Check every lesson and the landing, including cross-lesson invariants."""
-    from scripts.build.lesson_assembler import assemble_lessons
-    from scripts.build.linear_pipeline import run_mdx_render_gate, run_python_qg
-
-    module_dir = module_dir or _default_module_dir(level, slug)
-    plan_path = plan_path or _default_plan_path("a1", slug)
-    source_dir = source_dir or _default_module_dir("a1-v1", slug)
-    steps = []
-    if level.lower() != "a1":
-        return _finalize(
-            level,
-            slug,
-            [{"step": "inputs", "passed": False, "detail": "Lesson verification currently accepts canonical a1 only"}],
-        )
-    try:
-        with tempfile.TemporaryDirectory(prefix="verify-lessons-") as temp:
-            pages = assemble_lessons(module_dir, Path(temp), plan_path)
-            quality = run_python_qg(module_dir, plan_path, lesson_mode=True, source_dir=source_dir, rendered=pages)
-            steps.append(
-                {
-                    "step": "lesson_python_qg",
-                    "passed": quality["passed"],
-                    "detail": "; ".join(quality["diagnostics"]) or "lesson gates passed",
-                }
-            )
-            renders = {name: run_mdx_render_gate(page) for name, page in pages.items()}
-            for name, result in renders.items():
-                steps.append(
-                    {
-                        "step": f"mdx_render.{name}",
-                        "passed": result.get("passed") is True,
-                        "detail": result.get("message", ""),
-                    }
-                )
-            steps.append(
-                {
-                    "step": "mdx_render",
-                    "passed": all(r.get("passed") is True for r in renders.values()),
-                    "detail": "all lesson pages and module landing",
-                }
-            )
-    except Exception as exc:
-        steps.append({"step": "lesson_verification", "passed": False, "detail": f"{type(exc).__name__}: {exc}"})
-    return _finalize(level, slug, steps)
-
-
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
-        description="Verify deterministic shippability of V7 modules, lesson splits, or fresh lessons.\nUse after authoring; this does not run a writer or replace cross-family review.",
+        description="Verify deterministic shippability of V7 modules or fresh lessons.\nUse after authoring; this does not run a writer or replace cross-family review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson\n"
+        epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable folk narodna-kultura-yak-systema\n"
         "  .venv/bin/python -m scripts.build.verify_shippable a1 sounds-letters-and-hello --fresh\n"
         "  .venv/bin/python -m scripts.build.verify_shippable a1 sounds-letters-and-hello --fresh --through-lesson 1\n"
         "Outputs: human or JSON gate report; temporary assembled MDX. --astro-build writes a build log.\n"
@@ -617,7 +563,7 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=None,
         dest="plan_path",
-        help="Existing plan YAML (default under curriculum/l2-uk-en: plans/{level}/{slug}.yaml; lesson-plans/{level}/{slug}.yaml with --fresh; base A1 with --lesson)",
+        help="Existing plan YAML (default under curriculum/l2-uk-en: plans/{level}/{slug}.yaml; lesson-plans/{level}/{slug}.yaml with --fresh)",
     )
     ap.add_argument(
         "--astro-build", action="store_true", help="Also run the full Astro build (catch-all; default: off)"
@@ -626,12 +572,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--lesson",
         action="store_true",
-        help="Verify all lesson pages plus cross-lesson preservation (a1; plans/a1 and archived source a1-v1; default: off)",
-    )
-    ap.add_argument(
-        "--source-dir",
-        type=Path,
-        help="Original built module directory for --lesson, e.g. curriculum/l2-uk-en/a1-v1/greetings (default: archived a1-v1 module directory)",
+        help="Retired V7 A1 lesson-edition check; always refused (it validated against the legacy plans/a1 plans and the a1-v1 edition, R-10/R-11, #13295). Use --fresh (default: off)",
     )
     ap.add_argument(
         "--fresh",
@@ -645,32 +586,28 @@ def main(argv: list[str] | None = None) -> int:
         metavar="N",
         help="With --fresh, require and render planned lessons whose numbers are <= N, plus the landing if present. N must be a planned number (recap included); gaps are allowed. Later lessons are excluded. Default: all planned lessons. Example: --through-lesson 1",
     )
+    # Look for the retired flag before validating anything else, so a lesson-mode call with
+    # its old --source-dir, a malformed or attached value (--lesson=x) or any other option gets
+    # the retirement reason. The pre-parser only records that the flag was given.
+    retired = argparse.ArgumentParser(add_help=False)
+    retired.add_argument("--lesson", nargs="?", const="", default=None)
+    if retired.parse_known_args(argv)[0].lesson is not None:
+        ap.error(
+            "--lesson is retired: it verified the removed V7 A1 lesson edition against the legacy plans/a1 "
+            "plans and the a1-v1 edition, which R-10 and R-11 exclude (#13295); verify fresh lessons with --fresh"
+        )
     args = ap.parse_args(argv)
     if args.through_lesson is not None and not args.fresh:
         ap.error("--through-lesson requires --fresh")
-    if args.fresh and args.lesson:
-        ap.error("--fresh cannot be combined with --lesson")
-    if args.lesson and args.astro_build:
-        ap.error("--lesson does not yet support --astro-build; use the site build separately")
 
-    report = (
-        verify_lessons(
-            args.level,
-            args.slug,
-            module_dir=args.module_dir,
-            plan_path=args.plan_path,
-            source_dir=args.source_dir,
-        )
-        if args.lesson
-        else verify(
-            args.level,
-            args.slug,
-            module_dir=args.module_dir,
-            plan_path=args.plan_path,
-            astro_build=args.astro_build,
-            fresh=args.fresh,
-            through_lesson=args.through_lesson,
-        )
+    report = verify(
+        args.level,
+        args.slug,
+        module_dir=args.module_dir,
+        plan_path=args.plan_path,
+        astro_build=args.astro_build,
+        fresh=args.fresh,
+        through_lesson=args.through_lesson,
     )
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))

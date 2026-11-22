@@ -18,8 +18,8 @@ import pytest
 
 from scripts.build import linear_pipeline, v7_build
 
-LEVEL = "a1"
-SLUG = "my-morning"
+LEVEL = "folk"
+SLUG = "narodna-kultura-yak-systema"
 GATE_PASS = {"verdict": "PASS", "checks": {}}
 
 pytestmark = pytest.mark.reads_content
@@ -35,7 +35,7 @@ def temp_repo(tmp_path: Path) -> Path:
     (repo / "README.md").write_text("temp repo for v7_build --dry-run --worktree tests\n", encoding="utf-8")
     subprocess.run(["git", "add", "README.md"], cwd=repo, check=True, timeout=30)
     subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=repo, check=True, timeout=30)
-    (repo / "curriculum/l2-uk-en/a1").mkdir(parents=True)
+    (repo / f"curriculum/l2-uk-en/{LEVEL}").mkdir(parents=True)
     return repo
 
 
@@ -95,8 +95,8 @@ def test_setup_worktree_real_build_branch_name(temp_repo: Path, monkeypatch: pyt
     monkeypatch.setattr(v7_build, "_fetch_origin_main", lambda repo_root: False)
     monkeypatch.setattr(v7_build, "_utc_timestamp", lambda: "20260927-120000")
 
-    worktree = v7_build._setup_worktree("a1", "my-morning", None)
+    worktree = v7_build._setup_worktree(LEVEL, SLUG, None)
 
-    assert worktree.branch == "build/a1/my-morning-20260927-120000"
+    assert worktree.branch == f"build/{LEVEL}/{SLUG}-20260927-120000"
     subprocess.run(["git", "worktree", "remove", "--force", str(worktree.path)], cwd=temp_repo, check=True, timeout=30)
     subprocess.run(["git", "branch", "-D", worktree.branch], cwd=temp_repo, check=True, timeout=30)
