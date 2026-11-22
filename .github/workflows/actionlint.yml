@@ -56,7 +56,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --disable-pip-version-check PyYAML==6.0.3
+          .venv/bin/python -m pip install --disable-pip-version-check --require-hashes --only-binary :all: \
+            --uploaded-prior-to P7D -r .github/requirements-pyyaml.txt
           # The locked lu-machinery wheel alone; the lock's hash decides which bytes install.
           wheelhouse="${MACHINERY_WHEELHOUSE}"
           .venv/bin/python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \

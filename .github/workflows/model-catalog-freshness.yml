@@ -6,7 +6,9 @@ on:
     paths:
       - '.python-version'
       - 'uv.lock'
+      - '.github/requirements-pyyaml.txt'
       - '.github/actions/python-ci-env/**'
+      - '.github/workflows/model-catalog-freshness.yml'
       - 'docs/runbooks/fleet-comms-open-gaps.md'
       - 'docs/runbooks/epic-orchestrator-roster.md'
   push:
@@ -15,7 +17,9 @@ on:
     paths:
       - '.python-version'
       - 'uv.lock'
+      - '.github/requirements-pyyaml.txt'
       - '.github/actions/python-ci-env/**'
+      - '.github/workflows/model-catalog-freshness.yml'
       - 'docs/runbooks/fleet-comms-open-gaps.md'
       - 'docs/runbooks/epic-orchestrator-roster.md'
   schedule:
@@ -48,7 +52,8 @@ jobs:
       - name: Create isolated environment
         run: |
           python -m venv .venv
-          .venv/bin/python -m pip install --disable-pip-version-check PyYAML==6.0.3
+          .venv/bin/python -m pip install --disable-pip-version-check --require-hashes --only-binary :all: \
+            --uploaded-prior-to P7D -r .github/requirements-pyyaml.txt
 
       - name: Fetch the locked lu-machinery wheel
         id: machinery-wheel

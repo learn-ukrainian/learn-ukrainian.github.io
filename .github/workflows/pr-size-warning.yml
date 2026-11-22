@@ -26,36 +26,33 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        id: python
         with:
           python-version-file: '.python-version'
-      - name: Install existing review-helper dependency
-        env:
-          PROJECT_PYTHON: ${{ steps.python.outputs.python-path }}
-        run: '"$PROJECT_PYTHON" -m pip install --disable-pip-version-check PyYAML==6.0.3'
       - name: Fetch the locked lu-machinery wheel
         id: machinery-wheel
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
       # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
-      - name: Install the locked lu-machinery release
+      - name: Install locked dependencies in a scratch environment
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
-          PYTHON_BIN: ${{ steps.python.outputs.python-path }}
         run: |
           set -euo pipefail
+          venv="${RUNNER_TEMP}/pr-size-venv"
+          python -m venv "$venv"
+          "$venv/bin/python" -m pip install --disable-pip-version-check --require-hashes --only-binary :all: \
+            --uploaded-prior-to P7D -r .github/requirements-pyyaml.txt
           wheelhouse="${MACHINERY_WHEELHOUSE}"
-          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+          "$venv/bin/python" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
             --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Report exact PR diff
         id: report
         env:
-          PROJECT_PYTHON: ${{ steps.python.outputs.python-path }}
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
-        run: '"$PROJECT_PYTHON" -m lu_machinery.ci.pr_size_warning'
+        run: '"${RUNNER_TEMP}/pr-size-venv/bin/python" -m lu_machinery.ci.pr_size_warning'
       - name: Report unavailable measurement
         if: ${{ always() && steps.report.outcome != 'success' }}
         run: |

@@ -1,0 +1,9 @@
+# The dictionary reader uses marisa-trie directly. Compile this lock without
+# dependencies so the synced runtime omits Stanza.
+# Refresh with uv 0.13.9 and the seven-day cooldown:
+# printf '%s\n' 'ukrainian-word-stress==2.1.0' | uv --no-config pip compile \
+#   --exclude-newer '7 days' --python-version "$(cat .python-version)" --only-binary :all: \
+#   --no-deps --generate-hashes --no-annotate --no-header -
+ukrainian-word-stress==2.1.0 \
+    --hash=sha256:5292dbb52a79bc8a652fe9cc3e2e5511b0fdabe5481ab9cbe1cd0d246f90cb1f \
+    --hash=sha256:95cdf8ff38428bedad1bde0b4cccf60768c7cfe25f6ccdd87827fe072082bacb
