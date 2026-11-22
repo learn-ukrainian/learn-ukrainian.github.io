@@ -80,7 +80,7 @@ ensure_site_deps() {
     (cd "$ROOT/site" && npm ci)
   fi
   if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
-    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (npx fallback refused)" >&2
+    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (no npx or PATH fallback)" >&2
     exit 1
   fi
 }

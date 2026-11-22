@@ -3,8 +3,10 @@
 Standalone Node script (not a Playwright test: no `*.spec.ts`, so `playwright test` never runs it).
 Every command below runs from `site/` with the executables `npm ci` installed from
 `site/package-lock.json` (`./node_modules/.bin/…`). Never use `npx`: when the local package
-is missing it downloads an unlocked one from the registry. If an executable is missing, run
-`npm ci` in `site/`.
+is missing it downloads an unlocked one from the registry. The `npm run preview` and
+`npm run build` examples run `astro` too: npm looks in `./node_modules/.bin` first but then
+falls back to any `astro` on `PATH`, so confirm `test -x ./node_modules/.bin/astro` before
+them. If an executable is missing, run `npm ci` in `site/`.
 
 ```bash
 cd site

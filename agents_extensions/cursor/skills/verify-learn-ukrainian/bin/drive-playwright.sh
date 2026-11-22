@@ -8,13 +8,14 @@ Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
 Inputs: Node 22, site dependencies installed by npm ci from site/package-lock.json,
         installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
-Runs only site/node_modules/.bin/playwright; never npx or a registry download.
+Requires the locked Playwright CLI and Astro (its preview webServer) in
+site/node_modules/.bin; never npx, a registry download or another copy on PATH.
 Browser: site/playwright.config.ts runs installed Chrome with its sandbox on and
 blocks every origin except the loopback host and learn-ukrainian.github.io.
 Never downloads Playwright's bundled browsers.
 Outputs: playwright-<feature>.log and test-results copied into
 LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual).
-Exit: 0 passed, 2 invalid feature, 1 missing Chrome or locked Playwright,
+Exit: 0 passed, 2 invalid feature, 1 missing Chrome or locked binary,
       otherwise Playwright's failure code.
 Lessons includes the legacy sidebar contract; see ../features/lessons.md.
 Related: launch.sh, doctor.sh, ../SKILL.md.
@@ -75,15 +76,21 @@ if [[ ! -x /opt/google/chrome/chrome ]]; then
   exit 1
 fi
 
-# Locked Playwright only: the binary `npm ci` installed from site/package-lock.json.
-# No npx fallback, so a missing install fails here before any registry access.
-PLAYWRIGHT="$ROOT/site/node_modules/.bin/playwright"
-if [[ ! -f "$PLAYWRIGHT" || ! -x "$PLAYWRIGHT" ]]; then
-  echo "drive-playwright: locked Playwright missing or not executable at site/node_modules/.bin/playwright; run npm ci in site/ (npx fallback refused)" >&2
+# Locked binaries only: those `npm ci` installed from site/package-lock.json, run by
+# absolute path, so a missing one fails here before any npx, registry or PATH fallback.
+# The Playwright webServer (`npm run preview`) runs Astro, which npm would take from the
+# rest of PATH if the local one were missing, so Astro is checked too.
+LOCAL_BIN="$ROOT/site/node_modules/.bin"
+if [[ ! -f "$LOCAL_BIN/astro" || ! -x "$LOCAL_BIN/astro" ]]; then
+  echo "drive-playwright: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (no npx or PATH fallback)" >&2
+  exit 1
+fi
+if ! "$LOCAL_BIN"/playwright test --help >/dev/null 2>&1; then
+  echo "drive-playwright: the locked Playwright CLI in site/node_modules/.bin is missing or does not run; run npm ci in site/ (no npx or PATH fallback)" >&2
   exit 1
 fi
 
-ARGS=("$PLAYWRIGHT" test "${SPECS[@]}")
+ARGS=("$LOCAL_BIN"/playwright test "${SPECS[@]}")
 if [[ -n "$GREP_PATTERN" ]]; then
   ARGS+=(--grep "$GREP_PATTERN")
 fi
