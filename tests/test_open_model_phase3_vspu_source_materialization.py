@@ -154,17 +154,7 @@ def test_changed_private_jsonl_is_not_overwritten(tmp_path: Path, monkeypatch: p
 
 def test_non_private_scope_review_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
-    original_stat = Path.stat
-
-    def patched_stat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
-        result = original_stat(path, *args, **kwargs)
-        if path != paths["scope"]:
-            return result
-        values = list(result)
-        values[0] |= stat.S_IRGRP
-        return os.stat_result(values)
-
-    monkeypatch.setattr(Path, "stat", patched_stat)
+    os.chmod(paths["scope"], 0o640)
     with pytest.raises(materialization.VspuSourceMaterializationError, match="mode 0600"):
         _build(paths)
 

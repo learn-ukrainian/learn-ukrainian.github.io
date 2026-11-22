@@ -34,7 +34,7 @@ from scripts.projects.open_model_data import correction_factory, profile_corpus
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import validate_source_records as source_contract
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.projects.ua_eval_harness import evaluate_model
+from scripts.projects.ua_eval_harness import evaluate_model, release_sources
 
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 DEFAULT_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "reference/reference_build_config_v1.json"
@@ -870,8 +870,38 @@ def reproduce_baseline(output_dir: Path, config: dict[str, Any]) -> dict[str, An
         paths["model_responses_path"],
         logical_response_path=baseline["model_responses_path"],
     )
-    require(identity_report == read_json(paths["identity_report_path"]), "identity score report did not reproduce")
-    require(model_report == read_json(paths["model_report_path"]), "Gemma score report did not reproduce")
+    frozen_eval_path = release_sources.frozen_source_path(
+        ROOT, Path("scripts/projects/ua_eval_harness/evaluate_model.py")
+    )
+    frozen_eval_sha = sha256_file(frozen_eval_path)
+    snapshot_manifest = read_json(ROOT / release_sources.RELEASE_DIR / "source_snapshots.json")
+    require(
+        snapshot_manifest.get("sources", {}).get("evaluate_model.py") == frozen_eval_sha,
+        "frozen v0.1.1 evaluate_model.py snapshot drifted from source_snapshots.json",
+    )
+    live_eval_sha = sha256_file(Path(evaluate_model.__file__))
+
+    def _verify_reproduced_report(reproduced: dict[str, Any], committed: dict[str, Any], label: str) -> None:
+        committed_scorer = committed.get("scorer")
+        if not isinstance(committed_scorer, dict):
+            raise ReferenceBuildError(f"{label} committed scorer identity drifted from frozen v0.1.1 release snapshot")
+        require(
+            committed_scorer.get("id") == "ua_eval_exact_token_edits.v1"
+            and committed_scorer.get("implementation_sha256") == frozen_eval_sha,
+            f"{label} committed scorer identity drifted from frozen v0.1.1 release snapshot",
+        )
+        expected = {
+            **committed,
+            "scorer": {
+                **committed_scorer,
+                "id": evaluate_model.SCORER_ID,
+                "implementation_sha256": live_eval_sha,
+            },
+        }
+        require(reproduced == expected, f"{label} score report did not reproduce")
+
+    _verify_reproduced_report(identity_report, read_json(paths["identity_report_path"]), "identity")
+    _verify_reproduced_report(model_report, read_json(paths["model_report_path"]), "Gemma")
     identity_report_output = baseline_dir / "identity.report.json"
     model_report_output = baseline_dir / "gemma-4-31b-it.report.json"
     shutil.copyfile(paths["identity_report_path"], identity_report_output)

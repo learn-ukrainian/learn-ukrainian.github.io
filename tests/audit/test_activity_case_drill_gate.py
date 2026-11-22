@@ -9,7 +9,7 @@ from scripts.audit.checks.activity_validation import (
     _check_word_indeclinable,
     check_indeclinable_case_drills,
 )
-from scripts.verification.vesum import VESUM_DB_PATH, _resolve_vesum_db_path
+from scripts.verification import vesum
 from scripts.yaml_activities import FillInActivity, FillInItem
 
 
@@ -301,7 +301,25 @@ def test_missing_vesum_db_raises_or_reports_unavailable(tmp_path: Path):
     assert "gate could not run — VESUM DB unavailable" in violations[0]["message"]
 
 
-def test_no_ancestor_dir_walk_for_vesum_db():
+def test_no_ancestor_dir_walk_for_vesum_db(
+    vesum_fixture_db: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
     """F002 requirement: _resolve_vesum_db_path does NOT walk parent directories."""
-    resolved = _resolve_vesum_db_path(None)
-    assert resolved == VESUM_DB_PATH
+    (tmp_path / "vesum.db").write_bytes(b"decoy")
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "vesum.db").write_bytes(b"decoy")
+    nested_project = tmp_path / "nested" / "project"
+    (nested_project / ".git").mkdir(parents=True)
+
+    monkeypatch.setattr(vesum, "PROJECT_ROOT", nested_project)
+    monkeypatch.setattr(vesum._rag_config, "PROJECT_ROOT", nested_project)
+    monkeypatch.delenv("LU_VESUM_DB", raising=False)
+
+    with pytest.raises(vesum.VesumStoreMissing):
+        vesum._resolve_vesum_db_path(None)
+
+    monkeypatch.setenv("LU_VESUM_DB", str(vesum_fixture_db))
+    assert vesum._resolve_vesum_db_path(None) == vesum_fixture_db.resolve()
+    assert vesum_fixture_db.resolve() == vesum.VESUM_DB_PATH

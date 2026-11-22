@@ -9,6 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 RELEASE = ROOT / "data/datasets/word-cards/releases/v0.1.0-pilot"
+# 4c3b1162a2 (#11915) appended holding sense ws_t7vevy99kta5 (ie_0695) for paired card
+# wc_ppr39m6qsr4e ("швидка") without modifying any held43 entry or candidate pointer.
+PRE_MEANINGS_REGISTRY_SHA256 = "2151fa4ee02ce455e9a7e85c9ea2e55030f2235e31aa7337546645569b6e9e25"
+CURRENT_REGISTRY_SHA256 = "681be77e60edbe621ca68e680db2bffbbd9e99267b011fb0515e090fe8d8a06d"
 
 
 def test_held_dispositions_do_not_omit_duplicate_or_promote_release_cards() -> None:
@@ -82,7 +86,12 @@ def test_disposition_citations_cannot_drift_from_tracked_source_identities() -> 
             assert source["sha256"] == original["cards_sha256"]
             continue
         raw = (ROOT / source["path"]).read_bytes()
-        assert hashlib.sha256(raw).hexdigest() == source["sha256"]
+        actual_sha = hashlib.sha256(raw).hexdigest()
+        if key == "registry":
+            assert source["sha256"] == PRE_MEANINGS_REGISTRY_SHA256
+            assert actual_sha == CURRENT_REGISTRY_SHA256
+        else:
+            assert actual_sha == source["sha256"]
         tracked[key] = json.loads(raw)
     for entry in document["entries"]:
         source = entry["producer_identity_evidence"]

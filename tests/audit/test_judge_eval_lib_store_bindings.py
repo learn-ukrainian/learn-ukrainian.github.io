@@ -42,8 +42,8 @@ def _sources_db(path: Path, label: str) -> Path:
 
 def _vesum_db(path: Path, known: str) -> Path:
     conn = sqlite3.connect(path)
-    conn.execute("CREATE TABLE forms (word_form TEXT)")
-    conn.execute("INSERT INTO forms VALUES (?)", (known,))
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn.execute("INSERT INTO forms VALUES (?, ?, ?, ?)", (known, known, "noun", "noun:inanim:m:v_naz"))
     conn.commit()
     conn.close()
     return path

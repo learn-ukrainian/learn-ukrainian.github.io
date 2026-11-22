@@ -14,6 +14,7 @@ from __future__ import annotations
 import ast
 import csv
 import re
+import sys
 from pathlib import Path
 
 import pytest
@@ -87,20 +88,9 @@ FROZEN_LOGICAL_KEYS = frozenset(
     }
 )
 
-DIRECTORY_PREFIXES = frozenset(
-    {
-        "adjudication",
-        "admission",
-        "contracts",
-        "delivery",
-        "examples",
-        "integrations",
-        "model_views",
-        "silver",
-        "treatments",
-        "trust",
-    }
-)
+# ef115698fa (#13125) moved scripts/storage/build_classification_table.py into
+# lu-machinery, leaving only contracts/ as a production directory-prefix literal.
+DIRECTORY_PREFIXES = frozenset({"contracts"})
 
 PACKAGED_RESOURCE_PATHS = frozenset(
     {
@@ -588,7 +578,7 @@ def test_guard_keeps_review_locator_and_rejects_other_uses() -> None:
             "data/projects/open_model_data/admission/dataset_v4_a10_pilot_review_gate_receipt_v1.json",
             True,
         ),
-        ("directory-prefix", "data/projects/open_model_data/admission", False),
+        ("directory-prefix", "data/projects/open_model_data/contracts", False),
         (
             "frozen-logical-key",
             "data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json",
@@ -774,7 +764,13 @@ def test_packaged_resource_joinpath_accepts_package_root(expression: str) -> Non
         ("data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json", "frozen-logical-key"),
     ],
 )
-def test_resource_root_join_does_not_allow_other_classes(logical: str, allowed: str) -> None:
+def test_resource_root_join_does_not_allow_other_classes(
+    logical: str,
+    allowed: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    if allowed == "directory-prefix":
+        monkeypatch.setattr(sys.modules[__name__], "DIRECTORY_PREFIXES", DIRECTORY_PREFIXES | {"examples"})
     source = f'from learn_ukrainian_v4_runtime.resources import resource_root\nresource_root() / "{logical}"'
     bare = f'{{"review_dossier_locator": "{logical}"}}' if allowed == "review-locator" else f'"{logical}"'
     assert _disposition(_literal_hits(bare)[0], packaged=True) == allowed

@@ -233,7 +233,7 @@ def test_command_is_only_the_fixed_agy_bridge_shape(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     command = runner.command_for(manifest["packets"][0], manifest, private)
-    assert command[1:4] == [str(runner.ROOT / "scripts/ai_agent_bridge/__main__.py"), "ask-agy", "-"]
+    assert command[1:5] == ["-m", "lu_machinery.ai_agent_bridge", "ask-agy", "-"]
     assert "--review" not in command and "--task-id" in command and "--to-model" in command and "--data" in command and "--output-path" in command
     assert str(private / manifest["packets"][0]["prompt"]) not in command
     prompt = (private / manifest["packets"][0]["prompt"]).read_text(encoding="utf-8")

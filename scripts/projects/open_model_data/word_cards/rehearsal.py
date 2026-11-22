@@ -26,11 +26,13 @@ from scripts.atlas import word_card_verify as verifier
 
 W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
 # Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.
+# REGISTRY_SHA256 reflects 4c3b1162a2 (#11915), which appended holding sense ws_t7vevy99kta5 (ie_0695)
+# and added 125 local dictionary meaning assertions (3151 -> 3276 locators) to the pilot build.
 MANIFEST_SHA256 = "ffe7ff160ad9b08a97e0bd971d0577be654825b90cc40c2fc37aca7ae70a0b8b"
-REGISTRY_SHA256 = "c1b33a0d498ab2365fb8690b483755c16cb7ca39d62b871fd90bc756dcf22ff5"
+REGISTRY_SHA256 = "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a"
 # All frozen identities remain; twelve common-word CEFR assertions are withheld
 # from proper names. The source-scoped uppercase abbreviation retains its CEFR.
-DENOMINATOR = {"cards": 150, "locators": 3151, "source_rows": 272}
+DENOMINATOR = {"cards": 150, "locators": 3276, "source_rows": 272}
 SCENARIOS = frozenset({
     "source_record", "source", "overlap_source_then_record", "overlap_record_then_source",
     "content_stress_set", "content_paradigm_slot", "assertion_id_fallback",
