@@ -14,7 +14,7 @@ agents_extensions/
 ├── README.md
 ├── shared/          # Agent-agnostic previous extension source/
 ├── codex/           # Codex-owned durable rules, memory, and overlays
-└── cursor/          # Source for the tracked .cursor/rules/ copies
+└── cursor/          # Cursor project rules, skills, and MCP configuration
 ```
 
 Deploy extensions with:
@@ -25,31 +25,12 @@ npm run agents:deploy
 
 `npm run claude:deploy` remains as a compatibility alias.
 
-## Copy Cursor project rules
-
-Edit the rule and its frontmatter in `agents_extensions/cursor/rules/`. Run this
-command from the repository root to refresh the tracked copies Cursor loads.
-
-```sh
-(
-  set -eu
-  mkdir -p .cursor/rules
-  for rule in cold-start delivery-skills merge-closeout no-sitting-prs
-  do
-    cp "agents_extensions/cursor/rules/$rule.md" ".cursor/rules/$rule.mdc"
-  done
-)
-```
-
-Commit the source and its refreshed `.mdc` copy together.
-
-
 ## Codex skill discovery
 
 `npm run agents:deploy` runs the installed lu-machinery deployer
 (`lu_machinery.agent_deploy`). It composes the release's fleet rules, skills,
 hooks and prompts with the product sources that `agents_extensions/deployment.v1.json`
-names (`shared/`, `codex/`, `agy/`), refuses a product file at a release path, and
+names (`shared/`, `codex/`, `agy/`, `cursor/`), refuses a product file at a release path, and
 deploys shared skills to `.agents/skills/`, the single Codex discovery root. `.codex/`
 continues to receive its hooks, config, and other shared resources, but no skills.
 It owns only the files its manifest (`.deploy-state/agent-deploy.v1.json`) records;
@@ -74,19 +55,8 @@ Task intake follows `shared/rules/task-scoped-reading.md`. Mode-specific skill
 procedures live in linked `references/` files and are loaded only for the current
 operation or engine state; commands still run from the repository root.
 
-## Copy Cursor project skill and MCP configuration
+## Cursor project discovery
 
-Edit `agents_extensions/cursor/skills/verify-learn-ukrainian/` and
-`agents_extensions/cursor/mcp.json`, then refresh the copies Cursor loads:
-
-```sh
-(
-  set -eu
-  mkdir -p .cursor/skills/verify-learn-ukrainian
-  cp -R agents_extensions/cursor/skills/verify-learn-ukrainian/. .cursor/skills/verify-learn-ukrainian/
-  cp agents_extensions/cursor/mcp.json .cursor/mcp.json
-)
-```
-
-Commit each source change with its refreshed copy. Local skill artifacts remain
-in the runtime directory and are not source files.
+Edit and commit the sources in `agents_extensions/cursor/`. Run
+`npm run agents:deploy` to generate the ignored `.cursor/` tree, including
+the `.mdc` rules, the project skill, and `mcp.json`.
