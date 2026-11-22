@@ -32,7 +32,15 @@ The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as
 | Fleet inbox | `/api/comms/inbox?agent=cursor` |
 | Dispatches | `/api/delegate/active` |
 | Track state | `/api/state/summary` |
+| Track health | `/api/state/track-health/{track}` |
 | One module | `/api/state/module/{track}/slug/{slug}` |
+| Open PRs | `gh pr list` |
+| Usage limits | `/api/runtime/agents` |
 | After commit | `/api/orient?fresh=true` |
 
-Protocol: `agents_extensions/cursor/rules/cold-start.md`
+If Monitor is unavailable, run `git status --short --branch` and follow the
+offline rules loader in the installed release (`agents_extensions/shared/rules/_load-via-api.md`).
+After the rules change, fetch `/api/rules` again to refresh the session's rules.
+
+For read-only `ab discuss` routing and receipts, see
+`docs/runbooks/agent-seat-onboarding.md`. ACP discussion carries no formal review verdict.

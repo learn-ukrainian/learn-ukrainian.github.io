@@ -13,8 +13,8 @@ This follows the same layout used by the sibling kube-dojo project.
 agents_extensions/
 ├── README.md
 ├── shared/          # Agent-agnostic previous extension source/
-└── codex/           # Codex-owned durable rules, memory, and overlays
-└── cursor/          # Cursor IDE rules (deploy to .cursor/rules/)
+├── codex/           # Codex-owned durable rules, memory, and overlays
+└── cursor/          # Source for the tracked .cursor/rules/ copies
 ```
 
 Deploy extensions with:
@@ -24,6 +24,24 @@ npm run agents:deploy
 ```
 
 `npm run claude:deploy` remains as a compatibility alias.
+
+## Copy Cursor project rules
+
+Edit the rule and its frontmatter in `agents_extensions/cursor/rules/`. Run this
+command from the repository root to refresh the tracked copies Cursor loads.
+
+```sh
+(
+  set -eu
+  mkdir -p .cursor/rules
+  for rule in cold-start delivery-skills merge-closeout no-sitting-prs
+  do
+    cp "agents_extensions/cursor/rules/$rule.md" ".cursor/rules/$rule.mdc"
+  done
+)
+```
+
+Commit the source and its refreshed `.mdc` copy together.
 
 
 ## Codex skill discovery
