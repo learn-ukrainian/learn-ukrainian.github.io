@@ -62,7 +62,7 @@ def _write_harness(
     fixture: dict[str, Path],
     controller: Path,
     *,
-    stage_timeout_seconds: float | None = None,
+    timeout_after_runner_pid: Path | None = None,
 ) -> Path:
     harness = tmp_path / "guardian-harness.py"
     code_paths = {
@@ -73,6 +73,27 @@ def _write_harness(
         "resolve_runner": fixture["runner"],
         "certify_runner": fixture["runner"],
     }
+    wait_for_runner = ""
+    if timeout_after_runner_pid is not None:
+        wait_for_runner = f"""
+import runpy, subprocess
+
+module.STAGE_TIMEOUT_SECONDS = 0.5
+wait_for_line = runpy.run_path({str(ROOT / "tests/wait_helpers.py")!r})["wait_for_line"]
+communicate = subprocess.Popen.communicate
+
+def communicate_after_runner_start(process, *args, **kwargs):
+    if process.args[1:3] == [{str(controller)!r}, "run"]:
+        # Exercise the real timeout after the runner inherits the lock.
+        wait_for_line(
+            Path({str(timeout_after_runner_pid)!r}),
+            timeout=10,
+            stop_if=lambda: process.poll() is not None,
+        )
+    return communicate(process, *args, **kwargs)
+
+subprocess.Popen.communicate = communicate_after_runner_start
+"""
     harness.write_text(
         f"""
 import importlib.util, json, sys
@@ -82,7 +103,7 @@ spec = importlib.util.spec_from_file_location("held_out_guardian", {str(GUARDIAN
 module = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)
-{f"module.STAGE_TIMEOUT_SECONDS = {stage_timeout_seconds!r}" if stage_timeout_seconds is not None else ""}
+{wait_for_runner}
 config = module.Config(
     action="resume",
     package=Path({str(fixture['package'])!r}),
@@ -336,15 +357,15 @@ else:
         tmp_path,
         fixture,
         controller,
-        stage_timeout_seconds=0.5,
+        timeout_after_runner_pid=child_pid,
     )
     timed = _run_harness(timed_harness, "gemini")
     assert timed.returncode == 0, timed.stderr
-    assert json.loads(timed.stdout)["failure_code"] == "controller_timeout"
-    child = wait_for_pid_line(child_pid)
-    with pytest.raises(ProcessLookupError):
-        os.kill(int(controller_pid.read_text(encoding="utf-8")), 0)
+    child = int(child_pid.read_text(encoding="utf-8"))
     try:
+        assert json.loads(timed.stdout)["failure_code"] == "controller_timeout"
+        with pytest.raises(ProcessLookupError):
+            os.kill(int(controller_pid.read_text(encoding="utf-8")), 0)
         replacement = _run_harness(timed_harness, "gemini")
         assert replacement.returncode == 0, replacement.stderr
         assert json.loads(replacement.stdout)["failure_code"] == "active_worker"
