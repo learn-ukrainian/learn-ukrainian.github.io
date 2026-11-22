@@ -73,3 +73,20 @@ fails without a fallback that can overwrite or delete data.
 Task intake follows `shared/rules/task-scoped-reading.md`. Mode-specific skill
 procedures live in linked `references/` files and are loaded only for the current
 operation or engine state; commands still run from the repository root.
+
+## Copy Cursor project skill and MCP configuration
+
+Edit `agents_extensions/cursor/skills/verify-learn-ukrainian/` and
+`agents_extensions/cursor/mcp.json`, then refresh the copies Cursor loads:
+
+```sh
+(
+  set -eu
+  mkdir -p .cursor/skills/verify-learn-ukrainian
+  cp -R agents_extensions/cursor/skills/verify-learn-ukrainian/. .cursor/skills/verify-learn-ukrainian/
+  cp agents_extensions/cursor/mcp.json .cursor/mcp.json
+)
+```
+
+Commit each source change with its refreshed copy. Local skill artifacts remain
+in the runtime directory and are not source files.
