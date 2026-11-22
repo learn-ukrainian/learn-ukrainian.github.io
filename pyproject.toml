@@ -162,6 +162,7 @@ atlas = [
 # One uv release writes and reads uv.lock. python-ci-env installs this
 # required-version.
 required-version = "==0.13.9"
+exclude-newer = "7 days"
 # `uv sync` builds the whole environment; CI excludes packages by name.
 default-groups = ["ml", "dev"]
 
