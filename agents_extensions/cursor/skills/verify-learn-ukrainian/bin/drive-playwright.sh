@@ -81,19 +81,16 @@ fi
 # The Playwright webServer (`npm run preview`) runs Astro, which npm would take from the
 # rest of PATH if the local one were missing, so Astro is checked too.
 LOCAL_BIN="$ROOT/site/node_modules/.bin"
-if [[ ! -f "$LOCAL_BIN/astro" || ! -x "$LOCAL_BIN/astro" ]]; then
-  echo "drive-playwright: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (no npx or PATH fallback)" >&2
-  exit 1
-fi
-if ! "$LOCAL_BIN"/playwright test --help >/dev/null 2>&1; then
-  echo "drive-playwright: the locked Playwright CLI in site/node_modules/.bin is missing or does not run; run npm ci in site/ (no npx or PATH fallback)" >&2
-  exit 1
-fi
-
 ARGS=("$LOCAL_BIN"/playwright test "${SPECS[@]}")
 if [[ -n "$GREP_PATTERN" ]]; then
   ARGS+=(--grep "$GREP_PATTERN")
 fi
+for bin in "${ARGS[0]}" "$LOCAL_BIN/astro"; do
+  if [[ ! -f "$bin" || ! -x "$bin" ]]; then
+    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run npm ci in site/ (no npx or PATH fallback)" >&2
+    exit 1
+  fi
+done
 
 set +e
 "${ARGS[@]}" 2>&1 | tee "${EVIDENCE_DIR}/playwright-${FEATURE}.log"

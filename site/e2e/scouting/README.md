@@ -3,16 +3,16 @@
 Standalone Node script (not a Playwright test: no `*.spec.ts`, so `playwright test` never runs it).
 Every command below runs from `site/` with the executables `npm ci` installed from
 `site/package-lock.json` (`./node_modules/.bin/…`). Never use `npx`: when the local package
-is missing it downloads an unlocked one from the registry. The `npm run preview` and
-`npm run build` examples run `astro` too: npm looks in `./node_modules/.bin` first but then
-falls back to any `astro` on `PATH`, so confirm `test -x ./node_modules/.bin/astro` before
-them. If an executable is missing, run `npm ci` in `site/`.
+is missing it downloads an unlocked one from the registry. Astro also runs by its local path,
+not through `npm run preview` or `npm run build`: when the local `astro` is missing or not an
+executable file, npm runs any `astro` it finds on `PATH`. If an executable is missing, run
+`npm ci` in `site/`.
 
 ```bash
 cd site
 node e2e/scouting/run.mjs --help
 node e2e/scouting/run.mjs --slice C1 --live --out /tmp/scout-c1        # deployed site
-npm run preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # local (127.0.0.1:4321)
+./node_modules/.bin/astro preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # local (127.0.0.1:4321)
 ```
 
 Flags: `--slice C1..C8`, `--out <dir>`,
@@ -96,7 +96,7 @@ to the check page to tick boxes, and reopen the window after a route departure.
 ```bash
 cd site
 # 1. Build a clean checkout at the merged SHA into managed scratch (no Astro config change).
-npm run build -- --outDir "$OUT"
+npm run hydrate && ./node_modules/.bin/astro build --outDir "$OUT"
 # 2. Bind the page to that build; refuses dirty/moved/unknown source, symlinked or non-build output.
 node e2e/scouting/native-speech-probe.mjs prepare --source <clean checkout> --source-sha <merged sha> \
   --out "$OUT" --manifest "$SCRATCH/native-manifest.json"
