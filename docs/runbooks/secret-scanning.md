@@ -217,6 +217,17 @@ and [actionlint support for the self-repository reference](https://github.com/rh
 | 636 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:57` | Won't fix. The pinned actionlint rejects the suggested syntax. |
 | 637 | `zizmor/self-repository` | `.github/workflows/security-audit.yml:156` | Won't fix. The pinned actionlint rejects the suggested syntax. |
 
+The `py/overly-permissive-file` alerts below flag a deliberate negative test.
+Each test sets a private input to mode `0o640` and then asserts that the code
+under test refuses it with its mode-`0600` error. The loosened mode is the test
+input, not a file the product writes. Owner decision OWNER-DECISIONS-1122B
+dismisses both as used in tests. The scanner rules are unchanged.
+
+| Alert | Rule | Location | Disposition |
+| --- | --- | --- | --- |
+| 373 | `py/overly-permissive-file` | `tests/test_open_model_phase3_vspu_modern_theory_intake.py:223` | False positive. Used in tests: the line sets mode `0o640` to prove the intake refuses a non-private input (mode 0600 refusal). OWNER-DECISIONS-1122B. |
+| 639 | `py/overly-permissive-file` | `tests/test_open_model_phase3_vspu_source_materialization.py:157` | False positive. Used in tests: the line sets mode `0o640` to prove materialization refuses a non-private scope review (mode 0600 refusal). OWNER-DECISIONS-1122B. |
+
 ## Relation to the other secret gates
 
 | Gate | When | Scope |
