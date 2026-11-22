@@ -39,9 +39,11 @@ EXPECTED_COMPRESSED_SHA256 = "c07318782a8ad924902ee7f89592cfd03ec17d47c3be183ea1
 EXPECTED_PROMPT_V3_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
 # The tracked receipt pins the sources at 4dd731792efe. Keep those frozen
 # identities as provenance while separately checking the migrated cutover.
+# CURRENT_CUTOVER_SHA256 reflects 0e7b8343d7 (#13045), which migrated
+# phase3_vspu_db_cutover.py imports to the installed lu_machinery release.
 FROZEN_IMPLEMENTATION_SHA256 = "3641131b5f218bad785058561c02d8dbb7218f75a9f15c31789132fe4a1db687"
 FROZEN_CUTOVER_SHA256 = "1f009e56ef4eb37a2c42238b934db2025c71a8a4b3d9a6b0f3ef4f37fd416aa3"
-CURRENT_CUTOVER_SHA256 = "836a53a8e87174d719975bc96581a7a17eaa6a5f91d31e414a1d1970c6470719"
+CURRENT_CUTOVER_SHA256 = "a55bdfdcbd95c096b8ceb7a3d0aec4e24f3c099884675579bba034be512920d2"
 EXPECTED_COUNTS = cutover.COUNTS_AFTER
 PRIVATE_FILE_MODE = 0o600
 DEFAULT_MDLS_TIMEOUT_SECONDS: float = 30.0
