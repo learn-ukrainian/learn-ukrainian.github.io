@@ -11,8 +11,8 @@ Features:
 - Honest identifying User-Agent by default with CLI override
 - Immediate circuit-breaker stop on HTTP 403 (does not retry or corrupt state)
 - Exponential backoff on HTTP 429 and 5xx, respecting Retry-After headers
-- Incremental mode (--incremental, default true) checking existing SQLite records
-  and only requesting unseen / un-ingested articles
+- Incremental mode (default) compares fetched HTML with the stored SHA-256
+  and extracts pairs only for new or changed articles
 - Full fidelity: untruncated raw HTML, article text, content SHA-256, and metadata
 - Structured usage-advice pair extraction with linguistic reasoning and provenance
 - Summary JSON export for downstream lexicon review and UNLP dataset integration
@@ -28,6 +28,7 @@ import email.utils
 import hashlib
 import json
 import logging
+import math
 import re
 import signal
 import sqlite3
@@ -35,7 +36,7 @@ import sys
 import time
 import urllib.parse
 import xml.etree.ElementTree as ET
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -106,15 +107,20 @@ class SourceChoice(StrEnum):
     ALL = "all"
 
 
-@dataclasses.dataclass(frozen=True, slots=True)
+CONSUMER_SOURCES = {"movne": SourceChoice.MOVNE, "mova_ua": SourceChoice.MOVAUA}
+
+
+@dataclasses.dataclass(slots=True)
 class IngestStats:
     source: str
-    total_manifest: int
-    cached_existing: int
-    fetched_new: int
-    pairs_extracted: int
-    errors: int
+    total_manifest: int = 0
+    cached_existing: int = 0
+    fetched_new: int = 0
+    pairs_extracted: int = 0
+    errors: int = 0
     interrupted: bool = False
+    changed: int = 0
+    unchanged: int = 0
 
 
 # ---------------------------------------------------------------------------
@@ -127,8 +133,8 @@ def parse_retry_after(header_val: str | None) -> float | None:
     if not header_val or not header_val.strip():
         return None
     val = header_val.strip()
-    if val.isdigit():
-        return max(0.0, float(val))
+    if val.isascii() and val.isdecimal():
+        return float(val)
     try:
         parsed_date = email.utils.parsedate_to_datetime(val)
         if parsed_date is not None:
@@ -246,7 +252,9 @@ def polite_get(
                 raise RateLimitOrServerError(f"HTTP {resp.status_code} for {current_url} after {max_retries} retries.")
             retry_after = parse_retry_after(resp.headers.get("Retry-After"))
             base_delay = max(delay, 1.0)
-            wait_s = min(retry_after, 60.0) if retry_after is not None else base_delay * (retry_backoff**attempt)
+            if retry_after is not None and retry_after > 60.0:
+                raise RateLimitOrServerError(f"HTTP {resp.status_code} for {current_url}: Retry-After exceeds 60s.")
+            wait_s = max(retry_after or 0.0, base_delay * (retry_backoff**attempt))
             logger.warning(
                 "HTTP %s for %s; retrying in %.1fs (attempt %d/%d)",
                 resp.status_code,
@@ -1067,6 +1075,8 @@ def discover_movne_manifest(
     *,
     pages: list[str] | None = None,
     delay: float = 1.0,
+    max_retries: int = 3,
+    retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
     sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> list[dict[str, Any]]:
@@ -1083,7 +1093,15 @@ def discover_movne_manifest(
     seen_urls: set[str] = set()
 
     for p_url in target_pages:
-        resp = polite_get(session, p_url, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
+        resp = polite_get(
+            session,
+            p_url,
+            delay=delay,
+            max_retries=max_retries,
+            retry_backoff=retry_backoff,
+            user_agent=user_agent,
+            sleep_fn=sleep_fn,
+        )
         if resp.status_code != 200:
             logger.warning("Failed to fetch archive page %s (HTTP %s)", p_url, resp.status_code)
             continue
@@ -1132,6 +1150,8 @@ def discover_movne_manifest(
         else:
             c["issue_number"] = idx
         ordered.append(c)
+    if not ordered:
+        raise UsageAdviceIngestError("Glavcom archive discovery returned no issues.")
     return ordered
 
 
@@ -1140,6 +1160,8 @@ def discover_movaua_manifest(
     *,
     sitemap_url: str = "https://ukr-mova.in.ua/sitemap.xml",
     delay: float = 1.0,
+    max_retries: int = 3,
+    retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
     sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> list[dict[str, Any]]:
@@ -1154,7 +1176,15 @@ def discover_movaua_manifest(
             continue
         visited_sitemaps.add(cur_sm)
 
-        resp = polite_get(session, cur_sm, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
+        resp = polite_get(
+            session,
+            cur_sm,
+            delay=delay,
+            max_retries=max_retries,
+            retry_backoff=retry_backoff,
+            user_agent=user_agent,
+            sleep_fn=sleep_fn,
+        )
         if resp.status_code != 200:
             continue
 
@@ -1203,12 +1233,56 @@ def discover_movaua_manifest(
             sec = f"library/{parts[1]}"
         clean_urls.append({"url": u, "section": sec})
 
+    if not clean_urls:
+        raise UsageAdviceIngestError("mova.ua sitemap discovery returned no articles.")
     return clean_urls
 
 
 # ---------------------------------------------------------------------------
 # Ingest Runners
 # ---------------------------------------------------------------------------
+
+
+def _pending_articles(
+    items: list[dict[str, Any]],
+    stored: dict[str, tuple[str, str]],
+    *,
+    incremental: bool,
+    retry_errors: bool,
+    limit: int | None,
+) -> list[dict[str, Any]]:
+    pending = []
+    seen = set()
+    for item in items:
+        url = item["url"]
+        if url in seen:
+            continue
+        seen.add(url)
+        sha, error = stored.get(url, ("", ""))
+        if incremental and not retry_errors and error and (not sha or error == "http_403"):
+            continue
+        pending.append(item)
+    if limit is not None and limit >= 0:
+        if incremental:
+            # Keep limited runs able to discover new pages even with a large archive.
+            pending.sort(key=lambda item: bool(stored.get(item["url"], ("", ""))[0]))
+        return pending[:limit]
+    return pending
+
+
+@contextlib.contextmanager
+def _article_transaction(conn: sqlite3.Connection) -> Iterator[None]:
+    """Read the current revision and write the article and pairs atomically."""
+    # The savepoint also scopes writes for connections using SQLite autocommit.
+    with conn:
+        conn.execute("SAVEPOINT usage_advice_article")
+        try:
+            yield
+        except BaseException:
+            conn.execute("ROLLBACK TO usage_advice_article")
+            raise
+        finally:
+            conn.execute("RELEASE usage_advice_article")
 
 
 def ingest_movne_pytannya(
@@ -1224,6 +1298,7 @@ def ingest_movne_pytannya(
     retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
     sleep_fn: Callable[[float], None] = interruptible_sleep,
+    _stats: IngestStats | None = None,
 ) -> IngestStats:
     """Ingest Glavcom «Мовне питання» issues and extract pairs."""
     global _STOP_REQUESTED
@@ -1236,27 +1311,23 @@ def ingest_movne_pytannya(
     items = (
         manifest
         if manifest is not None
-        else discover_movne_manifest(sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
+        else discover_movne_manifest(
+            sess,
+            delay=delay,
+            max_retries=max_retries,
+            retry_backoff=retry_backoff,
+            user_agent=user_agent,
+            sleep_fn=sleep_fn,
+        )
     )
-    total_manifest = len(items)
-
-    if retry_errors:
-        existing_rows = conn.execute("SELECT url FROM movne_pytannya_issues WHERE content_sha256 != ''").fetchall()
-    else:
-        existing_rows = conn.execute(
-            "SELECT url FROM movne_pytannya_issues WHERE content_sha256 != '' OR error_status != ''"
-        ).fetchall()
-    existing_urls = {r[0] for r in existing_rows}
-    cached_existing = len(existing_urls)
-
-    pending = [it for it in items if it["url"] not in existing_urls] if incremental else items
-
-    if limit is not None and limit >= 0:
-        pending = pending[:limit]
-
-    fetched_new = 0
-    pairs_extracted = 0
-    errors = 0
+    stored = {
+        url: (sha, error)
+        for url, sha, error in conn.execute("SELECT url, content_sha256, error_status FROM movne_pytannya_issues")
+    }
+    stats = _stats if _stats is not None else IngestStats(SourceChoice.MOVNE)
+    stats.total_manifest = len(items)
+    stats.cached_existing = sum(bool(sha or (error and not retry_errors)) for sha, error in stored.values())
+    pending = _pending_articles(items, stored, incremental=incremental, retry_errors=retry_errors, limit=limit)
 
     for item in pending:
         if _STOP_REQUESTED:
@@ -1278,15 +1349,11 @@ def ingest_movne_pytannya(
         except AccessDeniedError:
             # Record 403 in SQLite so subsequent incremental runs skip it
             with conn:
-                conn.execute("PRAGMA foreign_keys = ON;")
                 now_iso = dt.datetime.now(dt.UTC).isoformat()
-                row = conn.execute("SELECT id FROM movne_pytannya_issues WHERE url = ?", (url,)).fetchone()
-                if row:
-                    conn.execute(
-                        "UPDATE movne_pytannya_issues SET error_status = 'http_403', fetched_at = ? WHERE id = ?",
-                        (now_iso, row[0]),
-                    )
-                else:
+                updated = conn.execute(
+                    "UPDATE movne_pytannya_issues SET error_status = 'http_403' WHERE url = ?", (url,)
+                )
+                if updated.rowcount == 0:
                     conn.execute(
                         """
                         INSERT INTO movne_pytannya_issues
@@ -1310,31 +1377,29 @@ def ingest_movne_pytannya(
                 logger.info("Ingest interrupted by signal: %s", exc)
                 break
             logger.error("Failed to fetch issue %s (%s): %s", issue_number, url, exc)
-            errors += 1
+            stats.errors += 1
             continue
         except Exception as exc:
             logger.error("Failed to fetch issue %s (%s): %s", issue_number, url, exc)
-            errors += 1
+            stats.errors += 1
             continue
 
         if resp.status_code != 200:
             logger.warning("Issue %s (%s) returned HTTP %s", issue_number, url, resp.status_code)
-            errors += 1
+            stats.errors += 1
             now_iso = dt.datetime.now(dt.UTC).isoformat()
             with conn:
-                conn.execute("PRAGMA foreign_keys = ON;")
-                row = conn.execute("SELECT id FROM movne_pytannya_issues WHERE url = ?", (url,)).fetchone()
-                if row:
-                    conn.execute(
-                        "UPDATE movne_pytannya_issues SET error_status = ?, fetched_at = ? WHERE id = ?",
-                        (f"http_{resp.status_code}", now_iso, row[0]),
-                    )
-                else:
+                updated = conn.execute(
+                    "UPDATE movne_pytannya_issues SET error_status = ? WHERE url = ? AND error_status IS NOT 'http_403'",
+                    (f"http_{resp.status_code}", url),
+                )
+                if updated.rowcount == 0:
                     conn.execute(
                         """
                         INSERT INTO movne_pytannya_issues
                         (url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at, error_status)
                         VALUES (?, ?, ?, ?, ?, '', '', '', ?, ?)
+                        ON CONFLICT(url) DO NOTHING
                         """,
                         (
                             url,
@@ -1349,21 +1414,36 @@ def ingest_movne_pytannya(
             continue
 
         html = resp.text
+        if not html.strip():
+            logger.error("Issue %s (%s) returned an empty HTTP 200 response", issue_number, url)
+            stats.errors += 1
+            continue
         sha = hashlib.sha256(html.encode("utf-8")).hexdigest()
-        soup = BeautifulSoup(html, "html.parser")
-        body_tag = (
-            soup.find("div", class_="post_text")
-            or soup.find("div", class_="art_body_uniq")
-            or soup.find("article")
-            or soup.find("div", class_="article_content")
-            or soup.body
-        )
-        art_text = body_tag.get_text(separator="\n").strip() if body_tag else ""
-        fetched_at = dt.datetime.now(dt.UTC).isoformat()
 
-        with conn:
-            conn.execute("PRAGMA foreign_keys = ON;")
-            row = conn.execute("SELECT id, issue_number FROM movne_pytannya_issues WHERE url = ?", (url,)).fetchone()
+        with _article_transaction(conn):
+            row = conn.execute(
+                "SELECT id, issue_number, content_sha256, error_status FROM movne_pytannya_issues WHERE url = ?", (url,)
+            ).fetchone()
+            same_content = incremental and row and sha == row[2]
+            if (row[2:] if row else None) != stored.get(url) and not (same_content and not row[3]):
+                logger.error("Issue %s (%s) changed in SQLite during fetch", issue_number, url)
+                stats.errors += 1
+                continue
+            if same_content:
+                if row[3]:
+                    conn.execute("UPDATE movne_pytannya_issues SET error_status = '' WHERE id = ?", (row[0],))
+                stats.unchanged += 1
+                continue
+            soup = BeautifulSoup(html, "html.parser")
+            body_tag = (
+                soup.find("div", class_="post_text")
+                or soup.find("div", class_="art_body_uniq")
+                or soup.find("article")
+                or soup.find("div", class_="article_content")
+                or soup.body
+            )
+            art_text = body_tag.get_text(separator="\n").strip() if body_tag else ""
+            fetched_at = dt.datetime.now(dt.UTC).isoformat()
             if row:
                 issue_id, issue_num = row[0], (item.get("issue_number") or row[1])
                 conn.execute(
@@ -1438,19 +1518,17 @@ def ingest_movne_pytannya(
                         p["created_at"],
                     ),
                 )
-            pairs_extracted += len(pairs)
+        stats.pairs_extracted += len(pairs)
+        if row and row[2]:
+            if sha == row[2]:
+                stats.unchanged += 1
+            else:
+                stats.changed += 1
+        else:
+            stats.fetched_new += 1
 
-        fetched_new += 1
-
-    return IngestStats(
-        source="movne_pytannya",
-        total_manifest=total_manifest,
-        cached_existing=cached_existing,
-        fetched_new=fetched_new,
-        pairs_extracted=pairs_extracted,
-        errors=errors,
-        interrupted=_STOP_REQUESTED,
-    )
+    stats.interrupted = _STOP_REQUESTED
+    return stats
 
 
 def extract_movaua_article(html: str, url: str = "") -> dict[str, str]:
@@ -1506,6 +1584,7 @@ def ingest_movaua(
     retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
     sleep_fn: Callable[[float], None] = interruptible_sleep,
+    _stats: IngestStats | None = None,
 ) -> IngestStats:
     """Ingest mova.ua articles and extract usage advice pairs."""
     global _STOP_REQUESTED
@@ -1518,27 +1597,23 @@ def ingest_movaua(
     items = (
         manifest
         if manifest is not None
-        else discover_movaua_manifest(sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
+        else discover_movaua_manifest(
+            sess,
+            delay=delay,
+            max_retries=max_retries,
+            retry_backoff=retry_backoff,
+            user_agent=user_agent,
+            sleep_fn=sleep_fn,
+        )
     )
-    total_manifest = len(items)
-
-    if retry_errors:
-        existing_rows = conn.execute("SELECT url FROM movaua_articles WHERE content_sha256 != ''").fetchall()
-    else:
-        existing_rows = conn.execute(
-            "SELECT url FROM movaua_articles WHERE content_sha256 != '' OR error_status != ''"
-        ).fetchall()
-    existing_urls = {r[0] for r in existing_rows}
-    cached_existing = len(existing_urls)
-
-    pending = [it for it in items if it["url"] not in existing_urls] if incremental else items
-
-    if limit is not None and limit >= 0:
-        pending = pending[:limit]
-
-    fetched_new = 0
-    pairs_extracted = 0
-    errors = 0
+    stored = {
+        url: (sha, error)
+        for url, sha, error in conn.execute("SELECT url, content_sha256, error_status FROM movaua_articles")
+    }
+    stats = _stats if _stats is not None else IngestStats(SourceChoice.MOVAUA)
+    stats.total_manifest = len(items)
+    stats.cached_existing = sum(bool(sha or (error and not retry_errors)) for sha, error in stored.values())
+    pending = _pending_articles(items, stored, incremental=incremental, retry_errors=retry_errors, limit=limit)
 
     for item in pending:
         if _STOP_REQUESTED:
@@ -1559,15 +1634,9 @@ def ingest_movaua(
             )
         except AccessDeniedError:
             with conn:
-                conn.execute("PRAGMA foreign_keys = ON;")
                 now_iso = dt.datetime.now(dt.UTC).isoformat()
-                row = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()
-                if row:
-                    conn.execute(
-                        "UPDATE movaua_articles SET error_status = 'http_403', fetched_at = ? WHERE id = ?",
-                        (now_iso, row[0]),
-                    )
-                else:
+                updated = conn.execute("UPDATE movaua_articles SET error_status = 'http_403' WHERE url = ?", (url,))
+                if updated.rowcount == 0:
                     conn.execute(
                         """
                         INSERT INTO movaua_articles
@@ -1584,49 +1653,62 @@ def ingest_movaua(
                 logger.info("Ingest interrupted by signal: %s", exc)
                 break
             logger.error("Failed to fetch movaua %s: %s", url, exc)
-            errors += 1
+            stats.errors += 1
             continue
         except Exception as exc:
             logger.error("Failed to fetch movaua %s: %s", url, exc)
-            errors += 1
+            stats.errors += 1
             continue
 
         if resp.status_code != 200:
             logger.warning("movaua %s returned HTTP %s", url, resp.status_code)
-            errors += 1
+            stats.errors += 1
             now_iso = dt.datetime.now(dt.UTC).isoformat()
             with conn:
-                conn.execute("PRAGMA foreign_keys = ON;")
-                row = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()
-                if row:
-                    conn.execute(
-                        "UPDATE movaua_articles SET error_status = ?, fetched_at = ? WHERE id = ?",
-                        (f"http_{resp.status_code}", now_iso, row[0]),
-                    )
-                else:
+                updated = conn.execute(
+                    "UPDATE movaua_articles SET error_status = ? WHERE url = ? AND error_status IS NOT 'http_403'",
+                    (f"http_{resp.status_code}", url),
+                )
+                if updated.rowcount == 0:
                     conn.execute(
                         """
                         INSERT INTO movaua_articles
                         (url, section, title, date, image_url, image_alt, raw_html, article_text, content_sha256, fetched_at, error_status)
                         VALUES (?, ?, ?, '', '', '', '', '', '', ?, ?)
+                        ON CONFLICT(url) DO NOTHING
                         """,
                         (url, section, item.get("title", ""), now_iso, f"http_{resp.status_code}"),
                     )
             continue
 
         html = resp.text
+        if not html.strip():
+            logger.error("movaua %s returned an empty HTTP 200 response", url)
+            stats.errors += 1
+            continue
         sha = hashlib.sha256(html.encode("utf-8")).hexdigest()
-        parsed = extract_movaua_article(html, url=url)
-        raw_title = parsed["title"]
-        date_str = parsed["date"]
-        img_url = parsed["image_url"]
-        img_alt = parsed["image_alt"]
-        art_text = parsed["article_text"]
-        fetched_at = dt.datetime.now(dt.UTC).isoformat()
 
-        with conn:
-            conn.execute("PRAGMA foreign_keys = ON;")
-            row = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()
+        with _article_transaction(conn):
+            row = conn.execute(
+                "SELECT id, content_sha256, error_status FROM movaua_articles WHERE url = ?", (url,)
+            ).fetchone()
+            same_content = incremental and row and sha == row[1]
+            if (row[1:] if row else None) != stored.get(url) and not (same_content and not row[2]):
+                logger.error("movaua %s changed in SQLite during fetch", url)
+                stats.errors += 1
+                continue
+            if same_content:
+                if row[2]:
+                    conn.execute("UPDATE movaua_articles SET error_status = '' WHERE id = ?", (row[0],))
+                stats.unchanged += 1
+                continue
+            parsed = extract_movaua_article(html, url=url)
+            raw_title = parsed["title"]
+            date_str = parsed["date"]
+            img_url = parsed["image_url"]
+            img_alt = parsed["image_alt"]
+            art_text = parsed["article_text"]
+            fetched_at = dt.datetime.now(dt.UTC).isoformat()
             if row:
                 article_id = row[0]
                 conn.execute(
@@ -1680,19 +1762,17 @@ def ingest_movaua(
                         p["created_at"],
                     ),
                 )
-            pairs_extracted += len(pairs)
+        stats.pairs_extracted += len(pairs)
+        if row and row[1]:
+            if sha == row[1]:
+                stats.unchanged += 1
+            else:
+                stats.changed += 1
+        else:
+            stats.fetched_new += 1
 
-        fetched_new += 1
-
-    return IngestStats(
-        source="movaua",
-        total_manifest=total_manifest,
-        cached_existing=cached_existing,
-        fetched_new=fetched_new,
-        pairs_extracted=pairs_extracted,
-        errors=errors,
-        interrupted=_STOP_REQUESTED,
-    )
+    stats.interrupted = _STOP_REQUESTED
+    return stats
 
 
 def reextract_movne(conn: sqlite3.Connection) -> int:
@@ -1889,39 +1969,53 @@ def export_movaua_summary_json(conn: sqlite3.Connection, output_path: Path) -> d
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="usage_advice_ingest",
-        description="Polite, incremental ingest and word/usage-pair extraction for Ukrainian language advice.",
+        description=(
+            "Refresh the Glavcom and mova.ua usage-advice archives and extract word pairs.\n"
+            "Use --re-extract when you need to rebuild pairs offline from saved articles."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.ingest.usage_advice_ingest --source movne --incremental
+  .venv/bin/python -m scripts.ingest.usage_advice_ingest --source all --re-extract
+
+Outputs: SQLite archives and word pairs, optional export files, and one JSON
+object on stdout with source, new, changed, unchanged, pairs_added, and status.
+Diagnostics go to stderr. Status is ok, error, or forbidden.
+Exit codes for movne and mova_ua: 0 ok, 1 error, 2 HTTP 403.
+Exit codes for movne_pytannya, movaua, and all: 0 ok, 3 HTTP 403,
+4 unexpected failure, 5 fetch error or interruption. Argparse errors exit 2.
+Related: scripts/ingest/README.md and #13293.""",
     )
     parser.add_argument(
         "--source",
-        type=SourceChoice,
         default=SourceChoice.ALL,
-        choices=[SourceChoice.MOVNE, SourceChoice.MOVAUA, SourceChoice.ALL],
-        help="Source to ingest (default: all)",
+        choices=[*SourceChoice, *CONSUMER_SOURCES],
+        help="Glavcom (movne or movne_pytannya), mova.ua (mova_ua or movaua), or both (default: all)",
     )
     parser.add_argument(
         "--db-movne",
         type=Path,
         default=DEFAULT_MOVNE_DB,
-        help="SQLite database path for Glavcom «Мовне питання»",
+        help="SQLite database for Glavcom (default: %(default)s)",
     )
     parser.add_argument(
         "--db-movaua",
         type=Path,
         default=DEFAULT_MOVAUA_DB,
-        help="SQLite database path for Мова – ДНК нації",
+        help="SQLite database for mova.ua (default: %(default)s)",
     )
     parser.add_argument(
         "--incremental",
         dest="incremental",
         action="store_true",
         default=True,
-        help="Skip already-ingested articles (default)",
+        help="Refresh discovered articles and reuse saved pairs when the HTML SHA-256 matches (default)",
     )
     parser.add_argument(
         "--no-incremental",
         dest="incremental",
         action="store_false",
-        help="Re-ingest all articles even if present",
+        help="Fetch and re-extract every discovered article, including previously failed URLs",
     )
     parser.add_argument(
         "--re-extract",
@@ -1929,20 +2023,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         dest="re_extract",
         action="store_true",
         default=False,
-        help="Re-run word-pair / usage-advice extraction from stored raw_html without fetching from the web.",
+        help="Rebuild pairs from stored HTML without network access (off by default)",
     )
     parser.add_argument(
         "--retry-errors",
         dest="retry_errors",
         action="store_true",
         default=False,
-        help="Retry previously failed or errored URLs without refetching successes.",
+        help="Include parked error URLs in the incremental run after access is restored (off by default)",
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=None,
-        help="Maximum new articles to fetch per source",
+        help="Maximum candidate articles per source, with new pages first in incremental mode (default: unlimited)",
     )
     parser.add_argument(
         "--delay",
@@ -1966,51 +2060,78 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--user-agent",
         type=str,
         default=DEFAULT_USER_AGENT,
-        help="Identifying User-Agent header",
+        help="Override the identifying User-Agent header (default: %(default)s)",
     )
     parser.add_argument(
         "--export-json-movne",
         type=Path,
         default=None,
-        help="Optional path to export Glavcom «Мовне питання» JSON summary",
+        help="Export Glavcom pairs to a JSON file, e.g. movne.json (off by default)",
     )
     parser.add_argument(
         "--export-json-movaua",
         type=Path,
         default=None,
-        help="Optional path to export mova.ua JSON summary",
+        help="Export mova.ua pairs to a JSON file, e.g. movaua.json (off by default)",
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if not math.isfinite(args.delay) or args.delay < 0:
+        parser.error("--delay must be a finite nonnegative number")
+    if args.max_retries < 0:
+        parser.error("--max-retries must be nonnegative")
+    if not math.isfinite(args.retry_backoff) or args.retry_backoff <= 0:
+        parser.error("--retry-backoff must be a finite positive number")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:
     global _STOP_REQUESTED
     _STOP_REQUESTED = False
 
+    args = parse_args(argv)
+    source = CONSUMER_SOURCES.get(args.source, args.source)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
     orig_sigint = signal.getsignal(signal.SIGINT)
     orig_sigterm = signal.getsignal(signal.SIGTERM)
     signal.signal(signal.SIGINT, _sig_handler)
     signal.signal(signal.SIGTERM, _sig_handler)
 
-    args = parse_args(argv)
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-
     stats_list: list[IngestStats] = []
+    exit_code = EXIT_OK
+    sources = (
+        (
+            SourceChoice.MOVNE,
+            args.db_movne,
+            ingest_movne_pytannya,
+            reextract_movne,
+            args.export_json_movne,
+            export_movne_summary_json,
+        ),
+        (
+            SourceChoice.MOVAUA,
+            args.db_movaua,
+            ingest_movaua,
+            reextract_movaua,
+            args.export_json_movaua,
+            export_movaua_summary_json,
+        ),
+    )
 
     try:
-        if args.source in (SourceChoice.MOVNE, SourceChoice.ALL):
-            args.db_movne.parent.mkdir(parents=True, exist_ok=True)
-            with contextlib.closing(sqlite3.connect(args.db_movne)) as conn:
+        for name, db, ingest, reextract, export_path, export in sources:
+            if source not in (name, SourceChoice.ALL):
+                continue
+            if _STOP_REQUESTED:
+                break
+            db.parent.mkdir(parents=True, exist_ok=True)
+            stats = IngestStats(name)
+            stats_list.append(stats)
+            with contextlib.closing(sqlite3.connect(db)) as conn:
                 if args.re_extract:
-                    logger.info("Running in --re-extract mode for Movne...")
-                    pairs_count = reextract_movne(conn)
-                    logger.info("Movne: re-extracted %d word pairs into %s", pairs_count, args.db_movne)
-                    if args.export_json_movne:
-                        export_movne_summary_json(conn, args.export_json_movne)
-                        logger.info("Exported Movne summary JSON to %s", args.export_json_movne)
+                    stats.pairs_extracted = reextract(conn)
                 else:
-                    logger.info("Ingesting Glavcom «Мовне питання» into %s...", args.db_movne)
-                    s = ingest_movne_pytannya(
+                    ingest(
                         conn,
                         incremental=args.incremental,
                         retry_errors=args.retry_errors,
@@ -2019,78 +2140,58 @@ def main(argv: list[str] | None = None) -> int:
                         max_retries=args.max_retries,
                         retry_backoff=args.retry_backoff,
                         user_agent=args.user_agent,
+                        _stats=stats,
                     )
-                    stats_list.append(s)
-                    logger.info(
-                        "Movne: total=%d, cached=%d, fetched_new=%d, pairs=%d, errors=%d",
-                        s.total_manifest,
-                        s.cached_existing,
-                        s.fetched_new,
-                        s.pairs_extracted,
-                        s.errors,
-                    )
-                    if args.export_json_movne:
-                        export_movne_summary_json(conn, args.export_json_movne)
-                        logger.info("Exported Movne summary JSON to %s", args.export_json_movne)
-
-        if args.source in (SourceChoice.MOVAUA, SourceChoice.ALL):
-            args.db_movaua.parent.mkdir(parents=True, exist_ok=True)
-            with contextlib.closing(sqlite3.connect(args.db_movaua)) as conn:
-                if args.re_extract:
-                    logger.info("Running in --re-extract mode for MovaUA...")
-                    pairs_count = reextract_movaua(conn)
-                    logger.info("MovaUA: re-extracted %d usage pairs into %s", pairs_count, args.db_movaua)
-                    if args.export_json_movaua:
-                        export_movaua_summary_json(conn, args.export_json_movaua)
-                        logger.info("Exported MovaUA summary JSON to %s", args.export_json_movaua)
-                else:
-                    logger.info("Ingesting Мова – ДНК нації into %s...", args.db_movaua)
-                    s = ingest_movaua(
-                        conn,
-                        incremental=args.incremental,
-                        retry_errors=args.retry_errors,
-                        limit=args.limit,
-                        delay=args.delay,
-                        max_retries=args.max_retries,
-                        retry_backoff=args.retry_backoff,
-                        user_agent=args.user_agent,
-                    )
-                    stats_list.append(s)
-                    logger.info(
-                        "MovaUA: total=%d, cached=%d, fetched_new=%d, pairs=%d, errors=%d",
-                        s.total_manifest,
-                        s.cached_existing,
-                        s.fetched_new,
-                        s.pairs_extracted,
-                        s.errors,
-                    )
-                    if args.export_json_movaua:
-                        export_movaua_summary_json(conn, args.export_json_movaua)
-                        logger.info("Exported MovaUA summary JSON to %s", args.export_json_movaua)
+                if stats.interrupted or _STOP_REQUESTED:
+                    break
+                if export_path is not None:
+                    export(conn, export_path)
 
         if _STOP_REQUESTED or any(s.interrupted for s in stats_list):
             logger.warning("Ingest was interrupted by user or supervisor signal.")
-            return EXIT_HTTP_SERVER_ERROR
-
-        if any(s.errors > 0 for s in stats_list):
+            exit_code = EXIT_HTTP_SERVER_ERROR
+        elif any(s.errors > 0 for s in stats_list):
             logger.error("Ingest completed with errors recorded in one or more sources.")
-            return EXIT_HTTP_SERVER_ERROR
+            exit_code = EXIT_HTTP_SERVER_ERROR
 
     except AccessDeniedError as exc:
         logger.error("HTTP 403 Forbidden encountered: %s", exc)
-        return EXIT_HTTP_403_FORBIDDEN
+        exit_code = EXIT_HTTP_403_FORBIDDEN
     except RateLimitOrServerError as exc:
         logger.error("HTTP server/rate-limit error: %s", exc)
-        return EXIT_HTTP_SERVER_ERROR
+        exit_code = EXIT_HTTP_SERVER_ERROR
     except Exception as exc:
-        logger.exception("Unexpected error in usage advice ingest: %s", exc)
-        return EXIT_PARSE_ERROR
+        if _STOP_REQUESTED:
+            logger.warning("Ingest was interrupted by user or supervisor signal.")
+            exit_code = EXIT_HTTP_SERVER_ERROR
+        else:
+            logger.exception("Unexpected error in usage advice ingest: %s", exc)
+            exit_code = EXIT_PARSE_ERROR
     finally:
         with contextlib.suppress(Exception):
             signal.signal(signal.SIGINT, orig_sigint)
             signal.signal(signal.SIGTERM, orig_sigterm)
 
-    return EXIT_OK
+    status = "ok"
+    if exit_code == EXIT_HTTP_403_FORBIDDEN:
+        status = "forbidden"
+    elif exit_code != EXIT_OK:
+        status = "error"
+    print(
+        json.dumps(
+            {
+                "source": args.source,
+                "new": sum(s.fetched_new for s in stats_list),
+                "changed": sum(s.changed for s in stats_list),
+                "unchanged": sum(s.unchanged for s in stats_list),
+                "pairs_added": sum(s.pairs_extracted for s in stats_list),
+                "status": status,
+            }
+        )
+    )
+    if args.source in CONSUMER_SOURCES:
+        return {"ok": 0, "error": 1, "forbidden": 2}[status]
+    return exit_code
 
 
 if __name__ == "__main__":
