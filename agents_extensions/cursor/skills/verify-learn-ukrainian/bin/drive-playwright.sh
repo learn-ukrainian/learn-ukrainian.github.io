@@ -6,14 +6,16 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
-Inputs: Node 22, site dependencies, installed Google Chrome;
-        LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Inputs: Node 22, site dependencies installed by npm ci from site/package-lock.json,
+        installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
+Runs only site/node_modules/.bin/playwright; never npx or a registry download.
 Browser: site/playwright.config.ts runs installed Chrome with its sandbox on and
 blocks every origin except the loopback host and learn-ukrainian.github.io.
 Never downloads Playwright's bundled browsers.
 Outputs: playwright-<feature>.log and test-results copied into
 LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual).
-Exit: 0 passed, 2 invalid feature, otherwise Playwright's failure code.
+Exit: 0 passed, 2 invalid feature, 1 missing Chrome or locked Playwright,
+      otherwise Playwright's failure code.
 Lessons includes the legacy sidebar contract; see ../features/lessons.md.
 Related: launch.sh, doctor.sh, ../SKILL.md.
 EOF
@@ -73,7 +75,15 @@ if [[ ! -x /opt/google/chrome/chrome ]]; then
   exit 1
 fi
 
-ARGS=(npx playwright test "${SPECS[@]}")
+# Locked Playwright only: the binary `npm ci` installed from site/package-lock.json.
+# No npx fallback, so a missing install fails here before any registry access.
+PLAYWRIGHT="$ROOT/site/node_modules/.bin/playwright"
+if [[ ! -f "$PLAYWRIGHT" || ! -x "$PLAYWRIGHT" ]]; then
+  echo "drive-playwright: locked Playwright missing or not executable at site/node_modules/.bin/playwright; run npm ci in site/ (npx fallback refused)" >&2
+  exit 1
+fi
+
+ARGS=("$PLAYWRIGHT" test "${SPECS[@]}")
 if [[ -n "$GREP_PATTERN" ]]; then
   ARGS+=(--grep "$GREP_PATTERN")
 fi

@@ -138,8 +138,12 @@ and permanent Cloudflare edge caching backed by Hugging Face Datasets:
 ```sh
 /absolute/path/to/shared/project/python -m pytest tests/test_pronunciation_generator.py tests/test_batch_synthesize_opus.py tests/test_sync_hf_dataset.py -q
 cd site
-npx vitest run tests/unit/pronunciation-player.test.tsx
+./node_modules/.bin/vitest run tests/unit/pronunciation-player.test.tsx
 ```
+
+Vitest runs from the install `npm ci` made from `site/package-lock.json`. If
+`./node_modules/.bin/vitest` is missing, run `npm ci` in `site/`; never use
+`npx`, which downloads an unlocked package from the registry.
 
 The tiny `tests/fixtures/audio/pronunciation.wav` is a Piper-generated clip of
 `або`, using the stress oracle's reading; it tests WAV handling, not Ukrainian

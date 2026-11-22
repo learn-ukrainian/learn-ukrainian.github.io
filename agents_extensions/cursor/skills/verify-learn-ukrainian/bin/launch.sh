@@ -6,6 +6,8 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh [preview|dev]
 Build and launch an isolated learner site for local verification; not deployment.
 Default: preview using build:shell; LU_VERIFY_BUILD_MODE=full selects build.
+Dependencies: npm ci from site/package-lock.json when site/node_modules is absent;
+the locked site/node_modules/.bin/astro must exist, never npx or a registry download.
 Inputs: Node 22, npm; LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
         optional LU_VERIFY_RUN_ID, LU_VERIFY_STATE_DIR, LU_VERIFY_EVIDENCE_DIR.
 State: a lu-verify-<run-id> directory directly under ${TMPDIR:-/tmp}.
@@ -68,10 +70,18 @@ if curl -fsS --max-time 1 "http://${HOST}:${PORT}/" >/dev/null 2>&1; then
   fi
 fi
 
+# Locked Astro only: the binary `npm ci` installed from site/package-lock.json.
+# No npx fallback, so a missing executable fails here before any registry access.
+ASTRO="$ROOT/site/node_modules/.bin/astro"
+
 ensure_site_deps() {
   if [[ ! -d "$ROOT/site/node_modules" ]]; then
-    echo "launch: npm ci in site/"
+    echo "launch: npm ci in site/ (committed lock)"
     (cd "$ROOT/site" && npm ci)
+  fi
+  if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
+    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (npx fallback refused)" >&2
+    exit 1
   fi
 }
 
@@ -91,7 +101,7 @@ start_preview() {
   (
     cd "$ROOT/site"
     # Own process group so cleanup can tear down children without pkill-by-name.
-    setsid npx astro preview --host "$HOST" --port "$PORT" >"$LOG_FILE" 2>&1 &
+    setsid "$ASTRO" preview --host "$HOST" --port "$PORT" >"$LOG_FILE" 2>&1 &
     echo $! >"$PID_FILE"
   )
 }
