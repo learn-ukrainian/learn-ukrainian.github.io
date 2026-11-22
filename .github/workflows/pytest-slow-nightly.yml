@@ -75,9 +75,13 @@ jobs:
           # selection never needed. The hash-pinned lu-machinery release comes from the
           # wheelhouse, as .github/actions/python-ci-env installs it (machinery
           # docs/release.md, Consumers); uv.lock's hashes decide which bytes install.
-          uv sync --locked --python "$(cat .python-version)" \
-            --no-install-package torchvision --no-install-package open-clip-torch \
-            --no-install-package lu-machinery
+          sync=(uv sync --locked --python "$(cat .python-version)"
+            --no-install-package torchvision --no-install-package open-clip-torch
+            --no-install-package lu-machinery)
+          # Install the locked build tools first. This job does not restore a uv cache.
+          "${sync[@]}" --no-build \
+            --no-install-package ipa-uk --no-install-package learn-ukrainian-v4-runtime
+          "${sync[@]}" --no-build-isolation
           uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
             --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 

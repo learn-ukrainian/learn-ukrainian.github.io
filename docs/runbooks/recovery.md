@@ -50,9 +50,12 @@ these examples in a dispatch worktree to repair the primary installation.
   git switch main
   git pull --ff-only
 
-  # The CPython in .python-version and every package uv.lock pins, each
-  # checked against its locked SHA-256 (CONTRIBUTING.md, Installation, step 2).
-  uv sync --locked
+  # Install the locked wheels before building ipa-uk and
+  # learn-ukrainian-v4-runtime with the locked setuptools and wheel.
+  uv sync --locked --no-build \
+    --no-install-package ipa-uk --no-install-package learn-ukrainian-v4-runtime
+  uv cache clean ipa-uk learn-ukrainian-v4-runtime
+  uv sync --locked --no-build-isolation
 )
 ```
 
@@ -60,9 +63,9 @@ Do not substitute another Python version for the one in `.python-version`.
 
 **`pip install -e .` does NOT work on this tree — do not use it.** `pyproject.toml`
 declares no `[build-system]`, so the repository is not an installable package: uv
-treats it as a virtual project and installs only its dependencies. `uv sync --locked`
-is the install. Every module production `scripts/` imports unconditionally is a
-declared dependency (#6830 closed the gap that left `pytest --collect-only` unable to
+treats it as a virtual project and installs only its dependencies. Every module that
+production `scripts/` imports unconditionally is a declared dependency
+(#6830 closed the gap that left `pytest --collect-only` unable to
 collect 17 test modules after a from-scratch install).
 
 ### The `.pth` story
