@@ -1,0 +1,127 @@
+# Fleet taxonomy registry — STABLE membership (areas -> canonical ID, aliases, epics).
+# Generated initially from scripts/config/issue_streams.yaml (provenance preserved).
+# See #5281 / #5279 / operator rulings on area definitions.
+#
+# Rules (binding):
+# - Every OPEN issue must be a member of EXACTLY ONE area/epic.
+# - New issues link their area epic at creation time.
+# - Epics themselves (and their child drive boards) are exempt from membership.
+#
+# Operator rulings applied:
+# - corpus (#4706) -> harness area (datasets mission)
+# - devops (#5703) -> devops area (separate slot — operator #5703 order)
+
+schema_version: 1
+areas:
+  infra:
+    id: infra
+    aliases:
+      - infra-harness
+    epics:
+      - number: 6943  # successor to closed #4707
+        name: "Infra & fleet reliability (hooks, dispatch, routing)"
+  epics:
+    id: epics
+    aliases:
+      - epics
+    epics:
+      - number: 10453
+        name: "Epic coordination"
+  devops:
+    id: devops
+    aliases:
+      - devops
+    epics:
+      - number: 5703
+        name: "DevOps automation, CI, release & launcher reliability"
+  monitor:
+    id: monitor
+    aliases:
+      - monitor
+      - ops-api
+      - operator-api
+    epics:
+      - number: 7919  # successor to closed #7177
+        name: "Ops API + UI — operator API & dashboards"
+  harness:
+    id: harness
+    aliases:
+      - corpus-channels
+    epics:
+      - number: 4706  # operator ruling: corpus->harness, datasets mission
+        name: "Corpus channels — acquisition & ingestion"
+  open-model-data:
+    id: open-model-data
+    aliases:
+      - open-model-data
+    epics:
+      - number: 6321
+        name: "Ukrainian open-model data infrastructure"
+  practice:
+    id: practice
+    aliases:
+      - practice
+    epics:
+      - number: 11151
+        name: "Practice Hub, ZNO and activities"
+  atlas:
+    id: atlas
+    aliases:
+      - atlas-practice
+      - atlas-intake
+    epics:
+      - number: 4387  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 4700  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 5331  # umbrella + UX-quality-wave + #5331 fill_local divergence
+        name: "Word Atlas + Practice Hub product"
+      - number: 4220  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+      - number: 4378  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+      - number: 5224  # intake epic + entry-model DB epic
+        name: "Word Atlas full-corpus intake"
+      - number: 4920  # backend phase duplicate of #4387
+        name: "Word Atlas backend phase & serving at scale"
+  core:
+    id: core
+    aliases:
+      - core-quality
+      - curriculum-upgrade
+    epics:
+      - number: 4274
+        name: "Core-track deterministic quality"
+      - number: 7994
+        name: "Curriculum upgrade machinery — V7 upgrade mode, lesson gates, MDX assembler"
+  seminars:
+    id: seminars
+    aliases:
+      - seminars-folk
+      - seminars-bio
+      - seminars-cross
+    epics:
+      - number: 2836
+        name: "FOLK track re-research + rebuild"
+      - number: 4431
+        name: "BIO track readiness + builds"
+      - number: 4215
+        name: "BIO track readiness + builds"
+      - number: 3120
+        name: "Cross-seminar gates (reading links, self-convergence)"
+      - number: 3079
+        name: "Cross-seminar gates (reading links, self-convergence)"
+  hramatka:
+    id: hramatka
+    aliases:
+      - hramatka
+    epics:
+      - number: 4542
+        name: "Hramatka teacher lesson service (user-gated)"
+  kube-dojo:
+    id: kube-dojo
+    aliases:
+      - kube-dojo
+    epics:
+      - number: 12556
+        name: "kube-dojo lane (coordinating stream for kube-dojo/kube-dojo.github.io#2272)"

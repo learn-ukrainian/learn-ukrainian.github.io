@@ -4368,6 +4368,16 @@ async def handle_dict_search(args: dict, collection: str, label: str):
         return [TextContent(type="text", text=prose)], envelope
 
     hits = await asyncio.to_thread(func, query, limit)
+    if collection == "puls_cefr":
+        # The shared dictionary helper falls through to a prefix LIKE. A CEFR
+        # level counts only when the folded headword is the folded query
+        # (будь must not report будь-який). Any other row is not-found.
+        folded_query = sdb._fold_dict_key(query)
+        hits = [
+            hit
+            for hit in hits
+            if sdb._fold_dict_key(str(hit.get("word") or "")) == folded_query
+        ]
 
     if not hits:
         prose = f'No results in {label} for: "{query}"'
