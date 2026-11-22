@@ -39,17 +39,28 @@ proof. The unused `v6-skeleton.md` and `v6-activities.md` copies were removed in
 documentation links; build-owned templates remain under `scripts/build/phases/`.
 The V6 per-dimension review prompts (`scripts/build/phases/v6-review/`) were removed in REMOVE-UNNEEDED-1107; see git history.
 The retired v3/v4 template archive was removed in REMOVE-UNNEEDED-1107; see git history.
+Unreferenced legacy prompts (the `gemini-review-*` and `phase-gemini-review-*` sets, `phase-fix-content.md`, `phase-fix-activities.md`, `plan-enrichment.md` and others) were removed in the cleanup that produced the table below; see git history.
 
 ## Files
 
-| Template | Phase | Purpose |
-|----------|-------|---------|
-| `phase-0-research-seminar.md` | 0 | Deep research for seminar tracks |
-| `phase-2-content.md` | 2 | Write lesson prose (1.5x overshoot) |
-| `phase-3-activities.md` | 3 | Generate activities + vocabulary YAML |
-| `phase-5-review.md` | 5 | Critical 14-dimension deep review |
-| `phase-fix.md` | Fix | Apply review fix plan to reach 9.0+ |
-| `help-response.md` | — | Template for Claude's NEEDS_HELP responses |
+Every file here must be loaded or linked by something live; a file nothing
+references is deleted (census at `6a75676ebe7`, PR body of the cleanup). The
+"Used by" column names that reference.
+
+| Template | Used by |
+|----------|---------|
+| `_shared-quality-dimensions.md`, `_shared-quality-dimensions-seminar.md`, `_shared-preflight.md`, `_shared-activity-rules.md`, `_shared-self-audit.md` | `scripts/pipeline/core.py` placeholder injection (`_read_phase_file`) |
+| `_shared-content-rules-beginner.md`, `_shared-content-rules-core.md` | `scripts/pipeline/core.py`, name built as `_shared-content-rules-{tier}.md` |
+| `review-output-format.md` | `scripts/pipeline/core.py` (`D1_OUTPUT_FORMAT`) |
+| `beginner-full-rag.md`, `beginner-checkpoint.md`, `core-content.md`, `core-checkpoint.md` | `scripts/pipeline/core.py` `_get_content_template` |
+| `beginner-activities.md`, `beginner-checkpoint-activities.md`, `core-activities.md`, `core-checkpoint-activities.md` | `scripts/pipeline/core.py` `_get_activities_template`, which currently has no caller beyond its re-export in `scripts/pipeline_lib.py` |
+| `content.md`, `activities.md`, `fix.md`, `fix-content.md`, `fix-activities.md`, `phase-5-review.md`, `research-seminar-v0.md`, `research-core.md` | `scripts/batch/batch_gemini_config.py` template tables |
+| `phase-fix.md`, `phase-5-review.md` | `scripts/batch/batch_fix_review.py` |
+| `direct-enrich.md` | `scripts/build/build_module_direct.py` |
+| `phase-2-content.md` | usage example in `scripts/generate_mdx/fill_template.py` |
+| `phase-A-seminar.md`, `phase-A-meta-only.md` | linked from `docs/best-practices/context-engineering.md` |
+| `phase-D1-structured-review.md`, `review-structured.md` | named as reviewer-rubric files to edit in `docs/folk-epic/seminar-quality-gate-design.md` |
+| `v6-write.md`, `v6-review.md` | retirement pointers for documentation links (`docs/SCRIPTS.md`) |
 
 ## Delimiter Convention
 
@@ -58,7 +69,6 @@ All phase templates use `===TAG_START===` / `===TAG_END===` delimiters to wrap s
 | Phase | Tags | Content Type |
 |-------|------|-------------|
 | 0 (Research) | `RESEARCH` | Markdown |
-| 0.5 (Plan Enrichment) | `ENRICHMENT` | YAML |
 | 1 (Meta) | `META_OUTLINE` | YAML |
 | 2 (Content) | `CONTENT` | Markdown |
 | 3 (Activities) | `ACTIVITIES`, `VOCABULARY` | YAML |
