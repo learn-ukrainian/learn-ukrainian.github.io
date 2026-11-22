@@ -1271,7 +1271,7 @@ def _pending_articles(
 
 
 @contextlib.contextmanager
-def _article_transaction(conn: sqlite3.Connection) -> Iterator[None]:
+def _article_transaction(conn) -> Iterator[None]:
     """Read the current revision and write the article and pairs atomically."""
     # The savepoint also scopes writes for connections using SQLite autocommit.
     with conn:
@@ -2129,7 +2129,11 @@ def main(argv: list[str] | None = None) -> int:
             db.parent.mkdir(parents=True, exist_ok=True)
             stats = IngestStats(name)
             stats_list.append(stats)
-            with contextlib.closing(sqlite3.connect(db)) as conn:
+            # Keep both database destinations explicit for the writable-open audit.
+            connection = (
+                sqlite3.connect(args.db_movne) if name == SourceChoice.MOVNE else sqlite3.connect(args.db_movaua)
+            )
+            with contextlib.closing(connection) as conn:
                 if args.re_extract:
                     stats.pairs_extracted = reextract(conn)
                 else:
