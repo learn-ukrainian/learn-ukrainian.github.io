@@ -1822,15 +1822,17 @@ _CORE_A1_NAME = re.compile(r"a1(?:-[a-z0-9-]+)?")
 _MODULE_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
-def _core_a1_refusal(level: str, slug: str) -> str | None:
-    """Why V7 must not build ``level``/``slug``, or None when it may (#13295).
+def core_a1_refusal(level: str, slug: str, *, tool: str = "v7_build") -> str | None:
+    """Why a V7 tool must not build or review ``level``/``slug``, or None when it may (#13295).
 
     A V7 build of ``a1`` or of an alias such as ``a1-v1`` hands its writer and
     reviewers the legacy ``plans/a1`` plan and the compiled ``wiki/pedagogy/a1``
     articles; an ``a1-v1`` build also writes into the preserved baseline, and
     ``--upgrade`` feeds the a1-v1 module bytes to the writer. R-10 and R-11 of
     ``docs/epics/fresh-build-requirements.md`` exclude all of these, so every
-    mode is refused, dry runs included. V7 joins level and slug into plan, wiki
+    mode is refused, dry runs included. The standalone V7 reviewers (``v7_review``,
+    ``run_llm_qg_parity``) load the same plan and wiki packet, so they call this too;
+    ``tool`` names the caller in the message. V7 joins level and slug into plan, wiki
     and output paths, so only plain kebab-case names are accepted: otherwise
     ``folk/../a1`` or a slug of ``../a1/<slug>`` would reach the same A1 inputs
     under another name. When the manifest cannot be read the alias test is
@@ -1843,7 +1845,7 @@ def _core_a1_refusal(level: str, slug: str) -> str | None:
     for name, value in (("level", level), ("slug", slug)):
         if not _MODULE_NAME.fullmatch(value):
             return (
-                f"v7_build: refused — {name} {value!r} is not a lowercase kebab-case name "
+                f"{tool}: refused — {name} {value!r} is not a lowercase kebab-case name "
                 "([a-z0-9] words joined by single hyphens); V7 builds paths from it (#13295)."
             )
     resolved = level
@@ -1855,9 +1857,9 @@ def _core_a1_refusal(level: str, slug: str) -> str | None:
     if not _CORE_A1_NAME.fullmatch(resolved):
         return None
     return (
-        f"v7_build: refused — V7 does not build core A1 (level {requested!r}). Its writer and reviewers "
-        "would read the legacy plans/a1 plans, the compiled wiki/pedagogy/a1 articles and the preserved "
-        "a1-v1 edition, which R-10 and R-11 exclude (#13295). Build A1 lessons with the fresh engine: "
+        f"{tool}: refused — V7 does not build or review core A1 (level {requested!r}). Its writer and "
+        "reviewers would read the legacy plans/a1 plans, the compiled wiki/pedagogy/a1 articles and the "
+        "preserved a1-v1 edition, which R-10 and R-11 exclude (#13295). Build A1 lessons with the fresh engine: "
         ".venv/bin/python -m scripts.build.fresh.cli (docs/epics/fresh-build-build-program.md)."
     )
 
@@ -1865,7 +1867,7 @@ def _core_a1_refusal(level: str, slug: str) -> str | None:
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
-    refusal = _core_a1_refusal(args.level, args.slug)
+    refusal = core_a1_refusal(args.level, args.slug)
     if refusal is not None:
         print(refusal, file=sys.stderr)
         return 2

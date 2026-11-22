@@ -14,8 +14,8 @@ from scripts.curriculum.quality.thresholds import QG_DIMS
 def _lesson(path: Path, *, writer: str = "gemini-tools") -> Path:
     path.write_text(
         f"""---
-level: A1
-slug: my-morning
+level: A2
+slug: aspect-concept
 writer: {writer}
 ---
 
@@ -137,8 +137,8 @@ def test_v7_review_refuses_self_review(
 
     exit_code = v7_review.main(
         [
-            "a1",
-            "my-morning",
+            "a2",
+            "aspect-concept",
             "--content",
             str(content),
             "--reviewer",
@@ -161,8 +161,8 @@ def test_v7_review_success_emits_all_dim_events(
 
     exit_code = v7_review.main(
         [
-            "a1",
-            "my-morning",
+            "a2",
+            "aspect-concept",
             "--content",
             str(content),
             "--reviewer",
@@ -195,8 +195,8 @@ def test_v7_review_telemetry_out_writes_file_not_stdout(
 
     exit_code = v7_review.main(
         [
-            "a1",
-            "my-morning",
+            "a2",
+            "aspect-concept",
             "--content",
             str(content),
             "--reviewer",
@@ -232,8 +232,8 @@ def test_v7_review_reviewer_timeout_emits_writer_timeout(
 
     exit_code = v7_review.main(
         [
-            "a1",
-            "my-morning",
+            "a2",
+            "aspect-concept",
             "--content",
             str(content),
             "--reviewer",

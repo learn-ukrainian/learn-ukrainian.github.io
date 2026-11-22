@@ -2626,8 +2626,9 @@ def _ukrainian_wiki_exclusion_sql(alias: str) -> tuple[str, list[str]]:
     """SQL ``AND`` clauses and parameters dropping excluded ukrainian_wiki rows.
 
     Track comparison ignores ASCII case and surrounding ASCII whitespace. Paths compare with
-    backslashes folded to slashes and leading ``./`` or ``/`` removed; ``LIKE`` is
-    ASCII case-insensitive, and ``%``, ``_`` and ``\\`` in a prefix are escaped.
+    backslashes folded to slashes; a prefix matches as written or after one literal ``./``
+    or ``/``, so a real directory such as ``.wiki`` keeps its dot. ``LIKE`` is ASCII
+    case-insensitive, and ``%``, ``_`` and ``\\`` in a prefix are escaped.
     """
     clauses: list[str] = []
     params: list[str] = []
@@ -2639,11 +2640,11 @@ def _ukrainian_wiki_exclusion_sql(alias: str) -> tuple[str, list[str]]:
         params.extend(track.strip().lower() for track in _EXCLUDED_UKRAINIAN_WIKI_TRACKS)
     for prefix in _EXCLUDED_UKRAINIAN_WIKI_PATH_PREFIXES:
         escaped = prefix.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-        clauses.append(
-            f"AND ltrim(replace(coalesce({alias}.article_path, ''), char(92), '/'), './') "
-            "NOT LIKE ? ESCAPE char(92)"
-        )
-        params.append(escaped + "%")
+        for lead in ("", "./", "/"):
+            clauses.append(
+                f"AND replace(coalesce({alias}.article_path, ''), char(92), '/') NOT LIKE ? ESCAPE char(92)"
+            )
+            params.append(lead + escaped + "%")
     return "\n".join(clauses), params
 
 
