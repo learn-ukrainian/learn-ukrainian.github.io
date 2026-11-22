@@ -24,10 +24,11 @@ from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_verify as verifier
 
-W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
-# Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.
-# REGISTRY_SHA256 reflects 4c3b1162a2 (#11915), which appended holding sense ws_t7vevy99kta5 (ie_0695)
-# and added 125 local dictionary meaning assertions (3151 -> 3276 locators) to the pilot build.
+# 4c3b1162a2 (#11915) supplies the committed W1a manifest and post-meanings registry
+# (appended holding sense ws_t7vevy99kta5 / ie_0695 and 125 local dictionary meaning
+# assertions: 3151 -> 3276 locators).
+W1A_SHA = "4c3b1162a21cd107485f932bca5191a1d6a0a8ca"
+# Canonical JSON digests of the two committed W1a inputs at W1A_SHA, independent of candidates and Git availability.
 MANIFEST_SHA256 = "ffe7ff160ad9b08a97e0bd971d0577be654825b90cc40c2fc37aca7ae70a0b8b"
 REGISTRY_SHA256 = "a3e870b5189fcdcf5f648bd0f45f47618c8ad95843cac4aca1c06593b0f5822a"
 # All frozen identities remain; twelve common-word CEFR assertions are withheld

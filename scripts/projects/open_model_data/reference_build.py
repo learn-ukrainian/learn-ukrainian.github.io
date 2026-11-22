@@ -59,6 +59,10 @@ VIEW_DESTINATIONS = {
     "heldout_evaluation": "heldout_evaluation",
 }
 FORBIDDEN_GOLD_FIELDS = frozenset({"target", "targets", "reference", "references", "edit", "edits"})
+# Reviewed v0.1.1 -> live evaluator transition: 29e5d7865a (#11830) bumped SCORER_ID
+# to v2; 0134f30b76 (#12894) migrated imports to lu_machinery. Unreviewed revisions fail closed.
+REVIEWED_SCORER_ID = "ua_eval_exact_token_edits.v2"
+REVIEWED_EVALUATOR_SHA256 = "6f3043b17b9e0e96361aed63e3565285e32b0e47921adcf0cec5ed336f9b3a7e"
 
 
 class ReferenceBuildError(ValueError):
@@ -880,6 +884,11 @@ def reproduce_baseline(output_dir: Path, config: dict[str, Any]) -> dict[str, An
         "frozen v0.1.1 evaluate_model.py snapshot drifted from source_snapshots.json",
     )
     live_eval_sha = sha256_file(Path(evaluate_model.__file__))
+    require(
+        evaluate_model.SCORER_ID == REVIEWED_SCORER_ID
+        and live_eval_sha == REVIEWED_EVALUATOR_SHA256,
+        "live evaluate_model scorer identity drifted from reviewed 0134f30b76 revision",
+    )
 
     def _verify_reproduced_report(reproduced: dict[str, Any], committed: dict[str, Any], label: str) -> None:
         committed_scorer = committed.get("scorer")
@@ -894,8 +903,8 @@ def reproduce_baseline(output_dir: Path, config: dict[str, Any]) -> dict[str, An
             **committed,
             "scorer": {
                 **committed_scorer,
-                "id": evaluate_model.SCORER_ID,
-                "implementation_sha256": live_eval_sha,
+                "id": REVIEWED_SCORER_ID,
+                "implementation_sha256": REVIEWED_EVALUATOR_SHA256,
             },
         }
         require(reproduced == expected, f"{label} score report did not reproduce")
