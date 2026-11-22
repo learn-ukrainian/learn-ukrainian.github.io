@@ -4314,8 +4314,21 @@ def query_cefr_levels(
     *,
     db_path: str | Path | None = None,
 ) -> dict[str, list[dict]]:
-    """Return the best PULS CEFR hit for each requested word in batched SQL."""
-    return _batch_dict_lookup("puls_cefr", words, limit=1, db_path=db_path)
+    """Return a PULS CEFR hit only when the folded headword is the folded word.
+
+    ``_batch_dict_lookup`` still falls through to a prefix ``LIKE``. A level
+    counts only when :func:`_fold_dict_key` of the headword equals
+    :func:`_fold_dict_key` of the requested word — the same fold the MCP
+    ``query_cefr_level`` filter uses. ``будь`` must not report ``будь-який``.
+    Any other row is the existing empty list. Other dictionaries keep the
+    prefix fallback.
+    """
+    found = _batch_dict_lookup("puls_cefr", words, limit=1, db_path=db_path)
+    exact: dict[str, list[dict]] = {}
+    for word, hits in found.items():
+        folded = _fold_dict_key(word)
+        exact[word] = [hit for hit in hits if _fold_dict_key(str(hit.get("word") or "")) == folded]
+    return exact
 
 
 def search_style_guide(

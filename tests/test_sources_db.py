@@ -675,6 +675,62 @@ class TestSourcesDb:
         assert sdb.source_count() == 0
 
 
+def test_query_cefr_levels_returns_level_only_for_exact_folded_headword(tmp_path: Path) -> None:
+    """A prefix PULS headword is not that word's CEFR level.
+
+    ``будь`` has no row, so the batch prefix fallback would return
+    ``будь-який`` (B1). ``сестра`` is stored with a combining acute on the
+    last letter: SQL exact match misses it and the prefix row is a different
+    string, so only ``_fold_dict_key`` keeps A1. A missing word stays the
+    empty list.
+    """
+    db_path = tmp_path / "puls-cefr.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        """
+        CREATE TABLE puls_cefr (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            guideword TEXT DEFAULT '',
+            level TEXT DEFAULT '',
+            pos TEXT DEFAULT '',
+            type TEXT DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO puls_cefr (word, level, text) VALUES (?, ?, ?)",
+        [
+            ("будь-який", "B1", "будь-який"),
+            ("сестра\u0301", "A1", "сестра"),
+        ],
+    )
+    conn.commit()
+    conn.close()
+
+    levels = sources_db.query_cefr_levels(
+        ["будь", "сестра", "будь-який", "відсутнє"],
+        db_path=db_path,
+    )
+
+    assert levels["будь"] == []
+    assert levels["відсутнє"] == []
+    sister = levels["сестра"][0]
+    assert sister["level"] == "A1"
+    assert sister["word"] == "сестра\u0301"
+    assert levels["будь-який"][0]["level"] == "B1"
+    assert levels["будь-який"][0]["word"] == "будь-який"
+    assert sources_db.query_cefr_levels(["", "  "], db_path=db_path) == {}
+    duplicate = sources_db.query_cefr_levels(["сестра", "сестра"], db_path=db_path)
+    assert list(duplicate) == ["сестра"]
+    assert duplicate["сестра"][0]["level"] == "A1"
+    assert sources_db.query_cefr_levels(["сестра"], db_path=tmp_path / "absent.db") == {
+        "сестра": [],
+    }
+
+
 @pytest.fixture()
 def external_search_db(tmp_path, monkeypatch):
     import wiki.sources_db as sdb
