@@ -98,9 +98,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--reviewer", default="codex-tools", help="Reviewer backend (default codex-tools).")
     ap.add_argument("--out", default=None, help="Module dir override; default curriculum/l2-uk-en/<level>/<slug>.")
     args = ap.parse_args(argv)
-    refusal = v7_build.core_a1_refusal(args.level, args.slug, tool="run_llm_qg_parity") or (
-        v7_build.retired_a1_path_refusal("--out", args.out, tool="run_llm_qg_parity")
-    )
+    refusal = v7_build.core_a1_refusal(args.level, args.slug, tool="run_llm_qg_parity")
     if refusal is not None:
         print(refusal, file=sys.stderr)
         return 2
