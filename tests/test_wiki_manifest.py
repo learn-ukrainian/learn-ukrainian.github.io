@@ -14,8 +14,6 @@ from wiki import config as wiki_config
 
 pytestmark = pytest.mark.reads_content
 
-ROOT = Path(__file__).resolve().parents[1]
-
 
 def test_normalize_external_role_rejects_substring_only_youtube_match() -> None:
     """py/incomplete-url-substring-sanitization regression: use host check, not substring."""
@@ -31,25 +29,52 @@ def test_normalize_external_role_rejects_substring_only_youtube_match() -> None:
     assert _normalize_external_role(None, url="not a url") == "article"
 
 
-def test_my_morning_manifest_extracts_required_obligations() -> None:
-    manifest = extract_manifest(ROOT / "wiki/pedagogy/a1/my-morning.md")
+def test_manifest_extracts_vocab_errors_sequence_and_phonetics(tmp_path: Path) -> None:
+    """One fixture covers the pedagogy sections retired A1 articles used to supply.
+
+    Defect class: extract_manifest drops vocabulary, an L2 row, a
+    ``Послідовність введення`` step, or a written/spoken phonetic pair.
+    """
+    wiki = tmp_path / "fixture.md"
+    wiki.write_text(
+        """# Fixture
+
+## Послідовність введення
+
+Крок 1: Перша дія.
+Треба показати форму.
+
+## Типові помилки L2
+
+| ❌ Помилково | ✅ Правильно | Чому |
+|---|---|---|
+| Я прокидаєшся. | Я прокидаюся. | Особу треба узгодити. |
+| Вимова: -шся [с':а] | Вимова: [с':а] | Асиміляція. |
+| Вимова: -ться [ц':а] | Вимова: [ц':а] | Асиміляція. |
+
+## Словниковий мінімум
+
+- прокидатися (★★★) — базова ранкова дія
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
 
     assert manifest["external_resources"] == []
-    assert len(manifest["wiki_vocabulary_minimum"]) == 21
-    assert manifest["wiki_vocabulary_minimum"][0] == {
-        "lemma": "прокидатися",
-        "frequency_tier": "high",
-        "gloss": "базова ранкова дія, з якої починається день",
-    }
-    assert len(manifest["l2_errors"]) == 6
-    assert len(manifest["sequence_steps"]) == 5
-    incorrect = [item["incorrect"] for item in manifest["l2_errors"]]
-    assert "Я прокидаєшся. / Він прокидаюся." in incorrect
-    assert "Вимова: [прокидайешся]" in incorrect
-    assert "Вимова: [одягайет'с'а]" in incorrect
-    assert "Я мию себе." in incorrect
-    assert "Я дивюся. / Я дивюсь." in incorrect
-    assert "Я користуювася." in incorrect
+    assert manifest["wiki_vocabulary_minimum"] == [
+        {
+            "lemma": "прокидатися",
+            "frequency_tier": "high",
+            "gloss": "базова ранкова дія",
+        }
+    ]
+    assert [item["incorrect"] for item in manifest["l2_errors"]] == [
+        "Я прокидаєшся.",
+        "Вимова: -шся [с':а]",
+        "Вимова: -ться [ц':а]",
+    ]
+    assert manifest["sequence_steps"][0]["heading"] == "Крок 1: Перша дія."
     assert any(item["written"] == "-шся" and item["spoken"] == "[с':а]" for item in manifest["phonetic_rules"])
     assert any(item["written"] == "-ться" and item["spoken"] == "[ц':а]" for item in manifest["phonetic_rules"])
 
@@ -98,26 +123,6 @@ def test_manifest_handles_mixed_or_missing_vocabulary_stars(tmp_path: Path) -> N
         {"lemma": "чай", "frequency_tier": "unknown", "gloss": "tea"},
         {"lemma": "сік", "frequency_tier": "unknown", "gloss": "juice"},
     ]
-
-
-def test_manifest_handles_a1_heading_variants() -> None:
-    pages = [
-        "around-the-city",
-        "at-the-cafe",
-        "checkpoint-actions",
-        "checkpoint-first-contact",
-    ]
-    counts = {}
-    for slug in pages:
-        manifest = extract_manifest(ROOT / f"wiki/pedagogy/a1/{slug}.md")
-        counts[slug] = (len(manifest["l2_errors"]), len(manifest["sequence_steps"]))
-
-    assert counts == {
-        "around-the-city": (6, 5),
-        "at-the-cafe": (6, 4),
-        "checkpoint-actions": (6, 6),
-        "checkpoint-first-contact": (7, 6),
-    }
 
 
 def test_manifest_accepts_sequence_heading_variants(tmp_path: Path) -> None:
@@ -225,8 +230,8 @@ def test_repository_relative_wiki_path_prefers_staged_wiki_root(
     is still under that root; the stored path must not keep the stage prefix.
     """
     project_root = Path(wiki_config.PROJECT_ROOT).resolve()
-    today = "wiki/pedagogy/a1/sounds-letters-and-hello.md"
-    article_suffix = Path("pedagogy/a1/sounds-letters-and-hello.md")
+    today = "wiki/grammar/a2/aspect-concept.md"
+    article_suffix = Path("grammar/a2/aspect-concept.md")
 
     assert _repository_relative_wiki_path(project_root / today) == today
     checkout_script = project_root / "scripts/build/phases/wiki_manifest.py"

@@ -17,12 +17,12 @@ from wiki import sources_db as wiki_sources_db
 
 pytestmark = pytest.mark.reads_content
 
-# Committed module inputs for the A1 letter ceiling check. A sparse checkout
-# omits these trees; the bytes still live in HEAD.
-_A1_LETTER_PLAN = "curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml"
-_A1_LETTER_WIKI = "wiki/pedagogy/a1/sounds-letters-and-hello.md"
-_A1_LETTER_SOURCES = "wiki/pedagogy/a1/sounds-letters-and-hello.sources.yaml"
-_A1_CURRICULUM = "curriculum/l2-uk-en/curriculum.yaml"
+# Committed A2 inputs for the ceiling check. Core A1 wiki articles are retired.
+# A sparse checkout omits these trees; the bytes still live in HEAD.
+_ASPECT_PLAN = "curriculum/l2-uk-en/plans/a2/aspect-concept.yaml"
+_ASPECT_WIKI = "wiki/grammar/a2/aspect-concept.md"
+_ASPECT_SOURCES = "wiki/grammar/a2/aspect-concept.sources.yaml"
+_CURRICULUM = "curriculum/l2-uk-en/curriculum.yaml"
 def _checkout_text(rel: str) -> str:
     """Working-tree file when this checkout has it, otherwise the HEAD blob."""
     path = Path(rel)
@@ -70,7 +70,7 @@ def _stage_learner_state_inputs(root: Path, plan_text: str) -> Path:
     plan = yaml.safe_load(plan_text)
     track = str(plan["level"]).strip().lower()
     module_num = int(plan["sequence"])
-    curriculum_path = _stage_checkout_file(root, _A1_CURRICULUM)
+    curriculum_path = _stage_checkout_file(root, _CURRICULUM)
     curriculum_root = root / "curriculum" / "l2-uk-en"
     plan_track = base_level(track, manifest=curriculum_path)
     for slug in _learner_state_plan_slugs(curriculum_path.read_text(encoding="utf-8"), track, module_num):
@@ -104,7 +104,7 @@ def _pin_base_level_manifest(monkeypatch: pytest.MonkeyPatch, manifest: Path) ->
         monkeypatch.setattr(fn, "__kwdefaults__", kwdefaults)
 
 
-def _pin_a1_letter_prompt_inputs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def _pin_aspect_prompt_inputs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Render the committed module with no gitignored corpus database.
 
     ``build_knowledge_packet`` reads ``data/vesum.db`` and ``data/sources.db``
@@ -116,9 +116,9 @@ def _pin_a1_letter_prompt_inputs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     unread here. #9343 is the full-corpus textbook-excerpt overrun; #9344 is
     the corpus-present heritage fallback that accepts mixed-case surfaces.
     """
-    plan_path = _stage_checkout_file(tmp_path, _A1_LETTER_PLAN)
-    article_path = _stage_checkout_file(tmp_path, _A1_LETTER_WIKI)
-    _stage_checkout_file(tmp_path, _A1_LETTER_SOURCES)
+    plan_path = _stage_checkout_file(tmp_path, _ASPECT_PLAN)
+    article_path = _stage_checkout_file(tmp_path, _ASPECT_WIKI)
+    _stage_checkout_file(tmp_path, _ASPECT_SOURCES)
     curriculum_root = _stage_learner_state_inputs(tmp_path, plan_path.read_text(encoding="utf-8"))
     absent_db = tmp_path / "no-corpus.db"
 
@@ -133,29 +133,29 @@ def _pin_a1_letter_prompt_inputs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     _pin_base_level_manifest(monkeypatch, curriculum_root / "curriculum.yaml")
 
 
-def _a1_letter_prompt_size() -> int:
-    prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+def _aspect_prompt_size() -> int:
+    prompt = render_fixture_writer_prompt("a2", "aspect-concept")
     return len(prompt.encode("utf-8"))
 
 
-def test_a1_letter_module_writer_prompt_stays_under_ceiling(
+def test_a2_aspect_writer_prompt_stays_under_ceiling(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    _pin_aspect_prompt_inputs(monkeypatch, tmp_path)
 
-    assert _a1_letter_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
+    assert _aspect_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
 
 
-def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling(
+def test_a2_aspect_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
     """Fixture corpus only: no excerpt is traded for the prompt's editorial history."""
     from tests.test_textbook_grounding import _seed_textbook_db
 
-    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
-    plan_path = linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello")
+    _pin_aspect_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = linear_pipeline.plan_path_for("a2", "aspect-concept")
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
     references = [
         {"title": f"Караман Grade 10, p.{page}", "notes": f"Fixture grounding {page}."}
@@ -178,7 +178,7 @@ def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling
     _seed_textbook_db(db_path, rows)
     monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
 
-    prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+    prompt = render_fixture_writer_prompt("a2", "aspect-concept")
 
     assert prompt.count("\n## Plan References\n") == 1
     for page, (reference, row) in enumerate(zip(references, rows, strict=True), start=1):
@@ -192,9 +192,9 @@ def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling
     print(f"Fixture corpus: 6/6 whole distinct excerpts; {size}/{WRITER_PROMPT_CEILING_BYTES} bytes.")
 
 
-def _render_pinned_a1_letter_prompt(monkeypatch: pytest.MonkeyPatch, root: Path) -> str:
-    _pin_a1_letter_prompt_inputs(monkeypatch, root)
-    return render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+def _render_pinned_aspect_prompt(monkeypatch: pytest.MonkeyPatch, root: Path) -> str:
+    _pin_aspect_prompt_inputs(monkeypatch, root)
+    return render_fixture_writer_prompt("a2", "aspect-concept")
 
 
 def _outside(path: Path, root: Path) -> bool:
@@ -204,7 +204,7 @@ def _outside(path: Path, root: Path) -> bool:
     return resolved != root_resolved and root_resolved not in resolved.parents
 
 
-def test_a1_letter_prompt_bytes_ignore_staged_root(
+def test_a2_aspect_prompt_bytes_ignore_staged_root(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -228,9 +228,9 @@ def test_a1_letter_prompt_bytes_ignore_staged_root(
     )
     inside_shallow = checkout / "tmp" / "impl-9335-r4-shallow"
     inside_deep = checkout / "tmp" / "impl-9335-r4-deep" / "nested" / "stage"
-    checkout_article = checkout / _A1_LETTER_WIKI
-    expected_wiki_path = '"wiki_path": "wiki/pedagogy/a1/sounds-letters-and-hello.md"'
-    today = "wiki/pedagogy/a1/sounds-letters-and-hello.md"
+    checkout_article = checkout / _ASPECT_WIKI
+    expected_wiki_path = '"wiki_path": "wiki/grammar/a2/aspect-concept.md"'
+    today = "wiki/grammar/a2/aspect-concept.md"
 
     assert _outside(tmp_path, real_root)
     for path in (checkout, outside_short, outside_long, inside_shallow, inside_deep, checkout_article):
@@ -253,20 +253,20 @@ def test_a1_letter_prompt_bytes_ignore_staged_root(
         prompts.append(prompt)
 
     for root in (outside_short, outside_long):
-        _accept(_render_pinned_a1_letter_prompt(monkeypatch, root))
+        _accept(_render_pinned_aspect_prompt(monkeypatch, root))
 
     monkeypatch.setattr(wiki_config, "PROJECT_ROOT", checkout)
     for root in (inside_shallow, inside_deep):
         assert Path(wiki_config.PROJECT_ROOT).resolve() in root.resolve().parents
-        _accept(_render_pinned_a1_letter_prompt(monkeypatch, root))
+        _accept(_render_pinned_aspect_prompt(monkeypatch, root))
 
-    _stage_checkout_file(checkout, _A1_LETTER_WIKI)
-    _stage_checkout_file(checkout, _A1_LETTER_SOURCES)
-    _pin_a1_letter_prompt_inputs(monkeypatch, outside_short)
+    _stage_checkout_file(checkout, _ASPECT_WIKI)
+    _stage_checkout_file(checkout, _ASPECT_SOURCES)
+    _pin_aspect_prompt_inputs(monkeypatch, outside_short)
     monkeypatch.setattr(wiki_config, "PROJECT_ROOT", checkout)
     monkeypatch.setattr(wiki_config, "WIKI_DIR", checkout / "wiki")
     monkeypatch.setattr(linear_pipeline, "_wiki_article_paths", lambda *_args: [checkout_article])
-    checkout_prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+    checkout_prompt = render_fixture_writer_prompt("a2", "aspect-concept")
     stored_today = checkout_article.resolve().relative_to(Path(wiki_config.PROJECT_ROOT).resolve()).as_posix()
     assert stored_today == today
     assert f'"wiki_path": "{stored_today}"' in checkout_prompt

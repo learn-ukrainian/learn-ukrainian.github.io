@@ -18,11 +18,9 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
-from scripts.build.phases.wiki_manifest import extract_manifest
 
 pytestmark = pytest.mark.reads_content
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROPOSAL_KEYS = {
     "obligation_id",
     "obligation_type",
@@ -591,21 +589,79 @@ def test_pipeline_emits_wiki_coverage_fix_proposals_event(tmp_path: Path) -> Non
 
 
 def test_paths_accepts_wiki_markdown_manifest_path(tmp_path: Path) -> None:
-    module_dir = tmp_path / "m20-my-morning"
+    """A markdown path is extracted and every obligation becomes a proposal.
+
+    Defect class: check_wiki_coverage_paths refuses a .md manifest or drops steps.
+    """
+    article = tmp_path / "fixture.md"
+    article.write_text(
+        """# Fixture
+
+## Послідовність введення
+
+Крок 1: Перша дія.
+Треба показати форму.
+
+Крок 2: Друга дія.
+Треба повторити форму.
+
+Крок 3: Третя дія.
+Треба зібрати діалог.
+""",
+        encoding="utf-8",
+    )
+    module_dir = tmp_path / "module"
     module_dir.mkdir()
 
     report = check_wiki_coverage_paths(
-        manifest=PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md",
+        manifest=article,
         implementation_map="",
         module_dir=module_dir,
     )
 
     assert report["passed"] is False
-    assert len(report["fix_proposals"]) == 18
+    assert len(report["fix_proposals"]) == 3
 
 
-def test_m20_real_world_manifest_synthesizes_seeded_substance_fix_proposals() -> None:
-    manifest = extract_manifest(PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md")
+def _partial_coverage_manifest() -> dict[str, Any]:
+    steps = [
+        {
+            "id": f"step-{index}",
+            "heading": f"Крок {index}",
+            "step_num": index,
+            "required_claim": f"Teach step {index}.",
+            "source_lines": str(index),
+        }
+        for index in range(1, 6)
+    ]
+    errors = [
+        {
+            "id": f"err-{index}",
+            "incorrect": f"Хиба {index}.",
+            "correct": f"Правильно {index}.",
+            "why": f"Причина {index}.",
+            "treatment": "contrast_pair",
+            "source_lines": str(30 + index),
+        }
+        for index in range(1, 7)
+    ]
+    return {
+        "slug": "fixture",
+        "wiki_path": "wiki/pedagogy/a1/fixture.md",
+        "sequence_steps": steps,
+        "l2_errors": errors,
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+
+
+def test_fixture_manifest_synthesizes_seeded_substance_fix_proposals() -> None:
+    """Implemented obligations stay quiet; the rest still get a proposal.
+
+    Defect class: a seeded partial map emits no fix proposal for an open obligation.
+    """
+    manifest = _partial_coverage_manifest()
     seeded_map = seed_implementation_map(manifest)
     obligations = validate_obligations(manifest)
     implemented_ids = {
@@ -615,8 +671,6 @@ def test_m20_real_world_manifest_synthesizes_seeded_substance_fix_proposals() ->
         "step-4",
         "step-5",
         "err-1",
-        "err-4",
-        "err-6",
     }
     implemented = [obligation for obligation in obligations if obligation["id"] in implemented_ids]
     implementation_map: dict[str, dict[str, str]] = {}

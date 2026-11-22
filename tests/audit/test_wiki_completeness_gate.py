@@ -14,8 +14,6 @@ from scripts.audit.wiki_completeness_gate import (
 
 pytestmark = pytest.mark.reads_content
 
-ROOT = Path(__file__).resolve().parents[2]
-
 
 def _pass_verify_quote(source_id: str, quote: str, source: dict[str, Any]) -> dict[str, Any]:
     return {"verdict": "PASS", "source_id": source_id, "quote": quote, "source": dict(source)}
@@ -159,31 +157,53 @@ tracks: [folk]
     return wiki
 
 
-def test_m20_my_morning_wiki_passes_completeness_gate() -> None:
+def test_fixture_wiki_passes_a1_completeness_gate(tmp_path: Path) -> None:
+    """A self-contained article at the A1 floors passes without a retired wiki file.
+
+    Defect class: the completeness gate fails a wiki that meets every A1 minimum.
+    """
+    wiki = _full_wiki(
+        tmp_path,
+        vocab_count=20,
+        step_count=5,
+        l2_rows=3,
+        decolonization_pairs=1,
+        exercise_count=3,
+        citation_count=3,
+    )
+
     report = check_wiki_completeness(
-        ROOT / "wiki/pedagogy/a1/my-morning.md",
+        wiki,
         level="a1",
-        slug="my-morning",
+        slug="fixture",
         verify_quote_fn=_pass_verify_quote,
     )
 
     assert report["verdict"] == "PASS"
-    assert report["checks"]["vocabulary_minimum"]["actual"] == 21
-    assert report["checks"]["l2_errors"]["actual"] == 6
-    # 1 genuine Russianism pair (завтрак). полотенце removed (2026-05-29): it is
-    # authentic Ukrainian (dim. of полотно — Грінченко 1907, Голоскевич 1929, СУМ-20;
-    # VESUM; check_russian_shadow=False) AND not A1 lexis, so flagging it was a
-    # heritage-mislabel + level over-reach. одіватися removed earlier (52c9deb8a8) for
-    # the same heritage reason. Gate still PASS (a1 minimum=1; l2_errors=6 covers the
-    # distractor floor).
+    assert report["checks"]["vocabulary_minimum"]["actual"] == 20
+    assert report["checks"]["l2_errors"]["actual"] == 3
     assert report["checks"]["decolonization_pairs"]["actual"] == 1
-    assert report["checks"]["textbook_exercises"]["actual"] == 5
+    assert report["checks"]["textbook_exercises"]["actual"] == 3
     assert report["checks"]["chunk_citations_spot_check"]["detail"] == "3/3 verify_quote returned PASS"
 
 
-def test_m1_foundation_wiki_passes_without_bad_form_decolonization_pairs() -> None:
+def test_foundation_slug_passes_without_bad_form_decolonization_pairs(tmp_path: Path) -> None:
+    """Early-foundation slugs keep a decolonization section and a zero pair floor.
+
+    Defect class: sounds-letters-and-hello is held to the ordinary A1 pair minimum.
+    """
+    wiki = _full_wiki(
+        tmp_path,
+        vocab_count=20,
+        step_count=5,
+        l2_rows=3,
+        decolonization_pairs=0,
+        exercise_count=3,
+        citation_count=3,
+    )
+
     report = check_wiki_completeness(
-        ROOT / "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+        wiki,
         level="a1",
         slug="sounds-letters-and-hello",
         verify_quote_fn=_pass_verify_quote,
@@ -198,7 +218,7 @@ def test_m1_foundation_wiki_passes_without_bad_form_decolonization_pairs() -> No
         "minimum": 0,
         "detail": "decolonization section present; bad-form pair inventory not required for early foundation modules.",
     }
-    assert report["checks"]["distractor_inventory"]["actual"] == 5
+    assert report["checks"]["distractor_inventory"]["actual"] == 6
     assert report["checks"]["distractor_inventory"]["minimum"] == 5
 
 

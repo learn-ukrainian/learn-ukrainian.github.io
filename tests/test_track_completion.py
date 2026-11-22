@@ -126,6 +126,79 @@ def _install_lifecycle_contracts(repo: Path) -> None:
     certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
 
 
+def _write_core_wiki_fixture(article: Path) -> None:
+    """A1-shaped article the preparation gate accepts, without the retired wiki tree.
+
+    Counts match the A1 completeness floors: 20 vocabulary rows, 5 steps, 3 L2
+    rows (6 distractors), 1 decolonization pair, 3 exercises, 3 citations.
+    """
+    vocab = "\n".join(f"- слово{index} (★★★) — word {index}." for index in range(20))
+    steps = "\n\n".join(f"Крок {index}: Послідовність {index} [S1]." for index in range(1, 6))
+    l2 = "\n".join(
+        f"| Хиба{index}а. / Хиба{index}б. | Правильно{index}. | Пояснення [S2]. |"
+        for index in range(1, 4)
+    )
+    exercises = "\n\n".join(
+        f"**Вправа {index}: Формат**\n- *Chunk ID:* chunk-{index} [S{index}]\n- *Формат:* Вправа."
+        for index in range(1, 4)
+    )
+    citations = " ".join(f"Речення з джерелом [S{index}]." for index in range(1, 4))
+    article.parent.mkdir(parents=True, exist_ok=True)
+    article.write_text(
+        f"""# Fixture
+
+<!-- wiki-meta
+slug: {article.stem}
+-->
+
+## Методичний підхід
+
+Методика повна. {citations}
+
+## Послідовність введення
+
+{steps}
+
+## Типові помилки L2 (англомовні учні)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+|---|---|---|
+{l2}
+
+## Деколонізаційні застереження
+
+Використовуємо «правильно» (не «помилка»).
+
+## Словниковий мінімум
+
+{vocab}
+
+## Приклади з підручників
+
+{exercises}
+""",
+        encoding="utf-8",
+    )
+    article.with_suffix(".sources.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": f"S{index}",
+                        "file": f"chunk-{index}",
+                        "type": "textbook",
+                        "title": f"Source {index}",
+                    }
+                    for index in range(1, 4)
+                ]
+            },
+            allow_unicode=True,
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+
 @pytest.fixture
 def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
     repo = tmp_path / "repo"
@@ -185,13 +258,8 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
                     sort_keys=False,
                 ),
             )
-    wiki_fixture = ROOT / "wiki/pedagogy/a1/my-morning.md"
-    wiki_sources_fixture = wiki_fixture.with_suffix(".sources.yaml")
     for slug in ("core-built", "core-unbuilt"):
-        wiki_target = repo / f"wiki/pedagogy/a1/{slug}.md"
-        wiki_target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(wiki_fixture, wiki_target)
-        shutil.copy2(wiki_sources_fixture, wiki_target.with_suffix(".sources.yaml"))
+        _write_core_wiki_fixture(repo / "wiki" / "pedagogy" / "a1" / f"{slug}.md")
     for track, slug in (("a1", "core-built"), ("bio", "seminar-built"), ("folk", "folk-built")):
         _write_bundle(
             repo,
