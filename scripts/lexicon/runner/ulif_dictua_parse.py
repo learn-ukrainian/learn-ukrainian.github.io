@@ -621,8 +621,14 @@ def _expand_table(table: Tag) -> list[list[_GridCell | None]]:
         for td in tr.find_all(["td", "th"], recursive=False):
             while (row_index, col) in occupied:
                 col += 1
-            rowspan = int(td.get("rowspan") or 1)
-            colspan = int(td.get("colspan") or 1)
+            raw_rowspan = td.get("rowspan") or 1
+            if isinstance(raw_rowspan, list):
+                raise TypeError("rowspan must be a scalar")
+            rowspan = int(raw_rowspan)
+            raw_colspan = td.get("colspan") or 1
+            if isinstance(raw_colspan, list):
+                raise TypeError("colspan must be a scalar")
+            colspan = int(raw_colspan)
             cell = _GridCell(
                 text=_cell_text(td),
                 rowspan=rowspan,

@@ -5680,7 +5680,8 @@ def _merge_homonym_relations(
 
     def relation_order(item: dict[str, Any]) -> tuple[int, int, str, str]:
         try:
-            number = int(item.get("homonym_no"))
+            raw_number = item.get("homonym_no")
+            number = int(raw_number) if raw_number is not None else 0
         except (TypeError, ValueError):
             number = 0
         try:
@@ -5697,7 +5698,8 @@ def _merge_homonym_relations(
     for relation in sorted(relations, key=relation_order):
         word = _canonical_synonym_term(relation.get("word"))
         try:
-            number = int(relation.get("homonym_no"))
+            raw_number = relation.get("homonym_no")
+            number = int(raw_number) if raw_number is not None else None
         except (TypeError, ValueError):
             number = None
         gloss = str(relation.get("gloss") or "").strip()

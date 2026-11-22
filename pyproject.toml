@@ -2,7 +2,7 @@
 name = "learn-ukrainian"
 version = "1.0.0"
 description = "Ukrainian language learning curriculum generator"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 # The runtime closure. uv.lock pins every version with hashes; change a
 # requirement here, then run `uv lock` (never edit uv.lock by hand). CI installs
 # with `uv sync --locked`, which refuses a lock that no longer matches.
@@ -221,7 +221,7 @@ markers = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py314"
 # Imports resolve from the repository root and scripts/ in both full and
 # sparse checkouts. Declare both roots so isort never probes tree presence.
 src = [".", "scripts"]
@@ -264,7 +264,7 @@ ignore = [
 # for the entire scripts/ tree. Root redirect stubs no longer need those ignores.
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true

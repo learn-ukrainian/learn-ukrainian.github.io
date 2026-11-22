@@ -1650,11 +1650,6 @@
     {
       "path": "scripts/audit/checks/contract_compliance.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None | int\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/audit/checks/contract_compliance.py",
-      "code": "arg-type",
       "message": "Argument 4 to \"add_check\" has incompatible type \"**dict[str, int]\"; expected \"str\""
     },
     {
@@ -3396,11 +3391,6 @@
       "path": "scripts/audit/llm_reviewer_dispatch.py",
       "code": "arg-type",
       "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/audit/llm_reviewer_dispatch.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
     },
     {
       "path": "scripts/audit/llm_reviewer_dispatch.py",
@@ -5636,31 +5626,6 @@
       "path": "scripts/build/linear_pipeline.py",
       "code": "arg-type",
       "message": "Argument 1 to \"emit_reviewer_audit_telemetry\" has incompatible type \"list[dict[str, Any]]\"; expected \"list[Mapping[str, Any]]\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
     },
     {
       "path": "scripts/build/linear_pipeline.py",
@@ -9750,16 +9715,6 @@
     {
       "path": "scripts/lexicon/enrich_manifest.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/lexicon/enrich_manifest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/lexicon/enrich_manifest.py",
-      "code": "arg-type",
       "message": "Argument 2 to \"_wiki_reference\" has incompatible type \"object\"; expected \"None | dict[Any, Any]\""
     },
     {
@@ -10715,16 +10670,6 @@
     {
       "path": "scripts/lexicon/runner/ulif_dictua_parse.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"AttributeValueList | int | str\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/lexicon/runner/ulif_dictua_parse.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"AttributeValueList | int | str\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/lexicon/runner/ulif_dictua_parse.py",
-      "code": "arg-type",
       "message": "Argument 1 to \"intersection\" of \"set\" has incompatible type \"AttributeValueList | None | str\"; expected \"Iterable[object]\""
     },
     {
@@ -11341,11 +11286,6 @@
       "path": "scripts/practice_deck/end_dictionaries.py",
       "code": "arg-type",
       "message": "Argument 1 to \"extract_all\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/practice_deck/end_dictionaries.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
     },
     {
       "path": "scripts/practice_deck/end_dictionaries.py",

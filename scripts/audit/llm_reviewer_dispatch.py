@@ -1398,7 +1398,10 @@ def tool_call_anomaly_warning(
 
     try:
         threshold = float(estimate.get("tool_call_anomaly_threshold"))
-        observed_max = int(estimate.get("observed_tool_call_max"))
+        raw_observed_max = estimate.get("observed_tool_call_max")
+        if raw_observed_max is None:
+            return None
+        observed_max = int(raw_observed_max)
     except (TypeError, ValueError):
         return None
     count = tool_call_count_from_dispatch_meta(dispatch_meta)

@@ -5532,7 +5532,7 @@ def invoke_reviewer_dim(
 def _gate_int(gate_report: Mapping[str, Any], *keys: str, default: int = 0) -> int:
     for key in keys:
         value = gate_report.get(key)
-        if isinstance(value, bool):
+        if value is None or isinstance(value, bool):
             continue
         try:
             return int(value)
@@ -8250,8 +8250,14 @@ def _normalize_activity_schema_forbidden_item_fields(
         if not offending_field:
             continue
         try:
-            activity_index = int(violation.get("activity_index")) - 1
-            item_index = int(violation.get("item_index")) - 1
+            raw_activity_index = violation.get("activity_index")
+            if raw_activity_index is None:
+                continue
+            activity_index = int(raw_activity_index) - 1
+            raw_item_index = violation.get("item_index")
+            if raw_item_index is None:
+                continue
+            item_index = int(raw_item_index) - 1
         except (TypeError, ValueError):
             continue
         if activity_index < 0 or item_index < 0 or activity_index >= len(activities):
@@ -8290,11 +8296,13 @@ def _activity_schema_line_targets(
         if not field:
             continue
         try:
-            activity_index = int(diagnostic.get("activity_index"))
+            raw_activity_index = diagnostic.get("activity_index")
+            activity_index = int(raw_activity_index) if raw_activity_index is not None else None
         except (TypeError, ValueError):
             activity_index = None
         try:
-            item_index = int(diagnostic.get("item_index"))
+            raw_item_index = diagnostic.get("item_index")
+            item_index = int(raw_item_index) if raw_item_index is not None else None
         except (TypeError, ValueError):
             item_index = None
         targets.add(
