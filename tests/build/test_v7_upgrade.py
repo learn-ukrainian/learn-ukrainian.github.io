@@ -243,11 +243,16 @@ def test_resume_binds_actual_writer_and_reviewer_identity(upgrade_root, monkeypa
     assert any("independent_reviewer" in prompt for prompt in review_prompts)
 
 
-def test_upgrade_cli_real_subprocess(tmp_path):
+def test_upgrade_cli_real_subprocess_refuses_core_a1(tmp_path):
+    """The real CLI refuses every core-A1 V7 run, before any other guard or write (#13295).
+
+    Defect class: an obsolete-input writer path (legacy plans/a1, wiki/pedagogy/a1,
+    a1-v1 module bytes) stays reachable from the command line.
+    """
     import subprocess
 
     root = Path(__file__).resolve().parents[2]
-    # Exercise the real CLI guard in an isolated primary checkout, including on CI.
+    # Run in an isolated primary checkout: the A1 refusal must precede the primary-checkout guard.
     env = v7_build.worktree_git.sanitized_git_env()
     env.pop(v7_build.run_archive.ENV_KEY, None)
     subprocess.run(
@@ -259,8 +264,10 @@ def test_upgrade_cli_real_subprocess(tmp_path):
         [sys.executable, str(root / "scripts/build/v7_build.py"), "a1", "things-have-gender", "--upgrade", "--dry-run", "--out", str(out)],
         cwd=tmp_path, capture_output=True, text=True, check=False, timeout=60, env=env,
     )
-    assert result.returncode == v7_build.PrimaryCheckoutBuildError.exit_code
-    assert "Refusing to run v7_build in the primary checkout; pass --worktree" in result.stderr
+    assert result.returncode == 2
+    assert "V7 does not build core A1" in result.stderr
+    assert "Refusing to run v7_build in the primary checkout" not in result.stderr
+    assert result.stdout == ""
     assert not out.exists()
 
 

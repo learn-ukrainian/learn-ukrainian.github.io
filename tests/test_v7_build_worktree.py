@@ -83,7 +83,7 @@ def test_worktree_auto_path_derives_path_and_branch(
     repo = _prepare_repo(monkeypatch, tmp_path)
     calls = _install_fake_subprocess_run(monkeypatch, repo)
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     assert exit_code == 0
     add_cmd = next(cmd for cmd in calls if cmd[:3] == ["git", "worktree", "add"])
@@ -92,8 +92,8 @@ def test_worktree_auto_path_derives_path_and_branch(
         "worktree",
         "add",
         "-b",
-        "build/a1/my-morning-20260513-123456",
-        str(repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"),
+        "build/folk/narodna-kultura-yak-systema-20260513-123456",
+        str(repo / ".worktrees" / "builds" / "folk-narodna-kultura-yak-systema-20260513-123456"),
         "origin/main",
     ]
 
@@ -104,11 +104,11 @@ def test_worktree_path_collision_errors_cleanly(
     capsys: Any,
 ) -> None:
     repo = _prepare_repo(monkeypatch, tmp_path)
-    target = repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"
+    target = repo / ".worktrees" / "builds" / "folk-narodna-kultura-yak-systema-20260513-123456"
     target.mkdir(parents=True)
     calls = _install_fake_subprocess_run(monkeypatch, repo)
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     captured = capsys.readouterr()
     assert exit_code == 3
@@ -129,14 +129,14 @@ def test_worktree_add_failure_propagates_stderr(
         monkeypatch,
         repo,
         worktree_add_returncode=128,
-        worktree_add_stderr="fatal: a branch named build/a1/my-morning exists",
+        worktree_add_stderr="fatal: a branch named build/folk/narodna-kultura-yak-systema exists",
     )
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     captured = capsys.readouterr()
     assert exit_code == 4
-    assert "fatal: a branch named build/a1/my-morning exists" in captured.err
+    assert "fatal: a branch named build/folk/narodna-kultura-yak-systema exists" in captured.err
 
 
 def test_worktree_build_success_prints_summary(
@@ -147,15 +147,15 @@ def test_worktree_build_success_prints_summary(
     repo = _prepare_repo(monkeypatch, tmp_path)
     _install_fake_subprocess_run(monkeypatch, repo, child_returncode=0)
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     captured = capsys.readouterr()
     assert exit_code == 0
     assert (
-        f"BUILD_WORKTREE={repo / '.worktrees' / 'builds' / 'a1-my-morning-20260513-123456'}"
+        f"BUILD_WORKTREE={repo / '.worktrees' / 'builds' / 'folk-narodna-kultura-yak-systema-20260513-123456'}"
         in captured.out
     )
-    assert "BUILD_BRANCH=build/a1/my-morning-20260513-123456" in captured.out
+    assert "BUILD_BRANCH=build/folk/narodna-kultura-yak-systema-20260513-123456" in captured.out
     assert "BUILD_BASE=abc1234" in captured.out
     assert "BUILD_RESULT=success" in captured.out
 
@@ -168,7 +168,7 @@ def test_worktree_build_failure_prints_summary_and_preserves_worktree(
     repo = _prepare_repo(monkeypatch, tmp_path)
     calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=17)
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     captured = capsys.readouterr()
     assert exit_code == 17
@@ -193,9 +193,9 @@ def test_worktree_persists_artifacts_on_success(
     """
     repo = _prepare_repo(monkeypatch, tmp_path)
     calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=0)
-    worktree_path = repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"
+    worktree_path = repo / ".worktrees" / "builds" / "folk-narodna-kultura-yak-systema-20260513-123456"
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     assert exit_code == 0
     add_cmd = next(
@@ -216,7 +216,7 @@ def test_worktree_persists_artifacts_on_success(
     assert "--allow-empty" in commit_cmd
     assert "--no-verify" in commit_cmd
     msg_idx = commit_cmd.index("-m") + 1
-    assert "build(a1/my-morning)" in commit_cmd[msg_idx]
+    assert "build(folk/narodna-kultura-yak-systema)" in commit_cmd[msg_idx]
     assert "(success)" in commit_cmd[msg_idx]
 
 
@@ -234,9 +234,9 @@ def test_worktree_persists_artifacts_on_failure(
     """
     repo = _prepare_repo(monkeypatch, tmp_path)
     calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=17)
-    worktree_path = repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"
+    worktree_path = repo / ".worktrees" / "builds" / "folk-narodna-kultura-yak-systema-20260513-123456"
 
-    exit_code = v7_build.main(["a1", "my-morning", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--worktree"])
 
     assert exit_code == 17
     commit_cmds = [
@@ -261,7 +261,7 @@ def test_dry_run_worktree_makes_no_git_worktree_add_call(
     calls = _install_fake_subprocess_run(monkeypatch, repo)
     monkeypatch.setattr(v7_build, "_run", lambda _args: 0)
 
-    exit_code = v7_build.main(["a1", "my-morning", "--dry-run", "--worktree"])
+    exit_code = v7_build.main(["folk", "narodna-kultura-yak-systema", "--dry-run", "--worktree"])
 
     assert exit_code == 0
     assert not any(cmd[:3] == ["git", "worktree", "add"] for cmd in calls)

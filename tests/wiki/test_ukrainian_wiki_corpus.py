@@ -258,10 +258,10 @@ def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.
     finally:
         conn.close()
 
-    assert len(results) == 1
-    assert results[0]["corpus"] == "ukrainian_wiki"
-    assert results[0]["title"] == "Апостроф"
-    assert "п'ять" in results[0]["text"]
+    # The ingested rows stay (above), but compiled A1 pedagogy is obsolete retrieval
+    # material and search_sources never returns it (#13295); the A2 round trip below
+    # keeps the positive search case.
+    assert results == []
 
 
 def test_round_trip_insert_preserves_a2_track(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -214,7 +214,7 @@ def test_main_guard_refuses_primary_checkout_but_allows_archive_child(
     calls: list[Any] = []
     monkeypatch.setattr(v7_build, "_run", lambda args: calls.append(args) or 0)
 
-    exit_code = v7_build.main(["a1", "foo", "--dry-run"])
+    exit_code = v7_build.main(["folk", "foo", "--dry-run"])
 
     captured = capsys.readouterr()
     assert exit_code == v7_build.PrimaryCheckoutSafetyError.exit_code
@@ -223,5 +223,5 @@ def test_main_guard_refuses_primary_checkout_but_allows_archive_child(
     assert "See #2884" in captured.err
 
     monkeypatch.setenv(run_archive.ENV_KEY, "test-child")
-    assert v7_build.main(["a1", "foo", "--dry-run"]) == 0
+    assert v7_build.main(["folk", "foo", "--dry-run"]) == 0
     assert len(calls) == 1
