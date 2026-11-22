@@ -1123,12 +1123,22 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m lu_machinery.ci.dependency_change_scope --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
       - if: steps.scope.outputs.run == 'true'
+        name: Install locked audit dependencies
+        env:
+          MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
+          MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PROJECT_ENVIRONMENT: .venv
+          UV_PYTHON_DOWNLOADS: never
+        run: |
+          set -euo pipefail
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group audit --no-install-package lu-machinery
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
+      - if: steps.scope.outputs.run == 'true'
         name: Run Python advisory audit
         env:
           LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
-        run: |
-          python -m pip install --upgrade pip pip-audit PyYAML
-          python -m lu_machinery.ci.audit_dependencies --skip-node
+        run: .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node
 
   ci-gate:
     name: CI Gate
@@ -1229,6 +1239,21 @@ jobs:
           )"
           export NEEDS_JSON
           "$PYTHON_BIN" -m lu_machinery.ci.gate
+      # Hash-pinned wheels from uv.lock, as in the machinery attribution runbook.
+      - name: Install the locked attribution parser
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          requirements="$(mktemp "${RUNNER_TEMP}/attribution-requirements.XXXXXX")"
+          trap 'rm -f "$requirements"' EXIT
+          cat > "$requirements" <<'EOF'
+          markdown-it-py==4.2.0 --hash=sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a
+          mdurl==0.1.2 --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8
+          EOF
+          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-deps --only-binary=:all: --force-reinstall \
+            --require-hashes -r "$requirements"
       # Attribution retains the repository's existing enforcement mode.
       - name: Check agent attribution
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -1247,9 +1272,6 @@ jobs:
             echo "::error::Missing base or head SHA for agent attribution in $EVENT_NAME"
             exit 1
           fi
-          # The parser pins from uv.lock; this job has no project environment.
-          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-deps --only-binary=:all: \
-            markdown-it-py==4.2.0 mdurl==0.1.2
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" -m lu_machinery.ci.check_agent_attribution "$mode" "$BASE_SHA" "$HEAD_SHA"

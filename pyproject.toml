@@ -141,10 +141,11 @@ dev = [
     # (pre-commit and CI) and TruffleHog through scripts/audit/secret_scan_local.py
     # (docs/runbooks/secret-scanning.md).
 ]
-# Narrow workflow environments (uv sync --only-group), so a job installs only what
-# it runs. Each is a subset of the project's own requirements above.
+# Narrow workflow environments (uv sync --only-group) limit each job to its tools.
 # The lu-machinery release and its closure: jobs that run only its entry points.
 machinery = ["lu-machinery[api,postgres,pytest]==0.1.49"]
+# Python advisory audits use the release and its resolver-free pip-audit entry point.
+audit = [{ include-group = "machinery" }, "pip-audit==2.10.1"]
 # deploy-pages.yml: the release plus the build scripts' YAML, schema and regex imports.
 pages = [{ include-group = "machinery" }, "pyyaml>=6.0", "jsonschema>=4.20", "regex>=2026.5.9"]
 # atlas-grow.yml: the release plus the lexicon scripts' imports.

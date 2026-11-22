@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -1052,9 +1053,20 @@ _QUEUE_EVENT = {
 def test_attribution_runs_in_ci_gate_after_the_large_file_guard_on_both_events() -> None:
     names = [step.get("name") for step in _gate_steps()]
     step = _attribution_step()
+    (install,) = [step for step in _gate_steps() if step.get("name") == "Install the locked attribution parser"]
 
     assert names.index("Check agent attribution") > names.index("Check large files guard")
     assert names.index("Check agent attribution") > names.index("Require every job")
+    assert names.index("Check agent attribution") > names.index(install["name"])
+    assert install["if"] == step["if"]
+    assert set(install["env"]) == {"PYTHON_BIN"}
+    assert "--require-hashes" in install["run"]
+    lock = tomllib.loads((_REPO / "uv.lock").read_text(encoding="utf-8"))
+    for name in ("markdown-it-py", "mdurl"):
+        (package,) = [package for package in lock["package"] if package["name"] == name]
+        (wheel,) = package["wheels"]
+        assert f'{name}=={package["version"]} --hash={wheel["hash"]}' in install["run"]
+    assert "-m pip" not in step["run"]
     assert not step.get("continue-on-error")
     assert _condition(step["if"], _PR_EVENT) is True
     assert _condition(step["if"], _QUEUE_EVENT) is True
@@ -1073,14 +1085,13 @@ def test_attribution_step_binds_each_event_shape() -> None:
 
 
 def _fake_python(tmp_path: Path, checker_prefix: str) -> Path:
-    """A PYTHON_BIN that skips pip and runs the real checker, optionally with a broken parser import."""
+    """A PYTHON_BIN that runs the real checker, optionally with a broken parser import."""
     broken = tmp_path / "broken"
     (broken / "markdown_it").mkdir(parents=True)
     (broken / "markdown_it" / "__init__.py").write_text("raise ImportError('simulated missing parser')\n")
     wrapper = tmp_path / "python"
     wrapper.write_text(
         "#!/bin/bash\n"
-        '[ "$1 $2" != "-m pip" ] || exit 0\n'
         f'shift 2; {checker_prefix} exec "{sys.executable}" "{SCRIPT}" "$@"\n'.replace("{broken}", str(broken))
     )
     wrapper.chmod(0o755)

@@ -652,25 +652,37 @@ test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844
     await page.setViewportSize(viewport);
     await page.goto('/practice/');
 
-    const card = page.getByTestId('practice-dashboard-session');
-    const estimate = page.getByTestId('practice-session-scope');
-    await expect(card).toBeVisible();
+    // The dashboard shifts as it loads: the Words-of-the-Day placeholder above the session card
+    // is swapped for the real deck, which moves the card down. Wait for that real condition
+    // (deck loaded, estimate rendered), then read every rect in ONE frame. Separate boundingBox()
+    // calls can straddle the shift and compare a stale card box with an already-moved estimate.
+    await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
+    await expect(page.getByTestId('practice-dashboard-session')).toBeVisible();
+    await expect(page.getByTestId('practice-session-scope')).toBeVisible();
 
-    const cardBox = await card.boundingBox();
-    expect(cardBox).not.toBeNull();
-    if ((await estimate.count()) > 0) {
-      const estimateBox = await estimate.boundingBox();
-      expect(estimateBox).not.toBeNull();
-      expect(estimateBox!.x).toBeGreaterThanOrEqual(cardBox!.x - 1);
-      expect(estimateBox!.x + estimateBox!.width).toBeLessThanOrEqual(cardBox!.x + cardBox!.width + 1);
-      expect(estimateBox!.y + estimateBox!.height).toBeLessThanOrEqual(cardBox!.y + cardBox!.height + 1);
-    }
+    const { card, estimate, budgetTops } = await page.evaluate(() => {
+      const rect = (element: Element | null) => {
+        const box = element?.getBoundingClientRect();
+        return box ? { x: box.x, y: box.y, width: box.width, height: box.height } : null;
+      };
+      return {
+        card: rect(document.querySelector('[data-testid="practice-dashboard-session"]')),
+        estimate: rect(document.querySelector('[data-testid="practice-session-scope"]')),
+        budgetTops: Array.from(document.querySelectorAll('.k3-session-budgets button')).map(
+          (button) => button.getBoundingClientRect().y,
+        ),
+      };
+    });
+
+    expect(card).not.toBeNull();
+    expect(estimate).not.toBeNull();
+    expect(estimate!.x).toBeGreaterThanOrEqual(card!.x - 1);
+    expect(estimate!.x + estimate!.width).toBeLessThanOrEqual(card!.x + card!.width + 1);
+    expect(estimate!.y + estimate!.height).toBeLessThanOrEqual(card!.y + card!.height + 1);
 
     // The session-size pills (10 / 20 / until-clear) stay on one row at every width.
-    const budgets = page.locator('.k3-session-budgets button');
-    const firstTop = (await budgets.first().boundingBox())?.y;
-    const lastTop = (await budgets.last().boundingBox())?.y;
-    expect(firstTop).toBe(lastTop);
+    expect(budgetTops.length).toBeGreaterThan(1);
+    expect(new Set(budgetTops).size).toBe(1);
   }
 });
 
