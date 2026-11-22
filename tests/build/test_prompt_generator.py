@@ -37,6 +37,28 @@ def m20():
                 "source_lines": "10-11",
             }
         ],
+        "l2_errors": [
+            {
+                "id": "l2-1",
+                "incorrect": "я вмиваю",
+                "correct": "я вмиваюся",
+                "why": "Reflexive morning routines need -ся.",
+                "treatment": "contrast_pair",
+                "source_lines": "20",
+            }
+        ],
+        "phonetic_rules": [
+            {
+                "id": "phon-1",
+                "written": "-ться",
+                "spoken": "[ц':а]",
+                "treatment": "explicit_explanation",
+                "source_lines": "30",
+            }
+        ],
+        "decolonization_bans": [
+            {"id": "ban-1", "rule": "Do not frame Ukrainian as a dialect.", "source_lines": "40"}
+        ],
     }
     return {
         "wiki_manifest": manifest,
@@ -85,6 +107,12 @@ def test_gate_consumes_obligation_checklist_one_to_one(m20):
     ]
 
     assert len(gate_obligations) == len(m20["implementation_map"]["entries"])
+    assert {entry["obligation_type"] for entry in m20["implementation_map"]["entries"]} == {
+        "sequence_step",
+        "l2_error",
+        "phonetic_rule",
+        "decolonization_ban",
+    }
     assert rendered_ids == gate_ids
     assert len(rendered_ids) == len(set(rendered_ids)), "no orphan/duplicate rendered obligations"
     for item in gate_obligations:
