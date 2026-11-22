@@ -230,21 +230,22 @@ runs:
         # the live-ML wheels (the unit suite does not import them and they exceed
         # the 15m budget; pytest-slow-nightly.yml installs them) and lu-machinery,
         # installed below from the hash-checked wheelhouse.
-        sync=(uv sync --locked --python "${PYTHON_VERSION}"
+        sync=(uv sync --python "${PYTHON_VERSION}"
           --no-install-package torch --no-install-package torchvision
           --no-install-package open-clip-torch --no-install-package stanza
           --no-install-package lu-machinery)
         # Install the locked setuptools and wheel before running either backend.
         wheel_only=(--no-build --no-install-package ipa-uk
           --no-install-package learn-ukrainian-v4-runtime)
-        if ! "${sync[@]}" "${wheel_only[@]}" --offline; then
+        if ! "${sync[@]}" --locked "${wheel_only[@]}" --offline; then
           echo 'uv cache incomplete; retrying installation from the index'
-          "${sync[@]}" "${wheel_only[@]}"
+          "${sync[@]}" --locked "${wheel_only[@]}"
         fi
         # A restored cache can contain wheels built with a different backend version.
         uv cache clean ipa-uk learn-ukrainian-v4-runtime
-        # Allow a Git cache miss to fetch ipa-uk without restarting the V4 build.
-        "${sync[@]}" --no-build-isolation
+        # Consume the lock checked above without revalidating the release wheel URL.
+        # A cold Git cache can fetch ipa-uk without restarting the V4 build.
+        "${sync[@]}" --frozen --no-build-isolation
         uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
           --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
         .venv/bin/python packages/v4-runtime/build_assets.py
