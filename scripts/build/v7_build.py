@@ -1822,6 +1822,47 @@ _CORE_A1_NAME = re.compile(r"a1(?:-[a-z0-9-]+)?")
 _MODULE_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
+# Retired A1 trees (#13295): obsolete drafts, plans, verdicts, archives, compiled
+# pedagogy and the preserved a1-v1 edition. No V7 tool reads a caller-supplied path
+# from them or writes one into them. Emptying this tuple restores the old behaviour.
+RETIRED_A1_TREES: tuple[tuple[str, ...], ...] = (
+    ("curriculum", "l2-uk-en", "a1-v1"),
+    ("curriculum", "l2-uk-en", "a1"),
+    ("curriculum", "l2-uk-en", "plans", "a1"),
+    ("curriculum", "l2-uk-en", "_archive", "a1-backup-2026-04-08"),
+    ("curriculum", "l2-uk-en", ".backup", "plans-en-a1a2-2026-04-20"),
+    ("wiki", "pedagogy", "a1"),
+    ("site", "src", "content", "docs", "a1-v1"),
+)
+
+
+def retired_a1_path_refusal(option: str, value: str | os.PathLike[str] | None, *, tool: str = "v7_build") -> str | None:
+    """Why ``tool`` must not use the path given for ``option``, or None (#13295).
+
+    The level and slug checks cannot see an explicit file or directory option, so
+    every path option is checked too. The path is read both relative to the project
+    root (how V7 resolves it) and relative to the working directory, each lexically
+    and with symlinks resolved. Any contiguous run of path components that equals a
+    retired tree, compared case-insensitively, refuses it, whichever checkout or clone
+    the path is in. Empty and unset values are allowed.
+    """
+    if value is None or not str(value):
+        return None
+    raw = Path(value)
+    bases = [raw] if raw.is_absolute() else [PROJECT_ROOT / raw, Path.cwd() / raw]
+    forms = [Path(os.path.normpath(base)) for base in bases] + [base.resolve() for base in bases]
+    for form in forms:
+        parts = tuple(part.casefold() for part in form.parts)
+        for tree in RETIRED_A1_TREES:
+            width = len(tree)
+            if any(parts[i : i + width] == tree for i in range(len(parts) - width + 1)):
+                return (
+                    f"{tool}: refused — {option} {str(value)!r} is inside the retired A1 tree "
+                    f"{'/'.join(tree)}, which no V7 tool reads or writes (R-10, R-11, #13295)."
+                )
+    return None
+
+
 def core_a1_refusal(level: str, slug: str, *, tool: str = "v7_build") -> str | None:
     """Why a V7 tool must not build or review ``level``/``slug``, or None when it may (#13295).
 
@@ -1874,6 +1915,9 @@ def main(argv: list[str] | None = None) -> int:
             "v7_build: refused — --upgrade is retired: it upgraded core A1 from the a1-v1 edition, "
             "which V7 no longer builds (R-10, #13295)."
         )
+    for option in ("out", "cf_clearance", "worktree", "telemetry_out", "lesson_map"):
+        if refusal is None:
+            refusal = retired_a1_path_refusal("--" + option.replace("_", "-"), getattr(args, option, None))
     if refusal is not None:
         print(refusal, file=sys.stderr)
         return 2

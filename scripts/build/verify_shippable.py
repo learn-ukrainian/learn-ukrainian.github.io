@@ -586,16 +586,16 @@ def main(argv: list[str] | None = None) -> int:
         metavar="N",
         help="With --fresh, require and render planned lessons whose numbers are <= N, plus the landing if present. N must be a planned number (recap included); gaps are allowed. Later lessons are excluded. Default: all planned lessons. Example: --through-lesson 1",
     )
-    # Parse known options first so a retired lesson-mode call (with its old --source-dir or any
-    # other flag) gets the retirement reason rather than an unrelated option error.
-    args, unknown = ap.parse_known_args(argv)
-    if args.lesson:
+    # Look for the retired flag before validating anything else, so a lesson-mode call with
+    # its old --source-dir, a malformed value or any other option gets the retirement reason.
+    retired = argparse.ArgumentParser(add_help=False)
+    retired.add_argument("--lesson", action="store_true")
+    if retired.parse_known_args(argv)[0].lesson:
         ap.error(
             "--lesson is retired: it verified the removed V7 A1 lesson edition against the legacy plans/a1 "
             "plans and the a1-v1 edition, which R-10 and R-11 exclude (#13295); verify fresh lessons with --fresh"
         )
-    if unknown:
-        ap.error(f"unrecognized arguments: {' '.join(unknown)}")
+    args = ap.parse_args(argv)
     if args.through_lesson is not None and not args.fresh:
         ap.error("--through-lesson requires --fresh")
 

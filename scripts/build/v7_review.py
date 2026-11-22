@@ -205,9 +205,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    from scripts.build.v7_build import core_a1_refusal
+    from scripts.build.v7_build import core_a1_refusal, retired_a1_path_refusal
 
     refusal = core_a1_refusal(args.level, args.slug, tool="v7_review")
+    for option in ("content", "telemetry_out"):
+        if refusal is None:
+            refusal = retired_a1_path_refusal(
+                "--" + option.replace("_", "-"), getattr(args, option, None), tool="v7_review"
+            )
     if refusal is not None:
         print(refusal, file=sys.stderr)
         return 2
