@@ -10,12 +10,12 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
+.venv/bin/python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
 
 # ❌ Wrong
-python3 scripts/build/v7_build.py a1 m01-alphabet --worktree   # missing deps
-python scripts/build/v7_build.py a1 m01-alphabet --worktree    # wrong version
+python3 scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree   # missing deps
+python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree    # wrong version
 ```
 
 **Why:** The venv runs the CPython named in `.python-version` with every dependency `uv.lock` pins. sqlite-vec needs an interpreter that can load SQLite extensions: uv's managed CPython can; Homebrew Python silently fails on vector search.
