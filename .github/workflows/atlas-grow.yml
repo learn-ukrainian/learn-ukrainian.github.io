@@ -220,15 +220,26 @@ jobs:
           GIT_CONFIG_KEY_0: credential.https://github.com.helper
           GIT_CONFIG_VALUE_0: '!gh auth git-credential'
           PROMOTED_COUNT: ${{ needs.grow.outputs.promoted-count }}
+          HELD_COUNT: ${{ needs.grow.outputs.held-count }}
         run: |
           set -euo pipefail
-          [[ "$PROMOTED_COUNT" =~ ^[0-9]+$ ]] || { echo "::error::Invalid Atlas promotion count"; exit 1; }
+          if [[ ! "$PROMOTED_COUNT" =~ ^[0-9]+$ || ! "$HELD_COUNT" =~ ^[0-9]+$ ]]; then
+            echo "::error::Invalid Atlas promotion or held count"
+            exit 1
+          fi
+          inputs="$RUNNER_TEMP/atlas-grow"
+          for file in lexicon-manifest.json lexicon-manifest.fingerprint.json pr-body.md; do
+            if [[ ! -f "$inputs/$file" || ! -s "$inputs/$file" || -L "$inputs/$file" ]]; then
+              echo "::error::Atlas PR input $file must be a nonempty regular file"
+              exit 1
+            fi
+          done
           if [[ "$USING_ATLAS_TOKEN" != true ]]; then
             echo "::notice::Opening with GITHUB_TOKEN. Re-run the PR checks before reviewing and merging."
           fi
           git config user.name "atlas-grow[bot]"
           git config user.email "atlas-grow[bot]@users.noreply.github.com"
-          cp "$RUNNER_TEMP"/atlas-grow/lexicon-manifest{,.fingerprint}.json site/src/data/
+          cp "$inputs"/lexicon-manifest{,.fingerprint}.json site/src/data/
           branch="atlas-grow/$(date -u +%F)"
           git fetch --no-tags origin "refs/heads/${branch}:refs/remotes/origin/${branch}" || true
           git switch -c "$branch"
@@ -253,7 +264,6 @@ jobs:
           PROMOTED_COUNT: ${{ needs.grow.outputs.promoted-count }}
         run: |
           set -euo pipefail
-          [[ "$HELD_COUNT" =~ ^[0-9]+$ ]] || { echo "::error::Invalid Atlas held count"; exit 1; }
           BODY_PATH="$RUNNER_TEMP/atlas-grow/pr-body.md"
           gh label create atlas-grow --color 1f883d --description "Automated Word Atlas grow PR" || true
           labels=(--label atlas-grow)

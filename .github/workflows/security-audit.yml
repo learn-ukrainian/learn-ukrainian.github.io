@@ -227,7 +227,10 @@ jobs:
           ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
           if [[ "$ACTION" == create ]]; then
             BODY="$RUNNER_TEMP/dependency-advisory/advisory-issue-body.md"
-            test -s "$BODY"
+            if [[ ! -f "$BODY" || ! -s "$BODY" || -L "$BODY" ]]; then
+              echo "::error::The advisory report must be a nonempty regular file"
+              exit 1
+            fi
             if [[ -n "$ISSUE_NUMBER" ]]; then
               gh issue edit "$ISSUE_NUMBER" --body-file "$BODY"
             else
@@ -320,9 +323,14 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
+          body="$RUNNER_TEMP/stack-currency/stack-currency.md"
+          if [[ ! -f "$body" || ! -s "$body" || -L "$body" ]]; then
+            echo "::error::The stack currency report must be a nonempty regular file"
+            exit 1
+          fi
           ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
           if [[ -z "$ISSUE_NUMBER" ]]; then
             echo "No open dependency-advisory issue; the report is available as a workflow artifact."
             exit 0
           fi
-          gh issue comment "$ISSUE_NUMBER" --body-file "$RUNNER_TEMP/stack-currency/stack-currency.md"
+          gh issue comment "$ISSUE_NUMBER" --body-file "$body"

@@ -223,10 +223,16 @@ jobs:
         run: |
           set -euo pipefail
           ledger="$RUNNER_TEMP/pytest-slow-nightly/flake-ledger.json"
+          if [[ ! -f "$ledger" || ! -s "$ledger" || -L "$ledger" ]]; then
+            echo "::error::The flake ledger must be a nonempty regular file"
+            exit 1
+          fi
           # Validate the whole report before any issue changes. Only fixed gh
           # operations run here, with issue IDs and text passed as arguments.
           rows="$(jq -cs '
-            def count: type == "number" and . == floor and . >= 0 and . <= 9007199254740991;
+            def count:
+              type == "number" and . == floor and . >= 0 and . <= 9007199254740991
+              and (tostring | test("^[0-9]+$"));
             def text: type == "string" and length > 0 and (contains("\u0000") | not);
             def row:
               (.fix_issue | count and . > 0) and (.node_id | text) and (.owner | text)
