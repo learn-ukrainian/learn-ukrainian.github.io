@@ -545,6 +545,11 @@ class TestUsageAdviceIngest(unittest.TestCase):
 
     @patch("scripts.ingest.usage_advice_ingest.ingest_movne_pytannya")
     def test_cli_main_exit_codes(self, mock_movne: MagicMock) -> None:
+        with self.assertRaises(SystemExit) as bad_limit:
+            main(["--source", "movne", "--limit", "-1"])
+        self.assertEqual(bad_limit.exception.code, 2)
+        mock_movne.assert_not_called()
+
         mock_movne.side_effect = AccessDeniedError("403 Forbidden")
         code = main(["--source", "movne_pytannya", "--db-movne", ":memory:"])
         self.assertEqual(code, EXIT_HTTP_403_FORBIDDEN)

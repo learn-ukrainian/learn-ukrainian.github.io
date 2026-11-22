@@ -2075,6 +2075,8 @@ Related: scripts/ingest/README.md and #13293.""",
         help="Export mova.ua pairs to a JSON file, e.g. movaua.json (off by default)",
     )
     args = parser.parse_args(argv)
+    if args.limit is not None and args.limit < 0:
+        parser.error("--limit must be nonnegative")
     if not math.isfinite(args.delay) or args.delay < 0:
         parser.error("--delay must be a finite nonnegative number")
     if args.max_retries < 0:
