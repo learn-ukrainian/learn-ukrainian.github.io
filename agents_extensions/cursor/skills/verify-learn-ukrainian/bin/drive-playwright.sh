@@ -88,7 +88,7 @@ if [[ -n "$GREP_PATTERN" ]]; then
 fi
 for bin in "${ARGS[0]}" "$LOCAL_BIN/astro"; do
   if [[ ! -f "$bin" || ! -x "$bin" ]]; then
-    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run (cd site && $LU_VERIFY_SITE_INSTALL) (no npx or PATH fallback)" >&2
+    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/} (no npx or PATH fallback); $(lu_verify_site_install_hint "$ROOT")" >&2
     exit 1
   fi
 done

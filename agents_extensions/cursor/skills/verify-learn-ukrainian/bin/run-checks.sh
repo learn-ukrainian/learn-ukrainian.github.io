@@ -17,8 +17,11 @@ EOF
 fi
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+BIN="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$BIN/../../../.." && pwd)"
 cd "$ROOT"
+# shellcheck source=SCRIPTDIR/toolchain.sh
+. "$BIN/toolchain.sh"
 
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 if [[ ! -x "$PYTHON" ]]; then
@@ -62,7 +65,7 @@ run_check() {
 if [[ -d "$ROOT/site/node_modules" ]]; then
   report PASS "site/node_modules present"
 else
-  report SKIP "site/node_modules" "run: (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)"
+  report SKIP "site/node_modules" "$(lu_verify_site_install_hint "$ROOT")"
 fi
 
 # --- CI Gate pieces developers run locally (from scripts/ci/checks.sh) --------
