@@ -47,19 +47,15 @@ uv sync --locked --no-build \
 uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
 uv sync --locked --no-build-isolation
 
-# 3. Locked Node dependencies (with nvm installed). nvm selects the Node
-# release in .nvmrc; npm must be the one bundled with it (engines.npm).
+# 3. Locked Node dependencies (with nvm installed). nvm installs and selects
+# the exact release in .nvmrc, whose bundled npm is the engines.npm pin. With
+# engine-strict in .npmrc, npm ci refuses (EBADENGINE) any other Node or npm
+# and prints the required and actual versions.
 nvm install &&
 nvm use &&
-npm_pin="$(node -p 'require("./package.json").engines.npm')" &&
-if [ "$(npm --version)" != "$npm_pin" ]; then
-  echo "Need the bundled npm $npm_pin. Run: nvm deactivate && nvm uninstall $(cat .nvmrc) && nvm install && nvm use" >&2
-  false
-else
-  npm ci --ignore-scripts &&
-  npm rebuild --ignore-scripts=false &&
-  (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
-fi
+npm ci --ignore-scripts &&
+npm rebuild --ignore-scripts=false &&
+(cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
 
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769

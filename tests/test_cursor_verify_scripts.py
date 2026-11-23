@@ -50,7 +50,7 @@ def command(commands, name, body):
 def toolchain(commands, node, npm):
     """Fake node and npm reporting these versions; node -p prints the fixture pins."""
     if node is not None:
-        command(commands, "node", f'if [[ "$1" == -v ]]; then echo {node}; else echo "{NODE_PIN} {NPM_PIN}"; fi')
+        command(commands, "node", f'if [[ "$1" == -v ]]; then echo {node}; else echo "{NODE_PIN},{NPM_PIN}"; fi')
     # npm ci records the PATH it ran with and stops the launch with a distinct code.
     command(
         commands,
@@ -73,7 +73,7 @@ def run(sandbox, name, *args):
     [(None, NPM_PIN), ("v22.23.4", NPM_PIN), (f"v{NODE_PIN}", "10.9.9"), (f"v{NODE_PIN}", NPM_PIN)],
 )
 def test_launch_toolchain_preflight(sandbox, node, npm):
-    """A wrong Node or a foreign npm is refused with the fix command before npm ci runs."""
+    """A wrong Node or a foreign npm is refused with the repair before npm ci runs."""
     root, _, commands, env = sandbox
     (root / "site/node_modules").rmdir()
     # Minimal PATH proves missing Node is handled without guessing NVM paths.
@@ -90,10 +90,9 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert result.returncode == 1
     assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
     # Without node the engines pins cannot be read; the .nvmrc release is still named.
-    assert f"bundled npm {NPM_PIN if node else 'unreadable'}" in result.stderr
-    fix = f"Run: cd {root} && "
-    fix += f"nvm deactivate && nvm uninstall {NODE_PIN} && " if node == f"v{NODE_PIN}" else ""
-    assert fix + "nvm install && nvm use" in result.stderr
+    assert f"bundled npm {NPM_PIN if node else 'unknown'}" in result.stderr
+    # No nvm in the sandbox, so the repair names the release rather than an nvm command.
+    assert f"Run: install Node {NODE_PIN} from https://nodejs.org/dist/v{NODE_PIN}/" in result.stderr
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
@@ -102,11 +101,13 @@ def test_launch_nvm_failure_is_friendly(sandbox):
     _, _, _, env = sandbox
     nvm_dir = Path(env["NVM_DIR"])
     nvm_dir.mkdir()
-    (nvm_dir / "nvm.sh").write_text("nvm() { return 3; }\n")
+    # An unset variable and a failing command must not abort the caller's set -eu shell.
+    (nvm_dir / "nvm.sh").write_text('echo "$NVM_UNSET_INIT"; false\nnvm() { return 3; }\n')
     result = run(sandbox, "launch.sh", "dev")
     assert result.returncode == 1
     assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
-    assert "nvm install && nvm use" in result.stderr
+    root = Path(env["LU_VERIFY_EVIDENCE_DIR"]).parent / "repo"
+    assert f"Run: cd {root} && nvm install && nvm use" in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])

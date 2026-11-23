@@ -79,7 +79,7 @@ ensure_site_deps() {
     )
   fi
   if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
-    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run (cd site && $LU_VERIFY_SITE_INSTALL) (no npx or PATH fallback)" >&2
+    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro (no npx or PATH fallback); $(lu_verify_site_install_hint "$ROOT")" >&2
     exit 1
   fi
 }
