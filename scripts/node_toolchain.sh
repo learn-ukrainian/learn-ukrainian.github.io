@@ -59,10 +59,10 @@ lu_verify_toolchain() {
   fi
   # Every repair loads nvm first: nvm is a shell function, so the caller's shell
   # does not have it just because this check sourced it. --no-use stops nvm
-  # selecting a default or the absent .nvmrc release while it loads; a shell
-  # whose dot command drops that argument may fail that selection, which the
-  # nvm command after it reports.
-  printf -v load 'cd %q && { . %q --no-use || :; }' "$root" "$nvm_sh"
+  # selecting a default or the absent .nvmrc release while it loads. A shell
+  # whose dot command drops that argument may fail that selection; loading
+  # still counts once the nvm function exists.
+  printf -v load 'cd %q && { . %q --no-use || command -v nvm >/dev/null; }' "$root" "$nvm_sh"
   if [[ "$nvm_state:$installed:$use_status" == ok:1:0 ]]; then
     # nvm selected the release. A node or npm earlier on PATH than nvm's own
     # shadows it; only nvm's own npm at the wrong version needs a reinstall.

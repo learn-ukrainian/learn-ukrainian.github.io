@@ -58,7 +58,7 @@ bash -c '. scripts/node_toolchain.sh &&
   lu_verify_toolchain "$PWD" setup &&
   npm ci --ignore-scripts && npm rebuild --ignore-scripts=false &&
   cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false' &&
-{ . "$NVM_DIR/nvm.sh" --no-use || :; } &&
+{ . "$NVM_DIR/nvm.sh" --no-use || command -v nvm >/dev/null; } &&
 nvm use "$(tr -d '[:space:]' < .nvmrc)" &&
 bash -c '. scripts/node_toolchain.sh && lu_verify_toolchain "$PWD" setup'
 
