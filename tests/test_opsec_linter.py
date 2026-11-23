@@ -588,7 +588,7 @@ def test_private_tracker_citation_not_flagged_in_private_code_or_tests():
 
 
 def test_live_metadata_failure_keeps_cause_but_redacts_secrets(publication, monkeypatch, capsys):
-    """A failed GitHub fetch must explain its cause without exposing credentials."""
+    """A fetch failure after a short rate-limit hold must still block and redact credentials."""
     from types import SimpleNamespace
 
     from lu_machinery.common import github_client
@@ -603,11 +603,18 @@ def test_live_metadata_failure_keeps_cause_but_redacts_secrets(publication, monk
     diagnostic = (f"request denied token={token}\n"
                   f"https://example.invalid/api?opaque={query}\n"
                   f"Authorization: Bearer {header}\nheld {secret}")
-    monkeypatch.setattr(github_client, "run", lambda *a, **kw: SimpleNamespace(
-        returncode=1, stdout="", stderr=diagnostic))
+    refusal = github_client.Result(error="github_rate_limited", reset_at=1002, reason="pool_exhausted")
+    responses = iter([
+        SimpleNamespace(returncode=75, github_result=refusal),
+        SimpleNamespace(returncode=1, stdout="", stderr=diagnostic),
+    ])
+    waits = []
+    monkeypatch.setattr(opsec_linter, "time", SimpleNamespace(time=lambda: 1000, sleep=waits.append))
+    monkeypatch.setattr(github_client, "run", lambda *a, **kw: next(responses))
     assert run(payload) == 1
     output = capsys.readouterr()
-    assert output.out == ""
+    assert waits == [3]
+    assert output.out == "OPSEC publication: retrying live PR fetch after GitHub rate limit\n"
     assert "live PR fetch (ValueError: current publication metadata unavailable (exit 1): request denied" in output.err
     for value in (secret, token, query, header):
         assert value not in output.err

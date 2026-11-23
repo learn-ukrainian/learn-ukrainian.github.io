@@ -1,34 +1,25 @@
 name: PR publication scan
 
-# The edit-time publication scan. ci.yml does not subscribe to `edited`, so a
-# PR title or body edit re-checks only the PR text here instead of restarting
-# the full suite. ci.yml still scans publication fields for PR pushes and the
-# merge queue.
-#
-# "Scan PR publication fields" blocks a bad title or body edit once branch
-# protection requires it. It also runs for merge_group, so the required
-# context reports on queue candidates. No push trigger: a push run would add a
-# skipped check of the same name to the head, and a skipped check counts as
-# success for a required context.
+# A PR title or body edit runs this lightweight scan. CI scans publication
+# fields on opened, synchronize and reopened events, and CI Gate scans every
+# merge queue member after the queue tests finish.
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
-  merge_group:
+    types: [edited]
 
 permissions:
   contents: read
 
 concurrency:
-  # Keyed by PR number: a rapid edit cancels the previous scan, and the newer
-  # run checks the same or a newer head. Queue runs are never cancelled.
+  # Keyed by PR number: a rapid edit cancels the previous scan.
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   pr-publication:
     # Reads title, body, branch and commit messages from the event and the
-    # current PR metadata; a queue run reads every member's current metadata.
+    # current PR metadata.
     name: Scan PR publication fields
     runs-on: ubuntu-24.04
     timeout-minutes: 5

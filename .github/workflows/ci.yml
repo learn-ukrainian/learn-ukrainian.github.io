@@ -162,7 +162,7 @@ jobs:
           python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
             --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
       - name: Scan publication fields
-        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"
@@ -1327,10 +1327,9 @@ jobs:
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" -m lu_machinery.ci.check_agent_attribution "$mode" "$BASE_SHA" "$HEAD_SHA"
-      # Secret scan read the queue's PR metadata when this run started. A title or
-      # body edit made since then would otherwise reach the merge unscanned, so
-      # re-read every member's current metadata as the gate's last step.
-      - name: Re-scan queue publication fields
+      # Read every member's current PR metadata after the queue tests finish,
+      # including title and body edits made while they were running.
+      - name: Scan queue publication fields
         if: github.event_name == 'merge_group'
         env:
           GH_TOKEN: ${{ github.token }}
