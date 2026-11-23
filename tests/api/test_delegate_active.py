@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -86,10 +87,15 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     )
     _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
 
+    async def wait_for_collection(thread, _timeout):
+        # Wait for the real collector with a bound for hung tests.
+        await asyncio.to_thread(thread.join, timeout=30)
+
     try:
         # Machinery #353: the lifespan writer publishes before HTTP readers run.
         delegate_router.active_snapshot(ctx).refresh()
         active_response = client.get("/api/delegate/active")
+        monkeypatch.setattr(api_main, "_await_thread", wait_for_collection)
         orient_response = client.get("/api/orient?sections=delegate&fresh=true")
     finally:
         api_main.reset_detached_orient_state_for_tests(ctx)
