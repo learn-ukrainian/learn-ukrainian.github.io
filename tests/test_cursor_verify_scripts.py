@@ -101,6 +101,7 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert f"bundled npm {NPM_PIN if node else 'at engines.npm'}" in result.stderr
     # The check holds no nvm logic: one line points to the single documented selection.
     assert "CONTRIBUTING.md step 3 (nvm install && nvm use" in result.stderr
+    assert len(result.stderr.splitlines()) == 1
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
