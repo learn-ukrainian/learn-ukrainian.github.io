@@ -90,9 +90,10 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert result.returncode == 1
     assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
     # Without node the engines pins cannot be read; the .nvmrc release is still named.
-    assert f"bundled npm {NPM_PIN if node else 'unknown'}" in result.stderr
-    # No nvm in the sandbox, so the repair names the release rather than an nvm command.
-    assert f"Run: install Node {NODE_PIN} from https://nodejs.org/dist/v{NODE_PIN}/" in result.stderr
+    assert f"bundled npm {NPM_PIN if node else 'at engines.npm'}" in result.stderr
+    # No nvm in the sandbox, so the repair names nvm as the prerequisite of the selection.
+    assert "nvm (the toolchain manager CONTRIBUTING.md requires) is missing" in result.stderr
+    assert f"then run: cd {root} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
@@ -106,8 +107,10 @@ def test_launch_nvm_failure_is_friendly(sandbox):
     result = run(sandbox, "launch.sh", "dev")
     assert result.returncode == 1
     assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
+    # The stub nvm fails every call, so the repair names nvm itself before the selection.
     root = Path(env["LU_VERIFY_EVIDENCE_DIR"]).parent / "repo"
-    assert f"Run: cd {root} && nvm install && nvm use" in result.stderr
+    assert f"nvm (the toolchain manager CONTRIBUTING.md requires) is not working at {nvm_dir}/nvm.sh" in result.stderr
+    assert f"then run: cd {root} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
