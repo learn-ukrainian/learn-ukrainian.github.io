@@ -236,7 +236,8 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     )
     assert "if" not in scanner
     assert scanner["uses"] == "trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb"
-    assert scanner["with"]["version"] == "3.99.0"
+    assert scanner["with"]["image"] == "ghcr.io/trufflesecurity/trufflehog@sha256"
+    assert re.fullmatch(r"[0-9a-f]{64}", scanner["with"]["version"])
 
     # Artifact publication is the coverage receipt. It follows a successful
     # scanner and is unavailable to PRs, queue runs, branches and bounded dispatch.

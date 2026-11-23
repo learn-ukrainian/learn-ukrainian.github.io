@@ -1,8 +1,7 @@
 """Both CI TruffleHog steps pin the scanner image (#10056).
 
-The action SHA pins the workflow script only. The action input ``version``
-defaults to ``latest``, so an omitted or floating value scans whatever image
-the registry serves that day.
+The pinned action passes ``image:version`` to Docker. Together those inputs
+must name the same digest in both jobs.
 """
 
 from __future__ import annotations
@@ -13,7 +12,8 @@ from pathlib import Path
 import yaml
 
 _CI = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "ci.yml"
-_EXACT_VERSION = re.compile(r"\d+\.\d+\.\d+\Z")
+_IMAGE = "ghcr.io/trufflesecurity/trufflehog@sha256"
+_DIGEST_HEX = re.compile(r"[0-9a-f]{64}")
 
 
 def _trufflehog_steps() -> list[dict]:
@@ -26,14 +26,15 @@ def _trufflehog_steps() -> list[dict]:
     return steps
 
 
-def test_both_trufflehog_steps_pin_an_exact_scanner_version() -> None:
+def test_both_trufflehog_steps_pin_the_same_scanner_digest() -> None:
     steps = _trufflehog_steps()
     assert len(steps) == 2
-    versions = []
+    digests = []
     for step in steps:
-        version = (step.get("with") or {}).get("version")
-        assert isinstance(version, str)
-        assert "latest" not in version.lower()
-        assert _EXACT_VERSION.fullmatch(version)
-        versions.append(version)
-    assert versions[0] == versions[1]
+        inputs = step["with"]
+        assert inputs["image"] == _IMAGE
+        digest = inputs["version"]
+        assert isinstance(digest, str)
+        assert _DIGEST_HEX.fullmatch(digest)
+        digests.append(digest)
+    assert digests[0] == digests[1]

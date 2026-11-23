@@ -113,7 +113,7 @@ pins:
     source: .github/workflows/ci.yml
     owner: DevOps
     review_by: "2026-11-16"
-    note: Runner image tag. The TruffleHog scanner image tag in the same file is 3.99.0; action SHAs are Dependabot's.
+    note: Runner image tag. The TruffleHog scanner uses an image digest in ci.yml. Dependabot tracks action SHAs.
   - name: browser-and-test-runtimes
     pinned: unknown
     source: host
