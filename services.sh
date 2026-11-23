@@ -1229,8 +1229,15 @@ _ensure_astro_deps() {
         return 0
     fi
     echo "  site deps missing (no node_modules/.bin/astro) — self-healing with npm ci..."
-    ( cd "$PROJECT_ROOT/site" && npm ci && npm rebuild esbuild sharp ) || {
-        echo "  ERROR: npm ci failed in site; cannot build/start astro" >&2
+    # Publish the Astro bin only after the approved scripts complete. Otherwise
+    # the fast path would treat an interrupted or refused install as complete.
+    (
+        cd "$PROJECT_ROOT/site" &&
+        npm ci --ignore-scripts --bin-links=false &&
+        npm rebuild --ignore-scripts=false --bin-links=false &&
+        npm rebuild --ignore-scripts
+    ) || {
+        echo "  ERROR: locked site dependency setup failed; cannot build/start astro" >&2
         return 1
     }
     echo "  site deps restored."

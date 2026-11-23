@@ -211,7 +211,10 @@ jobs:
       with:
         save-cache: false
     - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start postgres
-    - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
+    - name: Install measured revision's locked Node dependencies with scripts disabled
+      run: |
+        npm --version
+        bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
     - name: Keep measurement tooling outside the measured checkout
       run: |
         mkdir -p "$RUNNER_TEMP/coverage-ref"
@@ -220,6 +223,10 @@ jobs:
         printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
       timeout-minutes: 5
+    - name: Verify the measured revision's npm lock
+      run: |
+        git diff --exit-code HEAD -- package-lock.json
+        echo "package-lock.json matches HEAD after npm ci."
     - name: Isolate coverage storage from import-smoke guards
       # patch=subprocess uses interpreter startup, so this must also reach
       # children that deliberately clear PYTHONPATH or change their cwd.

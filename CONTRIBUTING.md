@@ -27,7 +27,7 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 
 - macOS (primary dev platform)
 - [uv](https://docs.astral.sh/uv/) 0.13.9 (`pyproject.toml` `[tool.uv] required-version`); it installs the Python in `.python-version`
-- Node.js 20+ (for Starlight frontend)
+- The Node.js release in `.nvmrc` with its bundled npm. npm enforces the repository's install-script policies.
 
 ### Installation
 
@@ -47,8 +47,12 @@ uv sync --locked --no-build \
 uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
 uv sync --locked --no-build-isolation
 
-# 3. Frontend
-cd starlight && npm install && cd ..
+# 3. Locked Node dependencies (with nvm installed)
+nvm install &&
+nvm use &&
+npm ci --ignore-scripts &&
+npm rebuild --ignore-scripts=false &&
+(cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
 
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769

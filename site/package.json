@@ -2,6 +2,13 @@
   "name": "starlight",
   "type": "module",
   "version": "0.0.1",
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "11.19.1",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "atlas:build-db": "cd .. && \"${PYTHON:-.venv/bin/python}\" -m scripts.atlas.atlas_db --db data/atlas.db",
     "atlas:build-search": "cd .. && \"${PYTHON:-.venv/bin/python}\" scripts/audit/generate_search_index.py --db data/atlas.db",
@@ -81,9 +88,8 @@
     "picomatch": "$picomatch"
   },
   "allowScripts": {
-    "esbuild@0.28.1": true,
-    "fsevents@2.3.2": true,
-    "fsevents@2.3.3": true,
-    "better-sqlite3@13.0.2": true
+    "better-sqlite3@13.0.3": false,
+    "esbuild@0.28.2": false,
+    "fsevents@2.3.3": false
   }
 }

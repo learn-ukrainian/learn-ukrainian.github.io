@@ -73,7 +73,20 @@
   "license": "ISC",
   "type": "commonjs",
   "engines": {
-    "node": "22.23.4"
+    "node": "24.22.3"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "11.19.1",
+      "onFail": "error"
+    }
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": false,
+    "esbuild@0.28.2": false,
+    "fsevents@2.3.3": false,
+    "puppeteer": false
   },
   "workspaces": [
     "packages/*"
