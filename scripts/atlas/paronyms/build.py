@@ -160,15 +160,30 @@ def _resolve_canonical_pair(
     return (wa, wb, True, []) if wa <= wb else (wb, wa, True, [])
 
 
+def _load_json_dict(path: Path) -> dict[str, Any]:
+    """Load a JSON file and fail closed with ValueError if top-level value is not an object."""
+    parsed = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(parsed, dict):
+        raise ValueError(f"Expected JSON object in {path.name}, got {type(parsed).__name__}")
+    return parsed
+
+
 def load_a1_lemma_sets(
     a1_inventory_path: Path,
 ) -> dict[str, set[str]]:
     """Load A1 card lemma sets from ``a1-v1-inventory.json`` and sibling slice manifests."""
-    inv = json.loads(a1_inventory_path.read_text(encoding="utf-8"))
+    inv = _load_json_dict(a1_inventory_path)
+    rows = inv.get("rows", [])
+    if not isinstance(rows, list):
+        raise ValueError(f"Expected 'rows' list in {a1_inventory_path.name}")
     inventory_lemmas: set[str] = set()
     single_token_keys: set[str] = set()
-    for row in inv.get("rows", []):
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError(f"Expected dict row in {a1_inventory_path.name}")
         mapping = row.get("mapping", {})
+        if not isinstance(mapping, dict):
+            raise ValueError(f"Expected dict 'mapping' in {a1_inventory_path.name}")
         lemma = mapping.get("lemma")
         if isinstance(lemma, str) and lemma.strip():
             inventory_lemmas.add(normalize_token(lemma))
@@ -181,29 +196,48 @@ def load_a1_lemma_sets(
     slice_lemmas: set[str] = set()
     reg_path = atlas_dir / "identity" / "registry.json"
     if reg_path.exists():
-        reg = json.loads(reg_path.read_text(encoding="utf-8"))
+        reg = _load_json_dict(reg_path)
+        reg_entries = reg.get("entries", [])
+        if not isinstance(reg_entries, list):
+            raise ValueError(f"Expected 'entries' list in {reg_path.name}")
         card_to_spelling: dict[str, str] = {}
-        for entry in reg.get("entries", []):
+        for entry in reg_entries:
+            if not isinstance(entry, dict):
+                raise ValueError(f"Expected dict entry in {reg_path.name}")
             cid = entry.get("card_id")
-            spelling = (entry.get("key_at_creation") or {}).get("spelling")
-            if cid and spelling:
-                card_to_spelling[str(cid)] = normalize_token(str(spelling))
+            key_info = entry.get("key_at_creation")
+            spelling = key_info.get("spelling") if isinstance(key_info, dict) else None
+            if isinstance(cid, str) and isinstance(spelling, str) and cid and spelling:
+                card_to_spelling[cid] = normalize_token(spelling)
         for slice_num in (2, 3, 4, 5, 6):
             comp_path = atlas_dir / "identity" / f"a1-v1-slice{slice_num}.json"
             if comp_path.exists():
-                comp = json.loads(comp_path.read_text(encoding="utf-8"))
-                for entry in comp.get("entries", []):
+                comp = _load_json_dict(comp_path)
+                comp_entries = comp.get("entries", [])
+                if not isinstance(comp_entries, list):
+                    raise ValueError(f"Expected 'entries' list in {comp_path.name}")
+                for entry in comp_entries:
+                    if not isinstance(entry, dict):
+                        raise ValueError(f"Expected dict entry in {comp_path.name}")
                     cid = entry.get("card_id")
-                    spelling = (entry.get("key_at_creation") or {}).get("spelling")
-                    if cid and spelling:
-                        card_to_spelling[str(cid)] = normalize_token(str(spelling))
+                    key_info = entry.get("key_at_creation")
+                    spelling = key_info.get("spelling") if isinstance(key_info, dict) else None
+                    if isinstance(cid, str) and isinstance(spelling, str) and cid and spelling:
+                        card_to_spelling[cid] = normalize_token(spelling)
             slice_path = atlas_dir / f"a1-v1-slice{slice_num}.json"
             if slice_path.exists():
-                sdata = json.loads(slice_path.read_text(encoding="utf-8"))
-                cids = sdata.get("card_ids") or (sdata.get("selection") or {}).get("card_ids") or []
+                sdata = _load_json_dict(slice_path)
+                selection = sdata.get("selection")
+                cids = sdata.get("card_ids")
+                if cids is None and isinstance(selection, dict):
+                    cids = selection.get("card_ids")
+                if cids is None:
+                    cids = []
+                if not isinstance(cids, list):
+                    raise ValueError(f"Expected 'card_ids' list in {slice_path.name}")
                 for cid in cids:
-                    if str(cid) in card_to_spelling:
-                        slice_lemmas.add(card_to_spelling[str(cid)])
+                    if isinstance(cid, str) and cid in card_to_spelling:
+                        slice_lemmas.add(card_to_spelling[cid])
 
     return {
         "inventory_lemmas": inventory_lemmas,

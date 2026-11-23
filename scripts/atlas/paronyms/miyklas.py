@@ -345,8 +345,12 @@ def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[So
     required_keys = ("page_id", "title", "url", "text", "text_sha256", "raw_html_sha256", "fetched_at_utc")
     docs: list[SourceDocument] = []
     for page in pages:
-        if not isinstance(page, dict) or any(k not in page for k in required_keys):
-            raise ValueError(f"MiyKlas snapshot page missing required provenance keys: {required_keys}")
+        if not isinstance(page, dict) or any(
+            not isinstance(page.get(k), str) for k in required_keys
+        ):
+            raise ValueError(
+                f"MiyKlas snapshot page missing required string provenance keys: {required_keys}"
+            )
         text = str(page["text"])
         actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
         expected_sha = str(page["text_sha256"])
