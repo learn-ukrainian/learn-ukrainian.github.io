@@ -85,6 +85,15 @@ def test_claude_adapter_keeps_no_tool_list_of_its_own():
     assert not hasattr(claude, "SOURCES_PERSISTING_TOOLS")
 
 
+@pytest.fixture
+def native_claude(tmp_path, monkeypatch):
+    binary = tmp_path / "claude"
+    binary.write_text('#!/bin/sh\n[ "$*" = --version ] || exit 1\nprintf "2.1.200\\n"\n', encoding="utf-8")
+    binary.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path), prepend=":")
+
+
+@pytest.mark.usefixtures("native_claude")
 @pytest.mark.parametrize(
     "tool_config",
     [{"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}, {"discussion_readonly": True}, None],
@@ -319,6 +328,7 @@ def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
         _render_codex_review_config(Path("/bin/python"), tmp_path / "missing.py", {})
 
 
+@pytest.mark.usefixtures("native_claude")
 @pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)
 def test_claude_ad_hoc_reviewer_denies_every_writer(tmp_path, writer):
     from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter

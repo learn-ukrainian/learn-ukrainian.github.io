@@ -1,8 +1,7 @@
 """Explicit exercise records for the Monitor API OPSEC sweep.
 
 The live FastAPI tree is the denominator. ``ACCEPTED_DENOMINATORS`` holds the
-reviewed snapshot of that tree for the installed machinery release
-(lu-machinery 0.1.31, after machinery #756 stopped serving the unused routes).
+reviewed snapshot of that tree for the installed machinery release.
 A tree that does not match fails. Adding or removing an HTTP or WebSocket
 route changes the fingerprint and fails the sweep until a record is
 deliberately reviewed.
@@ -47,14 +46,14 @@ class FrozenDenominator:
 
 
 # Measured from the live app. The count and the digest are one snapshot:
-# a tree matches only when all three fields match. This is lu-machinery 0.1.45,
-# which adds GET /api/fleet/model-stats/planning (machinery PR 1026) over the
-# 0.1.33-0.1.44 snapshot (168 HTTP routes).
+# A tree matches only when all three fields match. lu-machinery 0.1.55
+# adds the read-only GET /api/fleet/seats and GET /api/fleet/deliveries
+# (machinery PR 1227). Both use the ordinary read exercise without exemptions.
 ACCEPTED_DENOMINATORS = (
     FrozenDenominator(
-        http_count=169,
+        http_count=171,
         websocket_count=1,
-        sha256="39aed22bf3472069dc8030835051c6f90ab2825ad8c9922ba8cd760c1d1df224",
+        sha256="e945d923bc0328566fe9aef47b1f75c60ac5fa697d99a25acaf03adbfb763ebb",
     ),
 )
 

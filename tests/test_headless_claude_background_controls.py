@@ -403,7 +403,7 @@ def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.Monke
         lambda argv, **_kwargs: argvs.append(argv) or subprocess.CompletedProcess(argv, 0, "2.1.200", ""),
     )
     assert claude_version.run_version_probe(["/opt/claude"], timeout=1) is not None
-    assert claude_version.run_version_probe(claude_version.CLAUDE_NPX_PREFIX, timeout=1) is not None
+    assert claude_version.run_version_probe(["npx", "@anthropic-ai/claude-code@latest"], timeout=1) is None
     assert claude_version.run_version_probe(["claude", "-p"], timeout=1) is None
     assert claude_version.run_version_probe(["npx", "other-package"], timeout=1) is None
-    assert argvs == [["/opt/claude", "--version"], ["npx", "@anthropic-ai/claude-code@latest", "--version"]]
+    assert argvs == [["/opt/claude", "--version"]]
