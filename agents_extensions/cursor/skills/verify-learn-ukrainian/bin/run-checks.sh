@@ -62,8 +62,11 @@ run_check() {
 }
 
 # --- Site / toolchain presence ------------------------------------------------
-if [[ -d "$ROOT/site/node_modules" ]]; then
-  report PASS "site/node_modules present"
+# The install hint is only offered on the pinned toolchain; a refusal prints its repair.
+if ! lu_verify_toolchain "$ROOT" run-checks; then
+  report FAIL "Node toolchain" "see the repair above"
+elif [[ -d "$ROOT/site/node_modules" ]]; then
+  report PASS "Node toolchain and site/node_modules present"
 else
   report SKIP "site/node_modules" "$(lu_verify_site_install_hint "$ROOT")"
 fi

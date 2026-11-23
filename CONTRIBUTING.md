@@ -50,13 +50,17 @@ uv sync --locked --no-build-isolation
 # 3. Locked Node dependencies (with nvm installed). The shared toolchain
 # check selects the exact release in .nvmrc through nvm and refuses any other
 # Node or npm with the command that repairs it; then npm ci installs from the
-# locks. It runs in bash, so it works from any login shell. The last line
-# selects the same release in this shell for step 4 and `npm run dev:starlight`.
+# locks. It runs in bash, so it works from any login shell. The last lines
+# select the same release in this shell for step 4 and `npm run dev:starlight`,
+# then check this shell's Node and npm again.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}" &&
 bash -c '. scripts/node_toolchain.sh &&
   lu_verify_toolchain "$PWD" setup &&
   npm ci --ignore-scripts && npm rebuild --ignore-scripts=false &&
   cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false' &&
-. "${NVM_DIR:-$HOME/.nvm}/nvm.sh" && nvm use "$(tr -d '[:space:]' < .nvmrc)"
+{ . "$NVM_DIR/nvm.sh" --no-use || :; } &&
+nvm use "$(tr -d '[:space:]' < .nvmrc)" &&
+bash -c '. scripts/node_toolchain.sh && lu_verify_toolchain "$PWD" setup'
 
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769
