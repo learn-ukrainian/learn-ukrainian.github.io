@@ -105,14 +105,14 @@ jobs:
           SCAN_BASE: ${{ steps.metadata.outputs.parent }}
           SCAN_HEAD: ${{ steps.metadata.outputs.commit }}
         run: python3 -m lu_machinery.ci.secret_scan_scope materialize
-      # TruffleHog 3.99.0. The action joins image and version with a colon,
+      # TruffleHog 3.99.9. The action joins image and version with a colon,
       # producing ghcr.io/trufflesecurity/trufflehog@sha256:<digest>.
       # For a new release, update both digest pins together and re-scan
       # with scripts/audit/secret_scan_local.py tree.
       - uses: trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc # action v3.99.9
         with:
           image: ghcr.io/trufflesecurity/trufflehog@sha256
-          version: "39ee0643ae620664287bcc95f133f3fc8484590d6ca4e7105d96b90dac4b9f6f"
+          version: "2ec535840f860aa27f11fee20222fb790326ecd66325c96bd49d02ec6af46eca"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
           # Scan the blobless checkout in place; TruffleHog's own clone of a partial clone
@@ -212,7 +212,7 @@ jobs:
       - uses: trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc # action v3.99.9
         with:
           image: ghcr.io/trufflesecurity/trufflehog@sha256
-          version: "39ee0643ae620664287bcc95f133f3fc8484590d6ca4e7105d96b90dac4b9f6f"
+          version: "2ec535840f860aa27f11fee20222fb790326ecd66325c96bd49d02ec6af46eca"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: >-

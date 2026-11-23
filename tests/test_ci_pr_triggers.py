@@ -235,7 +235,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
         step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
     )
     assert "if" not in scanner
-    assert scanner["uses"] == "trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb"
+    assert scanner["uses"] == "trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc"
     assert scanner["with"]["image"] == "ghcr.io/trufflesecurity/trufflehog@sha256"
     assert re.fullmatch(r"[0-9a-f]{64}", scanner["with"]["version"])
 
