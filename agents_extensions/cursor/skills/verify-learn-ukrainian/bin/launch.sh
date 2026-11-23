@@ -48,8 +48,8 @@ fi
 
 mkdir -p "$STATE_DIR" "$EVIDENCE_DIR"
 
-# shellcheck source=SCRIPTDIR/toolchain.sh
-. "$BIN/toolchain.sh"
+# shellcheck source=scripts/node_toolchain.sh
+. "$ROOT/scripts/node_toolchain.sh"
 lu_verify_toolchain "$ROOT" launch || exit 1
 
 # Refuse to double-drive a foreign listener on our port.

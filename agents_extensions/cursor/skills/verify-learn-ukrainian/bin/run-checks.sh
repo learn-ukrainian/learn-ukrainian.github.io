@@ -20,8 +20,8 @@ set -euo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$BIN/../../../.." && pwd)"
 cd "$ROOT"
-# shellcheck source=SCRIPTDIR/toolchain.sh
-. "$BIN/toolchain.sh"
+# shellcheck source=scripts/node_toolchain.sh
+. "$ROOT/scripts/node_toolchain.sh"
 
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 if [[ ! -x "$PYTHON" ]]; then
