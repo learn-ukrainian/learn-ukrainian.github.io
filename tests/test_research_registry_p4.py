@@ -27,6 +27,7 @@ import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest.mock import create_autospec
 
 import lu_machinery.api.main as api_main
 import pytest
@@ -939,12 +940,26 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         )
         # The release audits its packaged registry (REGISTRY_PATH), not one under the root.
         monkeypatch.setattr(isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
-        monkeypatch.setattr(isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
-        monkeypatch.setattr(isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
+        monkeypatch.setattr(isa, "_repo_owner_name", create_autospec(isa._repo_owner_name, return_value=tuple(repo.split("/"))))
+        monkeypatch.setattr(
+            isa,
+            "fetch_open_issues",
+            create_autospec(isa.fetch_open_issues, return_value=[{"number": 123, "title": "PRIVATE_TITLE_CANARY"}]),
+        )
+
+        def fetch(cursors, *_args, **_kwargs):
+            return {
+                n: {
+                    "body": "- [ ] #123" if n == 5703 else "",
+                    "subIssues": {"nodes": [], "pageInfo": {"hasNextPage": False, "endCursor": None}},
+                }
+                for n in cursors
+            }
+
         monkeypatch.setattr(
             isa,
             "_fetch_subissue_batch",
-            lambda cursors, *a: {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors},
+            create_autospec(isa._fetch_subissue_batch, side_effect=fetch),
         )
         isa.run_audit(tmp_path)
     cache = tmp_path / "batch_state/issue_stream_audit.json"
