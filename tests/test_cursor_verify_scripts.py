@@ -237,6 +237,7 @@ def test_doctor_checks_real_child_listener_group(sandbox, foreign):
 @pytest.mark.parametrize("fail_ruff", [False, True])
 def test_checks_aggregate_and_share_interpreter(sandbox, fail_ruff):
     root, _, commands, env = sandbox
+    (root / "site/node_modules").rmdir()
     manifest = root / "site/src/data/lexicon-manifest.json"
     manifest.parent.mkdir(parents=True)
     manifest.write_text("{}")
@@ -259,4 +260,5 @@ def test_checks_aggregate_and_share_interpreter(sandbox, fail_ruff):
     assert "scripts/audit/lint_word_atlas.py" in calls
     assert "tests/validate/test_permissions_register.py" in calls
     assert "Summary:" in result.stdout
+    assert "follow CONTRIBUTING.md step 3 to install the locked site dependencies" in result.stdout
     assert "1 failed" in result.stdout if fail_ruff else "0 failed" in result.stdout

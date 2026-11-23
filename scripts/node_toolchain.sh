@@ -90,15 +90,14 @@ _lu_verify_versions() {
 }
 
 # lu_verify_site_install_hint ROOT: how to repair a missing locked site install,
-# as a command that works from any directory. A site/node_modules link (even a
+# through the checked setup procedure. A site/node_modules link (even a
 # dangling one) belongs to another tree, which npm ci would empty through the link.
 lu_verify_site_install_hint() {
-  local modules="$1/site/node_modules" site
+  local modules="$1/site/node_modules"
   if [[ -L "$modules" ]]; then
     printf 'site/node_modules is a link to %s, which this checkout must not reinstall; repair that install, or remove the link (rm -- %q) and rerun launch.sh to install from site/package-lock.json' \
       "$(readlink -- "$modules")" "$modules"
     return 0
   fi
-  printf -v site '%q' "$1/site"
-  printf 'run: cd %s && %s' "$site" "$LU_VERIFY_SITE_INSTALL"
+  printf 'follow CONTRIBUTING.md step 3 to install the locked site dependencies'
 }
