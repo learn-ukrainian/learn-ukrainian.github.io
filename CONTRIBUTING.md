@@ -47,15 +47,14 @@ uv sync --locked --no-build \
 uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
 uv sync --locked --no-build-isolation
 
-# 3. Locked Node dependencies (with nvm installed). nvm installs and selects
-# the exact release in .nvmrc, whose bundled npm is the engines.npm pin. With
-# engine-strict in .npmrc, npm ci refuses (EBADENGINE) any other Node or npm
-# and prints the required and actual versions.
-nvm install &&
-nvm use &&
-npm ci --ignore-scripts &&
-npm rebuild --ignore-scripts=false &&
-(cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
+# 3. Locked Node dependencies (with nvm installed). The verify skill's
+# toolchain check selects the exact release in .nvmrc through nvm and refuses
+# any other Node or npm with the command that repairs it; then npm ci installs
+# from the locks. It runs in bash, so it works from any login shell.
+bash -c '. agents_extensions/cursor/skills/verify-learn-ukrainian/bin/toolchain.sh &&
+  lu_verify_toolchain "$PWD" setup &&
+  npm ci --ignore-scripts && npm rebuild --ignore-scripts=false &&
+  cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false'
 
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769

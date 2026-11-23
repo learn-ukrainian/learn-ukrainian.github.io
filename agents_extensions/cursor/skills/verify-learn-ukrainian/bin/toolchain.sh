@@ -1,5 +1,6 @@
 # shellcheck shell=bash
-# Sourced by launch.sh, doctor.sh, drive-playwright.sh and run-checks.sh; not run directly.
+# Sourced by launch.sh, doctor.sh, drive-playwright.sh, run-checks.sh and
+# CONTRIBUTING.md step 3; not run directly.
 #
 # The checked-in Node contract: the exact release in .nvmrc, equal to package.json
 # engines.node, run with its bundled npm at engines.npm. That npm enforces the
@@ -11,17 +12,16 @@ _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 
 # lu_verify_toolchain ROOT LABEL
 # Return 0 when node and npm on PATH match the checked-in pins, selecting the
-# release through nvm first if it is installed and the PATH does not match.
-# Otherwise print why on stderr, with the command that repairs it, and return 1.
+# exact release through nvm first when the PATH does not match. Otherwise print
+# why on stderr, with the command that repairs it, and return 1.
 lu_verify_toolchain() {
-  local root="$1" label="$2" nvmrc="" node_pin="" npm_pin="" fix nvm_sh flags="$-"
+  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" flags="$-"
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
     nvmrc="${nvmrc//[[:space:]]/}"
     nvmrc="${nvmrc#v}"
   fi
-  # Pins are checked before nvm sees them: an alias such as lts/* would select a
-  # moving release.
+  # Checked before nvm sees it: an alias such as lts/* selects a moving release.
   if [[ ! "$nvmrc" =~ $_LU_VERIFY_EXACT ]]; then
     printf '%s FAIL: .nvmrc must hold an exact Node release (found "%s"). Restore the checked-in file: git -C %q checkout -- .nvmrc\n' \
       "$label" "$nvmrc" "$root" >&2
@@ -30,40 +30,52 @@ lu_verify_toolchain() {
   if _lu_verify_versions "$root" "$nvmrc"; then
     return 0
   fi
-  if [[ "$_lu_node_pin" != "$nvmrc" || ! "$_lu_npm_pin" =~ $_LU_VERIFY_EXACT ]]; then
-    # The pins are read with node, so without one they stay unknown here.
-    if [[ -n "$_lu_node_version" ]]; then
-      printf '%s FAIL: package.json engines must pin node %s (the .nvmrc release) and an exact npm (found node "%s", npm "%s"). Restore the checked-in files: git -C %q checkout -- .nvmrc package.json\n' \
-        "$label" "$nvmrc" "$_lu_node_pin" "$_lu_npm_pin" "$root" >&2
-      return 1
-    fi
-  fi
+  _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
   nvm_sh="${NVM_DIR:-${HOME:-}/.nvm}/nvm.sh"
   if [[ -s "$nvm_sh" ]]; then
-    # nvm is optional: a script that fails under errexit or nounset must not stop us.
-    # --no-use keeps its default alias off PATH, so a failed selection reports the
-    # caller's own node and npm.
+    # nvm is optional: a script that fails under errexit or nounset must not stop
+    # us. --no-use keeps its default alias off PATH until the exact selection.
     set +eu
     # shellcheck disable=SC1090
     . "$nvm_sh" --no-use >/dev/null 2>&1
-    if declare -F nvm >/dev/null; then
-      nvm use "$nvmrc" >/dev/null 2>&1
+    nvm_state=broken
+    if declare -F nvm >/dev/null && nvm --version >/dev/null 2>&1; then
+      nvm_state=ok
+      [[ "$(nvm version "$nvmrc" 2>/dev/null)" == "v$nvmrc" ]] && installed=1
+      [[ -n "$installed" ]] && nvm use "$nvmrc" >/dev/null 2>&1
     fi
     [[ "$flags" == *e* ]] && set -e
     [[ "$flags" == *u* ]] && set -u
     if _lu_verify_versions "$root" "$nvmrc"; then
       return 0
     fi
+    # Node may have become available through nvm, so the pins can be read now.
+    _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
   fi
-  node_pin="${_lu_node_pin:-$nvmrc}"
-  npm_pin="${_lu_npm_pin:-unknown}"
-  if declare -F nvm >/dev/null; then
-    printf -v fix 'cd %q && nvm install && nvm use' "$root"
-  else
-    printf -v fix 'install Node %s from https://nodejs.org/dist/v%s/ and put its bin directory first on PATH' \
-      "$node_pin" "$node_pin"
-  fi
-  echo "$label FAIL: need Node $node_pin (.nvmrc, package.json engines.node) with its bundled npm $npm_pin (engines.npm); found Node ${_lu_node_version:-none} and npm ${_lu_npm_version:-none}. Run: $fix" >&2
+  case "$nvm_state:$installed" in
+    ok:1)
+      # nvm selected the release, so its npm is not the one it shipped with.
+      printf -v fix 'cd %q && nvm deactivate >/dev/null; nvm uninstall %s && nvm install %s && nvm use %s' \
+        "$root" "$nvmrc" "$nvmrc" "$nvmrc"
+      ;;
+    ok:) printf -v fix 'cd %q && nvm install %s && nvm use %s' "$root" "$nvmrc" "$nvmrc" ;;
+    *)
+      printf -v fix 'nvm (the toolchain manager CONTRIBUTING.md requires) is %s at %q; install it from https://github.com/nvm-sh/nvm#installing-and-updating, then run: cd %q && nvm install %s && nvm use %s' \
+        "$([[ "$nvm_state" == broken ]] && echo 'not working' || echo 'missing')" "$nvm_sh" "$root" "$nvmrc" "$nvmrc"
+      ;;
+  esac
+  echo "$label FAIL: need Node $nvmrc (.nvmrc, package.json engines.node) with its bundled npm ${_lu_npm_pin:-at engines.npm}; found Node ${_lu_node_version:-none} and npm ${_lu_npm_version:-none}. Run: $fix" >&2
+  return 1
+}
+
+# _lu_verify_manifest ROOT LABEL NVMRC: when node could read package.json, refuse
+# engines that do not pin the .nvmrc release and an exact npm. Without node the
+# pins stay unknown and the toolchain repair comes first.
+_lu_verify_manifest() {
+  [[ -z "$_lu_node_version" ]] && return 0
+  [[ "$_lu_node_pin" == "$3" && "$_lu_npm_pin" =~ $_LU_VERIFY_EXACT ]] && return 0
+  printf '%s FAIL: package.json engines must pin node %s (the .nvmrc release) and an exact npm (found node "%s", npm "%s"). Restore the checked-in files: git -C %q checkout -- .nvmrc package.json\n' \
+    "$2" "$3" "$_lu_node_pin" "$_lu_npm_pin" "$1" >&2
   return 1
 }
 
