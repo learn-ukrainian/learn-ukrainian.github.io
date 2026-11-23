@@ -1,5 +1,6 @@
-"""Focused shell regression tests; no site build, private data, or provider calls."""
+"""Cursor script regressions and offline checks of the npm install policy."""
 
+import json
 import os
 import shutil
 import signal
@@ -10,7 +11,8 @@ from pathlib import Path
 
 import pytest
 
-SKILL = Path(__file__).resolve().parents[1] / "agents_extensions/cursor/skills/verify-learn-ukrainian"
+ROOT = Path(__file__).resolve().parents[1]
+SKILL = ROOT / "agents_extensions/cursor/skills/verify-learn-ukrainian"
 
 
 @pytest.fixture
@@ -27,7 +29,6 @@ def sandbox(tmp_path):
             env.pop(key)
     env.update(
         PATH=f"{commands}:/usr/bin:/bin",
-        NVM_DIR=str(tmp_path / "no-nvm"),
         TMPDIR=str(tmp_path),
         LU_VERIFY_PYTHON=sys.executable,
         LU_VERIFY_STATE_DIR=str(tmp_path / "lu-verify-test"),
@@ -51,36 +52,56 @@ def run(sandbox, name, *args):
     )
 
 
-@pytest.mark.parametrize("version", [None, "v20.19.0", "v22.19.0"])
-def test_launch_node_preflight(sandbox, version):
-    root, _, commands, env = sandbox
+def test_launch_propagates_npm_ci_refusal(sandbox):
+    root, _, commands, _ = sandbox
     (root / "site/node_modules").rmdir()
-    # Minimal PATH proves missing Node is handled without guessing NVM paths.
-    for name in ("dirname", "date", "mkdir", "sed", "readlink", "basename"):
-        (commands / name).symlink_to(shutil.which(name))
-    env["PATH"] = str(commands)
-    if version is not None:
-        command(commands, "node", f"echo {version}")
     command(commands, "curl", "exit 1")
-    command(commands, "npm", 'printf "%s" "$PATH" > "$LU_VERIFY_EVIDENCE_DIR/path"; exit 42')
+    command(commands, "npm", '[[ "$PWD" == */site && "$*" == ci ]]; echo "npm error code EBADENGINE" >&2; exit 42')
     result = run(sandbox, "launch.sh", "dev")
-    if version == "v22.19.0":
-        assert result.returncode == 42
-        assert Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").read_text() == env["PATH"]
-    else:
-        assert result.returncode == 1
-        assert "launch FAIL: need Node 22.x" in result.stderr
-        assert "command not found" not in result.stderr
+    assert result.returncode == 42
+    assert "npm error code EBADENGINE" in result.stderr
 
 
-def test_launch_nvm_failure_is_friendly(sandbox):
-    _, _, _, env = sandbox
-    nvm_dir = Path(env["NVM_DIR"])
-    nvm_dir.mkdir()
-    (nvm_dir / "nvm.sh").write_text("nvm() { return 3; }\n")
-    result = run(sandbox, "launch.sh", "dev")
-    assert result.returncode == 1
-    assert "launch FAIL: need Node 22.x (nvm use 22 failed)" in result.stderr
+def test_npm_refuses_wrong_engine_for_both_projects(tmp_path):
+    npm = shutil.which("npm")
+    node = shutil.which("node")
+    if npm is None or node is None:
+        pytest.skip("real Node and npm are required for the npm CLI offline check")
+    env = {
+        "PATH": os.environ["PATH"],
+        "HOME": str(tmp_path),
+        "npm_config_cache": str(tmp_path / "cache"),
+        "npm_config_userconfig": str(tmp_path / "user.npmrc"),
+        "npm_config_globalconfig": str(tmp_path / "global.npmrc"),
+    }
+    node_version = subprocess.check_output([node, "--version"], env=env, text=True, timeout=15).strip()
+    pins = json.loads((ROOT / "package.json").read_text())["engines"]
+    assert pins["node"] == (ROOT / ".nvmrc").read_text().strip()
+    for name, source in (("root", ROOT), ("site", ROOT / "site")):
+        assert json.loads((source / "package.json").read_text())["engines"] == pins
+        project = tmp_path / name
+        project.mkdir()
+        shutil.copyfile(source / ".npmrc", project / ".npmrc")
+        # A dependency-free copy of the install policy isolates the npm mismatch.
+        package = {
+            "name": "engine-probe",
+            "version": "1.0.0",
+            "engines": {"node": node_version, "npm": "0.0.0"},
+        }
+        (project / "package.json").write_text(json.dumps(package))
+        (project / "package-lock.json").write_text(json.dumps({
+            "name": package["name"],
+            "version": package["version"],
+            "lockfileVersion": 3,
+            "packages": {"": package},
+        }))
+        for action in ("ci", "install"):
+            result = subprocess.run(
+                [npm, action, "--offline", "--no-audit", "--no-fund"],
+                cwd=project, env=env, text=True, capture_output=True, timeout=15,
+            )
+            assert result.returncode != 0, f"{name}: npm {action} accepted the wrong npm version"
+            assert "EBADENGINE" in result.stderr, result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
@@ -137,8 +158,7 @@ def test_cleanup_preserves_evidence(sandbox):
 
 @pytest.mark.parametrize("foreign", [False, True])
 def test_doctor_checks_real_child_listener_group(sandbox, foreign):
-    _, _, commands, env = sandbox
-    command(commands, "node", "echo v22.19.0")
+    _, _, _, env = sandbox
     ready = Path(env["TMPDIR"]) / "listener-ready"
     server_code = (
         "import http.server, pathlib, sys; "

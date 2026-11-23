@@ -5,8 +5,7 @@ This directory is the maintained source for verifying learner-facing behavior of
 ## Baseline preconditions
 
 - Project `.venv` exists and is used for every Python command (never bare `python` / `python3`).
-- Node 22.x is on `PATH` (`nvm use 22` when available).
-- Site deps installed: `(cd site && npm ci)`.
+- Select the pinned Node and npm and install site dependencies using CONTRIBUTING.md installation step 3.
 - Launch an isolated preview with `bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview`, then `source` the printed `env.sh`.
 - Run `bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh` and require OK before the first drive.
 - Never drive an instance that was not started by this verification run.

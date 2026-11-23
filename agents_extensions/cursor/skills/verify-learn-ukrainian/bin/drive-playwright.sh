@@ -6,7 +6,7 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
-Inputs: Node 22, site dependencies installed by npm ci from site/package-lock.json,
+Inputs: Node and site dependencies from CONTRIBUTING.md installation step 3,
         installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
 Requires the locked Playwright CLI and Astro (its preview webServer) in
 site/node_modules/.bin; never npx, a registry download or another copy on PATH.
@@ -31,12 +31,6 @@ FEATURE="${1:-}"
 if [[ -z "$FEATURE" ]]; then
   echo "usage: drive-playwright.sh <lessons|atlas|practice|all>" >&2
   exit 2
-fi
-
-if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090,SC1091
-  . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-  nvm use 22 >/dev/null
 fi
 
 PORT="${LU_VERIFY_PORT:-${PLAYWRIGHT_PORT:-4321}}"
@@ -87,7 +81,7 @@ if [[ -n "$GREP_PATTERN" ]]; then
 fi
 for bin in "${ARGS[0]}" "$LOCAL_BIN/astro"; do
   if [[ ! -f "$bin" || ! -x "$bin" ]]; then
-    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run npm ci in site/ (no npx or PATH fallback)" >&2
+    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; follow CONTRIBUTING.md installation step 3" >&2
     exit 1
   fi
 done

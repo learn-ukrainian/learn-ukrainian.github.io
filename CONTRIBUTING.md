@@ -27,7 +27,7 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 
 - macOS (primary dev platform)
 - [uv](https://docs.astral.sh/uv/) 0.13.9 (`pyproject.toml` `[tool.uv] required-version`); it installs the Python in `.python-version`
-- The Node.js release in `.nvmrc` with its bundled npm. npm enforces the repository's install-script policies.
+- The Node.js release in `.nvmrc` with its bundled npm. npm checks both versions against the pins in each project's `package.json` when installing dependencies.
 
 ### Installation
 
@@ -47,10 +47,11 @@ uv sync --locked --no-build \
 uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
 uv sync --locked --no-build-isolation
 
-# 3. Locked Node dependencies (with nvm installed)
+# 3. Select the Node.js release from .nvmrc in this shell and install the locked dependencies.
+# If the exact release is already installed, put its bin directory first on PATH
+# and skip the nvm commands.
 nvm install &&
 nvm use &&
-test "$(npm --version)" = "$(node -p 'require("./package.json").engines.npm')" &&
 npm ci --ignore-scripts &&
 npm rebuild --ignore-scripts=false &&
 (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)

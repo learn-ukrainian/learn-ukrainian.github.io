@@ -8,7 +8,8 @@ Build and launch an isolated learner site for local verification; not deployment
 Default: preview using build:shell; LU_VERIFY_BUILD_MODE=full selects build.
 Dependencies: npm ci from site/package-lock.json when site/node_modules is absent;
 the locked site/node_modules/.bin/astro must exist, never npx or a registry download.
-Inputs: Node 22, npm; LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
+Inputs: Node and npm from CONTRIBUTING.md installation step 3;
+        LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
         optional LU_VERIFY_RUN_ID, LU_VERIFY_STATE_DIR, LU_VERIFY_EVIDENCE_DIR.
 State: a lu-verify-<run-id> directory directly under ${TMPDIR:-/tmp}.
 Outputs: site build, process, state env.sh/PID/log, evidence directory.
@@ -42,26 +43,6 @@ fi
 
 mkdir -p "$STATE_DIR" "$EVIDENCE_DIR"
 
-# Prefer a modern Node 22 when nvm is present (site undici wants >=22.19).
-if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090,SC1091
-  . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-  nvm use 22 >/dev/null || {
-    echo "launch FAIL: need Node 22.x (nvm use 22 failed)" >&2
-    exit 1
-  }
-fi
-
-node_version="$(node -v 2>/dev/null)" || {
-  echo "launch FAIL: need Node 22.x (node unavailable on PATH)" >&2
-  exit 1
-}
-node_major="$(sed -E 's/^v([0-9]+).*/\1/' <<<"$node_version")"
-[[ "$node_major" == "22" ]] || {
-  echo "launch FAIL: need Node 22.x (got ${node_version})" >&2
-  exit 1
-}
-
 # Refuse to double-drive a foreign listener on our port.
 if curl -fsS --max-time 1 "http://${HOST}:${PORT}/" >/dev/null 2>&1; then
   if [[ ! -f "$PID_FILE" ]]; then
@@ -80,7 +61,7 @@ ensure_site_deps() {
     (cd "$ROOT/site" && npm ci)
   fi
   if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
-    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (no npx or PATH fallback)" >&2
+    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; follow CONTRIBUTING.md installation step 3" >&2
     exit 1
   fi
 }
