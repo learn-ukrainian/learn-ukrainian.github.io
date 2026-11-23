@@ -38,10 +38,12 @@ make pronunciation-audio PYTHON=/absolute/path/to/shared/project/python
 make pronunciation-audio PYTHON=/absolute/path/to/shared/project/python PRONUNCIATION_LIMIT=5
 ```
 
-`pronunciation-setup` installs into ignored `batch_state/tts-runtime` using pip's
-`--target`; it does not create a virtualenv or change the shared interpreter.
-The stress package is installed without its optional Stanza dependency: the
-existing dictionary oracle uses marisa-trie directly and does not run NLP models.
+`pronunciation-setup` runs `uv pip sync` with the specified interpreter and
+installs into the ignored `batch_state/tts-runtime` directory. It uses
+`requirements-tts.txt` and `requirements-tts-stress.txt` together. The sync
+requires matching hashes and accepts only wheels uploaded at least seven days
+earlier. The stress lock omits Stanza because the dictionary oracle looks up
+stress with marisa-trie.
 `pronunciation-audio` hydrates the current practice deck and downloads missing
 model files from a pinned revision, checking both SHA-256 values. Subsequent
 runs use the local model. For an offline run after hydration/download:
