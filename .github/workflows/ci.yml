@@ -109,7 +109,7 @@ jobs:
       # producing ghcr.io/trufflesecurity/trufflehog@sha256:<digest>.
       # For a new release, update both digest pins together and re-scan
       # with scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # action v3.99.8
+      - uses: trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc # action v3.99.9
         with:
           image: ghcr.io/trufflesecurity/trufflehog@sha256
           version: "39ee0643ae620664287bcc95f133f3fc8484590d6ca4e7105d96b90dac4b9f6f"
@@ -209,7 +209,7 @@ jobs:
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
       # Same TruffleHog digest as the queue-metadata job.
-      - uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # action v3.99.8
+      - uses: trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc # action v3.99.9
         with:
           image: ghcr.io/trufflesecurity/trufflehog@sha256
           version: "39ee0643ae620664287bcc95f133f3fc8484590d6ca4e7105d96b90dac4b9f6f"
