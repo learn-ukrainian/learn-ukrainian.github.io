@@ -53,10 +53,11 @@ uv sync --locked --no-build-isolation
 # before the locked installs.
 nvm install &&
 nvm use &&
-bash -c '. scripts/node_toolchain.sh && lu_verify_toolchain "$PWD" setup' &&
-npm ci --ignore-scripts &&
-npm rebuild --ignore-scripts=false &&
-(cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
+. scripts/node_toolchain.sh &&
+lu_verify_toolchain "$PWD" setup &&
+"$_lu_npm_path" ci --ignore-scripts &&
+"$_lu_npm_path" rebuild --ignore-scripts=false &&
+(cd site && "$_lu_npm_path" ci --ignore-scripts && "$_lu_npm_path" rebuild --ignore-scripts=false)
 ```
 
 Run steps 4 and 5 only after step 3 finished without a refusal: service start

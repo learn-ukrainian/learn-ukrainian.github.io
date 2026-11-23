@@ -106,6 +106,32 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
 
+@pytest.mark.parametrize("name", ["node", "npm"])
+def test_nonexecutable_path_entry_cannot_certify_tool(sandbox, name):
+    """A placeholder before a relative entry cannot certify the checkout tool."""
+    _, _, commands, env = sandbox
+    toolchain(commands, f"v{NODE_PIN}", NPM_PIN)
+    (commands / name).chmod(0o644)
+    env["PATH"] = f"{commands}:.:/usr/bin:/bin"
+    result = run(sandbox, "doctor.sh")
+    assert result.returncode == 1
+    assert "PATH holds an empty or relative entry" in result.stderr
+
+
+@pytest.mark.parametrize("name", ["node", "npm"])
+def test_exported_function_does_not_replace_resolved_tool(sandbox, name):
+    """An exported function cannot masquerade as or replace the checked executable."""
+    root, _, commands, env = sandbox
+    toolchain(commands, f"v{NODE_PIN}", NPM_PIN)
+    env[f"BASH_FUNC_{name}%%"] = "() { exit 97; }"
+    env["PATH"] = f"{commands}:.:/usr/bin:/bin"
+    (root / "site/node_modules").rmdir()
+    command(commands, "curl", "exit 1")
+    result = run(sandbox, "launch.sh", "dev")
+    assert result.returncode == 42, result.stderr
+    assert Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").read_text() == env["PATH"]
+
+
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
 @pytest.mark.parametrize("unsafe", ["root", "temp-root", "traversal", "nested", "symlink", "symlink-slash"])
 def test_unsafe_state_is_rejected_before_side_effects(sandbox, script, unsafe):

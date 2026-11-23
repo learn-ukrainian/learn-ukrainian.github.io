@@ -37,7 +37,7 @@ PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 # shellcheck source=scripts/node_toolchain.sh
 . "$ROOT/scripts/node_toolchain.sh"
 lu_verify_toolchain "$ROOT" doctor || exit 1
-ok "Node $(node -v) with npm $(npm --version)"
+ok "Node $("$_lu_node_path" -v) with npm $("$_lu_npm_path" --version)"
 
 # HTTP readiness
 if ! curl -fsS --max-time 5 "${BASE_URL}/" >/dev/null; then
