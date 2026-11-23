@@ -636,7 +636,7 @@ def operator_gate_gpu_canary(
     return payload
 
 
-def _bootstrap_install(mode: str, manifest: Mapping[str, Any]) -> str:
+def _bootstrap_install(mode: str, image: str, manifest: Mapping[str, Any]) -> str:
     _require(manifest.get("transport_sha256") == sha256_file(TRANSPORT_PATH), "rebuild bundle with current transport")
     locks = {path.name: path.read_bytes() for path in (BOOTSTRAP_LOCK_PATH, GPU_LOCK_PATH)}
     _require(
@@ -644,11 +644,11 @@ def _bootstrap_install(mode: str, manifest: Mapping[str, Any]) -> str:
         == {name: hashlib.sha256(lock).hexdigest() for name, lock in locks.items()},
         "rebuild bundle with current bootstrap wheel locks",
     )
-    requirements = locks[BOOTSTRAP_LOCK_PATH.name]
-    if mode in RUN_MODES:
-        requirements += locks[GPU_LOCK_PATH.name]
+    lock_path = BOOTSTRAP_LOCK_PATH if mode == "preflight" else GPU_LOCK_PATH
+    requirements = locks[lock_path.name].decode("ascii")
+    _require(requirements.startswith(f"# Image: {image}\n"), f"{mode} image does not match its bootstrap wheel lock")
     install = shlex.join(["python3", *hf_jobs_transport.PIP_INSTALL_ARGS])
-    return f"printf '%s' {shlex.quote(requirements.decode('ascii'))} | env -i PATH=\"$PATH\" PIP_CONFIG_FILE=/dev/null {install}"
+    return f"printf '%s' {shlex.quote(requirements)} | env -i PATH=\"$PATH\" PIP_CONFIG_FILE=/dev/null {install}"
 
 
 def _bootstrap_source() -> str:
@@ -850,7 +850,7 @@ def job_command(
     bootstrap = shlex.join(
         ["python3", "-I", "-c", _bootstrap_source(), config["runtime"]["huggingface_hub_cli_version"], *transport_args]
     )
-    shell_command = f"{_bootstrap_install(mode, manifest)} && {bootstrap}"
+    shell_command = f"{_bootstrap_install(mode, image, manifest)} && {bootstrap}"
     labels = {
         "bundle_sha256": manifest["bundle_sha256"],
         "issue": "6273",

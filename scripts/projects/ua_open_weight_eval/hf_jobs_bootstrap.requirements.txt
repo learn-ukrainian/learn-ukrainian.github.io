@@ -1,5 +1,6 @@
-# Shared Hub client closure. Seven-day release cooldown.
-# Inputs: huggingface-hub==1.25.1, fsspec==2026.6.0 (vLLM image S3 client compatibility).
+# Image: python:3.12.8-slim@sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9
+# CPU Hub client closure. Seven-day release cooldown.
+# Inputs: huggingface-hub==1.25.1 and fsspec==2026.6.0.
 # uv 0.13.9: pip compile - --python-version 3.12 --python-platform x86_64-manylinux_2_28
 #   --only-binary :all: --exclude-newer 2026-11-16T03:26:43Z --format pylock.toml
 # One compatible wheel URL and SHA-256 per package from the uv output, for Linux x86_64 CPython 3.12.

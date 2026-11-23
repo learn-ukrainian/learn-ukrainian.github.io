@@ -365,16 +365,17 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
             preflight_gate=tampered_gate,
         )
 
-    preflight = hf_jobs_baseline.job_command(
-        mode="preflight",
-        namespace="operator",
-        bundle=bundle,
-        transport_repo="operator/ua-open-weight-eval-staging-6273",
-        transport_revision="a" * 40,
-        transport_prefix=f"bundles/{'b' * 64}",
-        hf_cli=hf_cli,
-        timeout_seconds=300,
-    )
+    preflight_inputs = {
+        "mode": "preflight",
+        "namespace": "operator",
+        "bundle": bundle,
+        "transport_repo": "operator/ua-open-weight-eval-staging-6273",
+        "transport_revision": "a" * 40,
+        "transport_prefix": f"bundles/{'b' * 64}",
+        "hf_cli": hf_cli,
+        "timeout_seconds": 300,
+    }
+    preflight = hf_jobs_baseline.job_command(**preflight_inputs)
     preflight_joined = " ".join(preflight)
     assert "--flavor cpu-basic" in preflight_joined
     assert "--timeout 5m" in preflight_joined
@@ -382,7 +383,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert "--volume" not in preflight
     assert "--secrets HF_TOKEN" in preflight_joined
     assert "UA_EVAL_HARDWARE_FLAVOR=" not in preflight_joined
-    for job, expected_wheels in ((preflight, 15), (command, 20)):
+    for job, expected_wheels in ((preflight, 15), (command, 2)):
         install, _ = job[-1].split(" && ", 1)
         prefix, fmt, requirements, *args = shlex.split(install)
         assert (prefix, fmt) == ("printf", "%s")
@@ -413,7 +414,8 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
             assert " @ https://files.pythonhosted.org/" in wheel
             assert ".whl" in wheel
             assert len(wheel.split("--hash=sha256:")[1]) == 64
-        assert ("gguf @" in requirements) == (job is command)
+        if job is command:
+            assert [wheel.split()[0] for wheel in wheels] == ["gguf", "huggingface-hub"]
     with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
         hf_jobs_baseline.job_command(
             mode="canary",
@@ -438,18 +440,14 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
             preflight_gate=preflight_gate,
         )
 
+    with monkeypatch.context() as patched:
+        patched.setitem(config["transport"]["cpu_preflight"], "container_amd64_digest", f"sha256:{'c' * 64}")
+        with pytest.raises(hf_jobs_baseline.BaselineError, match="image does not match its bootstrap wheel lock"):
+            hf_jobs_baseline.job_command(**preflight_inputs)
+
     monkeypatch.setitem(manifest, "bootstrap_lock_sha256", {})
     with pytest.raises(hf_jobs_baseline.BaselineError, match="rebuild bundle with current bootstrap wheel locks"):
-        hf_jobs_baseline.job_command(
-            mode="preflight",
-            namespace="operator",
-            bundle=bundle,
-            transport_repo="operator/ua-open-weight-eval-staging-6273",
-            transport_revision="a" * 40,
-            transport_prefix=f"bundles/{'b' * 64}",
-            hf_cli=hf_cli,
-            timeout_seconds=300,
-        )
+        hf_jobs_baseline.job_command(**preflight_inputs)
 
 
 def test_launch_preview_is_free_but_invalid_disposition_blocks_execution(
