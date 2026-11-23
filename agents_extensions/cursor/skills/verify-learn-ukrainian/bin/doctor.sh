@@ -6,7 +6,7 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh
 Read-only health check before driving a local instance; not deployment proof.
 First source the exact env.sh path printed by launch.sh.
-Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321, Node 22;
+Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321, the Node and npm pinned in .nvmrc and package.json;
         LU_VERIFY_PYTHON defaults to the checkout's .venv/bin/python.
 Optional: LU_VERIFY_PID_FILE checks socket process-group ownership with ss;
           LU_VERIFY_EXPECTED_REV checks the checkout's HEAD.
@@ -17,7 +17,8 @@ EOF
 fi
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+BIN="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$BIN/../../../.." && pwd)"
 cd "$ROOT"
 
 PORT="${LU_VERIFY_PORT:-4321}"
@@ -30,11 +31,13 @@ EXPECTED_REV="${LU_VERIFY_EXPECTED_REV:-}"
 fail() { echo "doctor FAIL: $*" >&2; exit 1; }
 ok() { echo "doctor OK: $*"; }
 
-# Interpreter + Node (site package engines.node = 22.x)
+# Interpreter + the checked-in Node and npm pins
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 [[ -x "$PYTHON" ]] || fail "project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree"
-NODE_MAJOR="$(node -v 2>/dev/null | sed -E 's/^v([0-9]+).*/\1/' || true)"
-[[ "$NODE_MAJOR" == "22" ]] || fail "need Node 22.x on PATH (got: $(node -v 2>/dev/null || echo none))"
+# shellcheck source=SCRIPTDIR/toolchain.sh
+. "$BIN/toolchain.sh"
+lu_verify_toolchain "$ROOT" doctor || exit 1
+ok "Node $(node -v) with npm $(npm --version)"
 
 # HTTP readiness
 if ! curl -fsS --max-time 5 "${BASE_URL}/" >/dev/null; then

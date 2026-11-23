@@ -62,7 +62,7 @@ run_check() {
 if [[ -d "$ROOT/site/node_modules" ]]; then
   report PASS "site/node_modules present"
 else
-  report SKIP "site/node_modules" "run: (cd site && npm ci)"
+  report SKIP "site/node_modules" "run: (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)"
 fi
 
 # --- CI Gate pieces developers run locally (from scripts/ci/checks.sh) --------

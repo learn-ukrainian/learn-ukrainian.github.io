@@ -6,7 +6,9 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lessons|atlas|practice|all>
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
-Inputs: Node 22, site dependencies installed by npm ci from site/package-lock.json,
+Inputs: the Node release in .nvmrc with its bundled npm (package.json engines),
+        selected through nvm when installed, else refused with the fix command;
+        site dependencies installed by launch.sh from site/package-lock.json;
         installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
 Requires the locked Playwright CLI and Astro (its preview webServer) in
 site/node_modules/.bin; never npx, a registry download or another copy on PATH.
@@ -15,7 +17,7 @@ blocks every origin except the loopback host and learn-ukrainian.github.io.
 Never downloads Playwright's bundled browsers.
 Outputs: playwright-<feature>.log and test-results copied into
 LU_VERIFY_EVIDENCE_DIR (default: skill artifacts/manual).
-Exit: 0 passed, 2 invalid feature, 1 missing Chrome or locked binary,
+Exit: 0 passed, 2 invalid feature, 1 wrong toolchain, missing Chrome or locked binary,
       otherwise Playwright's failure code.
 Lessons includes the legacy sidebar contract; see ../features/lessons.md.
 Related: launch.sh, doctor.sh, ../SKILL.md.
@@ -24,7 +26,8 @@ EOF
 fi
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+BIN="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$BIN/../../../.." && pwd)"
 cd "$ROOT/site"
 
 FEATURE="${1:-}"
@@ -33,11 +36,9 @@ if [[ -z "$FEATURE" ]]; then
   exit 2
 fi
 
-if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090,SC1091
-  . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-  nvm use 22 >/dev/null
-fi
+# shellcheck source=SCRIPTDIR/toolchain.sh
+. "$BIN/toolchain.sh"
+lu_verify_toolchain "$ROOT" drive-playwright || exit 1
 
 PORT="${LU_VERIFY_PORT:-${PLAYWRIGHT_PORT:-4321}}"
 export PLAYWRIGHT_PORT="$PORT"
@@ -87,7 +88,7 @@ if [[ -n "$GREP_PATTERN" ]]; then
 fi
 for bin in "${ARGS[0]}" "$LOCAL_BIN/astro"; do
   if [[ ! -f "$bin" || ! -x "$bin" ]]; then
-    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run npm ci in site/ (no npx or PATH fallback)" >&2
+    echo "drive-playwright: locked binary missing or not executable: site/node_modules/.bin/${bin##*/}; run (cd site && $LU_VERIFY_SITE_INSTALL) (no npx or PATH fallback)" >&2
     exit 1
   fi
 done

@@ -47,13 +47,19 @@ uv sync --locked --no-build \
 uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
 uv sync --locked --no-build-isolation
 
-# 3. Locked Node dependencies (with nvm installed)
+# 3. Locked Node dependencies (with nvm installed). nvm selects the Node
+# release in .nvmrc; npm must be the one bundled with it (engines.npm).
 nvm install &&
 nvm use &&
-test "$(npm --version)" = "$(node -p 'require("./package.json").engines.npm')" &&
-npm ci --ignore-scripts &&
-npm rebuild --ignore-scripts=false &&
-(cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
+npm_pin="$(node -p 'require("./package.json").engines.npm')" &&
+if [ "$(npm --version)" != "$npm_pin" ]; then
+  echo "Need the bundled npm $npm_pin. Run: nvm deactivate && nvm uninstall $(cat .nvmrc) && nvm install && nvm use" >&2
+  false
+else
+  npm ci --ignore-scripts &&
+  npm rebuild --ignore-scripts=false &&
+  (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
+fi
 
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769
@@ -205,7 +211,7 @@ The only active build pipeline. Phases: check → research → skeleton → writ
 
 ### Website
 
-Built with [Astro Starlight](https://starlight.astro.build/). 50+ React components for interactive exercises. MDX files in `starlight/src/content/docs/`.
+Built with [Astro Starlight](https://starlight.astro.build/). 50+ React components for interactive exercises. MDX files in `site/src/content/docs/`.
 
 ---
 
