@@ -264,9 +264,18 @@ It checks the bundled npm against the `engines.npm` pin in
 `npm rebuild` checks the unpacked packages before running approved scripts.
 If either command fails, resolve its error before using the install.
 
+CI and local end-to-end runs use the runner's or the machine's managed Google
+Chrome; security updates for it come from the system, not from this
+repository. The launcher (`site/e2e/support/hardened-browser.mjs`) keeps the
+browser sandbox on and restricts network requests to the loopback host names
+and the public site host name. Playwright's bundled browsers are not downloaded.
+
 For a task that needs Puppeteer's own browsers, install them after `npm ci`
 with `./node_modules/.bin/puppeteer browsers install`. The repository's npm
-policy skips the browser download during dependency installation.
+policy skips the browser download during dependency installation:
+`package.json` sets `"puppeteer": false` under `allowScripts`, and `.npmrc`
+sets `ignore-scripts=true` and `strict-allow-scripts=true`. The download is for
+explicit developer use only, goes to Puppeteer's own cache, and CI never runs it.
 
 The browser install fails when the per-browser installation directory
 already exists and the executable inside it is missing. The message names
