@@ -34,8 +34,8 @@ ok() { echo "doctor OK: $*"; }
 # Interpreter + the checked-in Node and npm pins
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 [[ -x "$PYTHON" ]] || fail "project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree"
-# shellcheck source=SCRIPTDIR/toolchain.sh
-. "$BIN/toolchain.sh"
+# shellcheck source=scripts/node_toolchain.sh
+. "$ROOT/scripts/node_toolchain.sh"
 lu_verify_toolchain "$ROOT" doctor || exit 1
 ok "Node $(node -v) with npm $(npm --version)"
 

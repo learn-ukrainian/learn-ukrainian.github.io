@@ -1,6 +1,6 @@
 # shellcheck shell=bash
-# Sourced by launch.sh, doctor.sh, drive-playwright.sh, run-checks.sh and
-# CONTRIBUTING.md step 3; not run directly.
+# Sourced by CONTRIBUTING.md step 3 and the Cursor verify skill's launch.sh,
+# doctor.sh, drive-playwright.sh and run-checks.sh; not run directly.
 #
 # The checked-in Node contract: the exact release in .nvmrc, equal to package.json
 # engines.node, run with its bundled npm at engines.npm. That npm enforces the
@@ -15,7 +15,7 @@ _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 # exact release through nvm first when the PATH does not match. Otherwise print
 # why on stderr, with the command that repairs it, and return 1.
 lu_verify_toolchain() {
-  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" flags="$-"
+  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" use_status="" load note="" flags="$-"
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
     nvmrc="${nvmrc//[[:space:]]/}"
@@ -42,7 +42,10 @@ lu_verify_toolchain() {
     if declare -F nvm >/dev/null && nvm --version >/dev/null 2>&1; then
       nvm_state=ok
       [[ "$(nvm version "$nvmrc" 2>/dev/null)" == "v$nvmrc" ]] && installed=1
-      [[ -n "$installed" ]] && nvm use "$nvmrc" >/dev/null 2>&1
+      if [[ -n "$installed" ]]; then
+        nvm use "$nvmrc" >/dev/null 2>&1
+        use_status=$?
+      fi
     fi
     [[ "$flags" == *e* ]] && set -e
     [[ "$flags" == *u* ]] && set -u
@@ -52,19 +55,27 @@ lu_verify_toolchain() {
     # Node may have become available through nvm, so the pins can be read now.
     _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
   fi
-  case "$nvm_state:$installed" in
-    ok:1)
+  # Every repair loads nvm first: nvm is a shell function, so the caller's shell
+  # does not have it just because this check sourced it.
+  printf -v load 'cd %q && . %q' "$root" "$nvm_sh"
+  case "$nvm_state:$installed:$use_status" in
+    ok:1:0)
       # nvm selected the release, so its npm is not the one it shipped with.
-      printf -v fix 'cd %q && nvm deactivate >/dev/null; nvm uninstall %s && nvm install %s && nvm use %s' \
-        "$root" "$nvmrc" "$nvmrc" "$nvmrc"
+      # nvm refuses to uninstall the active release; deactivating none is fine.
+      fix="$load && { nvm deactivate >/dev/null 2>&1 || :; } && nvm uninstall $nvmrc && nvm install $nvmrc && nvm use $nvmrc"
       ;;
-    ok:) printf -v fix 'cd %q && nvm install %s && nvm use %s' "$root" "$nvmrc" "$nvmrc" ;;
+    ok:1:*)
+      # Installed but not selectable: show nvm's own error rather than reinstalling.
+      note="nvm use $nvmrc failed with exit status $use_status; to see why, run: "
+      fix="$load && nvm use $nvmrc"
+      ;;
+    ok::*) fix="$load && nvm install $nvmrc && nvm use $nvmrc" ;;
     *)
-      printf -v fix 'nvm (the toolchain manager CONTRIBUTING.md requires) is %s at %q; install it from https://github.com/nvm-sh/nvm#installing-and-updating, then run: cd %q && nvm install %s && nvm use %s' \
-        "$([[ "$nvm_state" == broken ]] && echo 'not working' || echo 'missing')" "$nvm_sh" "$root" "$nvmrc" "$nvmrc"
+      printf -v fix 'nvm (the toolchain manager CONTRIBUTING.md requires) is %s at %q; install it from https://github.com/nvm-sh/nvm#installing-and-updating, then run: %s && nvm install %s && nvm use %s' \
+        "$([[ "$nvm_state" == broken ]] && echo 'not working' || echo 'missing')" "$nvm_sh" "$load" "$nvmrc" "$nvmrc"
       ;;
   esac
-  echo "$label FAIL: need Node $nvmrc (.nvmrc, package.json engines.node) with its bundled npm ${_lu_npm_pin:-at engines.npm}; found Node ${_lu_node_version:-none} and npm ${_lu_npm_version:-none}. Run: $fix" >&2
+  echo "$label FAIL: need Node $nvmrc (.nvmrc, package.json engines.node) with its bundled npm ${_lu_npm_pin:-at engines.npm}; found Node ${_lu_node_version:-none} and npm ${_lu_npm_version:-none}. ${note:-Run: }$fix" >&2
   return 1
 }
 

@@ -10,7 +10,8 @@ from pathlib import Path
 
 import pytest
 
-SKILL = Path(__file__).resolve().parents[1] / "agents_extensions/cursor/skills/verify-learn-ukrainian"
+REPO = Path(__file__).resolve().parents[1]
+SKILL = REPO / "agents_extensions/cursor/skills/verify-learn-ukrainian"
 # Fixture pins, written to the sandbox's .nvmrc and package.json engines; never the repository's.
 NODE_PIN, NPM_PIN = "30.1.2", "12.3.4"
 
@@ -20,6 +21,8 @@ def sandbox(tmp_path):
     root = tmp_path / "repo"
     scripts = root / ".cursor/skills/verify-learn-ukrainian/bin"
     shutil.copytree(SKILL / "bin", scripts)
+    (root / "scripts").mkdir()
+    shutil.copy(REPO / "scripts/node_toolchain.sh", root / "scripts")
     (root / "site/node_modules").mkdir(parents=True)
     (root / ".nvmrc").write_text(f"{NODE_PIN}\n")
     (root / "package.json").write_text(f'{{"engines": {{"node": "{NODE_PIN}", "npm": "{NPM_PIN}"}}}}\n')
@@ -93,7 +96,9 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert f"bundled npm {NPM_PIN if node else 'at engines.npm'}" in result.stderr
     # No nvm in the sandbox, so the repair names nvm as the prerequisite of the selection.
     assert "nvm (the toolchain manager CONTRIBUTING.md requires) is missing" in result.stderr
-    assert f"then run: cd {root} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
+    # The repair loads nvm itself, so it works when pasted into a shell that never sourced it.
+    nvm_sh = Path(env["NVM_DIR"], "nvm.sh")
+    assert f"then run: cd {root} && . {nvm_sh} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
@@ -110,7 +115,7 @@ def test_launch_nvm_failure_is_friendly(sandbox):
     # The stub nvm fails every call, so the repair names nvm itself before the selection.
     root = Path(env["LU_VERIFY_EVIDENCE_DIR"]).parent / "repo"
     assert f"nvm (the toolchain manager CONTRIBUTING.md requires) is not working at {nvm_dir}/nvm.sh" in result.stderr
-    assert f"then run: cd {root} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
+    assert f"then run: cd {root} && . {nvm_dir}/nvm.sh && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])

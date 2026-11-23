@@ -36,8 +36,8 @@ if [[ -z "$FEATURE" ]]; then
   exit 2
 fi
 
-# shellcheck source=SCRIPTDIR/toolchain.sh
-. "$BIN/toolchain.sh"
+# shellcheck source=scripts/node_toolchain.sh
+. "$ROOT/scripts/node_toolchain.sh"
 lu_verify_toolchain "$ROOT" drive-playwright || exit 1
 
 PORT="${LU_VERIFY_PORT:-${PLAYWRIGHT_PORT:-4321}}"
