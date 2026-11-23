@@ -108,29 +108,31 @@ def reset_overview_state_for_tests() -> None:
 
     Skips reloading the host disk snapshot so pytest cannot pick up a
     previous Monitor process's last-good file.
+
+    Returns only after every live refresh worker has finished: a worker writes
+    the TTL cache, last-good memory and the durable snapshot when its scan
+    ends, so none may outlive the reset. The wait is unbounded on purpose
+    (pytest's per-test timeout bounds it; a bounded join would leave a slow
+    worker to write afterwards). The state is cleared under the scheduler's
+    lock and only while no worker is alive, so no worker can be registered
+    between the liveness check and the clear.
     """
-    threads: list[threading.Thread]
-    with _overview_refresh_lock:
-        threads = list(_overview_refresh_threads.values())
-        _overview_refresh_threads.clear()
-    for thread in threads:
-        thread.join(timeout=2.0)
-    _overview_last_good_by_scope.clear()
-    _overview_disk_loaded_by_scope.clear()
-    cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
+    while True:
+        with _overview_refresh_lock:
+            live = [t for t in _overview_refresh_threads.values() if t.is_alive()]
+            if not live:
+                _overview_refresh_threads.clear()
+                _overview_last_good_by_scope.clear()
+                _overview_disk_loaded_by_scope.clear()
+                cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
+                return
+        for thread in live:
+            thread.join()
 
 
 def simulate_overview_process_bounce_for_tests() -> None:
     """Clear process memory only; the durable last-good file remains."""
-    threads: list[threading.Thread]
-    with _overview_refresh_lock:
-        threads = list(_overview_refresh_threads.values())
-        _overview_refresh_threads.clear()
-    for thread in threads:
-        thread.join(timeout=2.0)
-    _overview_last_good_by_scope.clear()
-    _overview_disk_loaded_by_scope.clear()
-    cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
+    reset_overview_state_for_tests()
 
 
 def _peek_state_summary(ctx: MonitorContext | None = None) -> tuple[dict, str, float | None]:
