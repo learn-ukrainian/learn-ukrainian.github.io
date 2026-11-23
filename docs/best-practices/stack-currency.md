@@ -7,9 +7,9 @@
 ## 2. Watching (reuse what runs today)
 
 - Dependabot handles automated updates for GitHub Actions, Python, and both npm projects. It checks for version updates weekly and applies a seven-day cooldown. Security updates are exempt from the Dependabot cooldown.
-- For a manual npm lock refresh, use the npm 11 version pinned in the root `package.json`.
+- For a manual npm lock refresh, use the npm 11 version pinned in the root `package.json`. npm 10 ignores the release-age setting.
   Run `npm update --package-lock-only` from the directory that owns the lockfile (the repository root or `site/`).
-  Each project's `.npmrc` sets `min-release-age=7`, so npm skips registry releases younger than seven days when resolving versions.
+  Each project's `.npmrc` sets `min-release-age=7`, so npm skips registry releases younger than seven days when resolving versions, including during manual security updates.
   Keep `npm ci` for frozen installs from committed lockfiles. [npm 11 configuration reference](https://docs.npmjs.com/cli/v11/using-npm/config/#min-release-age)
 - One report-only step added to the existing weekly `security-audit.yml` run: pinned (from §1) vs latest stable upstream. Output: versions and repo-relative paths only, into the existing advisory issue. It never opens PRs, enqueues or arms merge.
 - One small local drift check on the host (installed vs pinned vs running process), folded into an existing host check (DevOps picks which); private output, no new timer.
