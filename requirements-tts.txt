@@ -1,6 +1,6 @@
 # Pronunciation runtime with its transitive dependencies.
 # Refresh with uv 0.13.9 and the seven-day cooldown:
-# printf '%s\n' 'piper-tts==1.3.0' 'marisa-trie==1.4.1' | uv --no-config pip compile \
+# printf '%s\n' 'piper-tts==1.8.0' 'marisa-trie==1.4.1' | uv --no-config pip compile \
 #   --exclude-newer '7 days' --universal --python-version "$(cat .python-version)" \
 #   --only-binary :all: --generate-hashes --no-annotate --no-header --no-emit-package pyyaml \
 #   - .github/requirements-pyyaml.txt
@@ -177,7 +177,7 @@ onnxruntime==1.32.0 \
 packaging==26.3 \
     --hash=sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79 \
     --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
-piper-tts==1.3.0 \
+piper-tts==1.8.0 \
     --hash=sha256:0af0c90aeddf762555ed940de1ac576acbefb3623e6d5ca4fb1a70359ee7e65d \
     --hash=sha256:234c25474655b26f3418b84522c815c43e9b1bc8a1fdb13c2b28514290c165f0 \
     --hash=sha256:810c91a084d335d32b42928b1ef69d6480cf7e3a5a8b15eff98edd2ef55f2791 \
