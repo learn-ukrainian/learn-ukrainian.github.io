@@ -1714,12 +1714,8 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
         router = _loaded_module("scripts", "project_api", "dashboard_router")
         if router is None:
             return
-        # The refresh reads the snapshot path when it writes. Wait for it to
-        # finish before the path changes, under pytest's per-test timeout.
-        with router._overview_refresh_lock:
-            threads = tuple(router._overview_refresh_threads.values())
-        for thread in threads:
-            thread.join()
+        # The reset waits for any live refresh worker, which reads the snapshot
+        # path when it writes, so the path only changes after it has finished.
         router.reset_overview_state_for_tests()
 
     reset_overview()

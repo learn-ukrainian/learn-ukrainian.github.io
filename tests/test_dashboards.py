@@ -376,6 +376,46 @@ class TestOverviewLastGoodHonesty:
         assert data["meta"]["track_scan"] == "stale"
         assert not data["meta"].get("refreshing")
 
+    def test_reset_never_leaves_a_slow_refresh_worker_writing(self, monkeypatch, tmp_path):
+        """Defect class: a bounded join lets a slow refresh write after the reset returns."""
+        import threading
+
+        from lu_machinery.api.state_helpers import cache_get_with_age
+
+        import scripts.project_api.dashboard_router as dashboard_router
+
+        last_good_path = tmp_path / "overview_last_good.json"
+        monkeypatch.setenv(dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV, str(last_good_path))
+        release = threading.Event()
+        payload = {
+            "tracks": [{"id": "a1", "module_count": 1}],
+            "totals": {"total": 1},
+            "meta": {},
+        }
+
+        def slow_scan(_ctx=None):
+            release.wait(timeout=30)
+            return payload
+
+        monkeypatch.setattr(dashboard_router, "_build_overview_payload_from_scans", slow_scan)
+        dashboard_router._schedule_overview_refresh()
+        worker = next(iter(dashboard_router._overview_refresh_threads.values()))
+        assert worker.is_alive()
+        # Outlasts any bounded join the reset could use; the worker is real and slow.
+        releaser = threading.Timer(2.5, release.set)
+        releaser.start()
+        try:
+            dashboard_router.reset_overview_state_for_tests()
+            assert not worker.is_alive()
+            worker.join()
+            assert dashboard_router._overview_last_good_by_scope == {}
+            assert dashboard_router._overview_disk_loaded_by_scope == {}
+            assert cache_get_with_age(dashboard_router._overview_cache_key(), ttl=60.0) is None
+        finally:
+            releaser.cancel()
+            release.set()
+            worker.join()
+
     @pytest.mark.parametrize("cached", [False, True])
     @pytest.mark.parametrize("source_age", [30, 61, 46800, None])
     def test_source_age_not_cache_age_and_stale_source_labelled(self, monkeypatch, tmp_path, cached, source_age):
