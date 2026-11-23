@@ -15,7 +15,7 @@ _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 # exact release through nvm first when the PATH does not match. Otherwise print
 # why on stderr, with the command that repairs it, and return 1.
 lu_verify_toolchain() {
-  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" use_status="" load note="" tool found flags="$-"
+  local root="$1" label="$2" nvmrc="" fix nvm_dir nvm_sh nvm_state=absent installed="" use_status="" load note="" tool found flags="$-"
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
     nvmrc="${nvmrc//[[:space:]]/}"
@@ -31,7 +31,15 @@ lu_verify_toolchain() {
     return 0
   fi
   _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
-  nvm_sh="${NVM_DIR:-${HOME:-}/.nvm}/nvm.sh"
+  # nvm's installer default: $XDG_CONFIG_HOME/nvm when that is set, else ~/.nvm.
+  if [[ -n "${NVM_DIR:-}" ]]; then
+    nvm_dir="$NVM_DIR"
+  elif [[ -n "${XDG_CONFIG_HOME:-}" ]]; then
+    nvm_dir="$XDG_CONFIG_HOME/nvm"
+  else
+    nvm_dir="${HOME:-}/.nvm"
+  fi
+  nvm_sh="$nvm_dir/nvm.sh"
   if [[ -s "$nvm_sh" ]]; then
     # nvm is optional: a script that fails under errexit or nounset must not stop
     # us. --no-use keeps its default alias off PATH until the exact selection.
@@ -58,18 +66,22 @@ lu_verify_toolchain() {
     _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
   fi
   # Every repair loads nvm first: nvm is a shell function, so the caller's shell
-  # does not have it just because this check sourced it. --no-use stops nvm
-  # selecting a default or the absent .nvmrc release while it loads. A shell
-  # whose dot command drops that argument may fail that selection; loading
-  # still counts once the nvm function exists.
-  printf -v load 'cd %q && { . %q --no-use || command -v nvm >/dev/null; }' "$root" "$nvm_sh"
+  # does not have it just because this check sourced it. The repair works the
+  # same in bash, zsh and POSIX sh: NVM_DIR is exported because only bash lets
+  # nvm.sh find its own directory, and --no-use goes in as a positional
+  # parameter because sh ignores arguments to the dot command. Without
+  # --no-use, nvm would select a default or the absent .nvmrc release while
+  # loading and fail before the repair runs.
+  # shellcheck disable=SC2016  # $NVM_DIR is expanded by the caller's shell
+  printf -v load 'cd %q && export NVM_DIR=%q && set -- --no-use && . "$NVM_DIR/nvm.sh"' "$root" "$nvm_dir"
   if [[ "$nvm_state:$installed:$use_status" == ok:1:0 ]]; then
-    # nvm selected the release. A node or npm earlier on PATH than nvm's own
-    # shadows it; only nvm's own npm at the wrong version needs a reinstall.
+    # nvm selected the release. A node or npm that the release has but PATH
+    # finds elsewhere first is shadowed. A release missing its bundled npm, or
+    # whose npm is at the wrong version, needs a reinstall.
     for tool in node npm; do
       found="$(command -v "$tool" 2>/dev/null)" || found=""
-      if [[ "$found" != "${NVM_BIN:-}/$tool" ]]; then
-        note="nvm selected Node $nvmrc, but $tool on PATH is ${found:-missing}, not ${NVM_BIN:-nvm}/$tool; remove that PATH entry, then run: "
+      if [[ -x "${NVM_BIN:-}/$tool" && "$found" != "$NVM_BIN/$tool" ]]; then
+        note="nvm selected Node $nvmrc, but $tool on PATH is ${found:-not found}, not $NVM_BIN/$tool; remove that PATH entry, then run: "
         fix="$load && nvm use $nvmrc"
         break
       fi
