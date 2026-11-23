@@ -360,11 +360,15 @@ or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
 `view` or `config get` with no install-like word (`ci`, `install`, `update`,
 `prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` run
 only a closed allowlist of programs this repository uses that way
-(`EXEC_PROGRAMS` in the guard: `vitest`, `tsc`, `playwright`,
-`markdownlint-cli2` and the Claude adapter's `@anthropic-ai/claude-code`
-fallback), as in `npm --prefix site exec -- vitest run` or
-`npx @anthropic-ai/claude-code@latest`; they launch an existing binary or
-fetch one into npm's own cache, not into the project's `node_modules`. The
+(`EXEC_PROGRAMS` in the guard: `vitest`, `tsc`, `playwright`, and
+`markdownlint-cli2`), as in `npm --prefix site exec -- vitest run` or
+`npx playwright --version`; they launch an existing binary or
+fetch one into npm's own cache, not into the project's `node_modules`.
+For ordinary dispatch, `ClaudeAdapter` requires the provisioned native
+`claude` CLI (`PATH` or `~/.local/bin/claude`), raises
+`ClaudeCliUnavailableError` when none is found, and does not invoke
+`@anthropic-ai/claude-code` through `npx` (which `npm_guard.py` refuses
+in protected worktrees). The
 guard never reads shell text: the program is the first word after the options
 (or after `--`), and only `-y`/`--yes`, `--no`, `--no-install`, `--no-fund`,
 `--no-audit`, `--prefix`/`-C` and `--` may appear where npm parses options.
