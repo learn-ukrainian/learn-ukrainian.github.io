@@ -28,6 +28,27 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 - **Secret scanning** via trufflehog (`--results=verified,unknown`).
 - **CodeQL** runs via GitHub default setup (Python / JS / TS / Actions).
 
+## Browsers
+
+End-to-end and browser-backed tests in CI use the Google Chrome already
+installed on the runner (`ci.yml` and `deploy-pages.yml` check it before they
+run). Local end-to-end runs use the machine's own managed Chrome in the same
+way. Security updates for that browser come from the system's package
+management, not from this repository.
+
+- The launcher is `site/e2e/support/hardened-browser.mjs`. It selects the
+  installed Chrome (`channel: 'chrome'`), keeps the browser sandbox on, and
+  allows requests only to the loopback host and the public site origin. A run
+  without a usable sandbox fails.
+- Playwright's bundled browser downloads are not used.
+- Puppeteer's browser download is skipped on install. `package.json` sets
+  `"puppeteer": false` under `allowScripts`, and `.npmrc` sets
+  `ignore-scripts=true` and `strict-allow-scripts=true`. A developer who needs
+  those browsers installs them explicitly with
+  `./node_modules/.bin/puppeteer browsers install`, into Puppeteer's own cache
+  (`$HOME/.cache/puppeteer`, or `PUPPETEER_CACHE_DIR` when set). CI never does
+  this. See `docs/runbooks/recovery.md`.
+
 ## Fleet security
 
 `ci.yml` calls the shared machinery workflow at a full commit SHA. Its
