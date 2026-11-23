@@ -32,24 +32,24 @@ lu_verify_toolchain() {
       "$label" "${nvmrc//[[:space:]]/ }" "$root" >&2
     return 1
   fi
-  # An empty or relative PATH entry names another directory after any cd. It is
-  # harmless after the absolute entries that already hold node and npm, because
-  # PATH is searched in order; anywhere else it could change which tool runs in
-  # site/. So refuse unless both tools resolve before the first such entry.
-  case ":${PATH-}:" in
-    *:[!/]*)
-      rest="${PATH-}:"
-      while entry="${rest%%:*}" && [[ "$entry" == /* ]]; do
-        prefix="${prefix:+$prefix:}$entry"
-        rest="${rest#*:}"
-      done
-      if [[ -z "$prefix" ]] || ! PATH="$prefix" command -v node >/dev/null 2>&1 ||
-        ! PATH="$prefix" command -v npm >/dev/null 2>&1; then
-        printf '%s FAIL: PATH holds an empty or relative entry before node and npm, so the tools checked here could differ after a cd. Use absolute PATH entries, then rerun.\n' "$label" >&2
-        return 1
-      fi
-      ;;
-  esac
+  # Only absolute entries preceding the first empty or relative entry are stable
+  # across cd. Resolve external commands once, ignoring functions and aliases.
+  rest="${PATH-}:"
+  while entry="${rest%%:*}" && [[ "$entry" == /* ]]; do
+    prefix="${prefix:+$prefix:}$entry"
+    rest="${rest#*:}"
+  done
+  _lu_node_path="" _lu_npm_path=""
+  if [[ -n "$prefix" ]]; then
+    _lu_node_path="$(PATH="$prefix" type -P node)" || _lu_node_path=""
+    _lu_npm_path="$(PATH="$prefix" type -P npm)" || _lu_npm_path=""
+  fi
+  [[ "$_lu_node_path" == /* && -f "$_lu_node_path" && -x "$_lu_node_path" ]] || _lu_node_path=""
+  [[ "$_lu_npm_path" == /* && -f "$_lu_npm_path" && -x "$_lu_npm_path" ]] || _lu_npm_path=""
+  if [[ -n "$rest" && ( -z "$_lu_node_path" || -z "$_lu_npm_path" ) ]]; then
+    printf '%s FAIL: PATH holds an empty or relative entry before executable node and npm, so the tools checked here could differ after a cd. Use absolute PATH entries, then rerun.\n' "$label" >&2
+    return 1
+  fi
   if _lu_verify_versions "$root" "$nvmrc"; then
     return 0
   fi
@@ -74,17 +74,17 @@ _lu_verify_manifest() {
 _lu_verify_versions() {
   local root="$1" nvmrc="$2"
   _lu_node_version="" _lu_npm_version="" _lu_node_pin="" _lu_npm_pin=""
-  if _lu_node_version="$(node -v 2>/dev/null)"; then
+  if _lu_node_version="$("$_lu_node_path" -v 2>/dev/null)"; then
     # shellcheck disable=SC2016  # JavaScript template literal, expanded by node
     # Only exact string pins come through; a comma separator keeps an empty first field in place.
     IFS=, read -r _lu_node_pin _lu_npm_pin < <(
-      node -p 'const e = require(process.argv[1]).engines || {}; const pin = (v) => (typeof v === "string" && /^\d+\.\d+\.\d+$/.test(v) ? v : ""); `${pin(e.node)},${pin(e.npm)}`' \
+      "$_lu_node_path" -p 'const e = require(process.argv[1]).engines || {}; const pin = (v) => (typeof v === "string" && /^\d+\.\d+\.\d+$/.test(v) ? v : ""); `${pin(e.node)},${pin(e.npm)}`' \
         "$root/package.json" 2>/dev/null
     ) || true
   else
     _lu_node_version=""
   fi
-  _lu_npm_version="$(npm --version 2>/dev/null)" || _lu_npm_version=""
+  _lu_npm_version="$("$_lu_npm_path" --version 2>/dev/null)" || _lu_npm_version=""
   [[ "$_lu_node_pin" == "$nvmrc" && "$_lu_npm_pin" =~ $_LU_VERIFY_EXACT &&
      "$_lu_node_version" == "v$nvmrc" && "$_lu_npm_version" == "$_lu_npm_pin" ]]
 }

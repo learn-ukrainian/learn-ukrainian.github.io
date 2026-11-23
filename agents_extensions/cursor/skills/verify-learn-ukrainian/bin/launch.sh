@@ -73,9 +73,9 @@ ensure_site_deps() {
     # leaves no Astro binary and the check below refuses it (as services.sh does).
     (
       cd "$ROOT/site" &&
-        npm ci --ignore-scripts --bin-links=false &&
-        npm rebuild --ignore-scripts=false --bin-links=false &&
-        npm rebuild --ignore-scripts
+        "$_lu_npm_path" ci --ignore-scripts --bin-links=false &&
+        "$_lu_npm_path" rebuild --ignore-scripts=false --bin-links=false &&
+        "$_lu_npm_path" rebuild --ignore-scripts
     )
   fi
   if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
@@ -88,10 +88,10 @@ build_site() {
   ensure_site_deps
   if [[ "$BUILD_MODE" == "full" ]]; then
     echo "launch: npm run build (hydrate + astro) — needs public GitHub release asset for Atlas manifest"
-    (cd "$ROOT/site" && npm run build)
+    (cd "$ROOT/site" && "$_lu_npm_path" run build)
   else
     echo "launch: npm run build:shell (committed artifacts + astro)"
-    (cd "$ROOT/site" && npm run build:shell)
+    (cd "$ROOT/site" && "$_lu_npm_path" run build:shell)
   fi
 }
 
@@ -109,7 +109,7 @@ start_dev() {
   ensure_site_deps
   (
     cd "$ROOT/site"
-    setsid npm run dev -- --host "$HOST" --port "$PORT" >"$LOG_FILE" 2>&1 &
+    setsid "$_lu_npm_path" run dev -- --host "$HOST" --port "$PORT" >"$LOG_FILE" 2>&1 &
     echo $! >"$PID_FILE"
   )
 }
