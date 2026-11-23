@@ -422,7 +422,13 @@ jobs:
       - name: Verify npm install-script policy
         run: |
           set -euo pipefail
-          npm --version
+          npm_version="$(npm --version)"
+          npm_pin="$(node -p 'require("./package.json").engines.npm')"
+          echo "$npm_version"
+          if [[ "$npm_version" != "$npm_pin" ]]; then
+            echo "::error::npm $npm_pin is required for install-script enforcement. Found npm $npm_version."
+            exit 1
+          fi
           probe="$(mktemp -d "$RUNNER_TEMP/npm-script-policy.XXXXXX")"
           trap 'rm -rf -- "$probe"' EXIT
           # Pack a local fixture so the refusal check needs no registry packages.
@@ -438,9 +444,9 @@ jobs:
             cp "$project_dir/.npmrc" "$probe/$project/"
             # Copy the project policy into the fixture manifest.
             node -e '
-              const { allowScripts, devEngines } = require(process.argv[1]);
+              const { allowScripts } = require(process.argv[1]);
               const dependencies = { "lu-npm-policy-probe": "file:../lu-npm-policy-probe-1.0.0.tgz" };
-              console.log(JSON.stringify({ private: true, allowScripts, devEngines, dependencies }));
+              console.log(JSON.stringify({ private: true, allowScripts, dependencies }));
             ' "$project_dir/package.json" > "$probe/$project/package.json"
             (
               cd "$probe/$project"

@@ -1232,7 +1232,13 @@ _ensure_astro_deps() {
     # Publish the Astro bin only after the approved scripts complete. Otherwise
     # the fast path would treat an interrupted or refused install as complete.
     (
-        cd "$PROJECT_ROOT/site" &&
+        cd "$PROJECT_ROOT/site" || exit 1
+        npm_pin="$(node -p 'require("../package.json").engines.npm')" || exit 1
+        npm_version="$(npm --version)" || exit 1
+        if [[ "$npm_version" != "$npm_pin" ]]; then
+            echo "  ERROR: npm $npm_pin is required for site dependency recovery. Found npm $npm_version." >&2
+            exit 1
+        fi
         npm ci --ignore-scripts --bin-links=false &&
         npm rebuild --ignore-scripts=false --bin-links=false &&
         npm rebuild --ignore-scripts

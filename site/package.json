@@ -2,13 +2,6 @@
   "name": "starlight",
   "type": "module",
   "version": "0.0.1",
-  "devEngines": {
-    "packageManager": {
-      "name": "npm",
-      "version": "11.19.1",
-      "onFail": "error"
-    }
-  },
   "scripts": {
     "atlas:build-db": "cd .. && \"${PYTHON:-.venv/bin/python}\" -m scripts.atlas.atlas_db --db data/atlas.db",
     "atlas:build-search": "cd .. && \"${PYTHON:-.venv/bin/python}\" scripts/audit/generate_search_index.py --db data/atlas.db",

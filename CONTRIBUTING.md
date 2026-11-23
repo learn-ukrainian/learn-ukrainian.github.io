@@ -50,6 +50,7 @@ uv sync --locked --no-build-isolation
 # 3. Locked Node dependencies (with nvm installed)
 nvm install &&
 nvm use &&
+test "$(npm --version)" = "$(node -p 'require("./package.json").engines.npm')" &&
 npm ci --ignore-scripts &&
 npm rebuild --ignore-scripts=false &&
 (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)

@@ -140,7 +140,7 @@ The tracked agent-extension sources regenerate local ignored deployment files:
   cd ./recovery-checkout || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
-  npm_pin="$(node -p 'require("./package.json").devEngines.packageManager.version')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
@@ -226,7 +226,7 @@ the fresh `./recovery-checkout` clone. Both blocks refuse an unset or missing
 primary path before invoking npm or touching the browser cache.
 
 The block requires the Node version pinned in `.nvmrc` and `engines.node`.
-It checks the bundled npm against the `devEngines.packageManager` pin in
+It checks the bundled npm against the `engines.npm` pin in
 `package.json`. A failed `cd` exits before `npm ci`.
 
 ```bash
@@ -235,7 +235,7 @@ It checks the bundled npm against the `devEngines.packageManager` pin in
   cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
-  npm_pin="$(node -p 'require("./package.json").devEngines.packageManager.version')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
@@ -364,7 +364,7 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
   cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
-  npm_pin="$(node -p 'require("./package.json").devEngines.packageManager.version')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
