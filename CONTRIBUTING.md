@@ -162,6 +162,8 @@ After that, every `git commit` runs:
 - Block accidental `.yaml.bak` / `.yaml.orig` commits. Plan history lives in git, and content-bearing plan edits must bump `version:`.
 - Block bare `python` / `python3` in new shell scripts
 
+Pin each third-party hook repository to its full 40-character release commit SHA and keep the release tag in a trailing comment on the `rev` line.
+
 Run manually across the whole repo:
 
 ```bash

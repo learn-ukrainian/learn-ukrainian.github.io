@@ -27,7 +27,7 @@ repos:
   # --- Ruff: the primary linter (same rules as CI) ---
   # Match the uv.lock pin installed by CI.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.4
+    rev: c0f278f1254ccc8fb09676bcdb8d847e7db493e5  # v0.17.4
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -38,7 +38,7 @@ repos:
   # The repository already has a .gitleaks.toml allowlist for the
   # public Algolia keys. Pre-commit picks that up automatically.
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+    rev: 43fae355e6fe4d99d2a7b240a224b85e2903aeb4  # v8.21.2
     hooks:
       - id: gitleaks
         name: gitleaks (secret scan)
@@ -46,7 +46,7 @@ repos:
 
   # --- YAML syntax sanity ---
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # v5.0.0
     hooks:
       - id: check-yaml
         name: check yaml syntax
