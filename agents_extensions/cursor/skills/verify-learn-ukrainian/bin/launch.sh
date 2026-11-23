@@ -7,8 +7,8 @@ Usage: bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh [preview|dev]
 Build and launch an isolated learner site for local verification; not deployment.
 Default: preview using build:shell; LU_VERIFY_BUILD_MODE=full selects build.
 Toolchain: the Node release in .nvmrc (package.json engines.node) with its bundled
-npm (engines.npm), selected through nvm when installed; otherwise refuses and
-prints the command that installs and selects it.
+npm (engines.npm) on PATH. Any other toolchain is refused with a pointer to
+CONTRIBUTING.md step 3, which installs and selects it through nvm.
 Dependencies: when site/node_modules is absent, npm ci --ignore-scripts and
 npm rebuild --ignore-scripts=false in site/, from site/package-lock.json under
 site/.npmrc; the locked site/node_modules/.bin/astro must then exist, never npx

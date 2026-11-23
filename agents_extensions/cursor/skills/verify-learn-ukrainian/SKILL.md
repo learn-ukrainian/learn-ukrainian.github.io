@@ -14,8 +14,8 @@ Project-local verification for the public learner site (`site/`, Astro) plus the
 Isolated preview (preferred for proof):
 
 ```bash
-# Needs the Node release in .nvmrc with its bundled npm (package.json engines). With nvm
-# installed, launch selects it; otherwise it refuses and prints the command to run.
+# Needs the Node release in .nvmrc with its bundled npm (package.json engines) on PATH;
+# launch refuses any other and points to CONTRIBUTING.md step 3 (nvm install && nvm use).
 bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview
 source "$LU_VERIFY_STATE_DIR/env.sh"   # set LU_VERIFY_STATE_DIR to the exact path launch.sh printed
 ```

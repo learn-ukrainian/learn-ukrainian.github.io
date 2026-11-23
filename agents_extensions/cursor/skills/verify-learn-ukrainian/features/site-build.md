@@ -18,7 +18,7 @@ The learner site builds from `site/` with Astro: either a shell build from commi
 
 Preconditions:
 
-- The Node and npm pinned in `.nvmrc` and `package.json` `engines` on `PATH` (the launcher refuses others and prints the fix command).
+- The Node and npm pinned in `.nvmrc` and `package.json` `engines` on `PATH` (the launcher refuses others and points to CONTRIBUTING.md step 3).
 - For `full`: outbound HTTPS to the GitHub Release asset named by `site/src/data/lexicon-manifest.pointer.json` (public).
 
 - **Shell build + preview.** Run `LU_VERIFY_BUILD_MODE=shell bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview`. Observable: launch prints `launch OK` and an `env.sh` path; `doctor.sh` then PASSes.

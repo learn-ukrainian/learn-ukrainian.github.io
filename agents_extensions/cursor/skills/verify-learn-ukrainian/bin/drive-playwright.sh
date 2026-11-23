@@ -7,7 +7,7 @@ Usage: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh <lesso
 Drive existing site Playwright specs after launch.sh and doctor.sh.
 Example: bash .cursor/skills/verify-learn-ukrainian/bin/drive-playwright.sh practice
 Inputs: the Node release in .nvmrc with its bundled npm (package.json engines),
-        selected through nvm when installed, else refused with the fix command;
+        on PATH, else refused with a pointer to CONTRIBUTING.md step 3;
         site dependencies installed by launch.sh from site/package-lock.json;
         installed Google Chrome; LU_VERIFY_PORT or PLAYWRIGHT_PORT (4321).
 Requires the locked Playwright CLI and Astro (its preview webServer) in
