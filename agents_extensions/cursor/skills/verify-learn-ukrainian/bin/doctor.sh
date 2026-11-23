@@ -6,7 +6,7 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh
 Read-only health check before driving a local instance; not deployment proof.
 First source the exact env.sh path printed by launch.sh.
-Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321, Node 22;
+Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
         LU_VERIFY_PYTHON defaults to the checkout's .venv/bin/python.
 Optional: LU_VERIFY_PID_FILE checks socket process-group ownership with ss;
           LU_VERIFY_EXPECTED_REV checks the checkout's HEAD.
@@ -30,11 +30,8 @@ EXPECTED_REV="${LU_VERIFY_EXPECTED_REV:-}"
 fail() { echo "doctor FAIL: $*" >&2; exit 1; }
 ok() { echo "doctor OK: $*"; }
 
-# Interpreter + Node (site package engines.node = 22.x)
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 [[ -x "$PYTHON" ]] || fail "project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree"
-NODE_MAJOR="$(node -v 2>/dev/null | sed -E 's/^v([0-9]+).*/\1/' || true)"
-[[ "$NODE_MAJOR" == "22" ]] || fail "need Node 22.x on PATH (got: $(node -v 2>/dev/null || echo none))"
 
 # HTTP readiness
 if ! curl -fsS --max-time 5 "${BASE_URL}/" >/dev/null; then
