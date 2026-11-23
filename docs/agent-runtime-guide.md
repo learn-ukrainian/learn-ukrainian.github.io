@@ -179,9 +179,10 @@ busy or unready. A typed partial result is inspectable evidence, not success,
 formal review, or coordination authority.
 
 ```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Compare the two bounded options and name risks.' |
   ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m lu_machinery.fleet_comms acp-discuss --cwd . \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
@@ -217,7 +218,8 @@ replay the recorded terminal disposition without scheduling model work.
 Finally verify the body-free receipt:
 
 ```bash
-.venv/bin/python -m lu_machinery.fleet_comms acp-verify \
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-verify \
   --conversation-id conversation_<id> --require-replay --json
 ```
 

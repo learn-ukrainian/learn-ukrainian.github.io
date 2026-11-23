@@ -471,16 +471,18 @@ floating CLI surface.
 #### Active controller-backed ACP conversation
 
 The active path is a **bounded fleet-comms-backed conversation**, not a new
-bus. It is accepted only by `.venv/bin/python -m scripts.fleet_comms
-acp-discuss`, which scopes `LU_ACPX_TRANSPORT=active` to the controller call
-and restores the prior environment on exit; generic runtime callers cannot
-turn it on. Pass the task on stdin and never place task or model-response data
-in argv:
+bus. It is accepted only by `lu_machinery.fleet_comms acp-discuss` (invoked
+with the primary checkout's interpreter as in
+[Shared Python environment](#shared-python-environment)), which scopes
+`LU_ACPX_TRANSPORT=active` to the controller call and restores the prior
+environment on exit; generic runtime callers cannot turn it on. Pass the task
+on stdin and never place task or model-response data in argv:
 
 ```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Compare the two bounded options and name risks.' |
   ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
@@ -558,7 +560,8 @@ machinery Node prefix and Claude ACP adapter match the wheel's lock (exit 0
 only on a match):
 
 ```bash
-.venv/bin/python -c '
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -c '
 import json
 from lu_machinery.agent_runtime.adapters.acpx import validate_node_dependencies
 p = validate_node_dependencies()
@@ -577,7 +580,8 @@ values. The first terminal result is evidence; the second must be durable
 replay suppression, never another model run. Then run:
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms acp-verify \
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-verify \
   --conversation-id conversation_<id> --require-replay --json
 ```
 
@@ -760,8 +764,9 @@ On some machines `ab` is ApacheBench. Always use the explicit project entrypoint
 
 ```bash
 # Direct operator surface for the default Codex/Grok panel.
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-task --correlation-id acp-task-v1 --idempotency-key acp-task-v1
 
 # Normal fleet-TUI surface: automatically ACP-backed for an enabled pair.
