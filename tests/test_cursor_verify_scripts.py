@@ -85,7 +85,12 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     env["PATH"] = str(commands)
     toolchain(commands, node, npm)
     command(commands, "curl", "exit 1")
+    # An nvm.sh that records being sourced: the check must never load nvm itself.
+    nvm_dir = Path(env["NVM_DIR"])
+    nvm_dir.mkdir()
+    (nvm_dir / "nvm.sh").write_text(f': > "{nvm_dir}/sourced"\n')
     result = run(sandbox, "launch.sh", "dev")
+    assert not (nvm_dir / "sourced").exists()
     if (node, npm) == (f"v{NODE_PIN}", NPM_PIN):
         assert result.returncode == 42, result.stderr
         assert Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").read_text() == env["PATH"]
@@ -94,34 +99,10 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
     # Without node the engines pins cannot be read; the .nvmrc release is still named.
     assert f"bundled npm {NPM_PIN if node else 'at engines.npm'}" in result.stderr
-    # No nvm in the sandbox, so the repair names nvm as the prerequisite of the selection.
-    assert "nvm (the toolchain manager CONTRIBUTING.md requires) is missing" in result.stderr
-    # The repair loads nvm itself, so it works when pasted into a shell that never sourced it.
-    nvm_sh = Path(env["NVM_DIR"], "nvm.sh")
-    assert (
-        f"then run: cd {root} && export NVM_DIR={nvm_sh.parent} && set -- --no-use && . \"$NVM_DIR/nvm.sh\" && "
-        f"nvm install {NODE_PIN} && nvm use {NODE_PIN}"
-    ) in result.stderr
+    # The check holds no nvm logic: one line points to the single documented selection.
+    assert "CONTRIBUTING.md step 3 (nvm install && nvm use" in result.stderr
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
-
-
-def test_launch_nvm_failure_is_friendly(sandbox):
-    _, _, _, env = sandbox
-    nvm_dir = Path(env["NVM_DIR"])
-    nvm_dir.mkdir()
-    # An unset variable and a failing command must not abort the caller's set -eu shell.
-    (nvm_dir / "nvm.sh").write_text('echo "$NVM_UNSET_INIT"; false\nnvm() { return 3; }\n')
-    result = run(sandbox, "launch.sh", "dev")
-    assert result.returncode == 1
-    assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
-    # The stub nvm fails every call, so the repair names nvm itself before the selection.
-    root = Path(env["LU_VERIFY_EVIDENCE_DIR"]).parent / "repo"
-    assert f"nvm (the toolchain manager CONTRIBUTING.md requires) is not working at {nvm_dir}/nvm.sh" in result.stderr
-    assert (
-        f"then run: cd {root} && export NVM_DIR={nvm_dir} && set -- --no-use && . \"$NVM_DIR/nvm.sh\" && "
-        f"nvm install {NODE_PIN} && nvm use {NODE_PIN}"
-    ) in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
