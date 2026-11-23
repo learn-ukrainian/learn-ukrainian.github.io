@@ -51,14 +51,15 @@ uv sync --locked --no-build-isolation
 # check selects the exact release in .nvmrc through nvm and refuses any other
 # Node or npm with the command that repairs it; then npm ci installs from the
 # locks. It runs in bash, so it works from any login shell. The last lines
-# select the same release in this shell for step 4 and `npm run dev:starlight`,
-# then check this shell's Node and npm again.
-export NVM_DIR="${NVM_DIR:-$HOME/.nvm}" &&
+# load nvm in this shell without selecting its default (`set -- --no-use`
+# passes that option in any shell), select the same release for step 4 and
+# `npm run dev:starlight`, then check this shell's Node and npm again.
+export NVM_DIR="${NVM_DIR:-$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "$HOME/.nvm" || printf %s "$XDG_CONFIG_HOME/nvm")}" &&
 bash -c '. scripts/node_toolchain.sh &&
   lu_verify_toolchain "$PWD" setup &&
   npm ci --ignore-scripts && npm rebuild --ignore-scripts=false &&
   cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false' &&
-{ . "$NVM_DIR/nvm.sh" --no-use || command -v nvm >/dev/null; } &&
+set -- --no-use && . "$NVM_DIR/nvm.sh" &&
 nvm use "$(tr -d '[:space:]' < .nvmrc)" &&
 bash -c '. scripts/node_toolchain.sh && lu_verify_toolchain "$PWD" setup'
 
