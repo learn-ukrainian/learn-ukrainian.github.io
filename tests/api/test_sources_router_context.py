@@ -93,3 +93,37 @@ def test_search_routes_return_empty_when_corpus_missing(tmp_path: Path) -> None:
     assert client.get("/api/sources/search_literary", params={"q": "мова"}).json() == []
     assert client.get("/api/sources/search_images", params={"q": "мова"}).status_code == 404
     assert client.get("/api/rag/search_text", params={"q": "мова"}).status_code == 404
+
+
+def test_stats_cache_refreshes_for_new_database_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: repeat scans or stale counts when the selected generation changes."""
+    from rag import query
+
+    root = tmp_path / "corpus"
+    selector = root / "data" / "sources.db"
+    first = root / "data" / "first.db"
+    second = root / "data" / "second.db"
+    _seed_sources_db(first, rows=1)
+    _seed_sources_db(second, rows=2)
+    selector.symlink_to(first.name)
+    client = _client_for(root)
+    original = query.collection_stats
+    calls = 0
+
+    def count_queries():
+        nonlocal calls
+        calls += 1
+        return original()
+
+    monkeypatch.setattr(query, "collection_stats", count_queries)
+    assert client.get("/api/sources/stats").json()["sources_db"]["points_count"] == 1
+    assert client.get("/api/sources/stats").json()["sources_db"]["points_count"] == 1
+    assert calls == 1
+    selector.unlink()
+    selector.symlink_to(second.name)
+    assert client.get("/api/sources/stats").json()["sources_db"]["points_count"] == 2
+    assert calls == 2
+    selector.unlink()
+    assert client.get("/api/sources/stats").json() == {"sources_db": {"error": "data/sources.db not found"}}
+    selector.symlink_to(selector.name)
+    assert client.get("/api/sources/stats").json() == {"sources_db": {"error": "data/sources.db not found"}}

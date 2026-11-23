@@ -8,8 +8,10 @@ loads this module once, by the name in ``scripts/curriculum/monitor_paths.v1.jso
 
 from __future__ import annotations
 
+import copy
 import sqlite3
 import sys
+import threading
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
@@ -333,12 +335,32 @@ def search_sources_literary(
         return []
 
 
+_sources_stats_lock = threading.Lock()
+_sources_stats_cache: tuple[tuple[Path, int], dict[str, Any]] | None = None
+
+
+def _sources_stats_key(handle: Any) -> tuple[Path, int]:
+    if handle is None or not handle.path.exists():
+        raise FileNotFoundError("data/sources.db not found")
+    path = handle.path.resolve(strict=True)
+    return path, path.stat().st_mtime_ns
+
+
 def sources_collection_stats(handle: Any) -> dict[str, Any]:
-    """Corpus statistics with the Monitor's documented missing-database envelope."""
+    """Cache corpus counts until the selected database generation changes."""
     from rag.query import collection_stats
 
+    global _sources_stats_cache
     try:
-        return _run_sources_query(handle, collection_stats)
+        with _sources_stats_lock:
+            key = _sources_stats_key(handle)
+            if _sources_stats_cache is None or _sources_stats_cache[0] != key:
+                result = _run_sources_query(handle, collection_stats)
+                # Do not associate a result with a selector that changed during the query.
+                if _sources_stats_key(handle) == key and result.get("sources_db", {}).get("status") == "ok":
+                    _sources_stats_cache = (key, result)
+                return copy.deepcopy(result)
+            return copy.deepcopy(_sources_stats_cache[1])
     except FileNotFoundError:
         return {"sources_db": {"error": "data/sources.db not found"}}
 
