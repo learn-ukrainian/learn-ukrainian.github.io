@@ -44,7 +44,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.4.10",
-    "better-sqlite3": "^13.0.3",
+    "better-sqlite3": "^13.2.0",
     "picomatch": "file:vendor/picomatch/learn-ukrainian-picomatch-4.0.7-lu.1.tgz",
     "playwright": "^1.64.1",
     "react": "^19.3.0",
