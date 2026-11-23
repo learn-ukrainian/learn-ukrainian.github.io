@@ -16,7 +16,12 @@ const require = createRequire(import.meta.url);
 // Three are byte-identical. BuildTimeAstroVersionProvider stays export class;
 // version is "7.4.10" ?? "". config.js and messages/runtime.js keep the same
 // exports; their diffs are import specifiers and that embedded version string.
-const supportedAstroVersions = new Set(['7.2.9', '7.3.1', '7.3.2', '7.3.3', '7.3.5', '7.3.8', '7.4.2', '7.4.4', '7.4.7', '7.4.10']);
+// Compared again between 7.4.10 and 7.4.12: config.js, piccolore-text-styler.js and
+// preview/util.js are byte-identical; the version provider and messages/runtime.js
+// differ only in the embedded version string; vite-plugin-astro-preview.js keeps its
+// export and now answers malformed percent-encoding with 400 and turns an encoded
+// slash (%2F) in an .html lookup into a 404 instead of an error.
+const supportedAstroVersions = new Set(['7.2.9', '7.3.1', '7.3.2', '7.3.3', '7.3.5', '7.3.8', '7.4.2', '7.4.4', '7.4.7', '7.4.10', '7.4.12']);
 const { version: installedAstroVersion } = require('../node_modules/astro/package.json');
 
 if (!supportedAstroVersions.has(installedAstroVersion)) {
