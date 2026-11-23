@@ -332,14 +332,33 @@ def _concurrency_group(github: dict[str, Any]) -> str:
 
 
 def test_metadata_edits_cannot_bypass_code_or_publication_checks() -> None:
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
-    steps = _load("ci.yml")["jobs"]["secret-scan"]["steps"]
-    scan = next(s for s in steps if s.get("name") == "Scan publication fields")
-    for event in ("opened", "edited", "merge_group"):
-        assert _condition(scan["if"], {"github": _EVENTS[event]})
-    assert scan["run"] == 'python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'
-    assert set(scan["env"]) == {"GH_TOKEN"}
-    assert "reuse" not in _load("ci.yml")["jobs"]
+    workflows = {name: _load(name) for name in ("ci.yml", "pr-publication-scan.yml", "pr-body-guard.yml")}
+    assert _pr_types(workflows["ci.yml"]) == {"opened", "synchronize", "reopened"}
+    expected = {
+        "opened": [("ci.yml", "secret-scan")],
+        "synchronize": [("ci.yml", "secret-scan")],
+        "reopened": [("ci.yml", "secret-scan")],
+        "edited": [("pr-publication-scan.yml", "pr-publication")],
+        "merge_group": [("ci.yml", "ci-gate")],
+        "push": [("pr-body-guard.yml", "push-publication")],
+        "schedule": [],
+        "workflow_dispatch": [],
+    }
+    for name, github in {**_EVENTS, "push": _github("push", {}, ref="refs/heads/main")}.items():
+        event = github["event_name"]
+        scans = []
+        for filename, workflow in workflows.items():
+            if event not in _triggers(workflow) or (event == "pull_request" and name not in _pr_types(workflow)):
+                continue
+            for job_id, job in workflow["jobs"].items():
+                for step in job.get("steps", []):
+                    if 'scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"' not in step.get("run", ""):
+                        continue
+                    if all(_condition(item.get("if", "true"), {"github": github}) for item in (job, step)):
+                        scans.append((filename, job_id))
+                        assert ("GH_TOKEN" in step.get("env", {})) == (event != "push")
+        assert scans == expected[name], name
+    assert "reuse" not in workflows["ci.yml"]["jobs"]
 
 
 def test_publication_workflows_do_not_log_submitted_fields(tmp_path: Path) -> None:

@@ -24,6 +24,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 import unicodedata
 from contextlib import contextmanager
 from pathlib import Path
@@ -31,6 +32,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+MAX_PUBLICATION_RETRY_WAIT_SECONDS = 60
 
 # Regex to match IPv4 addresses: X.X.X.X where each X is 1-3 digits
 _IPV4_RE = re.compile(r"\b(?P<ip>(?:[0-9]{1,3}\.){3}[0-9]{1,3})\b")
@@ -524,19 +526,28 @@ def current_publication_pr(repository: str, number: int) -> dict:
         sys.path.insert(0, str(REPO_ROOT))
     from lu_machinery.common import github_client
 
-    result = github_client.run(
-        ["gh", "api", "-X", "GET", f"repos/{repository}/pulls/{number}"],
-        fresh=True, capture_output=True, text=True, timeout=30,
-    )
-    if result.returncode:
+    command = ["gh", "api", "-X", "GET", f"repos/{repository}/pulls/{number}"]
+    for attempt in range(2):
+        result = github_client.run(command, fresh=True, capture_output=True, text=True, timeout=30)
+        if result.returncode == 0:
+            break
         refusal = github_client.refusal_of(result)
-        if refusal is not None:
+        if refusal is None:
+            detail = (result.stderr or "").strip() or "no error message"
+            raise ValueError(f"current publication metadata unavailable (exit {result.returncode}): {detail}")
+        reset = refusal.reset_at
+        if attempt or type(reset) is not int or reset <= 0:
             raise refusal
-        detail = (result.stderr or "").strip() or "no error message"
-        raise ValueError(f"current publication metadata unavailable (exit {result.returncode}): {detail}")
+        # The client records expiry in whole seconds, rounded down.
+        now = time.time()
+        if reset + 1 > now + MAX_PUBLICATION_RETRY_WAIT_SECONDS:
+            raise refusal
+        print("OPSEC publication: retrying live PR fetch after GitHub rate limit", flush=True)
+        time.sleep(max(0.0, reset + 1 - now))
     pr = json.loads(result.stdout)
-    if not isinstance(pr, dict) or pr.get("number") != number:
+    if not isinstance(pr, dict) or type(pr.get("number")) is not int or pr["number"] != number:
         raise ValueError("invalid current publication metadata")
+    print("OPSEC publication: fetched current PR metadata")
     return pr
 
 

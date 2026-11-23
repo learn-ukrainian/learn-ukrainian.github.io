@@ -35,13 +35,15 @@ The component inventory chooses no tests.
 
 CI does not run on PR title and body edits; an edit would restart the whole
 suite on an unchanged head. The `Scan PR publication fields` job in
-`pr-publication-scan.yml` runs on every PR event, including edits, and on queue
-candidates. It and the CI Secret scan job read title, body, branch and complete
-commit messages from the event and current PR metadata using the existing OPSEC
-rules. Queue scans
-read every member of the first-parent squash chain and each member's current
-PR metadata and source commits. On `merge_group`, CI Gate repeats that scan as
-its last step, so an edit made while the queue run was testing still blocks. A missing field, incomplete checkout, unsupported
+`pr-publication-scan.yml` handles edits. The CI Secret scan job handles PR
+opens, synchronizations and reopens. Each reads title, body, branch and complete
+commit messages from the event and current PR metadata using the OPSEC rules.
+On `merge_group`, CI Gate scans every member of the first-parent squash chain
+and each member's current PR metadata and source commits after the queue tests.
+This timing covers edits made while the tests were running. Each successful
+metadata fetch logs one countable line. A typed GitHub rate limit with a reset
+within the 60-second wait budget permits one fresh retry after the reset.
+An unavailable fetch, missing field, incomplete checkout, unsupported
 event or unreadable range fails closed. Submitted values are never diagnostics
 or workflow environment inputs. The advisory PR-body guard also scans direct
 push branch names and complete commit ranges. A new topic branch uses its
