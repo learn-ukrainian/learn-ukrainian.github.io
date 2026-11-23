@@ -57,7 +57,12 @@ bash -c '. scripts/node_toolchain.sh && lu_verify_toolchain "$PWD" setup' &&
 npm ci --ignore-scripts &&
 npm rebuild --ignore-scripts=false &&
 (cd site && npm ci --ignore-scripts && npm rebuild --ignore-scripts=false)
+```
 
+Run steps 4 and 5 only after step 3 finished without a refusal: service start
+installs missing dependencies with whatever Node is selected.
+
+```bash
 # 4. Start services
 ./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769
 

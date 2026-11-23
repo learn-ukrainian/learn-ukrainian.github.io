@@ -20,7 +20,10 @@ lu_verify_toolchain() {
   local root="$1" label="$2" nvmrc=""
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
-    nvmrc="${nvmrc//[[:space:]]/}"
+    # Only the ends are trimmed (CRLF, spaces): whitespace inside the value is
+    # malformed, and deleting it could turn "2 2.23.4" into a release.
+    nvmrc="${nvmrc#"${nvmrc%%[![:space:]]*}"}"
+    nvmrc="${nvmrc%"${nvmrc##*[![:space:]]}"}"
     nvmrc="${nvmrc#v}"
   fi
   # An alias such as lts/* selects a moving release, so it is never a pin.
@@ -29,6 +32,14 @@ lu_verify_toolchain() {
       "$label" "$nvmrc" "$root" >&2
     return 1
   fi
+  # An empty or relative PATH entry names another directory after any cd, so the
+  # node and npm checked here could differ from the ones that run in site/.
+  case ":$PATH:" in
+    *:[!/]*)
+      printf '%s FAIL: PATH holds an empty or relative entry, so the node and npm checked here could differ after a cd. Use absolute PATH entries, then rerun.\n' "$label" >&2
+      return 1
+      ;;
+  esac
   if _lu_verify_versions "$root" "$nvmrc"; then
     return 0
   fi
@@ -55,9 +66,9 @@ _lu_verify_versions() {
   _lu_node_version="" _lu_npm_version="" _lu_node_pin="" _lu_npm_pin=""
   if _lu_node_version="$(node -v 2>/dev/null)"; then
     # shellcheck disable=SC2016  # JavaScript template literal, expanded by node
-    # A comma separator keeps an empty first field in place.
+    # Only exact string pins come through; a comma separator keeps an empty first field in place.
     IFS=, read -r _lu_node_pin _lu_npm_pin < <(
-      node -p 'const e = require(process.argv[1]).engines || {}; `${e.node || ""},${e.npm || ""}`' \
+      node -p 'const e = require(process.argv[1]).engines || {}; const pin = (v) => (typeof v === "string" && /^\d+\.\d+\.\d+$/.test(v) ? v : ""); `${pin(e.node)},${pin(e.npm)}`' \
         "$root/package.json" 2>/dev/null
     ) || true
   else

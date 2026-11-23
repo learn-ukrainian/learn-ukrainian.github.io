@@ -23,10 +23,14 @@ cd "$ROOT"
 # shellcheck source=scripts/node_toolchain.sh
 . "$ROOT/scripts/node_toolchain.sh"
 
+# The toolchain is checked before anything can skip: a wrong npm must never end in a passing skip.
+toolchain_ok=1
+lu_verify_toolchain "$ROOT" run-checks || toolchain_ok=0
+
 PYTHON="${LU_VERIFY_PYTHON:-${ROOT}/.venv/bin/python}"
 if [[ ! -x "$PYTHON" ]]; then
   echo "SKIP: project interpreter missing — set LU_VERIFY_PYTHON to the shared interpreter in a worktree" >&2
-  exit 0
+  exit $((1 - toolchain_ok))
 fi
 
 passed=0
@@ -63,7 +67,7 @@ run_check() {
 
 # --- Site / toolchain presence ------------------------------------------------
 # The install hint is only offered on the pinned toolchain; a refusal prints its repair.
-if ! lu_verify_toolchain "$ROOT" run-checks; then
+if [[ "$toolchain_ok" -eq 0 ]]; then
   report FAIL "Node toolchain" "see the repair above"
 elif [[ -d "$ROOT/site/node_modules" ]]; then
   report PASS "Node toolchain and site/node_modules present"
