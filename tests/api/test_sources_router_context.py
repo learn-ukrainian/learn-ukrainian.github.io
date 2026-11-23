@@ -125,3 +125,5 @@ def test_stats_cache_refreshes_for_new_database_generation(tmp_path: Path, monke
     assert calls == 2
     selector.unlink()
     assert client.get("/api/sources/stats").json() == {"sources_db": {"error": "data/sources.db not found"}}
+    selector.symlink_to(selector.name)
+    assert client.get("/api/sources/stats").json() == {"sources_db": {"error": "data/sources.db not found"}}

@@ -340,7 +340,7 @@ _sources_stats_cache: tuple[tuple[Path, int], dict[str, Any]] | None = None
 
 
 def _sources_stats_key(handle: Any) -> tuple[Path, int]:
-    if handle is None:
+    if handle is None or not handle.path.exists():
         raise FileNotFoundError("data/sources.db not found")
     path = handle.path.resolve(strict=True)
     return path, path.stat().st_mtime_ns
