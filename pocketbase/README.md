@@ -59,6 +59,10 @@ docker compose up --build
 Same result: PocketBase on `127.0.0.1:8090`, repo migration + hook mounted
 read-only, state in the `pb_data` volume.
 
+The [Dockerfile](Dockerfile) pins the Alpine 3.21 image by digest. The build
+uses Alpine's CA bundle and BusyBox tools to download the PocketBase release,
+verify its SHA-256 checksum, and unpack it. It skips the Alpine package index.
+
 The container runs as UID and GID `10001`. Docker initializes new named
 volumes from the image. If you already have a `pb_data` volume from the
 root-running image, stop PocketBase and run this once from this directory

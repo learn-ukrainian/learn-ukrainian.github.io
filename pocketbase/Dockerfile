@@ -1,9 +1,8 @@
 # Pinned PocketBase binary for the local-dev compose target (see README.md).
-FROM alpine:3.21
+FROM alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab
 ARG PB_VERSION=0.40.6
 ARG PB_SHA256=0e1f609158ed945f809f8a02ae012aa0427129c66ebb63c1aee76f2c0309373f
-RUN apk add --no-cache ca-certificates unzip \
-    && wget -q -O /tmp/pb.zip "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip" \
+RUN wget -q -O /tmp/pb.zip "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip" \
     && printf '%s  %s\n' "${PB_SHA256}" /tmp/pb.zip | sha256sum -c - \
     && unzip /tmp/pb.zip -d /usr/local/bin \
     && rm /tmp/pb.zip \
