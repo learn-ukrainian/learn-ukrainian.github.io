@@ -1655,7 +1655,10 @@ def test_subissue_connection_404_with_present_parent_is_failure(tmp_path, monkey
 def test_issue_create_resolves_milestone_before_one_write(tmp_path):
     store, calls = client(
         tmp_path,
-        [response([{"title": "Ship", "number": 7}]), response({"html_url": "https://github.com/o/r/issues/1"})],
+        [
+            response([{"title": "Ship", "number": 7, "state": "open"}]),
+            response({"html_url": "https://github.com/o/r/issues/1"}),
+        ],
     )
     proc = gh.run(
         ["gh", "issue", "create", "--repo", "o/r", "--title", "test", "--body", "body", "--milestone", "Ship"],
