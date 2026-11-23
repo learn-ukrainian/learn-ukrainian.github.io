@@ -29,7 +29,6 @@ Preconditions:
 
 ## Gotchas
 
-- Root `CONTRIBUTING.md` still mentions `starlight/`; the live package path is `site/`.
 - `lexicon-manifest.json` is gitignored hydrate output — absence before first hydrate is normal.
 - Do not set `ATLAS_MANIFEST_ALLOW_STALE_POINTER=1` to force a green build; that hides real drift.
 - Full build is large (hundreds of MB unzipped); prefer shell mode for lesson-only proof.

@@ -41,9 +41,11 @@ lu_verify_toolchain() {
   nvm_sh="${NVM_DIR:-${HOME:-}/.nvm}/nvm.sh"
   if [[ -s "$nvm_sh" ]]; then
     # nvm is optional: a script that fails under errexit or nounset must not stop us.
+    # --no-use keeps its default alias off PATH, so a failed selection reports the
+    # caller's own node and npm.
     set +eu
     # shellcheck disable=SC1090
-    . "$nvm_sh" >/dev/null 2>&1
+    . "$nvm_sh" --no-use >/dev/null 2>&1
     if declare -F nvm >/dev/null; then
       nvm use "$nvmrc" >/dev/null 2>&1
     fi
