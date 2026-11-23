@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/validate-yaml.yml'
+      - '.nvmrc'
       - 'curriculum/**/*.yaml'
       - 'curriculum/l2-uk-en/plans/**/*.yaml.bak'
       - 'schemas/**'
@@ -16,6 +17,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/validate-yaml.yml'
+      - '.nvmrc'
       - 'curriculum/**/*.yaml'
       - 'curriculum/l2-uk-en/plans/**/*.yaml.bak'
       - 'schemas/**'
@@ -259,10 +261,22 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
+      - name: Check the Node.js pin
+        run: |
+          if [[ ! -f .nvmrc || ! "$(<.nvmrc)" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo '::error::.nvmrc must contain one exact Node.js release version'
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
+
+      - name: Report Node.js and npm versions
+        run: |
+          node --version
+          npm --version
 
       - name: Collect changed schema files
         id: changed-schemas
