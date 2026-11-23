@@ -7,7 +7,7 @@ import os
 import signal
 import time
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, create_autospec
 
 import pytest
 
@@ -15,6 +15,9 @@ pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 from lu_machinery.ci.check_issue_task_quality import main, score_body
 from lu_machinery.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
+
+# This sibling has no local stream roots and needs no host selector.
+CARD_SIBLING_REPO = "kube-dojo/kube-dojo.github.io"
 
 COMPLETE = """
 ## User-visible outcome
@@ -189,10 +192,8 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     # Membership now walks the native parent chain before deciding it does not apply.
-    monkeypatch.setattr("lu_machinery.ci.check_issue_task_quality.read_parent", lambda *_args: None)
-    assert (
-        main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 0
-    )
+    monkeypatch.setattr(checker, "read_parent", create_autospec(checker.read_parent, return_value=None))
+    assert main(["--issue", "123", "--repo", CARD_SIBLING_REPO, "--strict", "--json"]) == 0
     assert json.loads(capsys.readouterr().out)["trivial"] is True
     assert "PASS (trivial exemption)" in render_comment(payload)
 
@@ -203,9 +204,8 @@ def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
         "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
-    assert (
-        main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 1
-    )
+    monkeypatch.setattr(checker, "read_parent", create_autospec(checker.read_parent, return_value=None))
+    assert main(["--issue", "123", "--repo", CARD_SIBLING_REPO, "--strict", "--json"]) == 1
     assert json.loads(capsys.readouterr().out)["verdict"] == "WARN"
     assert "DoR card check: WARN" in render_comment(payload)
 
@@ -305,6 +305,7 @@ def _select_checkout(monkeypatch, checkout):
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 REGISTRY = {"devops": [5703], "harness": [6943]}
+LAST_SUBISSUE_PAGE = {"hasNextPage": False, "endCursor": None}
 
 
 def audit_report(*, native=(), body=()):
@@ -430,21 +431,25 @@ def test_observation_audits_only_target_null_and_publishes_complete_cache(monkey
 
 
 def test_live_audit_retains_forest_ownership_and_incomplete_refusal(monkeypatch):
-    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
-    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
+    monkeypatch.setattr(audit, "_repo_owner_name", create_autospec(audit._repo_owner_name, return_value=tuple(REPO.split("/"))))
+    monkeypatch.setattr(
+        audit, "fetch_open_issues", create_autospec(audit.fetch_open_issues, return_value=[{"number": 123, "title": "target"}])
+    )
     tree = {5703: [6943, 321], 6943: [456, 321], 456: [123]}
     unread = set()
 
-    def fetch(cursors, *args):
+    def fetch(cursors, *_args, **_kwargs):
         pages = {}
         for number in cursors:
             nodes = [{"number": n, "repository": {"nameWithOwner": REPO},
                       "subIssuesSummary": {"total": len(tree.get(n, []))}} for n in tree.get(number, [])]
             pages[number] = audit.INCOMPLETE_NODE if number in unread else {
-                "body": "#123 #777" if number == 5703 else "", "subIssues": {"nodes": nodes}}
+                "body": "#123 #777" if number == 5703 else "",
+                "subIssues": {"nodes": nodes, "pageInfo": LAST_SUBISSUE_PAGE},
+            }
         return pages
 
-    monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", create_autospec(audit._fetch_subissue_batch, side_effect=fetch))
     report = checker.live_audit(REPO, REGISTRY)
     assert report["membership_complete"] is True
     assert report["effective_membership"] == {
@@ -548,7 +553,7 @@ def test_canonical_validator_must_accept_cache(monkeypatch, membership_cache, ca
 @pytest.mark.parametrize("stage", ["target_fetch", "cached_audit_validation", "live_audit_open_issues",
                                       "live_audit_root_2_of_2_issue_6943", "live_audit_root_1_of_2_issue_999"])
 def test_deadline_signal_reports_current_stage(monkeypatch, membership_cache, capsys, stage):
-    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    monkeypatch.setattr(audit, "_repo_owner_name", create_autospec(audit._repo_owner_name, return_value=tuple(REPO.split("/"))))
     membership_cache.write_text(json.dumps(audit_report(body=[123])))
 
     def expire(*a, **k):
@@ -563,16 +568,19 @@ def test_deadline_signal_reports_current_stage(monkeypatch, membership_cache, ca
         monkeypatch.setattr(audit, "validate_membership_report", expire)
     else:
         membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
-        monkeypatch.setattr(audit, "fetch_open_issues", expire if stage == "live_audit_open_issues" else lambda *a: [])
+        open_issues = create_autospec(
+            audit.fetch_open_issues, return_value=[], side_effect=expire if stage == "live_audit_open_issues" else None
+        )
+        monkeypatch.setattr(audit, "fetch_open_issues", open_issues)
 
-        def fetch(cursors, *args):
+        def fetch(cursors, *_args, **_kwargs):
             number = next(iter(cursors))
             if stage.endswith(f"issue_{number}"):
                 expire()
             nodes = [{"number": 999, "repository": {"nameWithOwner": REPO}}] if number == 5703 else []
-            return {number: {"body": "#123", "subIssues": {"nodes": nodes}}}
+            return {number: {"body": "#123", "subIssues": {"nodes": nodes, "pageInfo": LAST_SUBISSUE_PAGE}}}
 
-        monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+        monkeypatch.setattr(audit, "_fetch_subissue_batch", create_autospec(audit._fetch_subissue_batch, side_effect=fetch))
     started = time.monotonic()
     assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
     assert time.monotonic() - started < 1  # Far inside delegate.py's 135s outer deadline.
@@ -811,20 +819,26 @@ def audited_checkout(monkeypatch, tmp_path):
     monkeypatch.setattr(audit, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
     monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
     monkeypatch.setattr(checker, "read_parent", lambda *a: None)
-    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    monkeypatch.setattr(audit, "_repo_owner_name", create_autospec(audit._repo_owner_name, return_value=tuple(REPO.split("/"))))
     open_issues = [{"number": n, "title": f"issue {n}"} for n in (123, 5703, 6943)]
-    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: open_issues)
-    states = Mock(return_value=({77: "CLOSED", 4000: "OPEN"}, set()))
+    monkeypatch.setattr(audit, "fetch_open_issues", create_autospec(audit.fetch_open_issues, return_value=open_issues))
+    states = create_autospec(audit.fetch_issue_states, return_value=({77: "CLOSED", 4000: "OPEN"}, set()))
     monkeypatch.setattr(audit, "fetch_issue_states", states)
     children = {
         5703: [{"number": 456, "repository": {"nameWithOwner": REPO}, "subIssuesSummary": {"total": 0}}],
         6943: [{"number": 9, "repository": {"nameWithOwner": "other/repository"}}],
     }
 
-    def fetch(cursors, *args):
-        return {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": children[n]}} for n in cursors}
+    def fetch(cursors, *_args, **_kwargs):
+        return {
+            n: {
+                "body": "- [ ] #123" if n == 5703 else "",
+                "subIssues": {"nodes": children[n], "pageInfo": LAST_SUBISSUE_PAGE},
+            }
+            for n in cursors
+        }
 
-    monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", create_autospec(audit._fetch_subissue_batch, side_effect=fetch))
     return states
 
 
@@ -862,12 +876,13 @@ def test_run_audit_publication_is_trusted_by_strict_checker(monkeypatch, tmp_pat
 
 def test_run_audit_publishes_unverifiable_report_with_null_root_results(monkeypatch, tmp_path, audited_checkout):
     """A conflicting report is still published for the Monitor, never trusted for membership."""
-    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": n, "title": ""} for n in (123, 456)])
-    monkeypatch.setattr(audit, "_fetch_subissue_batch", lambda cursors, *a: {
-        n: {"body": "", "subIssues": {"nodes": [
-            {"number": 456, "repository": {"nameWithOwner": REPO}, "subIssuesSummary": {"total": 0}},
-        ]}} for n in cursors
-    })
+    audit.fetch_open_issues.return_value = [{"number": n, "title": ""} for n in (123, 456)]
+
+    def fetch(cursors, *_args, **_kwargs):
+        subissue = {"number": 456, "repository": {"nameWithOwner": REPO}, "subIssuesSummary": {"total": 0}}
+        return {n: {"body": "", "subIssues": {"nodes": [subissue], "pageInfo": LAST_SUBISSUE_PAGE}} for n in cursors}
+
+    audit._fetch_subissue_batch.side_effect = fetch
     report = audit.run_audit(tmp_path)
     assert report["multi_homed"]
     published = json.loads((tmp_path / "batch_state/issue_stream_audit.json").read_text())
@@ -1059,10 +1074,12 @@ def test_absent_public_registry_is_reported_as_absent(monkeypatch):
 
 
 def test_in_memory_audit_refuses_mismatched_checkout(monkeypatch):
-    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: ("other", "repository"))
-    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: pytest.fail("must refuse before fetching"))
+    monkeypatch.setattr(audit, "_repo_owner_name", create_autospec(audit._repo_owner_name, return_value=("other", "repository")))
+    fetch_issues = create_autospec(audit.fetch_open_issues)
+    monkeypatch.setattr(audit, "fetch_open_issues", fetch_issues)
     with pytest.raises(ValueError, match="audit repository does not match target"):
         checker.live_audit(REPO, REGISTRY)
+    fetch_issues.assert_not_called()
 
 
 @pytest.mark.parametrize("failure", [ValueError("PRIVATE_CANARY"), TimeoutError(),
@@ -1206,8 +1223,10 @@ def test_event_api_cost_and_exit_status(monkeypatch, tmp_path, action, body, par
 
     monkeypatch.setattr(checker, "registry_for", lambda r: registry)
     monkeypatch.setattr(checker.github_client, "command", command)
-    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
-    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
+    monkeypatch.setattr(audit, "_repo_owner_name", create_autospec(audit._repo_owner_name, return_value=tuple(REPO.split("/"))))
+    monkeypatch.setattr(
+        audit, "fetch_open_issues", create_autospec(audit.fetch_open_issues, return_value=[{"number": 123, "title": "target"}])
+    )
     monkeypatch.setattr(commenter, "GitHubClient", Client)
     event = tmp_path / "event.json"
     event.write_text(json.dumps({"action": action, "issue": {"number": 123}}))
