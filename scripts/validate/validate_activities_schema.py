@@ -142,7 +142,7 @@ def main():
 
     if not HAS_JSONSCHEMA:
         print("⚠️ jsonschema not installed - using basic validation")
-        print("   Install with: pip install jsonschema")
+        print("   Follow the locked Python setup in CONTRIBUTING.md (Installation, step 2).")
         print()
 
     files_to_check = []

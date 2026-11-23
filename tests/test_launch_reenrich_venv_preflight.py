@@ -6,7 +6,8 @@ launcher only checked that ``$REPO/.venv/bin/python`` existed, never that it
 could import the driver's hard dependencies. The launcher must now fail
 closed before systemd-run unless the resolved runner venv (``$REPO/.venv``
 preferred, ``$CODE_ROOT/.venv`` fallback) can ``import yaml`` and
-``import jsonschema``, printing a one-line pip install recipe otherwise.
+``import jsonschema``. If either import fails, the launcher points to the locked
+Python setup in CONTRIBUTING.md.
 
 Like the target-detection suite, this drives the real launcher via subprocess
 against a fully stubbed tmp tree (stub venv python, stub driver/data files),

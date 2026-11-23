@@ -26,7 +26,7 @@ try:
 except ImportError:
     warnings.warn(
         "filelock not installed — state writes will not be thread-safe. "
-        "Install with: pip install filelock",
+        "Follow the locked Python setup in CONTRIBUTING.md (Installation, step 2).",
         stacklevel=1,
     )
     class FileLock:  # type: ignore[no-redef]
