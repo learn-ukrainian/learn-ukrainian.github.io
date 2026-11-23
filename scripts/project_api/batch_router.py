@@ -6,14 +6,13 @@ import asyncio
 import json
 import logging
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx
 from lu_machinery.common.repo_root import project_interpreter
-
-from .dashboard_helpers import find_active_builds
 
 logger = logging.getLogger(__name__)
 
@@ -69,11 +68,31 @@ def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
 
 @router.get("/api/batch/active")
 def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
-    # Same 15-minute scan as the dashboard's active builds, without stage details.
-    return [
-        {"slug": build["slug"], "track": build["track"], "seconds_ago": build["seconds_ago"]}
-        for build in find_active_builds(ctx)
-    ]
+    active: list[dict[str, Any]] = []
+    if not ctx.roots.curriculum_root.exists():
+        return active
+    for track_dir in ctx.roots.curriculum_root.iterdir():
+        if not track_dir.is_dir():
+            continue
+        orch_dir = track_dir / "orchestration"
+        if not orch_dir.exists():
+            continue
+        for module_dir in orch_dir.iterdir():
+            if not module_dir.is_dir():
+                continue
+            latest_mtime = 0.0
+            for f in module_dir.iterdir():
+                if f.is_file():
+                    latest_mtime = max(latest_mtime, f.stat().st_mtime)
+            if (datetime.now().timestamp() - latest_mtime) < 900:
+                active.append(
+                    {
+                        "slug": module_dir.name,
+                        "track": track_dir.name,
+                        "seconds_ago": int(datetime.now().timestamp() - latest_mtime),
+                    }
+                )
+    return active
 
 
 @router.get("/api/batch/failures")

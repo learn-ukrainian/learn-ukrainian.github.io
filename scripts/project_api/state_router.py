@@ -25,6 +25,7 @@ Performance notes:
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 from datetime import UTC, datetime
@@ -56,6 +57,7 @@ from .config import LEVELS
 from .curriculum_state import (
     get_audit_status,
     get_plan_slugs,
+    monitor_surface,
 )
 from .state_build import (
     compute_build_stats,
@@ -299,11 +301,21 @@ def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
     generically, so a newly-added dim (e.g. ``beauty`` once Phase A lands) is
     surfaced automatically with no change here.
     """
-    data = read_llm_qg(module_dir.parent, module_dir.name)
+    level = module_dir.parent.name
+    slug = module_dir.name
+    data = monitor_surface.current_payload_for_module(level, slug, module_dir)
+    path = module_dir / "llm_qg.json"
     if data is None:
+        if not monitor_surface.llm_qg_file_is_current_for_module(module_dir, path):
+            return {"aggregate": None, "dimensions": {}}
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError, ValueError):
+            return {"aggregate": None, "dimensions": {}}
+    if not isinstance(data, dict):
         return {"aggregate": None, "dimensions": {}}
 
-    raw_agg = data.get("aggregate")
+    raw_agg = data.get("aggregate") if isinstance(data, dict) else None
     aggregate: dict[str, Any] | None = None
     if isinstance(raw_agg, dict):
         aggregate = {
@@ -315,7 +327,7 @@ def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
             "warning_dims": raw_agg.get("warning_dims", []),
         }
 
-    raw_dims = data.get("dimensions")
+    raw_dims = data.get("dimensions") if isinstance(data, dict) else None
     dimensions: dict[str, Any] = {}
     if isinstance(raw_dims, dict):
         for dim, entry in raw_dims.items():
