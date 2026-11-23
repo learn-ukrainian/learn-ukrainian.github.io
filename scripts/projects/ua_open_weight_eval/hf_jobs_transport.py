@@ -12,8 +12,11 @@ import re
 import subprocess
 import sys
 from collections.abc import Mapping
+from email.parser import BytesParser
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
+from zipfile import BadZipFile, ZipFile
 
 JOB_ID_PATTERN = re.compile(r"[a-f0-9]{20,64}")
 SHA256_PATTERN = re.compile(r"[a-f0-9]{64}")
@@ -21,6 +24,21 @@ REPO_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/[A-Za-z0-9][A-Za-
 SAFE_PATH_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.\-/]{0,255}")
 TRANSPORT_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_transport_receipt.v1"
 PLUGIN_INSTALL_TIMEOUT_SECONDS = 300
+PIP_INSTALL_ARGS = (
+    "-I",
+    "-m",
+    "pip",
+    "install",
+    "--disable-pip-version-check",
+    "--no-cache-dir",
+    "--no-index",
+    "--no-deps",
+    "--only-binary=:all:",
+    "--require-hashes",
+    "--force-reinstall",
+    "-r",
+    "/dev/stdin",
+)
 # The direct transport passes no HF job timeout to the in-container worker, so its
 # subprocess is bounded by this documented ceiling instead of a job label.
 WORKER_TIMEOUT_SECONDS = 3600
@@ -191,21 +209,59 @@ def run_preflight(args: argparse.Namespace, files: list[dict[str, Any]]) -> dict
     return receipt
 
 
+def _verify_plugin_requirements(wheel: Path, runtime: Mapping[str, Any]) -> None:
+    from packaging.requirements import InvalidRequirement, Requirement
+
+    try:
+        with ZipFile(wheel) as archive:
+            metadata = [name for name in archive.namelist() if name.endswith(".dist-info/METADATA")]
+            _require(len(metadata) == 1, "GGUF plugin wheel must contain one METADATA file")
+            requirements = BytesParser().parsebytes(archive.read(metadata[0])).get_all("Requires-Dist", [])
+    except BadZipFile as exc:
+        raise TransportError("GGUF plugin wheel is not a valid archive") from exc
+
+    try:
+        _require(version("vllm") == runtime["vllm_version"], "vLLM version drift before GGUF plugin installation")
+        for value in requirements:
+            requirement = Requirement(value)
+            if requirement.marker is not None and not requirement.marker.evaluate({"extra": ""}):
+                continue
+            _require(not requirement.url and not requirement.extras, f"unsupported GGUF plugin requirement: {value}")
+            installed = version(requirement.name)
+            _require(installed in requirement.specifier, f"GGUF plugin requires {value}, found {installed}")
+    except PackageNotFoundError as exc:
+        raise TransportError(f"GGUF plugin requirement is missing from the pinned runtime: {exc.name}") from exc
+    except InvalidRequirement as exc:
+        raise TransportError("GGUF plugin wheel contains an invalid requirement") from exc
+
+
 def run_worker(args: argparse.Namespace, root: Path) -> int:
     config = json.loads((root / "run_config.json").read_text(encoding="utf-8"))
-    plugin = config["runtime"]["vllm_gguf_plugin"]["filename"]
+    runtime = config["runtime"]
+    plugin = runtime["vllm_gguf_plugin"]
+    filename = _safe_path(plugin["filename"], label="GGUF plugin wheel filename")
+    _require("/" not in filename and filename.endswith(".whl"), "invalid GGUF plugin wheel filename")
+    wheel = root / filename
+    digest = plugin["sha256"]
+    _require(SHA256_PATTERN.fullmatch(digest) is not None, "invalid GGUF plugin wheel SHA-256")
+    _require(wheel.is_file() and sha256_file(wheel) == digest, "GGUF plugin wheel SHA-256 drift")
+    _verify_plugin_requirements(wheel, runtime)
     try:
         install = subprocess.run(
-            ["uv", "pip", "install", "--system", str(root / plugin)],
+            [sys.executable, *PIP_INSTALL_ARGS],
             check=False,
             timeout=PLUGIN_INSTALL_TIMEOUT_SECONDS,
+            input=f"{wheel.absolute().as_uri()} --hash=sha256:{digest}\n",
+            text=True,
+            env={"PIP_CONFIG_FILE": os.devnull},
         )
     except subprocess.TimeoutExpired as exc:
         raise TransportError("verified plugin installation timed out") from exc
     _require(install.returncode == 0, "verified plugin installation failed")
     output = root / "output"
     command = [
-        "python3",
+        sys.executable,
+        "-I",
         str(root / "hf_jobs_worker.py"),
         "--mode",
         args.mode,
