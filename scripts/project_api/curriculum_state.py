@@ -19,7 +19,6 @@ the machinery ``lu_machinery.api.state_helpers`` (Monitor split, C-4687).
 from __future__ import annotations
 
 import contextlib
-import hashlib
 import json
 import os
 import re
@@ -41,6 +40,14 @@ from lu_machinery.research.research_quality import assess_research_compat, find_
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
+
+
+def safe_join_or_none(base: Path, *parts: str | Path) -> Path | None:
+    """``safe_join`` that returns ``None`` instead of raising for an unsafe path."""
+    try:
+        return cast("Path | None", safe_join(base, *parts))
+    except ValueError:
+        return None
 
 
 # ==================== PRODUCT DATA AND ENTRY POINT ====================
@@ -633,44 +640,6 @@ def get_word_target_from_plan(
 
 
 # ==================== REVIEW HELPERS ====================
-
-
-def extract_content_hash(review_path: Path) -> str | None:
-    """Extract content hash from review file header (#618).
-
-    Reviews written by write_review_with_hash() start with:
-        <!-- content-hash: abc123def456 -->
-    """
-    try:
-        with open(review_path, encoding="utf-8") as f:
-            first_line = f.readline()
-        m = re.match(r"<!-- content-hash: ([a-f0-9]+) -->", first_line)
-        return m.group(1) if m else None
-    except Exception:
-        return None
-
-
-def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
-    """Check if a review file is stale relative to its content (#618)."""
-    if not review_path.exists():
-        return False
-    if not content_path or not content_path.exists():
-        return False
-
-    review_hash = extract_content_hash(review_path)
-    if review_hash:
-        try:
-            current_hash = hashlib.md5(content_path.read_bytes(), usedforsecurity=False).hexdigest()[:12]
-        except OSError:
-            return False
-        return review_hash != current_hash
-
-    try:
-        content_mtime = content_path.stat().st_mtime
-        review_mtime = review_path.stat().st_mtime
-    except OSError:
-        return False
-    return content_mtime > 0 and review_mtime < content_mtime
 
 
 def get_final_review_info(

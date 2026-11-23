@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 
 from .curriculum_state import monitor_surface
+from .decisions_router import decisions_file
 
 router = APIRouter(tags=["governance"])
 
@@ -30,10 +31,6 @@ _EMPTY_ADR_GOVERNANCE: dict[str, Any] = {
 
 
 
-def _decisions_file(ctx: MonitorContext | None = None) -> Path:
-    return resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
-
-
 def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
@@ -41,7 +38,7 @@ def _isoformat_z(value: datetime) -> str:
 def _load_decisions(
     path: Path | None = None, ctx: MonitorContext | None = None
 ) -> list[dict[str, Any]]:
-    path = path or _decisions_file(ctx)
+    path = path or decisions_file(ctx)
     if not path.exists():
         return []
     payload = yaml.safe_load(path.read_text("utf-8")) or {}

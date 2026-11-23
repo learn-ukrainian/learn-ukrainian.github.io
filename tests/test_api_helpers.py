@@ -8,8 +8,7 @@ Covers:
   4. state_compute.py — research detail, module detail, legacy compat, severity
   5. state_build.py — build status, ETA, track health, enrichment
   6. state_issues.py — issue collection, review analysis, patterns
-  7. dashboard_helpers.py — parse_slug, scan_track_cached, find_active_builds
-  8. dashboard_comms.py — dispatcher state
+  7. dashboard_helpers.py — parse_slug, scan_track_cached, find_active_builds, dispatcher state
 """
 
 import json
@@ -227,40 +226,6 @@ class TestGetAuditStatus:
         (tmp_path / "status" / "test.json").write_text("broken json{{{")
         result = get_audit_status(tmp_path, "test")
         assert result["status"] == "error"
-
-
-class TestExtractContentHash:
-    """extract_content_hash reads hash from review header."""
-
-    def test_valid_hash(self, tmp_path):
-        from scripts.project_api.curriculum_state import extract_content_hash
-
-        review = tmp_path / "review.md"
-        review.write_text("<!-- content-hash: abc123def456 -->\n# Review")
-        assert extract_content_hash(review) == "abc123def456"
-
-    def test_no_hash(self, tmp_path):
-        from scripts.project_api.curriculum_state import extract_content_hash
-
-        review = tmp_path / "review.md"
-        review.write_text("# Review\nNo hash here")
-        assert extract_content_hash(review) is None
-
-
-class TestIsReviewStale:
-    """is_review_stale checks if review is older than content."""
-
-    def test_not_stale_by_hash_match(self, tmp_path):
-        import hashlib
-
-        from scripts.project_api.curriculum_state import is_review_stale
-
-        content = tmp_path / "content.md"
-        content.write_text("some content")
-        content_hash = hashlib.md5(content.read_bytes(), usedforsecurity=False).hexdigest()[:12]
-        review = tmp_path / "review.md"
-        review.write_text(f"<!-- content-hash: {content_hash} -->\n# Review")
-        assert is_review_stale(review, content) is False
 
 
 class TestGetWordTargetFromPlan:
@@ -495,7 +460,7 @@ class TestScanTrackCached:
         assert result == cached_data
 
 
-# ==================== dashboard_comms ====================
+# ==================== dashboard dispatcher state ====================
 
 
 def _dashboard_ctx(tmp_path):
@@ -508,7 +473,7 @@ class TestReadDispatcherState:
     """read_dispatcher_state reads JSON from disk."""
 
     def test_valid_state(self, tmp_path):
-        from scripts.project_api.dashboard_comms import read_dispatcher_state
+        from scripts.project_api.dashboard_helpers import read_dispatcher_state
 
         ctx = _dashboard_ctx(tmp_path)
         ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)
@@ -519,7 +484,7 @@ class TestReadDispatcherState:
         assert result["running"] is True
 
     def test_invalid_json(self, tmp_path):
-        from scripts.project_api.dashboard_comms import read_dispatcher_state
+        from scripts.project_api.dashboard_helpers import read_dispatcher_state
 
         ctx = _dashboard_ctx(tmp_path)
         ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)

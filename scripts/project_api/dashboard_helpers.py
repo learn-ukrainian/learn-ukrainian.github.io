@@ -1,7 +1,8 @@
 """Module scanning and track aggregation helpers for the dashboard API router.
 
 Contains functions for scanning tracks, building module info, computing
-track stats, finding active builds, and classifying pipeline queues.
+track stats, finding active builds, classifying pipeline queues, and reading
+the batch dispatcher state.
 """
 
 import contextlib
@@ -14,17 +15,22 @@ from pathlib import Path
 from typing import Any, cast
 
 import yaml
-from lu_machinery.api.monitor_context import MonitorContext
+from lu_machinery.api.monitor_context import MonitorContext, resolve_context
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.api.state_helpers import ctx_cache_scope
-from lu_machinery.path_safety import safe_join
 from lu_machinery.research.research_quality import assess_research_compat, find_research_path, get_rubric
 
-from .curriculum_state import detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
+from .curriculum_state import (
+    detect_pipeline_version,
+    get_plan_slugs,
+    monitor_surface,
+    read_v2_state,
+    safe_join_or_none,
+)
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
 
 # Names stay on this module so existing tests can patch them. The functions
@@ -88,14 +94,6 @@ def read_yaml_file(path: Path) -> dict | None:
         return None
 
 
-def _safe_join(base: Path, *parts: str | Path) -> Path | None:
-    """Return a safe child path under ``base`` or ``None`` if input is invalid."""
-    try:
-        return cast("Path | None", safe_join(base, *parts))
-    except ValueError:
-        return None
-
-
 def default_research_info(track_id: str) -> dict:
     """Return a default (empty) research info dict for a track."""
     return {
@@ -144,8 +142,8 @@ def extract_review_info(track_dir: Path, slug: str) -> dict:
         "plan_review_verdict": None,
     }
 
-    review_file = _safe_join(track_dir, "review", f"{slug}-review.md")
-    final_review_file = _safe_join(track_dir, "review", f"{slug}-final-review.md")
+    review_file = safe_join_or_none(track_dir, "review", f"{slug}-review.md")
+    final_review_file = safe_join_or_none(track_dir, "review", f"{slug}-final-review.md")
     info["has_review"] = bool(review_file and review_file.exists())
     info["has_final_review"] = bool(final_review_file and final_review_file.exists())
 
@@ -157,7 +155,7 @@ def extract_review_info(track_dir: Path, slug: str) -> dict:
         except Exception:
             pass
 
-    plan_review_file = _safe_join(track_dir, "audit", f"{slug}-plan-review.md")
+    plan_review_file = safe_join_or_none(track_dir, "audit", f"{slug}-plan-review.md")
     info["has_plan_review"] = bool(plan_review_file and plan_review_file.exists())
     if plan_review_file and plan_review_file.exists():
         try:
@@ -169,6 +167,29 @@ def extract_review_info(track_dir: Path, slug: str) -> dict:
     return info
 
 
+def friction_counts(friction_path: Path | None) -> tuple[int, int]:
+    """Count the active and resolved entries of a module's ``friction.yaml``.
+
+    Only ``friction.yaml`` counts, not every friction-named file. The caller
+    joins the path, so it keeps its own refusal for an unsafe one. An absent
+    file is ``(0, 0)``; an unreadable or malformed one keeps the counts made
+    before the error.
+    """
+    active = 0
+    resolved = 0
+    if friction_path and friction_path.exists():
+        try:
+            fdata = yaml.safe_load(friction_path.read_text("utf-8"))
+            for f in fdata.get("frictions", []) if fdata else []:
+                if f.get("status") == "active":
+                    active += 1
+                elif f.get("status") == "resolved":
+                    resolved += 1
+        except Exception:
+            pass
+    return active, resolved
+
+
 def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     """Build the info dict for a single module in a track scan."""
     num = idx + 1
@@ -178,7 +199,7 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     has_meta = sp.get("meta") and sp["meta"].exists() if sp else False
     has_activities = sp.get("activities") and sp["activities"].exists() if sp else False
     has_vocab = sp.get("vocabulary") and sp["vocabulary"].exists() if sp else False
-    plan_file = _safe_join(plans_dir, f"{slug}.yaml")
+    plan_file = safe_join_or_none(plans_dir, f"{slug}.yaml")
     has_plan = bool(plan_file and plan_file.exists())
 
     content_path = sp.get("md") if sp else None
@@ -187,7 +208,7 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     if research_info is None:
         research_info = default_research_info(track_id)
 
-    status_file = _safe_join(track_dir, "status", f"{slug}.json")
+    status_file = safe_join_or_none(track_dir, "status", f"{slug}.json")
     result = read_status(status_file, source_paths=sp) if status_file and status_file.exists() else None
 
     overall_status = "missing"
@@ -206,24 +227,13 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         plan_data = read_yaml_file(plan_file)
         word_target = plan_data.get("word_target", 0) if plan_data else 0
 
-    orch_dir = _safe_join(track_dir, "orchestration", slug)
+    orch_dir = safe_join_or_none(track_dir, "orchestration", slug)
     orch_exists = bool(orch_dir and orch_dir.exists())
     pipeline_version = detect_pipeline_version(cast(Path, orch_dir)) if orch_exists else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
-    # Friction from friction.yaml (active count only, not glob of all friction files)
-    friction_active = 0
-    friction_resolved = 0
-    friction_path = _safe_join(cast(Path, orch_dir), "friction.yaml") if orch_exists else None
-    if friction_path and friction_path.exists():
-        try:
-            fdata = yaml.safe_load(friction_path.read_text("utf-8"))
-            for f in fdata.get("frictions", []) if fdata else []:
-                if f.get("status") == "active":
-                    friction_active += 1
-                elif f.get("status") == "resolved":
-                    friction_resolved += 1
-        except Exception:
-            pass
+    # Active count from friction.yaml only, not a glob of all friction files.
+    friction_path = safe_join_or_none(cast(Path, orch_dir), "friction.yaml") if orch_exists else None
+    friction_active, friction_resolved = friction_counts(friction_path)
 
     return {
         "slug": slug,
@@ -392,7 +402,7 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     sp = get_source_paths(track_dir, slug) if track_dir.exists() else {}
     has_md = sp.get("md") and sp["md"].exists() if sp else False
 
-    status_file = _safe_join(track_dir, "status", f"{slug}.json")
+    status_file = safe_join_or_none(track_dir, "status", f"{slug}.json")
     result = read_status(status_file, source_paths=sp) if status_file and status_file.exists() else None
 
     overall_status = "missing"
@@ -401,7 +411,7 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     elif has_md:
         overall_status = "unaudited"
 
-    orch_dir = _safe_join(track_dir, "orchestration", slug)
+    orch_dir = safe_join_or_none(track_dir, "orchestration", slug)
     pipeline_version = detect_pipeline_version(orch_dir) if orch_dir and orch_dir.exists() else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
     return {
@@ -445,8 +455,8 @@ def scan_track_summary(
 ) -> dict:
     """Lightweight track scan — only status/badges per module, no research or full detail."""
     curriculum_root = ctx.roots.curriculum_root
-    track_dir = _safe_join(curriculum_root, track_path)
-    plans_dir = _safe_join(curriculum_root, "plans", track_id)
+    track_dir = safe_join_or_none(curriculum_root, track_path)
+    plans_dir = safe_join_or_none(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
         return {
             "track_id": track_id,
@@ -484,8 +494,8 @@ def scan_track(
 ) -> dict:
     """Scan a single track and return module-level detail."""
     curriculum_root = ctx.roots.curriculum_root
-    track_dir = _safe_join(curriculum_root, track_path)
-    plans_dir = _safe_join(curriculum_root, "plans", track_id)
+    track_dir = safe_join_or_none(curriculum_root, track_path)
+    plans_dir = safe_join_or_none(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
         return {
             "track_id": track_id,
@@ -566,7 +576,7 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
             f"{idx + 1:02d}-{slug}.md",
             f"{idx + 1}-{slug}.md",
         ]
-        md_exists = any((candidate := _safe_join(track_dir, fn)) and candidate.exists() for fn in md_names)
+        md_exists = any((candidate := safe_join_or_none(track_dir, fn)) and candidate.exists() for fn in md_names)
         return None if md_exists else "otaman"
 
     try:
@@ -581,7 +591,7 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
             lesson_status = data.get("gates", {}).get("lesson", {}).get("status", "")
             return "otaman" if lesson_status == "fail" else None
         if overall == "pass":
-            review_file = _safe_join(track_dir, "review", f"{slug}-final-review.md")
+            review_file = safe_join_or_none(track_dir, "review", f"{slug}-final-review.md")
             return "final_review" if not (review_file and review_file.exists()) else None
     except Exception:
         pass
@@ -692,7 +702,7 @@ def _markdown_present(
         if name in files:
             return True
         if name in links:
-            candidate = _safe_join(track_dir, name)
+            candidate = safe_join_or_none(track_dir, name)
             if candidate is not None and candidate.exists():
                 return True
     return False
@@ -731,11 +741,11 @@ def _queue_fingerprint(ctx: MonitorContext) -> tuple:
     tracks: list[tuple] = []
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_dir = _safe_join(curriculum_root, level_cfg["path"])
+        track_dir = safe_join_or_none(curriculum_root, level_cfg["path"])
         if track_dir is None:
             tracks.append((track_id, None))
             continue
-        status_dir = _safe_join(track_dir, "status")
+        status_dir = safe_join_or_none(track_dir, "status")
         if status_dir is None:
             tracks.append((track_id, _mtime_ns(track_dir), "status-rejected", _lstat_mtime_ns(track_dir / "status")))
             continue
@@ -771,7 +781,7 @@ def _classify_scanned_module(
 ) -> str | None:
     status_name = f"{slug}.json"
     if not _plain_filename(slug) or status_name in status_links:
-        return classify_module_queue(track_id, track_dir, slug, idx, _safe_join(status_dir, status_name))
+        return classify_module_queue(track_id, track_dir, slug, idx, safe_join_or_none(status_dir, status_name))
     status_file = regular_status.get(status_name)
     if status_file is None:
         if _markdown_present(track_dir, slug, idx, root_files, root_links):
@@ -791,10 +801,10 @@ def _scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_dir = _safe_join(curriculum_root, level_cfg["path"])
+        track_dir = safe_join_or_none(curriculum_root, level_cfg["path"])
         if track_dir is None:
             continue
-        status_dir = _safe_join(track_dir, "status")
+        status_dir = safe_join_or_none(track_dir, "status")
         if status_dir is None:
             continue
         _status_mtime, status_rows = _json_snapshot(status_dir)
@@ -845,3 +855,15 @@ def scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
     if _queue_fingerprint(ctx) == fingerprint:
         _pipeline_queue_cache[key] = (fingerprint, result)
     return _copy_queues(result)
+
+
+def read_dispatcher_state(ctx: MonitorContext | None = None) -> dict:
+    """Read the batch dispatcher state from disk; ``{}`` when absent or unreadable."""
+    ds_file = resolve_context(ctx).roots.batch_state_dir / "dispatcher_state.json"
+    if not ds_file.exists():
+        return {}
+    try:
+        with open(ds_file) as f:
+            return cast("dict[Any, Any]", json.load(f))
+    except Exception:
+        return {}
