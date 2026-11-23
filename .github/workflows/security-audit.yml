@@ -2,10 +2,10 @@ name: Security Audit (blocking)
 
 # Scheduled and manually dispatched dependency advisory checks. The required
 # PR and merge-group scans run in ci.yml. This workflow checks Python
-# (pip-audit over the uv.lock export, with scripts/config/pip-audit-ignore.yaml)
+# (pip-audit over the uv.lock export and standalone requirements locks)
 # and Node.js production dependencies (npm audit with
 # scripts/config/npm-audit-ignore.yaml).
-# PRs that change the scheduled npm audit or its policy validate it here.
+# The path-filtered PR runs also validate changes to this workflow.
 #
 # Reference issue: learn-ukrainian-infra-private#703
 
@@ -31,9 +31,9 @@ on:
 jobs:
   pip-audit:
     name: pip-audit (blocking)
-    # Weekly Monday schedule and dispatch only. The daily 04:23 UTC run
-    # exists solely to refresh the advisory tracking issue (#9871).
-    if: ${{ github.event_name != 'pull_request' && github.event.schedule != '23 4 * * *' }}
+    # The daily 04:23 UTC run exists solely to refresh the advisory
+    # tracking issue (#9871).
+    if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The installed release has no implicit product: name this checkout.
@@ -69,10 +69,28 @@ jobs:
           uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
             --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
-      - name: pip-audit (blocking with suppression)
+      - name: pip-audit (blocking Python locks)
         env:
           LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
-        run: .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node
+        run: |
+          set -euo pipefail
+          status=0
+
+          echo "::group::pip-audit uv.lock"
+          .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node || status=1
+          echo "::endgroup::"
+
+          # The uv.lock suppressions are reviewed against its pins.
+          # Resolver-free mode reads each file's own pins, so audit the
+          # PyYAML lock included by requirements-tts.txt directly too.
+          for lock in requirements-tts.txt requirements-tts-stress.txt .github/requirements-pyyaml.txt; do
+            echo "::group::pip-audit $lock"
+            .venv/bin/python -m pip_audit --strict --disable-pip --require-hashes \
+              --progress-spinner=off --requirement "$lock" || status=1
+            echo "::endgroup::"
+          done
+
+          exit "$status"
 
   npm-audit:
     name: npm-audit (blocking)
