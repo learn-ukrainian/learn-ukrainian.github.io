@@ -8,17 +8,13 @@ still comes last (Monitor split, C-4687).
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import cast
-
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import FileResponse
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx
-from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
 from .context import product_roots
-from .curriculum_state import load_phase_labels
+from .curriculum_state import load_phase_labels, safe_join_or_none
 
 router = APIRouter()
 
@@ -40,18 +36,11 @@ _ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 _MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
 
 
-def _safe_join(base: Path, *parts: str | Path) -> Path | None:
-    try:
-        return cast(Path, safe_join(base, *parts))
-    except ValueError:
-        return None
-
-
 @router.get("/images/{path:path}")
 def serve_image(path: str, ctx: MonitorContext = Depends(get_ctx)):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
     image_dir = product_roots(ctx).images_dir
-    file_path = _safe_join(image_dir, path)
+    file_path = safe_join_or_none(image_dir, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Invalid image path")
     if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:

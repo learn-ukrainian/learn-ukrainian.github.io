@@ -38,15 +38,15 @@ _CACHE_TTL = 60  # seconds
 
 
 
-def _decisions_file(ctx: MonitorContext | None = None) -> Path:
+def decisions_file(ctx: MonitorContext | None = None) -> Path:
     return resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
 
 
 def _load_decisions(ctx: MonitorContext | None = None) -> list[dict]:
     """Load decisions from YAML with 60s TTL cache."""
     now = time.monotonic()
-    decisions_file = _decisions_file(ctx)
-    path_key = str(decisions_file)
+    path = decisions_file(ctx)
+    path_key = str(path)
     if (
         _cache["data"] is not None
         and _cache.get("path") == path_key
@@ -54,13 +54,13 @@ def _load_decisions(ctx: MonitorContext | None = None) -> list[dict]:
     ):
         return cast("list[dict[Any, Any]]", _cache["data"])
 
-    if not decisions_file.exists():
+    if not path.exists():
         _cache["data"] = []
         _cache["ts"] = now
         _cache["path"] = path_key
         return []
 
-    raw = yaml.safe_load(decisions_file.read_text("utf-8"))
+    raw = yaml.safe_load(path.read_text("utf-8"))
     decisions = raw.get("decisions", []) if raw else []
     _cache["data"] = decisions
     _cache["ts"] = now

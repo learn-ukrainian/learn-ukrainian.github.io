@@ -22,12 +22,11 @@ from lu_machinery.api.state_helpers import cache_get, cache_set
 
 from .config import LEVELS
 from .context import sources_db
-from .curriculum_state import monitor_surface
+from .curriculum_state import monitor_surface, safe_join_or_none
 
 # path_safety is a top-level module when scripts/ is on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.path_safety import safe_join
 
 
 # The product orient section (orient.py) calls wiki_state.get_status_summary() on this
@@ -89,13 +88,6 @@ def _known_tracks(ctx: MonitorContext) -> list[str]:
 
 def _track_exists(track: str, ctx: MonitorContext) -> bool:
     return track in _known_tracks(ctx)
-
-
-def _safe_join(base: Path, *parts: str | Path) -> Path | None:
-    try:
-        return cast("Path | None", safe_join(base, *parts))
-    except ValueError:
-        return None
 
 
 def _ensure_track_exists(track: str, ctx: MonitorContext) -> None:
@@ -252,7 +244,7 @@ def _track_status_rows(
 
     for slug in slugs:
         article = _resolve_article(track, slug, article_candidates, ctx=ctx)
-        article_path = _safe_join(_wiki_dir(ctx), article["path"]) if article else None
+        article_path = safe_join_or_none(_wiki_dir(ctx), article["path"]) if article else None
         compiled = bool(article_path and article_path.exists())
         word_count = 0
 
@@ -310,7 +302,7 @@ def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
             "compiled_at": None,
         }
 
-    article_path = _safe_join(_wiki_dir(ctx), article["path"])
+    article_path = safe_join_or_none(_wiki_dir(ctx), article["path"])
     if article_path is None:
         return {
             "track": track,

@@ -30,15 +30,16 @@ from lu_machinery.api.state_helpers import (
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .curriculum_state import get_plan_slugs, monitor_surface
-from .dashboard_comms import read_dispatcher_state
 from .dashboard_helpers import (
     compute_track_stats,
     default_research_info,
     extract_review_info,
     find_active_builds,
+    friction_counts,
     get_orchestration_info,
     load_manifest,
     present_module_count,
+    read_dispatcher_state,
     read_yaml_file,
     scan_pipeline_queues,
     scan_track_cached,
@@ -159,6 +160,15 @@ def _age_overview_meta(meta: dict) -> None:
 
 def _empty_overview_totals() -> dict[str, int]:
     return {key: 0 for key in _OVERVIEW_TOTAL_KEYS}
+
+
+def _add_overview_totals(totals: dict[str, int], module_count: int, stats: dict) -> None:
+    """Add one track's module count and stats to the overview totals."""
+    for key in totals:
+        if key == "total":
+            totals["total"] += module_count
+        elif key in stats:
+            totals[key] += stats[key]
 
 
 def _overlay_research_from_summary(tracks: list[dict], state_tracks: dict) -> None:
@@ -286,6 +296,18 @@ def hydrate_overview_last_good_from_disk(ctx: MonitorContext | None = None) -> d
     return payload
 
 
+def _track_modules(levels: dict, track_id: str, ctx: MonitorContext) -> list:
+    """The manifest's module entries for ``track_id``, else its plan slugs in order."""
+    return levels.get(track_id, {}).get("modules", []) or [
+        slug
+        for _num, slug in get_plan_slugs(
+            track_id,
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        )
+    ]
+
+
 def _build_overview_from_state_summary(
     state_summary: dict,
     cache_state: str,
@@ -306,14 +328,7 @@ def _build_overview_from_state_summary(
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
         summary_stats = state_tracks.get(track_id, {})
-        track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug
-            for _num, slug in get_plan_slugs(
-                track_id,
-                curriculum_root=resolved.roots.curriculum_root,
-                plans_root=resolved.roots.plans_root,
-            )
-        ]
+        track_modules = _track_modules(levels, track_id, resolved)
         module_count = int(summary_stats.get("total") or 0) or len(track_modules)
         if not module_count:
             continue
@@ -336,11 +351,7 @@ def _build_overview_from_state_summary(
                 "audit_stale": summary_stats.get("audit_stale", 0),
             }
         )
-        for key in totals:
-            if key == "total":
-                totals["total"] += module_count
-            elif key in s:
-                totals[key] += s[key]
+        _add_overview_totals(totals, module_count, s)
 
     meta = {
         "generated_at": state_summary.get("generated_at") if isinstance(state_summary, dict) else None,
@@ -386,14 +397,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug
-            for _num, slug in get_plan_slugs(
-                track_id,
-                curriculum_root=resolved.roots.curriculum_root,
-                plans_root=resolved.roots.plans_root,
-            )
-        ]
+        track_modules = _track_modules(levels, track_id, resolved)
         if not track_modules:
             continue
 
@@ -425,11 +429,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
         }
         tracks.append(track_entry)
 
-        for key in totals:
-            if key == "total":
-                totals["total"] += track_data["module_count"]
-            elif key in s:
-                totals[key] += s[key]
+        _add_overview_totals(totals, track_data["module_count"], s)
 
     payload: dict[str, Any] = {
         "tracks": tracks,
@@ -563,14 +563,7 @@ def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
-    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
-        slug
-        for _num, slug in get_plan_slugs(
-            track_id,
-            curriculum_root=ctx.roots.curriculum_root,
-            plans_root=ctx.roots.plans_root,
-        )
-    ]
+    track_modules = _track_modules(manifest.get("levels", {}), track_id, ctx)
     return scan_track_summary_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
 
 
@@ -582,14 +575,7 @@ def track_detail(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
-    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
-        slug
-        for _num, slug in get_plan_slugs(
-            track_id,
-            curriculum_root=ctx.roots.curriculum_root,
-            plans_root=ctx.roots.plans_root,
-        )
-    ]
+    track_modules = _track_modules(manifest.get("levels", {}), track_id, ctx)
     return scan_track_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
 
 
@@ -668,19 +654,7 @@ def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ct
 
     # Friction from friction.yaml (#970)
     orch_dir = safe_join(track_dir, "orchestration", slug)
-    friction_path = safe_join(orch_dir, "friction.yaml") if orch_dir else None
-    result["friction_active"] = 0
-    result["friction_resolved"] = 0
-    if friction_path and friction_path.exists():
-        try:
-            fdata = yaml.safe_load(friction_path.read_text())
-            for f in fdata.get("frictions", []) if fdata else []:
-                if f.get("status") == "active":
-                    result["friction_active"] += 1
-                elif f.get("status") == "resolved":
-                    result["friction_resolved"] += 1
-        except Exception:
-            pass
+    result["friction_active"], result["friction_resolved"] = friction_counts(safe_join(orch_dir, "friction.yaml"))
 
     orch_info = get_orchestration_info(orch_dir)
     result.update(orch_info)
