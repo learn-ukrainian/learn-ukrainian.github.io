@@ -18,7 +18,7 @@ Developers prove curriculum and Atlas integrity with the same scripts CI Gate ru
 
 Preconditions:
 
-- `.venv/bin/python` installed with `uv sync --locked`.
+- `.venv/bin/python` installed with the locked Python setup in `CONTRIBUTING.md` (Installation, step 2).
 - `git fetch origin main` when running `checks.sh` (skipped otherwise).
 - No preview server required.
 
@@ -30,7 +30,7 @@ Preconditions:
 
 ## Gotchas
 
-- Install Python deps with `uv sync --locked` (it installs the `uv.lock` ruff). A newer unpinned ruff can fail rules CI does not enforce.
+- Follow the locked Python setup in `CONTRIBUTING.md` (Installation, step 2); it installs the `uv.lock` ruff. A newer unpinned ruff can fail rules CI does not enforce.
 - `checks.sh` needs full history / `origin/main` for changed-vs-base gates; shallow clones should fetch before claiming CI parity.
 - VESUM lookups inside plan validate are declared `not_checked` when `data/vesum.db` is absent — that is intentional in CI, not a local failure to "fix" by skipping the whole script.
 - Word-card `verify` on committed pilot inputs does not certify evaluation readiness (`--for-evaluation` must refuse).

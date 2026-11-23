@@ -20,10 +20,8 @@ python scripts/build/v7_build.py folk narodna-kultura-yak-systema --worktree    
 
 **Why:** The venv runs the CPython named in `.python-version` with every dependency `uv.lock` pins. sqlite-vec needs an interpreter that can load SQLite extensions: uv's managed CPython can; Homebrew Python silently fails on vector search.
 
-If recreating the venv (uv reads `.python-version`, `pyproject.toml` and `uv.lock`):
-```bash
-rm -rf .venv && uv sync --locked
-```
+If recreating the venv, follow the [locked Python setup](../../CONTRIBUTING.md#installation)
+(step 2). uv reads `.python-version`, `pyproject.toml` and `uv.lock`.
 
 ---
 
