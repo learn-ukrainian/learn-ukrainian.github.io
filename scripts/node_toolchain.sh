@@ -29,16 +29,16 @@ lu_verify_toolchain() {
   # An alias such as lts/* selects a moving release, so it is never a pin.
   if [[ ! "$nvmrc" =~ $_LU_VERIFY_EXACT ]]; then
     printf '%s FAIL: .nvmrc must hold an exact Node release (found "%s"). Restore the checked-in file: git -C %q checkout -- .nvmrc\n' \
-      "$label" "$nvmrc" "$root" >&2
+      "$label" "${nvmrc//[[:space:]]/ }" "$root" >&2
     return 1
   fi
   # An empty or relative PATH entry names another directory after any cd. It is
   # harmless after the absolute entries that already hold node and npm, because
   # PATH is searched in order; anywhere else it could change which tool runs in
   # site/. So refuse unless both tools resolve before the first such entry.
-  case ":$PATH:" in
+  case ":${PATH-}:" in
     *:[!/]*)
-      rest="$PATH:"
+      rest="${PATH-}:"
       while entry="${rest%%:*}" && [[ "$entry" == /* ]]; do
         prefix="${prefix:+$prefix:}$entry"
         rest="${rest#*:}"
