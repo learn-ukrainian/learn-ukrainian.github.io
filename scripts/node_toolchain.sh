@@ -17,7 +17,7 @@ _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 # CONTRIBUTING.md step 3, which holds the one nvm install and select; return 1.
 # This file never loads or runs nvm.
 lu_verify_toolchain() {
-  local root="$1" label="$2" nvmrc=""
+  local root="$1" label="$2" nvmrc="" rest entry prefix=""
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
     # Only the ends are trimmed (CRLF, spaces): whitespace inside the value is
@@ -32,12 +32,22 @@ lu_verify_toolchain() {
       "$label" "$nvmrc" "$root" >&2
     return 1
   fi
-  # An empty or relative PATH entry names another directory after any cd, so the
-  # node and npm checked here could differ from the ones that run in site/.
+  # An empty or relative PATH entry names another directory after any cd. It is
+  # harmless after the absolute entries that already hold node and npm, because
+  # PATH is searched in order; anywhere else it could change which tool runs in
+  # site/. So refuse unless both tools resolve before the first such entry.
   case ":$PATH:" in
     *:[!/]*)
-      printf '%s FAIL: PATH holds an empty or relative entry, so the node and npm checked here could differ after a cd. Use absolute PATH entries, then rerun.\n' "$label" >&2
-      return 1
+      rest="$PATH:"
+      while entry="${rest%%:*}" && [[ "$entry" == /* ]]; do
+        prefix="${prefix:+$prefix:}$entry"
+        rest="${rest#*:}"
+      done
+      if [[ -z "$prefix" ]] || ! PATH="$prefix" command -v node >/dev/null 2>&1 ||
+        ! PATH="$prefix" command -v npm >/dev/null 2>&1; then
+        printf '%s FAIL: PATH holds an empty or relative entry before node and npm, so the tools checked here could differ after a cd. Use absolute PATH entries, then rerun.\n' "$label" >&2
+        return 1
+      fi
       ;;
   esac
   if _lu_verify_versions "$root" "$nvmrc"; then
