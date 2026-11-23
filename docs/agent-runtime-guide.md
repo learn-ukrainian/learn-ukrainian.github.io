@@ -99,8 +99,12 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   are never returned by
   `available_agents()` and never become dispatch/routing/review/failover
   candidates.
-- The project-local ACPX dependency and every directly invoked provider CLI
-  use rolling compatibility contracts. Before each spawn, the adapter probes
+- The machinery-wheel ACPX Node prefix
+  (`<venv>/share/lu-machinery/node/<version>-<lock_sha256>`, resolved by
+  `lu_machinery.agent_runtime.adapters.acpx.node_prefix()`) and every directly
+  invoked provider CLI use rolling compatibility contracts. Before each spawn,
+  the adapter validates the locked prefix (`validate_node_dependencies()`) and
+  probes
   the exact command/flag surface it will invoke; observed versions are
   telemetry, never allowlists. The contracts are `json-one-shot-v1` (ACPX),
   `agent-stdio-v1` (Grok), `text-plan-sandbox-v1` (AGY), and
@@ -200,11 +204,13 @@ file handoffs, which remain authoritative. The task, participant responses,
 credentials, paths, sessions, tool data, and raw model content do not enter
 metadata APIs.
 
-The shared primary checkout owns the one project-local ACPX install; dispatch
-worktrees resolve that install rather than creating a global copy. The
-manifest accepts compatible updates from `0.13.0` onward, while the lockfile
-keeps installs reproducible and the runtime capability probe decides whether
-the installed version may execute. For E2E/replay verification, run the real stdin-only
+The installed `lu-machinery` wheel owns the one shared ACPX Node prefix under
+the project `.venv` (`<venv>/share/lu-machinery/node/<version>-<lock_sha256>`,
+resolved by `node_prefix()` and archive-verified by
+`validate_node_dependencies()`); neither the product root `package.json` nor
+dispatch worktrees install their own copy. The machinery wheel's `node-contract`
+lockfile keeps installs reproducible and the runtime capability probe decides
+whether the installed version may execute. For E2E/replay verification, run the real stdin-only
 `acp-discuss` command once from a registered worktree, then repeat the
 identical task, correlation, and idempotency values. The second call must
 replay the recorded terminal disposition without scheduling model work.
