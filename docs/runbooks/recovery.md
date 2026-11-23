@@ -267,8 +267,8 @@ If either command fails, resolve its error before using the install.
 CI and local end-to-end runs use the runner's or the machine's managed Google
 Chrome; security updates for it come from the system, not from this
 repository. The launcher (`site/e2e/support/hardened-browser.mjs`) keeps the
-browser sandbox on and allows requests only to the loopback host and the
-public site origin. Playwright's bundled browsers are not downloaded.
+browser sandbox on and restricts network requests to the loopback host names
+and the public site host name. Playwright's bundled browsers are not downloaded.
 
 For a task that needs Puppeteer's own browsers, install them after `npm ci`
 with `./node_modules/.bin/puppeteer browsers install`. The repository's npm

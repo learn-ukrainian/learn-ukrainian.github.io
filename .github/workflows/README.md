@@ -31,15 +31,16 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 ## Browsers
 
 End-to-end and browser-backed tests in CI use the Google Chrome already
-installed on the runner (`ci.yml` and `deploy-pages.yml` check it before they
-run). Local end-to-end runs use the machine's own managed Chrome in the same
-way. Security updates for that browser come from the system's package
-management, not from this repository.
+installed on the runner. `ci.yml` checks that it is present before the
+browser-backed tests, and `deploy-pages.yml` launches it once after the site
+build to verify its sandbox. Local end-to-end runs use the machine's own
+managed Chrome in the same way. Security updates for that browser come from
+the system's package management, not from this repository.
 
 - The launcher is `site/e2e/support/hardened-browser.mjs`. It selects the
   installed Chrome (`channel: 'chrome'`), keeps the browser sandbox on, and
-  allows requests only to the loopback host and the public site origin. A run
-  without a usable sandbox fails.
+  restricts network requests to the loopback host names and the public site
+  host name. A run without a usable sandbox fails.
 - Playwright's bundled browser downloads are not used.
 - Puppeteer's browser download is skipped on install. `package.json` sets
   `"puppeteer": false` under `allowScripts`, and `.npmrc` sets
