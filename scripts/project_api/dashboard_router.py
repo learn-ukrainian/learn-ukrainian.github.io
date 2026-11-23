@@ -103,37 +103,31 @@ def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
     return resolve_context(ctx).roots.project_root / ".cache" / "dashboard_overview_last_good.json"
 
 
-def _stop_overview_refresh_workers_for_tests() -> None:
-    """Wait for every live refresh worker, then drop the registrations.
+def reset_overview_state_for_tests() -> None:
+    """Drop overview last-good + TTL cache so tests do not leak across cases.
 
-    A worker writes the TTL cache, last-good memory and the durable snapshot
-    when its scan ends, so a reset must not return while one is alive. The
-    registry is cleared only under the lock and only once no worker is alive;
-    the scheduler takes the same lock, so no new worker slips in between.
-    The wait is unbounded on purpose: pytest's per-test timeout bounds it, and
-    a bounded join would leave a slow worker to write after the reset.
+    Skips reloading the host disk snapshot so pytest cannot pick up a
+    previous Monitor process's last-good file.
+
+    Returns only after every live refresh worker has finished: a worker writes
+    the TTL cache, last-good memory and the durable snapshot when its scan
+    ends, so none may outlive the reset. The wait is unbounded on purpose
+    (pytest's per-test timeout bounds it; a bounded join would leave a slow
+    worker to write afterwards). The state is cleared under the scheduler's
+    lock and only while no worker is alive, so no worker can be registered
+    between the liveness check and the clear.
     """
     while True:
         with _overview_refresh_lock:
             live = [t for t in _overview_refresh_threads.values() if t.is_alive()]
             if not live:
                 _overview_refresh_threads.clear()
+                _overview_last_good_by_scope.clear()
+                _overview_disk_loaded_by_scope.clear()
+                cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
                 return
         for thread in live:
             thread.join()
-
-
-def reset_overview_state_for_tests() -> None:
-    """Drop overview last-good + TTL cache so tests do not leak across cases.
-
-    Skips reloading the host disk snapshot so pytest cannot pick up a
-    previous Monitor process's last-good file. Returns only after any live
-    refresh worker has finished, so no overview write lands afterwards.
-    """
-    _stop_overview_refresh_workers_for_tests()
-    _overview_last_good_by_scope.clear()
-    _overview_disk_loaded_by_scope.clear()
-    cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
 
 
 def simulate_overview_process_bounce_for_tests() -> None:
