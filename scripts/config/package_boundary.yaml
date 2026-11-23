@@ -51,9 +51,6 @@ packages:
   eval:
     reason: 'Unsure: lesson-evaluation harness that also drives the dispatcher. Machinery, so its build, wiki, and verification imports stay on the ratchet.'
     role: machinery
-  fleet_comms:
-    reason: operator classification
-    role: machinery
   generate_mdx:
     reason: operator classification
     role: product
