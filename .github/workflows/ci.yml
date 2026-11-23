@@ -419,13 +419,61 @@ jobs:
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: .venv/bin/python -m lu_machinery.common.flake_quarantine --base-ref "$BASE_SHA"
+      - name: Verify npm install-script policy
+        run: |
+          set -euo pipefail
+          npm_version="$(npm --version)"
+          npm_pin="$(node -p 'require("./package.json").engines.npm')"
+          echo "$npm_version"
+          if [[ "$npm_version" != "$npm_pin" ]]; then
+            echo "::error::npm $npm_pin is required for install-script enforcement. Found npm $npm_version."
+            exit 1
+          fi
+          probe="$(mktemp -d "$RUNNER_TEMP/npm-script-policy.XXXXXX")"
+          trap 'rm -rf -- "$probe"' EXIT
+          # Pack a local fixture so the refusal check needs no registry packages.
+          mkdir "$probe/dependency"
+          printf '%s\n' '{"name":"lu-npm-policy-probe","version":"1.0.0","scripts":{"postinstall":"touch unexpected-install-script"}}' > "$probe/dependency/package.json"
+          (cd "$probe" && npm pack ./dependency --ignore-scripts --offline --quiet)
+          for project in root site; do
+            project_dir="$PWD"
+            if [[ "$project" == site ]]; then
+              project_dir="$PWD/site"
+            fi
+            mkdir "$probe/$project"
+            cp "$project_dir/.npmrc" "$probe/$project/"
+            # Copy the project policy into the fixture manifest.
+            node -e '
+              const { allowScripts } = require(process.argv[1]);
+              const dependencies = { "lu-npm-policy-probe": "file:../lu-npm-policy-probe-1.0.0.tgz" };
+              console.log(JSON.stringify({ private: true, allowScripts, dependencies }));
+            ' "$project_dir/package.json" > "$probe/$project/package.json"
+            (
+              cd "$probe/$project"
+              npm install --package-lock-only --ignore-scripts --offline --no-audit --no-fund
+              npm ci --offline --no-audit --no-fund
+              if npm rebuild --ignore-scripts=false --offline --color=false > probe.log 2>&1; then
+                cat probe.log
+                echo "::error::npm rebuild accepted an unapproved install script for $project"
+                exit 1
+              fi
+              cat probe.log
+              grep -Fxq 'npm error code ESTRICTALLOWSCRIPTS' probe.log
+              grep -Fq 'lu-npm-policy-probe@1.0.0' probe.log
+              test ! -e node_modules/lu-npm-policy-probe/unexpected-install-script
+              echo "npm rebuild refused the unapproved probe postinstall for $project."
+            )
+          done
       - name: Lint and content contracts
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: |
-          npm ci --prefer-offline --no-audit --no-fund
+          npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          npm rebuild --ignore-scripts=false
+          git diff --exit-code HEAD -- package-lock.json
+          echo "package-lock.json matches HEAD after npm ci."
           PATH="$PWD/.venv/bin:$PATH" bash scripts/ci/checks.sh
 
   frontend:
@@ -476,7 +524,12 @@ jobs:
         uses: ./.github/actions/python-ci-env
       - name: Install site toolchain
         working-directory: site
-        run: npm ci --prefer-offline --no-audit --no-fund
+        run: |
+          npm --version
+          npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          npm rebuild --ignore-scripts=false
+          git diff --exit-code HEAD -- package-lock.json
+          echo "site/package-lock.json matches HEAD after npm ci."
       # Browser-backed tests launch the runner's installed Google Chrome with its
       # sandbox on, through site/e2e/support/hardened-browser.mjs (#12689). Nothing
       # downloads Playwright's bundled browsers; a launch without a usable sandbox fails.

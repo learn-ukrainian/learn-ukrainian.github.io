@@ -52,11 +52,11 @@ pins:
     review_by: "2026-11-16"
     note: CI reads this via python-version-file. pyproject.toml requires-python is >=3.12.
   - name: node
-    pinned: "22.23.4"
+    pinned: "24.22.3"
     source: .nvmrc
     owner: DevOps
-    review_by: "2026-11-16"
-    note: package.json engines is 22.23.4. Workflows read .nvmrc via node-version-file. validate-yaml.yml schema-check passes 20.
+    review_by: "2026-12-23"
+    note: Workflows read .nvmrc via node-version-file. This release bundles npm 11.19.1 for install-script enforcement.
   - name: sqlite
     pinned: unknown
     source: host

@@ -534,14 +534,17 @@ review, and plane-status checks.
 
 ACPX is installed once at the shared primary checkout as a project-local
 dependency; a dispatch worktree resolves that primary install and must not
-create its own global ACPX installation. The manifest accepts versions from
-`0.13.0` onward, the lockfile preserves reproducibility, and the runtime probe
-rejects incompatible command-surface drift before prompt delivery. The same
-install owns the rolling Claude ACP adapter dependency; run `npm ci` in the
-primary checkout after pulling a lockfile change. `npm ci` installs exactly the
-committed `package-lock.json` and fails if it disagrees with `package.json`;
-never use `npm install`, which may rewrite the lock, or dynamic package
-execution such as `npx`. `npm ci` first removes `node_modules`, so run it
+create its own global ACPX installation. The lockfile pins the installed
+version, and the runtime probe rejects incompatible CLI changes before prompt
+delivery. The same install includes the Claude ACP adapter. Select the Node
+release in `.nvmrc` and use its bundled npm, which enforces the root
+install-script policy. After pulling a lockfile change, run
+`npm ci --ignore-scripts && npm rebuild --ignore-scripts=false` in the primary checkout.
+`npm ci` installs the committed `package-lock.json` with scripts disabled
+and fails if the dependencies disagree with `package.json`. The rebuild then
+checks the unpacked dependencies and runs the approved scripts. Avoid
+`npm install`, which may rewrite the lock, and dynamic package execution
+such as `npx`. `npm ci` first removes `node_modules`, so run it
 while no ACP call is in flight. Then, from the same checkout root, verify that
 the installed adapter is the locked version (exit 0 only on a match):
 
@@ -693,7 +696,7 @@ counts and outcomes.
 | `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
 | `AUTH_REQUIRED` on the Grok shadow seat | Establish the native Grok CLI's cached login outside this adapter; the Grok adapter automatically sets the non-secret per-process selector `ACPX_AUTH_CACHED_TOKEN=1` and scrubs ambient XAI API-key auth selectors so cached native login is the only accepted path |
 | Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
-| `acp_adapter_missing` / `acp_adapter_incompatible` | Run `npm ci` in the canonical primary checkout and run the adapter lock check in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification) to confirm the installed `@agentclientprotocol/claude-agent-acp` matches `package-lock.json`; do not use a global install or permit dynamic package execution |
+| `acp_adapter_missing` / `acp_adapter_incompatible` | Run the locked install and adapter version check in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification) from the primary checkout. |
 | `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
 | `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
 | `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Prompt retries stay at zero; tree review uses the direct toolful route |

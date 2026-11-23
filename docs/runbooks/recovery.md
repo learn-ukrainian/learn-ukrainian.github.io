@@ -130,6 +130,8 @@ Retain the stage until application checks pass.
 
 ## 3. Recreate deployed agent configuration
 
+Select the Node release in `.nvmrc` and use its bundled npm before running the
+recovery blocks below. npm enforces the repository's install-script policy.
 The tracked agent-extension sources regenerate local ignored deployment files:
 
 ```bash
@@ -138,6 +140,7 @@ The tracked agent-extension sources regenerate local ignored deployment files:
   cd ./recovery-checkout || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
@@ -150,33 +153,15 @@ The tracked agent-extension sources regenerate local ignored deployment files:
       exit 1
       ;;
   esac
-  case "$node_version" in
-    v"$nvmrc"|v"$nvmrc".*) ;;
-    *)
-      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
-      exit 1
-      ;;
-  esac
-  case "$engines" in
-    *.x)
-      major="${engines%.x}"
-      case "$node_version" in
-        v"$major".*) ;;
-        *)
-          printf 'Node %s does not satisfy engines.node (%s).\n' \
-            "$node_version" "$engines" >&2
-          exit 1
-          ;;
-      esac
-      ;;
-    *)
-      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
-      exit 1
-      ;;
-  esac
+  if [[ "$node_version" != "v$nvmrc" || "$node_version" != "v$engines" || "$npm_version" != "$npm_pin" ]]; then
+    printf 'Use Node %s from .nvmrc and its bundled npm %s. Found Node %s and npm %s.\n' \
+      "$nvmrc" "$npm_pin" "$node_version" "$npm_version" >&2
+    exit 1
+  fi
   printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
     "$nvmrc" "$engines" "$node_version" "$npm_version"
   npm ci
+  npm rebuild --ignore-scripts=false
   npm run agents:deploy
 )
 ```
@@ -240,10 +225,9 @@ checkout path relative to the directory where you will run the block, such as
 the fresh `./recovery-checkout` clone. Both blocks refuse an unset or missing
 primary path before invoking npm or touching the browser cache.
 
-`.nvmrc` pins Node 22 and `package.json` `engines.node` is `22.x`. The block
-exits unless `node` matches `.nvmrc` and satisfies `engines.node`, and unless
-`npm` resolves inside that Node's prefix (the npm that ships with it). A
-failed `cd` exits before `npm ci`.
+The block requires the Node version pinned in `.nvmrc` and `engines.node`.
+It checks the bundled npm against the `engines.npm` pin in
+`package.json`. A failed `cd` exits before `npm ci`.
 
 ```bash
 (
@@ -251,6 +235,7 @@ failed `cd` exits before `npm ci`.
   cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
@@ -263,41 +248,27 @@ failed `cd` exits before `npm ci`.
       exit 1
       ;;
   esac
-  case "$node_version" in
-    v"$nvmrc"|v"$nvmrc".*) ;;
-    *)
-      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
-      exit 1
-      ;;
-  esac
-  case "$engines" in
-    *.x)
-      major="${engines%.x}"
-      case "$node_version" in
-        v"$major".*) ;;
-        *)
-          printf 'Node %s does not satisfy engines.node (%s).\n' \
-            "$node_version" "$engines" >&2
-          exit 1
-          ;;
-      esac
-      ;;
-    *)
-      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
-      exit 1
-      ;;
-  esac
+  if [[ "$node_version" != "v$nvmrc" || "$node_version" != "v$engines" || "$npm_version" != "$npm_pin" ]]; then
+    printf 'Use Node %s from .nvmrc and its bundled npm %s. Found Node %s and npm %s.\n' \
+      "$nvmrc" "$npm_pin" "$node_version" "$npm_version" >&2
+    exit 1
+  fi
   printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
     "$nvmrc" "$engines" "$node_version" "$npm_version"
   npm ci
+  npm rebuild --ignore-scripts=false
 )
 ```
 
-`npm ci` removes `node_modules` before it reinstalls. A failed run leaves the
-directory nearly empty. Retry that block until `npm ci` exits 0. Do not leave
-a partial install in place.
+`npm ci` replaces `node_modules` and installs with scripts disabled.
+`npm rebuild` checks the unpacked packages before running approved scripts.
+If either command fails, resolve its error before using the install.
 
-Puppeteer's postinstall fails when the per-browser installation directory
+For a task that needs Puppeteer's own browsers, install them after `npm ci`
+with `./node_modules/.bin/puppeteer browsers install`. The repository's npm
+policy skips the browser download during dependency installation.
+
+The browser install fails when the per-browser installation directory
 already exists and the executable inside it is missing. The message names
 that directory and the executable, for example a folder
 `<cache>/chrome/linux-<buildId>` whose executable
@@ -307,7 +278,6 @@ directory exists, so removing an empty cache root does not clear the failure.
 
 Set `install_dir` and `executable` to the two paths from the message. The
 default cache is `$HOME/.cache/puppeteer` unless `PUPPETEER_CACHE_DIR` is set.
-Repeating `npm ci` alone does not clear a directory that is already there.
 
 The block resolves the cache and the installation directory with a sentinel
 after `readlink -f`, then removes that sentinel, so a trailing newline stays
@@ -320,11 +290,9 @@ unchanged, to a new sibling under the same cache:
 A failed check exits before `rmdir` or `mv`. A failed `cd` exits before either
 command and before `npm ci`.
 
-Quarantine requires exclusive recovery. Stop every actor that can change
-the cache and leave it stopped until the block exits: `npm` (including
-`npm ci`, which downloads the browser), any `node` process that launches
-Puppeteer, the browser those processes start (`chrome` or
-`chrome-headless-shell`), agents, and cleanup tools. The probe below and
+Quarantine requires exclusive recovery. Stop browser installers, Puppeteer
+processes, the browsers they launch, agents, and cleanup tools that can
+change the cache. Leave them stopped until the block exits. The probe below and
 the probe inside the block are point-in-time checks, not a lock. A process
 that opens a cache file, or swaps a parent directory, after the probe
 returns is outside what the probe can see. Exclusive recovery is what
@@ -396,6 +364,7 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
   cd "${PRIMARY_CHECKOUT:?set PRIMARY_CHECKOUT to the verified primary checkout}" || exit 1
   nvmrc="$(tr -d '[:space:]' < .nvmrc)"
   engines="$(node -p 'require("./package.json").engines.node')"
+  npm_pin="$(node -p 'require("./package.json").engines.npm')"
   node_version="$(node --version)"
   npm_version="$(npm --version)"
   node_bin="$(readlink -f -- "$(command -v node)")"
@@ -408,30 +377,11 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
       exit 1
       ;;
   esac
-  case "$node_version" in
-    v"$nvmrc"|v"$nvmrc".*) ;;
-    *)
-      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
-      exit 1
-      ;;
-  esac
-  case "$engines" in
-    *.x)
-      major="${engines%.x}"
-      case "$node_version" in
-        v"$major".*) ;;
-        *)
-          printf 'Node %s does not satisfy engines.node (%s).\n' \
-            "$node_version" "$engines" >&2
-          exit 1
-          ;;
-      esac
-      ;;
-    *)
-      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
-      exit 1
-      ;;
-  esac
+  if [[ "$node_version" != "v$nvmrc" || "$node_version" != "v$engines" || "$npm_version" != "$npm_pin" ]]; then
+    printf 'Use Node %s from .nvmrc and its bundled npm %s. Found Node %s and npm %s.\n' \
+      "$nvmrc" "$npm_pin" "$node_version" "$npm_version" >&2
+    exit 1
+  fi
   printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
     "$nvmrc" "$engines" "$node_version" "$npm_version"
   cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
@@ -599,6 +549,8 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
     fi
   fi
   npm ci
+  npm rebuild --ignore-scripts=false
+  ./node_modules/.bin/puppeteer browsers install
 )
 ```
 

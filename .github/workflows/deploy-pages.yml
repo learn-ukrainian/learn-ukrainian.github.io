@@ -162,7 +162,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          # Astro 7.4.2 requires Node >=22.23.4. The version is .nvmrc.
+          # The Node release in .nvmrc bundles npm with strict-allow-scripts support.
           node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
@@ -236,7 +236,12 @@ jobs:
           --dest "$RELEASE_DIR" --github-output "$GITHUB_OUTPUT"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm --version
+          npm ci --ignore-scripts
+          npm rebuild --ignore-scripts=false
+          git diff --exit-code HEAD -- package-lock.json
+          echo "site/package-lock.json matches HEAD after npm ci."
 
       - name: Restore pinned Atlas runtime archive
         id: atlas-runtime-cache
