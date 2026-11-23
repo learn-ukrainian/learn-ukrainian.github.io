@@ -11,6 +11,8 @@ from pathlib import Path
 import pytest
 
 SKILL = Path(__file__).resolve().parents[1] / "agents_extensions/cursor/skills/verify-learn-ukrainian"
+# Fixture pins, written to the sandbox's .nvmrc and package.json engines; never the repository's.
+NODE_PIN, NPM_PIN = "30.1.2", "12.3.4"
 
 
 @pytest.fixture
@@ -19,6 +21,8 @@ def sandbox(tmp_path):
     scripts = root / ".cursor/skills/verify-learn-ukrainian/bin"
     shutil.copytree(SKILL / "bin", scripts)
     (root / "site/node_modules").mkdir(parents=True)
+    (root / ".nvmrc").write_text(f"{NODE_PIN}\n")
+    (root / "package.json").write_text(f'{{"engines": {{"node": "{NODE_PIN}", "npm": "{NPM_PIN}"}}}}\n')
     commands = tmp_path / "commands"
     commands.mkdir()
     env = os.environ.copy()
@@ -43,6 +47,19 @@ def command(commands, name, body):
     return path
 
 
+def toolchain(commands, node, npm):
+    """Fake node and npm reporting these versions; node -p prints the fixture pins."""
+    if node is not None:
+        command(commands, "node", f'if [[ "$1" == -v ]]; then echo {node}; else echo "{NODE_PIN} {NPM_PIN}"; fi')
+    # npm ci records the PATH it ran with and stops the launch with a distinct code.
+    command(
+        commands,
+        "npm",
+        f'if [[ "$1" == --version ]]; then echo {npm}; exit 0; fi\n'
+        'printf "%s" "$PATH" > "$LU_VERIFY_EVIDENCE_DIR/path"; exit 42',
+    )
+
+
 def run(sandbox, name, *args):
     root, scripts, _, env = sandbox
     return subprocess.run(
@@ -51,26 +68,34 @@ def run(sandbox, name, *args):
     )
 
 
-@pytest.mark.parametrize("version", [None, "v20.19.0", "v22.19.0"])
-def test_launch_node_preflight(sandbox, version):
+@pytest.mark.parametrize(
+    ("node", "npm"),
+    [(None, NPM_PIN), ("v22.23.4", NPM_PIN), (f"v{NODE_PIN}", "10.9.9"), (f"v{NODE_PIN}", NPM_PIN)],
+)
+def test_launch_toolchain_preflight(sandbox, node, npm):
+    """A wrong Node or a foreign npm is refused with the fix command before npm ci runs."""
     root, _, commands, env = sandbox
     (root / "site/node_modules").rmdir()
     # Minimal PATH proves missing Node is handled without guessing NVM paths.
     for name in ("dirname", "date", "mkdir", "sed", "readlink", "basename"):
         (commands / name).symlink_to(shutil.which(name))
     env["PATH"] = str(commands)
-    if version is not None:
-        command(commands, "node", f"echo {version}")
+    toolchain(commands, node, npm)
     command(commands, "curl", "exit 1")
-    command(commands, "npm", 'printf "%s" "$PATH" > "$LU_VERIFY_EVIDENCE_DIR/path"; exit 42')
     result = run(sandbox, "launch.sh", "dev")
-    if version == "v22.19.0":
-        assert result.returncode == 42
+    if (node, npm) == (f"v{NODE_PIN}", NPM_PIN):
+        assert result.returncode == 42, result.stderr
         assert Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").read_text() == env["PATH"]
-    else:
-        assert result.returncode == 1
-        assert "launch FAIL: need Node 22.x" in result.stderr
-        assert "command not found" not in result.stderr
+        return
+    assert result.returncode == 1
+    assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
+    # Without node the engines pins cannot be read; the .nvmrc release is still named.
+    assert f"bundled npm {NPM_PIN if node else 'unreadable'}" in result.stderr
+    fix = f"Run: cd {root} && "
+    fix += f"nvm deactivate && nvm uninstall {NODE_PIN} && " if node == f"v{NODE_PIN}" else ""
+    assert fix + "nvm install && nvm use" in result.stderr
+    assert "command not found" not in result.stderr
+    assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
 
 def test_launch_nvm_failure_is_friendly(sandbox):
@@ -80,7 +105,8 @@ def test_launch_nvm_failure_is_friendly(sandbox):
     (nvm_dir / "nvm.sh").write_text("nvm() { return 3; }\n")
     result = run(sandbox, "launch.sh", "dev")
     assert result.returncode == 1
-    assert "launch FAIL: need Node 22.x (nvm use 22 failed)" in result.stderr
+    assert f"launch FAIL: need Node {NODE_PIN}" in result.stderr
+    assert "nvm install && nvm use" in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
@@ -138,7 +164,7 @@ def test_cleanup_preserves_evidence(sandbox):
 @pytest.mark.parametrize("foreign", [False, True])
 def test_doctor_checks_real_child_listener_group(sandbox, foreign):
     _, _, commands, env = sandbox
-    command(commands, "node", "echo v22.19.0")
+    toolchain(commands, f"v{NODE_PIN}", NPM_PIN)
     ready = Path(env["TMPDIR"]) / "listener-ready"
     server_code = (
         "import http.server, pathlib, sys; "

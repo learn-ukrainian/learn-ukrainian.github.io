@@ -6,9 +6,14 @@ if [[ "${1:-}" == --help ]]; then
 Usage: bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh [preview|dev]
 Build and launch an isolated learner site for local verification; not deployment.
 Default: preview using build:shell; LU_VERIFY_BUILD_MODE=full selects build.
-Dependencies: npm ci from site/package-lock.json when site/node_modules is absent;
-the locked site/node_modules/.bin/astro must exist, never npx or a registry download.
-Inputs: Node 22, npm; LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
+Toolchain: the Node release in .nvmrc (package.json engines.node) with its bundled
+npm (engines.npm), selected through nvm when installed; otherwise refuses and
+prints the command that installs and selects it.
+Dependencies: when site/node_modules is absent, npm ci --ignore-scripts and
+npm rebuild --ignore-scripts=false in site/, from site/package-lock.json under
+site/.npmrc; the locked site/node_modules/.bin/astro must then exist, never npx
+or a registry download.
+Inputs: LU_VERIFY_HOST=localhost, LU_VERIFY_PORT=4321;
         optional LU_VERIFY_RUN_ID, LU_VERIFY_STATE_DIR, LU_VERIFY_EVIDENCE_DIR.
 State: a lu-verify-<run-id> directory directly under ${TMPDIR:-/tmp}.
 Outputs: site build, process, state env.sh/PID/log, evidence directory.
@@ -19,7 +24,8 @@ EOF
 fi
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+BIN="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$BIN/../../../.." && pwd)"
 cd "$ROOT"
 
 MODE="${1:-preview}" # preview | dev
@@ -42,25 +48,9 @@ fi
 
 mkdir -p "$STATE_DIR" "$EVIDENCE_DIR"
 
-# Prefer a modern Node 22 when nvm is present (site undici wants >=22.19).
-if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
-  # shellcheck disable=SC1090,SC1091
-  . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-  nvm use 22 >/dev/null || {
-    echo "launch FAIL: need Node 22.x (nvm use 22 failed)" >&2
-    exit 1
-  }
-fi
-
-node_version="$(node -v 2>/dev/null)" || {
-  echo "launch FAIL: need Node 22.x (node unavailable on PATH)" >&2
-  exit 1
-}
-node_major="$(sed -E 's/^v([0-9]+).*/\1/' <<<"$node_version")"
-[[ "$node_major" == "22" ]] || {
-  echo "launch FAIL: need Node 22.x (got ${node_version})" >&2
-  exit 1
-}
+# shellcheck source=SCRIPTDIR/toolchain.sh
+. "$BIN/toolchain.sh"
+lu_verify_toolchain "$ROOT" launch || exit 1
 
 # Refuse to double-drive a foreign listener on our port.
 if curl -fsS --max-time 1 "http://${HOST}:${PORT}/" >/dev/null 2>&1; then
@@ -75,12 +65,21 @@ fi
 ASTRO="$ROOT/site/node_modules/.bin/astro"
 
 ensure_site_deps() {
-  if [[ ! -d "$ROOT/site/node_modules" ]]; then
-    echo "launch: npm ci in site/ (committed lock)"
-    (cd "$ROOT/site" && npm ci)
+  # Install only into an absent path: npm ci first deletes what is there, and a
+  # node_modules link (even a dangling one) may point at another checkout's tree.
+  if [[ ! -e "$ROOT/site/node_modules" && ! -L "$ROOT/site/node_modules" ]]; then
+    echo "launch: $LU_VERIFY_SITE_INSTALL in site/ (committed lock)"
+    # Link bins only after the approved scripts ran, so an interrupted install
+    # leaves no Astro binary and the check below refuses it (as services.sh does).
+    (
+      cd "$ROOT/site" &&
+        npm ci --ignore-scripts --bin-links=false &&
+        npm rebuild --ignore-scripts=false --bin-links=false &&
+        npm rebuild --ignore-scripts
+    )
   fi
   if [[ ! -f "$ASTRO" || ! -x "$ASTRO" ]]; then
-    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run npm ci in site/ (no npx or PATH fallback)" >&2
+    echo "launch FAIL: locked Astro missing or not executable at site/node_modules/.bin/astro; run (cd site && $LU_VERIFY_SITE_INSTALL) (no npx or PATH fallback)" >&2
     exit 1
   fi
 }

@@ -5,8 +5,8 @@ This directory is the maintained source for verifying learner-facing behavior of
 ## Baseline preconditions
 
 - Project `.venv` exists and is used for every Python command (never bare `python` / `python3`).
-- Node 22.x is on `PATH` (`nvm use 22` when available).
-- Site deps installed: `(cd site && npm ci)`.
+- The Node release in `.nvmrc` with its bundled npm (`package.json` `engines`) is on `PATH`; with nvm, `nvm install && nvm use` from the repository root. The launcher refuses any other toolchain and prints that command.
+- Site deps come from `site/package-lock.json`: `launch.sh` runs `npm ci --ignore-scripts && npm rebuild --ignore-scripts=false` in `site/` when `site/node_modules` is absent.
 - Launch an isolated preview with `bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview`, then `source` the printed `env.sh`.
 - Run `bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh` and require OK before the first drive.
 - Never drive an instance that was not started by this verification run.

@@ -78,14 +78,17 @@ Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and sta
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-npm install
+# Install the locked Node dependencies with step 3 of the
+# installation instructions in CONTRIBUTING.md, then:
 
 # Start the website (Astro Starlight)
 npm run dev:starlight
 # Opens at http://localhost:4321/
 ```
 
-**Requirements:** Node.js 20+, uv (installs Python 3.14 from `.python-version`; build scripts and audits)
+**Requirements:** the Node.js release in `.nvmrc` with its bundled npm
+(`package.json` `engines`), and uv (installs Python 3.14 from `.python-version`;
+build scripts and audits)
 
 ## Project Structure
 
@@ -100,7 +103,7 @@ learn-ukrainian/
 │   │   ├── research/           # Research notes (seminar tracks)
 │   │   └── status/             # Audit results (auto-generated)
 │   └── curriculum.yaml         # Module manifest
-├── starlight/                  # Website (Astro Starlight)
+├── site/                       # Website (Astro Starlight)
 │   └── src/content/docs/       # Published module pages (MDX)
 ├── scripts/                    # Build tools, audits, batch processing
 ├── schemas/                    # JSON Schema for YAML validation
@@ -116,13 +119,11 @@ learn-ukrainian/
 
 ## Quick Start (Developers)
 
-To run the build pipeline locally, start with the clone and Python setup
-in steps 1 and 2 of the [installation instructions](CONTRIBUTING.md#installation).
+To run the build pipeline locally, start with the clone, Python setup and
+locked Node dependencies in steps 1 to 3 of the
+[installation instructions](CONTRIBUTING.md#installation).
 
 ```bash
-# Frontend
-cd starlight && npm install && cd ..
-
 # Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8769)
 ./services.sh start
 ./services.sh status

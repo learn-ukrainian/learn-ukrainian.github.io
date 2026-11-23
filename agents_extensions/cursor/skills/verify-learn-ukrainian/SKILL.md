@@ -14,7 +14,8 @@ Project-local verification for the public learner site (`site/`, Astro) plus the
 Isolated preview (preferred for proof):
 
 ```bash
-# Node 22.x required (site package engines + undici). Prefer nvm use 22 when available.
+# Needs the Node release in .nvmrc with its bundled npm (package.json engines). With nvm
+# installed, launch selects it; otherwise it refuses and prints the command to run.
 bash .cursor/skills/verify-learn-ukrainian/bin/launch.sh preview
 source "$LU_VERIFY_STATE_DIR/env.sh"   # set LU_VERIFY_STATE_DIR to the exact path launch.sh printed
 ```
@@ -31,7 +32,8 @@ Prerequisites outside Launch (once per machine):
 In the primary checkout, follow the locked Python setup in `CONTRIBUTING.md` (Installation, step 2).
 
 ```bash
-(cd site && npm ci)
+# Node dependencies: step 3 of CONTRIBUTING.md (locks, install-script policy).
+# launch.sh runs the site half itself when site/node_modules is absent.
 ```
 
 In a dispatch worktree, set `LU_VERIFY_PYTHON` to the task-prescribed shared project interpreter before doctor or run-checks. Both default to the checkout's `.venv/bin/python` otherwise; the sense-lint child shell uses the same selected interpreter.
@@ -43,7 +45,7 @@ source "$LU_VERIFY_STATE_DIR/env.sh"   # from launch
 bash .cursor/skills/verify-learn-ukrainian/bin/doctor.sh
 ```
 
-Doctor checks: project `.venv` present, Node 22.x on PATH, site HTTP up, `/a1/`, `/lexicon/`, `/practice/` return 200, optional PID ownership of the port, optional `LU_VERIFY_EXPECTED_REV` matches `git rev-parse HEAD`. Run doctor before the first drive and after any failed drive.
+Doctor checks: project `.venv` present, the pinned Node and npm on PATH, site HTTP up, `/a1/`, `/lexicon/`, `/practice/` return 200, optional PID ownership of the port, optional `LU_VERIFY_EXPECTED_REV` matches `git rev-parse HEAD`. Run doctor before the first drive and after any failed drive.
 
 ## Drive
 
