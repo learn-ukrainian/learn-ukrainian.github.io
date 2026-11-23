@@ -107,7 +107,7 @@
     "js-yaml": "^4.3.2",
     "markdownlint-cli2": "^0.24.0",
     "picomatch": "file:site/vendor/picomatch/learn-ukrainian-picomatch-4.0.7-lu.1.tgz",
-    "prettier": "^3.10.0",
+    "prettier": "^3.10.1",
     "puppeteer": "^25.17.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
