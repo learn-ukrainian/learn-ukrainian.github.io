@@ -26,12 +26,14 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.projects.ua_open_weight_eval import hf_jobs_worker, response_integrity, suite_cli
+from scripts.projects.ua_open_weight_eval import hf_jobs_transport, hf_jobs_worker, response_integrity, suite_cli
 
 CONFIG_PATH = ROOT / "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.json"
 DISPOSITION_PATH = ROOT / "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.disposition.json"
 WORKER_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_worker.py"
 TRANSPORT_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_transport.py"
+BOOTSTRAP_LOCK_PATH = TRANSPORT_PATH.with_name("hf_jobs_bootstrap.requirements.txt")
+GPU_LOCK_PATH = TRANSPORT_PATH.with_name("hf_jobs_gpu.requirements.txt")
 LICENSE_PATH = ROOT / "LICENSE"
 THIRD_PARTY_PATH = ROOT / "docs/projects/ua-open-weight-eval/THIRD_PARTY_NOTICES.md"
 PUBLIC_FILES = frozenset(
@@ -365,6 +367,7 @@ def prepare_bundle(output_dir: Path, *, plugin_wheel: Path | None = None) -> dic
         "config_sha256": sha256_file(output_dir / "run_config.json"),
         "transport_sha256": sha256_file(output_dir / "hf_jobs_transport.py"),
         "worker_sha256": sha256_file(output_dir / "hf_jobs_worker.py"),
+        "bootstrap_lock_sha256": {path.name: sha256_file(path) for path in (BOOTSTRAP_LOCK_PATH, GPU_LOCK_PATH)},
     }
     manifest["bundle_sha256"] = sha256_text(canonical_json(manifest))
     write_atomic(output_dir / "BUNDLE_MANIFEST.json", manifest)
@@ -633,9 +636,27 @@ def operator_gate_gpu_canary(
     return payload
 
 
+def _bootstrap_install(mode: str, image: str, manifest: Mapping[str, Any]) -> str:
+    _require(manifest.get("transport_sha256") == sha256_file(TRANSPORT_PATH), "rebuild bundle with current transport")
+    locks = {path.name: path.read_bytes() for path in (BOOTSTRAP_LOCK_PATH, GPU_LOCK_PATH)}
+    _require(
+        manifest.get("bootstrap_lock_sha256")
+        == {name: hashlib.sha256(lock).hexdigest() for name, lock in locks.items()},
+        "rebuild bundle with current bootstrap wheel locks",
+    )
+    lock_path = BOOTSTRAP_LOCK_PATH if mode == "preflight" else GPU_LOCK_PATH
+    requirements = locks[lock_path.name].decode("ascii")
+    _require(requirements.startswith(f"# Image: {image}\n"), f"{mode} image does not match its bootstrap wheel lock")
+    install = shlex.join(["python3", *hf_jobs_transport.PIP_INSTALL_ARGS])
+    return f"printf '%s' {shlex.quote(requirements)} | env -i PATH=\"$PATH\" PIP_CONFIG_FILE=/dev/null {install}"
+
+
 def _bootstrap_source() -> str:
     return """import argparse,hashlib,json,os,sys
+from importlib.metadata import version
 from pathlib import Path
+if version('huggingface-hub') != sys.argv.pop(1):
+    raise SystemExit('bootstrap Hugging Face Hub version drift')
 from huggingface_hub import hf_hub_download
 p=argparse.ArgumentParser()
 p.add_argument('--mode',required=True)
@@ -650,12 +671,15 @@ a,_=p.parse_known_args()
 mp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/BUNDLE_MANIFEST.json',token=True))
 m=json.loads(mp.read_text(encoding='utf-8'))
 u={k:v for k,v in m.items() if k!='bundle_sha256'}
-assert m.get('schema_version')=='ua_open_weight_eval_hf_jobs_bundle.v1'
-assert m.get('bundle_sha256')==a.bundle_sha256==hashlib.sha256(json.dumps(u,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+if m.get('schema_version')!='ua_open_weight_eval_hf_jobs_bundle.v1':
+    raise SystemExit('bootstrap bundle schema drift')
+if not m.get('bundle_sha256')==a.bundle_sha256==hashlib.sha256(json.dumps(u,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest():
+    raise SystemExit('bootstrap bundle digest drift')
 r=next(x for x in m['files'] if x['path']=='hf_jobs_transport.py')
 tp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/hf_jobs_transport.py',token=True))
-assert tp.stat().st_size==r['bytes'] and hashlib.sha256(tp.read_bytes()).hexdigest()==r['sha256']
-os.execvp('python3',['python3',str(tp),*sys.argv[1:]])
+if tp.stat().st_size!=r['bytes'] or not hashlib.sha256(tp.read_bytes()).hexdigest()==r['sha256']==m['transport_sha256']:
+    raise SystemExit('bootstrap transport file drift')
+os.execv(sys.executable,[sys.executable,'-I',str(tp),*sys.argv[1:]])
 """
 
 
@@ -717,12 +741,10 @@ def job_command(
         _require(timeout_seconds == preflight["timeout_seconds"] == 300, "preflight timeout drift")
         flavor = "cpu-basic"
         image = f"{preflight['container_image']}@{preflight['container_amd64_digest']}"
-        installer = "python -m pip install --disable-pip-version-check --no-cache-dir"
         artifact_prefix = f"artifacts/{manifest['bundle_sha256']}/preflight"
     else:
         flavor = "l40sx1"
         image = f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
-        installer = "uv pip install --system"
         artifact_prefix = f"artifacts/{manifest['bundle_sha256']}/{mode}"
         if mode == "canary":
             _require(projection is None, "canary launch must not accept a full-run projection")
@@ -825,8 +847,10 @@ def job_command(
     ]
     if mode in RUN_MODES:
         transport_args.extend(["--requests-sha256", manifest["requests_sha256"]])
-    bootstrap = shlex.join(["python3", "-c", _bootstrap_source(), *transport_args])
-    shell_command = f"{installer} huggingface_hub=={config['runtime']['huggingface_hub_cli_version']} && {bootstrap}"
+    bootstrap = shlex.join(
+        ["python3", "-I", "-c", _bootstrap_source(), config["runtime"]["huggingface_hub_cli_version"], *transport_args]
+    )
+    shell_command = f"{_bootstrap_install(mode, image, manifest)} && {bootstrap}"
     labels = {
         "bundle_sha256": manifest["bundle_sha256"],
         "issue": "6273",

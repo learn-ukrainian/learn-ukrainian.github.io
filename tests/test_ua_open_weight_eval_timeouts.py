@@ -5,8 +5,10 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
+from zipfile import ZipFile
 
 import pytest
 
@@ -35,6 +37,7 @@ def _canary_bundle_fixtures(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     }
     monkeypatch.setattr(hf_jobs_baseline, "verify_bundle", lambda _: manifest)
     monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
+    monkeypatch.setattr(hf_jobs_baseline, "_bootstrap_install", lambda *args: "locked bootstrap")
     return hf_cli
 
 
@@ -152,8 +155,17 @@ def test_run_worker_bounds_install_and_worker_and_maps_timeout_to_contract(
 ) -> None:
     config = hf_jobs_baseline.load_config()
     plugin = config["runtime"]["vllm_gguf_plugin"]
+    wheel = tmp_path / plugin["filename"]
+    with ZipFile(wheel, "w") as archive:
+        archive.writestr(
+            "vllm_gguf_plugin-0.0.4.dist-info/METADATA",
+            "Requires-Dist: gguf>=0.17.0\nRequires-Dist: vllm\nRequires-Dist: torch>=2.9\n"
+            'Requires-Dist: pre-commit; extra == "dev"\n',
+        )
+    plugin["sha256"] = hf_jobs_transport.sha256_file(wheel)
+    versions = {"vllm": config["runtime"]["vllm_version"], "gguf": "0.19.0", "torch": "2.11.0+cu130"}
+    monkeypatch.setattr(hf_jobs_transport, "version", versions.__getitem__)
     (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
-    (tmp_path / plugin["filename"]).write_bytes(b"wheel")
     (tmp_path / "hf_jobs_worker.py").write_text("print('worker')\n", encoding="utf-8")
     (tmp_path / "requests.jsonl").write_text("{}\n", encoding="utf-8")
     (tmp_path / "canary_selection.json").write_text("{}\n", encoding="utf-8")
@@ -162,6 +174,9 @@ def test_run_worker_bounds_install_and_worker_and_maps_timeout_to_contract(
 
     def fake_run(command: list[str], *, check: bool = False, **kwargs: object) -> subprocess.CompletedProcess:
         assert check is False
+        if command[1:4] == ["-I", "-m", "pip"]:
+            assert kwargs["input"] == f"{wheel.as_uri()} --hash=sha256:{plugin['sha256']}\n"
+            assert kwargs["env"] == {"PIP_CONFIG_FILE": "/dev/null"}
         timeouts.append(kwargs.get("timeout"))
         calls.append(command)
         return subprocess.CompletedProcess(command, 0)
@@ -173,13 +188,20 @@ def test_run_worker_bounds_install_and_worker_and_maps_timeout_to_contract(
         transport_repo="operator/ua-open-weight-eval-staging-6273",
         artifact_prefix="artifacts/bundle/canary",
     )
+    versions["torch"] = "2.8.0"
+    with pytest.raises(hf_jobs_transport.TransportError, match=r"GGUF plugin requires torch>=2\.9, found 2\.8\.0"):
+        hf_jobs_transport.run_worker(args, tmp_path)
+    assert calls == []
+    versions["torch"] = "2.11.0+cu130"
     assert hf_jobs_transport.run_worker(args, tmp_path) == 0
-    assert calls[0][:4] == ["uv", "pip", "install", "--system"]
+    assert calls[0][:5] == [sys.executable, "-I", "-m", "pip", "install"]
+    assert {"--no-index", "--no-deps", "--require-hashes", "--only-binary=:all:"} <= set(calls[0])
+    assert calls[1][:2] == [sys.executable, "-I"]
     assert timeouts == [hf_jobs_transport.PLUGIN_INSTALL_TIMEOUT_SECONDS, hf_jobs_transport.WORKER_TIMEOUT_SECONDS]
     assert timeouts == [300, 3600]
 
     def hanging_install(*args: object, **kwargs: object) -> subprocess.CompletedProcess:
-        raise subprocess.TimeoutExpired(cmd=["uv", "pip", "install", "--system"], timeout=300)
+        raise subprocess.TimeoutExpired(cmd=calls[0], timeout=300)
 
     monkeypatch.setattr(hf_jobs_transport.subprocess, "run", hanging_install)
     with pytest.raises(hf_jobs_transport.TransportError, match="installation timed out"):

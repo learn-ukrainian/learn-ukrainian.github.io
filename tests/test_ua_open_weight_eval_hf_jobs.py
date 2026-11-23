@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -28,6 +29,14 @@ def _write_fake_hf_cli(path: Path) -> None:
         encoding="utf-8",
     )
     path.chmod(0o700)
+
+
+def _bootstrap_manifest_fields() -> dict:
+    locks = (hf_jobs_baseline.BOOTSTRAP_LOCK_PATH, hf_jobs_baseline.GPU_LOCK_PATH)
+    return {
+        "bootstrap_lock_sha256": {path.name: hf_jobs_baseline.sha256_file(path) for path in locks},
+        "transport_sha256": hf_jobs_baseline.sha256_file(hf_jobs_baseline.TRANSPORT_PATH),
+    }
 
 
 def test_invalid_run_disposition_requires_private_retention_and_semantic_publication_gate(
@@ -296,6 +305,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         "bundle_sha256": "b" * 64,
         "requests_sha256": "r" * 64,
         "source_commit": "d" * 40,
+        **_bootstrap_manifest_fields(),
     }
     preflight_gate = {
         "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
@@ -339,9 +349,8 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     )
     assert command[separator + 2 : separator + 4] == ["sh", "-lc"]
     shell_command = command[separator + 4]
-    assert "python3 -c" in shell_command
-    assert " python -c" not in shell_command
-    assert "os.execvp('python3',['python3'" in hf_jobs_baseline._bootstrap_source()
+    assert "python3 -I -c" in shell_command
+    assert "os.execv(sys.executable,[sys.executable" in hf_jobs_baseline._bootstrap_source()
     tampered_gate = {**preflight_gate, "preflight_cost_usd": 0.002}
     with pytest.raises(hf_jobs_baseline.BaselineError, match="gate SHA-256 drift"):
         hf_jobs_baseline.job_command(
@@ -356,16 +365,17 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
             preflight_gate=tampered_gate,
         )
 
-    preflight = hf_jobs_baseline.job_command(
-        mode="preflight",
-        namespace="operator",
-        bundle=bundle,
-        transport_repo="operator/ua-open-weight-eval-staging-6273",
-        transport_revision="a" * 40,
-        transport_prefix=f"bundles/{'b' * 64}",
-        hf_cli=hf_cli,
-        timeout_seconds=300,
-    )
+    preflight_inputs = {
+        "mode": "preflight",
+        "namespace": "operator",
+        "bundle": bundle,
+        "transport_repo": "operator/ua-open-weight-eval-staging-6273",
+        "transport_revision": "a" * 40,
+        "transport_prefix": f"bundles/{'b' * 64}",
+        "hf_cli": hf_cli,
+        "timeout_seconds": 300,
+    }
+    preflight = hf_jobs_baseline.job_command(**preflight_inputs)
     preflight_joined = " ".join(preflight)
     assert "--flavor cpu-basic" in preflight_joined
     assert "--timeout 5m" in preflight_joined
@@ -373,6 +383,39 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert "--volume" not in preflight
     assert "--secrets HF_TOKEN" in preflight_joined
     assert "UA_EVAL_HARDWARE_FLAVOR=" not in preflight_joined
+    for job, expected_wheels in ((preflight, 15), (command, 2)):
+        install, _ = job[-1].split(" && ", 1)
+        prefix, fmt, requirements, *args = shlex.split(install)
+        assert (prefix, fmt) == ("printf", "%s")
+        assert args == [
+            "|",
+            "env",
+            "-i",
+            "PATH=$PATH",
+            "PIP_CONFIG_FILE=/dev/null",
+            "python3",
+            "-I",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--no-cache-dir",
+            "--no-index",
+            "--no-deps",
+            "--only-binary=:all:",
+            "--require-hashes",
+            "--force-reinstall",
+            "-r",
+            "/dev/stdin",
+        ]
+        wheels = [line for line in requirements.replace("\\\n", "").splitlines() if not line.startswith("#")]
+        assert len(wheels) == expected_wheels
+        for wheel in wheels:
+            assert " @ https://files.pythonhosted.org/" in wheel
+            assert ".whl" in wheel
+            assert len(wheel.split("--hash=sha256:")[1]) == 64
+        if job is command:
+            assert [wheel.split()[0] for wheel in wheels] == ["gguf", "huggingface-hub"]
     with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
         hf_jobs_baseline.job_command(
             mode="canary",
@@ -396,6 +439,15 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
             timeout_seconds=1200,
             preflight_gate=preflight_gate,
         )
+
+    with monkeypatch.context() as patched:
+        patched.setitem(config["transport"]["cpu_preflight"], "container_amd64_digest", f"sha256:{'c' * 64}")
+        with pytest.raises(hf_jobs_baseline.BaselineError, match="image does not match its bootstrap wheel lock"):
+            hf_jobs_baseline.job_command(**preflight_inputs)
+
+    monkeypatch.setitem(manifest, "bootstrap_lock_sha256", {})
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="rebuild bundle with current bootstrap wheel locks"):
+        hf_jobs_baseline.job_command(**preflight_inputs)
 
 
 def test_launch_preview_is_free_but_invalid_disposition_blocks_execution(
@@ -456,6 +508,20 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
     monkeypatch.setenv("ACCELERATOR", "l40sx1")
     with pytest.raises(hf_jobs_transport.TransportError, match="GPU accelerator"):
         hf_jobs_transport.run_preflight(args, files)
+
+
+def test_modified_plugin_wheel_is_refused_before_install(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    config = hf_jobs_baseline.load_config()
+    plugin = config["runtime"]["vllm_gguf_plugin"]
+    wheel = tmp_path / plugin["filename"]
+    wheel.write_bytes(b"verified wheel bytes")
+    plugin["sha256"] = hf_jobs_transport.sha256_file(wheel)
+    (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
+    wheel.write_bytes(b"modified wheel bytes")
+    monkeypatch.setattr(hf_jobs_transport.subprocess, "run", lambda *args, **kwargs: pytest.fail("ran installer"))
+
+    with pytest.raises(hf_jobs_transport.TransportError, match="GGUF plugin wheel SHA-256 drift"):
+        hf_jobs_transport.run_worker(SimpleNamespace(), tmp_path)
 
 
 def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
@@ -583,7 +649,7 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
     monkeypatch.setattr(
         hf_jobs_baseline,
         "verify_bundle",
-        lambda _: {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64},
+        lambda _: {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, **_bootstrap_manifest_fields()},
     )
     monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
     command = hf_jobs_baseline.job_command(
@@ -782,7 +848,12 @@ def test_job_command_accepts_only_untampered_operator_canary_gate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     config = hf_jobs_baseline.load_config()
-    manifest = {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, "source_commit": "d" * 40}
+    manifest = {
+        "bundle_sha256": "b" * 64,
+        "requests_sha256": "r" * 64,
+        "source_commit": "d" * 40,
+        **_bootstrap_manifest_fields(),
+    }
     gate = hf_jobs_baseline.operator_gate_gpu_canary(
         bundle_manifest=manifest,
         repo_id="operator/ua-open-weight-eval-staging-6273",
