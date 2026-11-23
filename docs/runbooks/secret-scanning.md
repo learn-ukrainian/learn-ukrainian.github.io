@@ -313,9 +313,15 @@ counts as the full clone did: 10 chunks and 21,939 bytes for queue run
 40752784461, 45 and 13,905 for PR run 40752258232, and 15,503 and 37,957,893
 for the 400-step schedule window of run 40667791948.
 
-The action SHA pins the workflow script only. Both TruffleHog steps set the
-action input `version` to one exact release (`3.99.0` as of #10056). Omitting
-it pulls `:latest`. Bump both steps together to the newest
-`trufflesecurity/trufflehog` release, never to an older tag to clear a finding,
-then re-run `scripts/audit/secret_scan_local.py tree`.
-`tests/ci/test_trufflehog_scanner_pin.py` rejects a missing pin and `latest`.
+Both TruffleHog steps in `ci.yml` pin the upstream action by commit SHA and
+the scanner image by SHA-256 digest. The action joins its `image` and `version`
+inputs with a colon. Set `image` to `ghcr.io/trufflesecurity/trufflehog@sha256`
+and `version` to the 64 hex characters of the digest.
+
+When upgrading, query the GHCR Registry v2 manifest endpoint for the newest
+TruffleHog release tag with `curl`. Request the image index or manifest list,
+then confirm that its SHA-256 matches the `Docker-Content-Digest` response
+header. Update both steps with that digest and update the release comment.
+Never downgrade the scanner to clear a finding. Re-run
+`scripts/audit/secret_scan_local.py tree` after the update.
+`tests/ci/test_trufflehog_scanner_pin.py` requires the same digest in both steps.
