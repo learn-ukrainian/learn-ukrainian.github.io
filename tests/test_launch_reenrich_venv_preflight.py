@@ -6,7 +6,8 @@ launcher only checked that ``$REPO/.venv/bin/python`` existed, never that it
 could import the driver's hard dependencies. The launcher must now fail
 closed before systemd-run unless the resolved runner venv (``$REPO/.venv``
 preferred, ``$CODE_ROOT/.venv`` fallback) can ``import yaml`` and
-``import jsonschema``, printing a one-line pip install recipe otherwise.
+``import jsonschema``. If either import fails, the launcher points to the locked
+Python setup in CONTRIBUTING.md.
 
 Like the target-detection suite, this drives the real launcher via subprocess
 against a fully stubbed tmp tree (stub venv python, stub driver/data files),
@@ -107,7 +108,7 @@ def test_fails_closed_when_venv_cannot_import_yaml_jsonschema(tmp_path: Path) ->
     env = _build_fixture(tmp_path, repo_stub=_STUB_BROKEN)
     proc = _run_launcher(env)
     assert proc.returncode == 1, proc.stdout + proc.stderr
-    assert "pip install pyyaml jsonschema" in proc.stderr
+    assert "follow the locked Python setup in CONTRIBUTING.md (Installation, step 2)" in proc.stderr
     # One-line recipe naming the resolved interpreter, and no launch happened.
     assert ".venv/bin/python" in proc.stderr
     assert "pid=" not in proc.stdout
@@ -142,7 +143,7 @@ def test_prefers_repo_venv_over_code_root_venv(tmp_path: Path) -> None:
     env = _build_fixture(tmp_path, repo_stub=_STUB_BROKEN, code_stub=_STUB_OK)
     proc = _run_launcher(env)
     assert proc.returncode == 1, proc.stdout + proc.stderr
-    assert "pip install pyyaml jsonschema" in proc.stderr
+    assert "follow the locked Python setup in CONTRIBUTING.md (Installation, step 2)" in proc.stderr
 
 
 def test_runner_python_override_wins(tmp_path: Path) -> None:

@@ -28,10 +28,9 @@ source "$LU_VERIFY_STATE_DIR/env.sh"   # set LU_VERIFY_STATE_DIR to the exact pa
 
 Prerequisites outside Launch (once per machine):
 
+In the primary checkout, follow the locked Python setup in `CONTRIBUTING.md` (Installation, step 2).
+
 ```bash
-# Python project env (primary checkout setup only; never create a worktree venv)
-# uv reads .python-version, pyproject.toml and uv.lock (the CI versions, ruff included).
-uv sync --locked
 (cd site && npm ci)
 ```
 

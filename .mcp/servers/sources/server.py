@@ -85,7 +85,10 @@ try:
         ToolAnnotations,
     )
 except ImportError:
-    print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
+    print(
+        "MCP package not installed. Follow the locked Python setup in CONTRIBUTING.md (Installation, step 2).",
+        file=sys.stderr,
+    )
     sys.exit(1)
 
 

@@ -19,7 +19,10 @@ Use the Python in `.python-version` and the repository's lock, `uv.lock`
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-uv sync --locked
+uv sync --locked --no-build \
+  --no-install-package ipa-uk --no-install-package learn-ukrainian-v4-runtime &&
+uv cache clean ipa-uk learn-ukrainian-v4-runtime &&
+uv sync --locked --no-build-isolation
 ```
 
 No provider credential is read. The commands below operate on local JSON or

@@ -175,7 +175,7 @@ if [[ -z "$RUNNER_PYTHON" || ! -x "$RUNNER_PYTHON" ]]; then
   exit 1
 fi
 if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
-  echo "runner venv $RUNNER_PYTHON cannot import yaml/jsonschema; install with: $RUNNER_PYTHON -m pip install pyyaml jsonschema" >&2
+  echo "runner venv $RUNNER_PYTHON cannot import yaml/jsonschema; follow the locked Python setup in CONTRIBUTING.md (Installation, step 2)" >&2
   exit 1
 fi
 

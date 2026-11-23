@@ -67,7 +67,9 @@ from datasets import load_dataset
 cases = load_dataset("OWNER/ua-open-weight-eval", split="test")
 ```
 
-For the verified offline runner and scorer, clone the exact GitHub tag:
+For the verified offline runner and scorer, clone the exact GitHub tag. The
+following setup is specific to the historical `ua-open-weight-eval-v0.1.0`
+release; current checkouts use the locked setup in `CONTRIBUTING.md`.
 
 ```bash
 git clone --branch ua-open-weight-eval-v0.1.0 \
