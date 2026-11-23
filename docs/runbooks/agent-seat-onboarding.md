@@ -367,11 +367,15 @@ not permanent routing weights and do not override current CodexBar headroom.
   text ACP server remains digest-checked before use.
 - Claude is the one built-in with an additional installed-package invariant:
   `@agentclientprotocol/claude-agent-acp` must resolve from the same
-  project-local `node_modules` tree as ACPX and satisfy
-  `installed>=0.64.2<1`. The manifest keeps that rolling range while the
-  lockfile records the exact installed release. Missing, incompatible, or
-  unsafe package/bin metadata fails before prompt delivery; ACPX must not
-  fall back to per-call package execution.
+  machinery wheel Node prefix as ACPX
+  (`<venv>/share/lu-machinery/node/<version>-<lock_sha256>`, resolved by
+  `lu_machinery.agent_runtime.adapters.acpx.node_prefix()`) and satisfy
+  `installed>=0.64.2<1`. The machinery wheel's locked `node-contract` pins the
+  exact installed release, and `validate_node_dependencies()` verifies every
+  installed file against its retained archive before spawn. Missing,
+  incompatible, or unsafe package/bin metadata fails before prompt delivery;
+  ACPX must not fall back to per-call package execution or the product root
+  `node_modules`.
 - The Claude adapter never runs its bundled Claude Code: each launch pins the
   host `claude` real path, runs it through the repo-owned launcher that
   `CLAUDE_CODE_EXECUTABLE` names (it adds the headless background denies;
@@ -467,16 +471,18 @@ floating CLI surface.
 #### Active controller-backed ACP conversation
 
 The active path is a **bounded fleet-comms-backed conversation**, not a new
-bus. It is accepted only by `.venv/bin/python -m scripts.fleet_comms
-acp-discuss`, which scopes `LU_ACPX_TRANSPORT=active` to the controller call
-and restores the prior environment on exit; generic runtime callers cannot
-turn it on. Pass the task on stdin and never place task or model-response data
-in argv:
+bus. It is accepted only by `lu_machinery.fleet_comms acp-discuss` (invoked
+with the primary checkout's interpreter as in
+[Shared Python environment](#shared-python-environment)), which scopes
+`LU_ACPX_TRANSPORT=active` to the controller call and restores the prior
+environment on exit; generic runtime callers cannot turn it on. Pass the task
+on stdin and never place task or model-response data in argv:
 
 ```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Compare the two bounded options and name risks.' |
   ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
@@ -532,28 +538,39 @@ review, and plane-status checks.
 
 ### Shared ACPX install and E2E/replay verification
 
-ACPX is installed once at the shared primary checkout as a project-local
-dependency; a dispatch worktree resolves that primary install and must not
-create its own global ACPX installation. The lockfile pins the installed
-version, and the runtime probe rejects incompatible CLI changes before prompt
-delivery. The same install includes the Claude ACP adapter. Select the Node
-release in `.nvmrc` and use its bundled npm, which enforces the root
-install-script policy. After pulling a lockfile change, run
-`npm ci --ignore-scripts && npm rebuild --ignore-scripts=false` in the primary checkout.
-`npm ci` installs the committed `package-lock.json` with scripts disabled
-and fails if the dependencies disagree with `package.json`. The rebuild then
-checks the unpacked dependencies and runs the approved scripts. Avoid
-`npm install`, which may rewrite the lock, and dynamic package execution
-such as `npx`. `npm ci` first removes `node_modules`, so run it
-while no ACP call is in flight. Then, from the same checkout root, verify that
-the installed adapter is the locked version (exit 0 only on a match):
+ACPX, `@agentclientprotocol/claude-agent-acp`, and `@agentclientprotocol/sdk`
+are owned by the installed `lu-machinery` wheel, not the product root
+`package.json` or `node_modules`. They live in the wheel's locked,
+archive-verified Node prefix under the project `.venv`
+(`<venv>/share/lu-machinery/node/<version>-<lock_sha256>`), provisioned from
+`<venv>/share/lu-machinery/node-contract` (`package.json`, `package-lock.json`,
+and `.nvmrc`). Dispatch worktrees and the primary checkout both resolve that
+shared prefix via `lu_machinery.agent_runtime.adapters.acpx.node_prefix()` and
+never create a product-root or global ACPX installation. Before every launch,
+`validate_node_dependencies()` verifies every file in the prefix against its
+retained lock-authenticated archive, and the runtime probe rejects incompatible
+CLI changes before prompt delivery.
+
+Provisioning and sealing the prefix for a new `lu-machinery` release follow
+`docs/release.md` in `learn-ukrainian/machinery` (`prepare_node_dependencies`,
+`npm ci --ignore-scripts` with the contract's pinned Node/npm, and
+`seal_node_dependencies`). Avoid `npm install`, which may rewrite the lock, and
+dynamic package execution such as `npx`. To verify read-only that the installed
+machinery Node prefix and Claude ACP adapter match the wheel's lock (exit 0
+only on a match):
 
 ```bash
-node -e 'const n="@agentclientprotocol/claude-agent-acp";
-const l=require("./package-lock.json").packages["node_modules/"+n].version;
-const i=require("./node_modules/"+n+"/package.json").version;
-if(l!==i){console.error(n+" "+i+" differs from lock "+l);process.exit(1)}
-console.log(n+" "+i+" matches package-lock.json")'
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -c '
+import json
+from lu_machinery.agent_runtime.adapters.acpx import validate_node_dependencies
+p = validate_node_dependencies()
+n = "@agentclientprotocol/claude-agent-acp"
+l = json.loads((p / "package-lock.json").read_text())["packages"]["node_modules/" + n]["version"]
+i = json.loads((p / "node_modules" / n / "package.json").read_text())["version"]
+assert l == i, f"{n} {i} differs from lock {l}"
+print(f"{n} {i} matches {p.name} lock")
+'
 ```
 
 For an E2E/replay check, run the real
@@ -563,7 +580,8 @@ values. The first terminal result is evidence; the second must be durable
 replay suppression, never another model run. Then run:
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms acp-verify \
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-verify \
   --conversation-id conversation_<id> --require-replay --json
 ```
 
@@ -696,7 +714,7 @@ counts and outcomes.
 | `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
 | `AUTH_REQUIRED` on the Grok shadow seat | Establish the native Grok CLI's cached login outside this adapter; the Grok adapter automatically sets the non-secret per-process selector `ACPX_AUTH_CACHED_TOKEN=1` and scrubs ambient XAI API-key auth selectors so cached native login is the only accepted path |
 | Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
-| `acp_adapter_missing` / `acp_adapter_incompatible` | Run the locked install and adapter version check in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification) from the primary checkout. |
+| `acp_adapter_missing` / `acp_adapter_incompatible` | Provision and seal the installed `lu-machinery` wheel's Node prefix (see `docs/release.md` in `learn-ukrainian/machinery`) and run the read-only adapter verification in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification). |
 | `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
 | `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
 | `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Prompt retries stay at zero; tree review uses the direct toolful route |
@@ -746,8 +764,9 @@ On some machines `ab` is ApacheBench. Always use the explicit project entrypoint
 
 ```bash
 # Direct operator surface for the default Codex/Grok panel.
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  "$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-task --correlation-id acp-task-v1 --idempotency-key acp-task-v1
 
 # Normal fleet-TUI surface: automatically ACP-backed for an enabled pair.
