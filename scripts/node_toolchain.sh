@@ -7,8 +7,6 @@
 # engines.node, run with its bundled npm at engines.npm. That npm enforces the
 # install-script policy in .npmrc and site/.npmrc, so this file holds no versions.
 
-# The locked site install, the same commands CONTRIBUTING.md and CI run.
-LU_VERIFY_SITE_INSTALL='npm ci --ignore-scripts && npm rebuild --ignore-scripts=false'
 _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 
 # lu_verify_toolchain ROOT LABEL

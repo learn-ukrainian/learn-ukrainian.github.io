@@ -18,7 +18,7 @@ NODE_PIN, NPM_PIN = "30.1.2", "12.3.4"
 
 @pytest.fixture
 def sandbox(tmp_path):
-    root = tmp_path / "repo"
+    root = tmp_path / "repo with spaces"
     scripts = root / ".cursor/skills/verify-learn-ukrainian/bin"
     shutil.copytree(SKILL / "bin", scripts)
     (root / "scripts").mkdir()
@@ -26,8 +26,10 @@ def sandbox(tmp_path):
     (root / "site/node_modules").mkdir(parents=True)
     (root / ".nvmrc").write_text(f"{NODE_PIN}\n")
     (root / "package.json").write_text(f'{{"engines": {{"node": "{NODE_PIN}", "npm": "{NPM_PIN}"}}}}\n')
-    commands = tmp_path / "commands"
-    commands.mkdir()
+    real_commands = tmp_path / "commands with spaces"
+    real_commands.mkdir()
+    commands = tmp_path / "commands link"
+    commands.symlink_to(real_commands, target_is_directory=True)
     env = os.environ.copy()
     for key in tuple(env):
         if key.startswith("LU_VERIFY_"):
@@ -93,6 +95,7 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert not (nvm_dir / "sourced").exists()
     if (node, npm) == (f"v{NODE_PIN}", NPM_PIN):
         assert result.returncode == 42, result.stderr
+        assert "installing locked site dependencies (npm ci and rebuild)" in result.stdout
         assert Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").read_text() == env["PATH"]
         return
     assert result.returncode == 1
@@ -238,6 +241,8 @@ def test_doctor_checks_real_child_listener_group(sandbox, foreign):
 def test_checks_aggregate_and_share_interpreter(sandbox, fail_ruff):
     root, _, commands, env = sandbox
     (root / "site/node_modules").rmdir()
+    if fail_ruff:
+        (root / "site/node_modules").symlink_to(root / "missing target", target_is_directory=True)
     manifest = root / "site/src/data/lexicon-manifest.json"
     manifest.parent.mkdir(parents=True)
     manifest.write_text("{}")
@@ -260,5 +265,9 @@ def test_checks_aggregate_and_share_interpreter(sandbox, fail_ruff):
     assert "scripts/audit/lint_word_atlas.py" in calls
     assert "tests/validate/test_permissions_register.py" in calls
     assert "Summary:" in result.stdout
-    assert "follow CONTRIBUTING.md step 3 to install the locked site dependencies" in result.stdout
+    if fail_ruff:
+        assert "site/node_modules is a link" in result.stdout
+        assert "missing target" in result.stdout
+    else:
+        assert "follow CONTRIBUTING.md step 3 to install the locked site dependencies" in result.stdout
     assert "1 failed" in result.stdout if fail_ruff else "0 failed" in result.stdout

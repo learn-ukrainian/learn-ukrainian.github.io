@@ -68,7 +68,7 @@ ensure_site_deps() {
   # Install only into an absent path: npm ci first deletes what is there, and a
   # node_modules link (even a dangling one) may point at another checkout's tree.
   if [[ ! -e "$ROOT/site/node_modules" && ! -L "$ROOT/site/node_modules" ]]; then
-    echo "launch: $LU_VERIFY_SITE_INSTALL in site/ (committed lock)"
+    echo "launch: installing locked site dependencies (npm ci and rebuild)"
     # Link bins only after the approved scripts ran, so an interrupted install
     # leaves no Astro binary and the check below refuses it (as services.sh does).
     (
