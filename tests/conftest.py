@@ -1710,17 +1710,27 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
     bounce can reload it. Tests must not read or overwrite that host file,
     and in-memory last-good must not leak across cases.
     """
+    def reset_overview() -> None:
+        router = _loaded_module("scripts", "project_api", "dashboard_router")
+        if router is None:
+            return
+        # The refresh reads the snapshot path when it writes. Wait for it to
+        # finish before the path changes, under pytest's per-test timeout.
+        with router._overview_refresh_lock:
+            threads = tuple(router._overview_refresh_threads.values())
+        for thread in threads:
+            thread.join()
+        router.reset_overview_state_for_tests()
+
+    reset_overview()
     monkeypatch.setenv(
         "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
         str(tmp_path / "dashboard_overview_last_good.json"),
     )
-    router = _loaded_module("scripts", 'api', "dashboard_router")
-    if router is not None:
-        router.reset_overview_state_for_tests()
-    yield
-    router = _loaded_module("scripts", 'api', "dashboard_router")
-    if router is not None:
-        router.reset_overview_state_for_tests()
+    try:
+        yield
+    finally:
+        reset_overview()
 
 
 @pytest.fixture
