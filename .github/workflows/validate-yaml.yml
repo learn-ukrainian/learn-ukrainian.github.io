@@ -263,7 +263,8 @@ jobs:
 
       - name: Check the Node.js pin
         run: |
-          if [[ ! -f .nvmrc || ! "$(<.nvmrc)" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          component='(0|[1-9][0-9]*)'
+          if [[ ! -f .nvmrc || ! "$(<.nvmrc)" =~ ^v?$component\.$component\.$component$ ]]; then
             echo '::error::.nvmrc must contain one exact Node.js release version'
             exit 1
           fi
