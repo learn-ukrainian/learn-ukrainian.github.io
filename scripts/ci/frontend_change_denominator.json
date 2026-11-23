@@ -9,6 +9,7 @@
     "docs/sources/permissions-register.yaml",
     "curriculum/l2-uk-en/curriculum.yaml",
     "registry/practice/",
+    "registry/atlas/a1-v1-inventory.json",
     "registry/lexicon/synonym_pair_verdicts.yaml",
     "registry/lexicon/curated_aliases.yaml",
     "tests/fixtures/atlas/",
