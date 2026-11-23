@@ -248,8 +248,7 @@ FALSE_REFUSALS = {
     "exec-after-bare-option": (["--json", "exec", "vitest"], "`--json` is refused"),
 }
 
-# The Claude adapter's npx fallback: its prompt and settings arguments mention
-# npm, paths and install words in free text, which must not trip the guard.
+# The retired Claude npx fallback stays refused even with its former settings and prompt.
 CLAUDE_FALLBACK = [
     "@anthropic-ai/claude-code@latest",
     "-p",
@@ -280,10 +279,13 @@ LAUNCHES = [
     ("npx", ["-y", "--no-fund", "--", "vitest", "run"]),
     ("npx", ["--no", "--", "tsc", "--noEmit"]),
     ("npx", ["--yes", "markdownlint-cli2", "docs/README.md"]),
-    ("npx", ["@anthropic-ai/claude-code", "--version"]),
-    ("npx", ["@anthropic-ai/claude-code@latest", "--version"]),
-    ("npx", CLAUDE_FALLBACK),
 ]
+
+CLAUDE_NPX_REFUSALS = {
+    "claude-unversioned": ["@anthropic-ai/claude-code", "--version"],
+    "claude-latest": ["@anthropic-ai/claude-code@latest", "--version"],
+    "claude-former-fallback": CLAUDE_FALLBACK,
+}
 
 # The independent review's reproductions: real npm resolved the escaped shell
 # text to `npm ci` and emptied the shared folder past the text-classifying guard.
@@ -664,10 +666,16 @@ def test_global_installs_are_refused_while_the_link_exists(layout, case):
     assert "run the command outside this worktree" in proc.stderr
 
 
-@pytest.mark.parametrize("case", sorted(LAUNCH_REFUSALS))
+@pytest.mark.parametrize(
+    "tool,args,reason",
+    [pytest.param(*values, id=case) for case, values in sorted(LAUNCH_REFUSALS.items())]
+    + [
+        pytest.param("npx", args, f"`{args[0]}` is not on the allowlist", id=case)
+        for case, args in CLAUDE_NPX_REFUSALS.items()
+    ],
+)
 @pytest.mark.parametrize("relative_cwd", [".", "site"])
-def test_npx_and_npm_exec_outside_the_closed_rule_are_refused(layout, case, relative_cwd):
-    tool, args, reason = LAUNCH_REFUSALS[case]
+def test_npx_and_npm_exec_outside_the_closed_rule_are_refused(layout, tool, args, reason, relative_cwd):
     proc = _run(layout, tool, args, layout["worktree"] / relative_cwd)
     _assert_refused(layout, proc)
     assert reason in proc.stderr
@@ -750,27 +758,22 @@ def test_npx_and_npm_exec_launching_a_tool_pass_through(layout, tool, args, rela
     _assert_forwarded_unchanged(layout, tool, args, layout["worktree"] / relative_cwd)
 
 
-def test_claude_adapter_npx_fallback_passes_through(layout, monkeypatch):
-    """The adapter's own npx command line (no native claude), as build_invocation assembles it."""
+def test_claude_adapter_requires_native_binary(layout, monkeypatch):
     from lu_machinery.agent_runtime.adapters import claude as claude_adapter
 
     monkeypatch.setattr(claude_adapter, "_default_claude_bin", lambda: None)
     monkeypatch.setattr(claude_adapter.shutil, "which", lambda name, *a, **k: "/usr/bin/npx" if name == "npx" else None)
-    monkeypatch.setattr(claude_adapter, "_ensure_supported_claude_cli_version", lambda prefix: (2, 1, 200))
-    plan = claude_adapter.ClaudeAdapter().build_invocation(
-        prompt="Fix the build: run npm ci, then /usr/bin/npm install and yarn add x.",
-        mode="workspace-write",
-        cwd=layout["worktree"],
-        model="claude-sonnet-5-5",
-        task_id="task-9460",
-        session_id=None,
-        tool_config={},
-    )
-    assert plan.cmd[:2] == ["npx", "@anthropic-ai/claude-code@latest"]
-    assert npm_guard.refusal_reason("npx", plan.cmd[1:]) is None
-    for relative_cwd in (".", "site"):
-        layout["log"].unlink(missing_ok=True)
-        _assert_forwarded_unchanged(layout, "npx", plan.cmd[1:], layout["worktree"] / relative_cwd)
+    with pytest.raises(claude_adapter.ClaudeCliUnavailableError) as exc:
+        claude_adapter.ClaudeAdapter().build_invocation(
+            prompt="Fix the build.",
+            mode="workspace-write",
+            cwd=layout["worktree"],
+            model="claude-sonnet-5-5",
+            task_id="task-9460",
+            session_id=None,
+            tool_config={},
+        )
+    assert exc.value.reason == "missing"
 
 
 def _assert_forwarded_unchanged(layout, tool: str, args: list[str], cwd: Path) -> None:
@@ -1066,7 +1069,7 @@ def test_shim_never_resolves_itself_as_the_real_tool(layout):
         ("npx", ["--no-install", "vitest"], True),
         ("npx", ["--no-fund", "vitest"], False),
         ("npx", ["--no-fund", "--yes", "vitest"], True),
-        ("npx", ["@anthropic-ai/claude-code@latest"], True),
+        ("npx", ["@anthropic-ai/claude-code@latest"], False),
         ("npx", ["@anthropic-ai/claude-code/../npm"], False),
         ("npx", ["@anthropic-ai/claude-code@npm:npm"], False),
         ("npx", ["vitest@"], False),
