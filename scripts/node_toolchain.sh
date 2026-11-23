@@ -15,7 +15,7 @@ _LU_VERIFY_EXACT='^[0-9]+\.[0-9]+\.[0-9]+$'
 # exact release through nvm first when the PATH does not match. Otherwise print
 # why on stderr, with the command that repairs it, and return 1.
 lu_verify_toolchain() {
-  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" use_status="" load note="" flags="$-"
+  local root="$1" label="$2" nvmrc="" fix nvm_sh nvm_state=absent installed="" use_status="" load note="" tool found flags="$-"
   if [[ -f "$root/.nvmrc" ]]; then
     nvmrc="$(<"$root/.nvmrc")"
     nvmrc="${nvmrc//[[:space:]]/}"
@@ -49,20 +49,37 @@ lu_verify_toolchain() {
     fi
     [[ "$flags" == *e* ]] && set -e
     [[ "$flags" == *u* ]] && set -u
-    if _lu_verify_versions "$root" "$nvmrc"; then
+    # A failed nvm use may still have changed PATH, so only a successful
+    # selection can pass here.
+    if _lu_verify_versions "$root" "$nvmrc" && [[ "$use_status" == 0 ]]; then
       return 0
     fi
     # Node may have become available through nvm, so the pins can be read now.
     _lu_verify_manifest "$root" "$label" "$nvmrc" || return 1
   fi
   # Every repair loads nvm first: nvm is a shell function, so the caller's shell
-  # does not have it just because this check sourced it.
-  printf -v load 'cd %q && . %q' "$root" "$nvm_sh"
+  # does not have it just because this check sourced it. --no-use stops nvm
+  # selecting a default or the absent .nvmrc release while it loads; a shell
+  # whose dot command drops that argument may fail that selection, which the
+  # nvm command after it reports.
+  printf -v load 'cd %q && { . %q --no-use || :; }' "$root" "$nvm_sh"
+  if [[ "$nvm_state:$installed:$use_status" == ok:1:0 ]]; then
+    # nvm selected the release. A node or npm earlier on PATH than nvm's own
+    # shadows it; only nvm's own npm at the wrong version needs a reinstall.
+    for tool in node npm; do
+      found="$(command -v "$tool" 2>/dev/null)" || found=""
+      if [[ "$found" != "${NVM_BIN:-}/$tool" ]]; then
+        note="nvm selected Node $nvmrc, but $tool on PATH is ${found:-missing}, not ${NVM_BIN:-nvm}/$tool; remove that PATH entry, then run: "
+        fix="$load && nvm use $nvmrc"
+        break
+      fi
+    done
+  fi
   case "$nvm_state:$installed:$use_status" in
     ok:1:0)
-      # nvm selected the release, so its npm is not the one it shipped with.
       # nvm refuses to uninstall the active release; deactivating none is fine.
-      fix="$load && { nvm deactivate >/dev/null 2>&1 || :; } && nvm uninstall $nvmrc && nvm install $nvmrc && nvm use $nvmrc"
+      [[ -n "$note" ]] ||
+        fix="$load && { nvm deactivate >/dev/null 2>&1 || :; } && nvm uninstall $nvmrc && nvm install $nvmrc && nvm use $nvmrc"
       ;;
     ok:1:*)
       # Installed but not selectable: show nvm's own error rather than reinstalling.

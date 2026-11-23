@@ -98,7 +98,7 @@ def test_launch_toolchain_preflight(sandbox, node, npm):
     assert "nvm (the toolchain manager CONTRIBUTING.md requires) is missing" in result.stderr
     # The repair loads nvm itself, so it works when pasted into a shell that never sourced it.
     nvm_sh = Path(env["NVM_DIR"], "nvm.sh")
-    assert f"then run: cd {root} && . {nvm_sh} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
+    assert f"then run: cd {root} && {{ . {nvm_sh} --no-use || :; }} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
     assert "command not found" not in result.stderr
     assert not Path(env["LU_VERIFY_EVIDENCE_DIR"], "path").exists()
 
@@ -115,7 +115,7 @@ def test_launch_nvm_failure_is_friendly(sandbox):
     # The stub nvm fails every call, so the repair names nvm itself before the selection.
     root = Path(env["LU_VERIFY_EVIDENCE_DIR"]).parent / "repo"
     assert f"nvm (the toolchain manager CONTRIBUTING.md requires) is not working at {nvm_dir}/nvm.sh" in result.stderr
-    assert f"then run: cd {root} && . {nvm_dir}/nvm.sh && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
+    assert f"then run: cd {root} && {{ . {nvm_dir}/nvm.sh --no-use || :; }} && nvm install {NODE_PIN} && nvm use {NODE_PIN}" in result.stderr
 
 
 @pytest.mark.parametrize("script", ["launch.sh", "cleanup.sh"])
@@ -236,6 +236,8 @@ def test_checks_aggregate_and_share_interpreter(sandbox, fail_ruff):
     )
     env["LU_VERIFY_PYTHON"] = str(interpreter)
     command(commands, "git", "exit 0")
+    # The checks verify the pinned toolchain before reporting the site install.
+    toolchain(commands, f"v{NODE_PIN}", NPM_PIN)
     result = run(sandbox, "run-checks.sh")
     assert result.returncode == int(fail_ruff), result.stdout + result.stderr
     calls = log.read_text()
