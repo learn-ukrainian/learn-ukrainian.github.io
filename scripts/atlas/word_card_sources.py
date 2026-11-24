@@ -33,7 +33,9 @@ PERSONS = ("1", "2", "3")
 RELATED_FORMS = ("adjp", "advp", "impers")
 VOICES = ("actv", "pasv")
 # Canonical slot order: tense, case, number, gender, person.
-SLOT_VOCABULARY = frozenset(CASES + GENDERS + TENSES + PERSONS + ("s", "p"))
+INFLECTION_ORDER = TENSES + CASES + ("s", "p") + GENDERS + PERSONS
+SLOT_VOCABULARY = frozenset(INFLECTION_ORDER)
+SLOT_ORDER = INFLECTION_ORDER + RELATED_FORMS + VOICES
 HIDDEN_MARKERS = ("bad", "obsc", "subst")
 # VESUM tag tokens that mark an entry flag (proper name, abbreviation, register/variant marking).
 VARIANT_TAGS = frozenset({"var", "arch", "rare", "long", "short", "slang", "vulg", "bad", "obsc", "subst", "ranim", "rinanim"})
@@ -105,6 +107,16 @@ def stress_forms(head: str) -> list[str]:
 
 def row_dict(row) -> dict:
     return {key: row[key] for key in row.keys()}  # noqa: SIM118 - sqlite3.Row iterates values, not keys
+
+
+def query_vesum_forms(connection: SQLiteConnection, lemma: str) -> sqlite3.Cursor:
+    """Read one exact VESUM lemma using the word-card visibility rules."""
+    return connection.execute(
+        "SELECT f.id, f.entry_id, f.word_form, f.lemma, f.pos, f.tags, f.source_comment FROM forms_all AS f "
+        "WHERE f.lemma=? AND NOT EXISTS (SELECT 1 FROM form_markers AS m WHERE m.form_id=f.id "
+        f"AND m.marker IN ({','.join('?' * len(HIDDEN_MARKERS))})) ORDER BY f.entry_id, f.id",
+        (lemma, *HIDDEN_MARKERS),
+    )
 
 
 def _raw_sha(ref) -> str | None:
@@ -267,13 +279,8 @@ class PilotSources:
     def vesum_forms(self, lemma: str) -> list[dict]:
         """Visible forms (hidden markers excluded, the `forms` view's rule) of every entry with this lemma."""
         if lemma not in self._vesum:
-            rows = self.vesum.execute(
-                "SELECT f.id, f.entry_id, f.word_form, f.lemma, f.pos, f.tags, f.source_comment FROM forms_all AS f "
-                "WHERE f.lemma=? AND NOT EXISTS (SELECT 1 FROM form_markers AS m WHERE m.form_id=f.id "
-                f"AND m.marker IN ({','.join('?' * len(HIDDEN_MARKERS))})) ORDER BY f.entry_id, f.id",
-                (lemma, *HIDDEN_MARKERS),
-            )
-            self._vesum[lemma] = [row_dict(r) for r in rows]
+            rows = query_vesum_forms(self.vesum, lemma)
+            self._vesum[lemma] = [row_dict(row) for row in rows]
         rows = self._vesum[lemma]
         self._use(f"vesum_forms:{lemma}", rows)
         return rows
@@ -294,8 +301,7 @@ def ulif_slot(tags: list[str]) -> tuple[str, ...] | None:
 
 
 def slot_key(tokens: list[str]) -> tuple[str, ...]:
-    order = TENSES + CASES + ("s", "p") + GENDERS + PERSONS + RELATED_FORMS + VOICES
-    return tuple(sorted(set(tokens), key=order.index))
+    return tuple(sorted(set(tokens), key=SLOT_ORDER.index))
 
 
 def slot_name(slot: tuple[str, ...]) -> str:
