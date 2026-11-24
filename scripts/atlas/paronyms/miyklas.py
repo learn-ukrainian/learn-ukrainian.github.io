@@ -459,6 +459,11 @@ def loads_i_json(text: str) -> Any:
         return number
 
     def _exact_int(literal: str) -> int:
+        # JSON integers have no leading zeros, so a literal longer than 2**53 - 1 (16 digits)
+        # is outside the range; refusing it before int() also stays clear of the interpreter's
+        # own digit limit for integer conversion.
+        if len(literal.lstrip("-")) > len(str(_I_JSON_MAX_INT)):
+            raise ValueError(f"integer {literal[:40]} is outside the exact range ±(2**53 - 1)")
         number = int(literal)
         if abs(number) > _I_JSON_MAX_INT:
             raise ValueError(f"integer {literal[:40]} is outside the exact range ±(2**53 - 1)")

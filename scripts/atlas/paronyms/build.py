@@ -33,7 +33,6 @@ from lu_machinery.lib.readonly_sqlite import open_readonly
 from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 from scripts.atlas.paronyms.extractor import (
-    MemberNote,
     RawPairAttestation,
     SourceDocument,
     extract_from_document,
@@ -47,6 +46,17 @@ from scripts.atlas.paronyms.miyklas import (
 from scripts.verification import vesum as vesum_mod
 
 SCHEMA_VERSION = "atlas-paronyms.v1"
+# Top-level members of the registry this build writes, and their JSON types.
+_REGISTRY_MEMBER_TYPES: dict[str, type] = {
+    "schema_version": str,
+    "sources_corpus": dict,
+    "counts": dict,
+    "a1_coverage": dict,
+    "pairs": list,
+    "unverified": list,
+}
+# The schema the A1 inventory producer (scripts/atlas/a1_vocabulary_inventory.py) declares.
+A1_INVENTORY_SCHEMA_VERSION = "atlas-a1-v1-inventory.v1"
 DEFAULT_OUTPUT = Path("registry/atlas/paronyms-v1.json")
 DEFAULT_A1_INVENTORY = Path("registry/atlas/a1-v1-inventory.json")
 DEFAULT_MIYKLAS_RAW = Path("registry/miyklas/paronyms-raw-v1.json")
@@ -142,8 +152,16 @@ def read_pinned_corpus_fingerprint(registry_path: Path) -> dict[str, Any]:
         ) from exc
     except (OSError, ValueError) as exc:
         raise CorpusFingerprintError(f"unreadable registry {registry_path}: {exc}") from exc
-    corpus = payload.get("sources_corpus") if isinstance(payload, dict) else None
-    pinned = corpus.get("corpus_fingerprint") if isinstance(corpus, dict) else None
+    if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
+        found = payload.get("schema_version") if isinstance(payload, dict) else type(payload).__name__
+        raise CorpusFingerprintError(f"{registry_path} is not an {SCHEMA_VERSION} registry (schema_version {found!r})")
+    # The registry is this build's own output, so it must have exactly the shape the build writes.
+    shape = {name: type(value).__name__ for name, value in payload.items()}
+    expected = {name: kind.__name__ for name, kind in _REGISTRY_MEMBER_TYPES.items()}
+    if shape != expected:
+        raise CorpusFingerprintError(f"{registry_path} has top-level members {shape}, expected {expected}")
+    corpus = payload["sources_corpus"]
+    pinned = corpus.get("corpus_fingerprint")
     if not isinstance(pinned, dict) or not pinned:
         raise CorpusFingerprintError(
             f"{registry_path} records no sources_corpus.corpus_fingerprint: no corpus is pinned, so the build refuses"
@@ -251,17 +269,6 @@ def _unique_sorted(items: list[str]) -> list[str]:
     return sorted({x for x in items if x})
 
 
-_GLOSS_WORD_RE = re.compile(r"(?<![\w'’ʼ-])[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ'’ʼ]*(?:-[а-щьюяєіїґ'’ʼ]+)*")
-
-
-def _gloss_words(text: str) -> list[str]:
-    """Ukrainian words of a gloss, normalised to lower case (Latin text is not checked).
-
-    A sentence-initial capital does not exempt a common word ("Оспівний").
-    """
-    return [normalize_token(m.group(0)) for m in _GLOSS_WORD_RE.finditer(text)]
-
-
 def _resolve_canonical_pair(
     att: RawPairAttestation,
     vesum_results: dict[str, list[dict[str, Any]]],
@@ -359,6 +366,10 @@ def load_a1_lemma_sets(a1_inventory_path: Path) -> dict[str, set[str]]:
         raise A1InventoryError(f"Invalid JSON in {name}: {exc}") from exc
     if not isinstance(inv, dict):
         raise A1InventoryError(f"Expected JSON object in {name}, got {type(inv).__name__}")
+    if inv.get("schema_version") != A1_INVENTORY_SCHEMA_VERSION:
+        raise A1InventoryError(
+            f"Unsupported schema_version {inv.get('schema_version')!r} in {name}, expected {A1_INVENTORY_SCHEMA_VERSION}"
+        )
     rows = inv.get("rows")
     if not isinstance(rows, list) or not rows:
         raise A1InventoryError(f"Missing, non-list or empty 'rows' in {name}")
@@ -475,52 +486,9 @@ def build_paronym_registry(
             "attested_forms": [att.member_a.attested_form, att.member_b.attested_form],
             "quoted_line": att.quoted_line,
         }
-        if att.shared_context:
-            rec["shared_context"] = att.shared_context
         if att.source_url:
             rec["source_url"] = att.source_url
         return rec
-
-    def _attach_member_notes(
-        bucket: dict[str, Any],
-        target_word: str,
-        note: MemberNote,
-        att: RawPairAttestation,
-    ) -> None:
-        m_bucket = bucket["members_map"][target_word]
-        if note.meaning:
-            entry = {
-                "text": note.meaning,
-                "source_file": att.source_file,
-                "chunk_id": att.chunk_id,
-                "locator": att.locator,
-            }
-            if entry not in m_bucket["meanings"]:
-                m_bucket["meanings"].append(entry)
-        if note.example:
-            entry = {
-                "text": note.example,
-                "source_file": att.source_file,
-                "chunk_id": att.chunk_id,
-                "locator": att.locator,
-            }
-            if entry not in m_bucket["examples"]:
-                m_bucket["examples"].append(entry)
-
-    def _match_note_to_canonical(
-        att: RawPairAttestation,
-        ca: str,
-        cb: str,
-    ) -> tuple[tuple[str, MemberNote], tuple[str, MemberNote]]:
-        if att.member_a.word == ca and att.member_b.word == cb:
-            return (ca, att.member_a), (cb, att.member_b)
-        if att.member_a.word == cb and att.member_b.word == ca:
-            return (ca, att.member_b), (cb, att.member_a)
-        # Lemmatized inflected pair: match by VESUM lemma membership.
-        lemmas_a = {normalize_token(str(r.get("lemma", ""))) for r in vesum_results.get(att.member_a.word, [])}
-        if ca in lemmas_a:
-            return (ca, att.member_a), (cb, att.member_b)
-        return (ca, att.member_b), (cb, att.member_a)
 
     for att, ca, cb, is_surf, unv in resolved_rows:
         if not unv:
@@ -536,10 +504,6 @@ def build_paronym_registry(
             target_map[pair_key] = {
                 "pair_id": f"{ca}|{cb}",
                 "surface_form_pair": is_surf,
-                "members_map": {
-                    ca: {"meanings": [], "examples": []},
-                    cb: {"meanings": [], "examples": []},
-                },
                 "sources": [],
                 "unverified_members": list(unv),
             }
@@ -549,9 +513,6 @@ def build_paronym_registry(
         srec = _source_record(att)
         if srec not in bucket["sources"]:
             bucket["sources"].append(srec)
-        (w1, n1), (w2, n2) = _match_note_to_canonical(att, ca, cb)
-        _attach_member_notes(bucket, w1, n1, att)
-        _attach_member_notes(bucket, w2, n2, att)
 
     # Same-meaning variants are not "do not confuse" pairs: withhold a pair when a СУМ-20 article
     # refers one member directly to the other. Antonymic and synonymic paronyms that the sources
@@ -574,50 +535,8 @@ def build_paronym_registry(
                 unverified_groups[pair_key] = bucket
             break
 
-    # A source gloss is shown to learners only when VESUM attests every lowercase word in it;
-    # a gloss carrying a source typo (e.g. "оспівний") is withheld. The quoted line stays verbatim.
-    gloss_words = sorted(
-        {
-            w
-            for buckets in (verified_groups, unverified_groups)
-            for bucket in buckets.values()
-            for m_bucket in bucket["members_map"].values()
-            for note in m_bucket["meanings"]
-            for word in _gloss_words(note["text"])
-            for w in (word, *word.split("-"))
-            if w
-        }
-        - set(vesum_results)
-    )
-    if gloss_words:
-        vesum_results = {**vesum_results, **vesum_lookup(gloss_words)}
-
-    def _attested_word(word: str) -> bool:
-        # A hyphenated compound ("писемно-літературного") counts when each part is attested.
-        return bool(vesum_results.get(word)) or all(vesum_results.get(part) for part in word.split("-"))
-
-    def _attested_gloss(note: dict[str, str]) -> bool:
-        return all(_attested_word(w) for w in _gloss_words(note["text"]))
-
-    def _infinitive_gloss_for_non_verb(note: dict[str, str], analyses: list[dict[str, Any]]) -> bool:
-        # A gloss headed by a verb infinitive defines an action, so it misdefines a member that
-        # VESUM analyses only as a non-verb ("мимохідь" adv: "проходити мимо по дорозі").
-        words = _gloss_words(note["text"])
-        if not words or not analyses or any(r.get("pos") == "verb" for r in analyses):
-            return False
-        head = vesum_results.get(words[0], [])
-        return bool(head) and all(":inf" in str(r.get("tags", "")) for r in head)
-
-    def _finalize_member(word: str, m_bucket: dict[str, Any], *, surface_form: bool) -> dict[str, Any]:
+    def _finalize_member(word: str, *, surface_form: bool) -> dict[str, Any]:
         analyses = vesum_results.get(word, []) if " " not in word else []
-        m_bucket = {
-            **m_bucket,
-            "meanings": [
-                n
-                for n in m_bucket["meanings"]
-                if _attested_gloss(n) and not _infinitive_gloss_for_non_verb(n, analyses)
-            ],
-        }
         lexeme_analyses = analyses
         if surface_form:
             # A surface-form pair is about the cited forms. VESUM can tie such a form to an
@@ -631,20 +550,11 @@ def build_paronym_registry(
             "vesum_verified": bool(analyses) and (" " not in word),
             "vesum_lemmas": lemmas,
             "vesum_pos": pos_list,
-            "meanings": sorted(
-                m_bucket["meanings"],
-                key=lambda x: (x["source_file"], x["chunk_id"], x["text"]),
-            ),
-            "examples": sorted(
-                m_bucket["examples"],
-                key=lambda x: (x["source_file"], x["chunk_id"], x["text"]),
-            ),
         }
 
     pairs_out: list[dict[str, Any]] = []
     source_type_counts = {"textbook": 0, "miyklas": 0, "both": 0}
     pairs_by_source_file: dict[str, int] = defaultdict(int)
-    pairs_with_meaning = 0
     word_to_paronyms: dict[str, set[str]] = defaultdict(set)
     word_to_pair_ids: dict[str, set[str]] = defaultdict(set)
 
@@ -663,10 +573,8 @@ def build_paronym_registry(
         for sf in {s["source_file"] for s in sources_sorted}:
             pairs_by_source_file[sf] += 1
 
-        m_a = _finalize_member(ca, bucket["members_map"][ca], surface_form=bucket["surface_form_pair"])
-        m_b = _finalize_member(cb, bucket["members_map"][cb], surface_form=bucket["surface_form_pair"])
-        if m_a["meanings"] or m_b["meanings"]:
-            pairs_with_meaning += 1
+        m_a = _finalize_member(ca, surface_form=bucket["surface_form_pair"])
+        m_b = _finalize_member(cb, surface_form=bucket["surface_form_pair"])
 
         pair_id = bucket["pair_id"]
         word_to_paronyms[ca].add(cb)
@@ -697,8 +605,8 @@ def build_paronym_registry(
                 "pair_id": bucket["pair_id"],
                 "unverified_members": unv_members,
                 "members": [
-                    _finalize_member(ca, bucket["members_map"][ca], surface_form=bucket["surface_form_pair"]),
-                    _finalize_member(cb, bucket["members_map"][cb], surface_form=bucket["surface_form_pair"]),
+                    _finalize_member(ca, surface_form=bucket["surface_form_pair"]),
+                    _finalize_member(cb, surface_form=bucket["surface_form_pair"]),
                 ],
                 "sources": sources_sorted,
             }
@@ -749,7 +657,6 @@ def build_paronym_registry(
             "distinct_verified_members": len(word_to_paronyms),
             "verified_pairs_by_source_type": source_type_counts,
             "verified_pairs_by_source_file": dict(sorted(pairs_by_source_file.items())),
-            "verified_pairs_with_meaning": pairs_with_meaning,
             "a1_inventory_lemmas_total": len(inv_lemmas),
             "a1_inventory_lemmas_with_paronym": len(matched_a1),
             "a1_single_token_keys_total": len(single_keys),

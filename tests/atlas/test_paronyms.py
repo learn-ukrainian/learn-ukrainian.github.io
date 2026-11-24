@@ -33,12 +33,8 @@ def _doc(text: str, *, source_type: str = "textbook", chunk_id: str = "book_s000
     )
 
 
-def _fold(text: str) -> str:
-    return " ".join(text.replace("\u00a0", " ").split())
-
-
 def test_pdf_line_wrap_dehyphenation_and_inline_gloss_extraction() -> None:
-    """Defect class: PDF line-wrap hyphens, note-boundary corruption, page footers, or raw quote drift."""
+    """Defect class: PDF line-wrap hyphens, page footers, or a quoted_line that is not a verbatim source span."""
     doc = _doc(
         "§ 9. Пароніми\n"
         "Пароніми можуть бути: однокореневими словами: організаційний — ор-\n"
@@ -67,32 +63,16 @@ def test_pdf_line_wrap_dehyphenation_and_inline_gloss_extraction() -> None:
     assert ("сердешний", "серцевий") in by_pair
     assert ("гривна", "гривня") in by_pair
 
-    # Every quoted_line must stay verbatim inside the raw source text after whitespace folding.
-    folded_raw = _fold(doc.text)
+    # Every quoted_line is a verbatim span of the raw source text, line breaks included.
     for att in atts:
-        assert _fold(att.quoted_line) in folded_raw
-    assert "ор- ганізований" in by_pair[("організаційний", "організований")].quoted_line
+        assert att.quoted_line in doc.text
+    assert "ор-\nганізований" in by_pair[("організаційний", "організований")].quoted_line
 
-    ab = by_pair[("абонемент", "абонент")]
-    assert ab.member_a.meaning == "документ на користування"
-    assert ab.member_b.meaning == "власник абонемента"
-    assert ab.chunk_id == "book_s0001"
+    assert by_pair[("абонемент", "абонент")].chunk_id == "book_s0001"
 
-    # Author credit stays attached to the literary example, and trailing page numbers are excluded.
-    ss = by_pair[("сердешний", "серцевий")]
-    assert ss.member_a.meaning == "бідолашний, нещасний"
-    assert ss.member_a.example == "Сердешна жінка припадала з горя (А. Кащенко)"
-    assert "168" not in ss.quoted_line
-
-    # Abbreviation note is NOT misclassified as a usage example.
-    gg = by_pair[("гривна", "гривня")]
-    assert gg.member_b.meaning == "назва грошової одиниці. Скорочено позначаємо грн (без крапки в кінці)"
-    assert gg.member_b.example is None
-
-    # Paronymic-adjective definition box excludes trailing page footer.
-    ll = by_pair[("літний", "літній")]
-    assert ll.member_a.meaning == "який стосується польоту, літання"
-    assert "133" not in ll.quoted_line
+    # Trailing page numbers are excluded from the quoted definition lines.
+    assert "168" not in by_pair[("сердешний", "серцевий")].quoted_line
+    assert "133" not in by_pair[("літний", "літній")].quoted_line
 
 
 def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
@@ -133,8 +113,8 @@ def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
     assert wrapped_pairs == {("громадською", "громадянською")}
 
 
-def test_slash_dictionary_extracts_triplets_with_meanings_and_examples() -> None:
-    """Defect class: losing third triplet member, definitions, or raw quote fidelity in slash-headed dictionaries."""
+def test_slash_dictionary_extracts_triplets() -> None:
+    """Defect class: losing a third triplet member, or raw quote fidelity, in slash-headed dictionaries."""
     doc = _doc(
         "Додаток 2\n"
         "СЛОВНИЧОК ПАРОНІМІВ\n"
@@ -151,12 +131,7 @@ def test_slash_dictionary_extracts_triplets_with_meanings_and_examples() -> None
         ("сердечний", "серцевий"),
         ("сердешний", "серцевий"),
     }
-    pair = by_pair[("сердечний", "серцевий")]
-    assert pair.member_a.meaning == "добрий, щирий"
-    assert pair.member_a.example == "Сердечна людина"
-    assert pair.member_b.meaning == "пов’язаний із серцем"
-    assert pair.member_b.example == "Серцевий ритм"
-    assert _fold(pair.quoted_line) in _fold(doc.text)
+    assert by_pair[("сердечний", "серцевий")].quoted_line in doc.text
 
 
 def test_miyklas_html_parser_preserves_inline_morpheme_spans_and_groups(tmp_path: Path) -> None:
@@ -325,13 +300,18 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
     # Malformed A1 inventory (missing rows, missing resolved lemma, non-string lemma/key,
     # missing row id, or a missing file) fails closed with A1InventoryError naming the file.
     missing_rows = tmp_path / "missing-rows.json"
-    missing_rows.write_text(json.dumps({"schema_version": "v1"}), encoding="utf-8")
+    missing_rows.write_text(json.dumps({"schema_version": "atlas-a1-v1-inventory.v1"}), encoding="utf-8")
     with pytest.raises(ValueError, match="rows"):
         load_a1_lemma_sets(missing_rows)
 
     missing_resolved_lemma = tmp_path / "missing-resolved-lemma.json"
     missing_resolved_lemma.write_text(
-        json.dumps({"rows": [{"id": "r1", "key": "адреса", "mapping": {"resolution": "resolved"}}]}),
+        json.dumps(
+            {
+                "schema_version": "atlas-a1-v1-inventory.v1",
+                "rows": [{"id": "r1", "key": "адреса", "mapping": {"resolution": "resolved"}}],
+            }
+        ),
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="lemma"):
@@ -339,7 +319,12 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
 
     bad_lemma = tmp_path / "bad-lemma.json"
     bad_lemma.write_text(
-        json.dumps({"rows": [{"id": "r1", "key": "адреса", "mapping": {"resolution": "resolved", "lemma": 123}}]}),
+        json.dumps(
+            {
+                "schema_version": "atlas-a1-v1-inventory.v1",
+                "rows": [{"id": "r1", "key": "адреса", "mapping": {"resolution": "resolved", "lemma": 123}}],
+            }
+        ),
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="lemma"):
@@ -347,7 +332,12 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
 
     bad_key = tmp_path / "bad-key.json"
     bad_key.write_text(
-        json.dumps({"rows": [{"id": "r1", "key": 42, "mapping": {"resolution": "resolved", "lemma": "адреса"}}]}),
+        json.dumps(
+            {
+                "schema_version": "atlas-a1-v1-inventory.v1",
+                "rows": [{"id": "r1", "key": 42, "mapping": {"resolution": "resolved", "lemma": "адреса"}}],
+            }
+        ),
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="key"):
@@ -357,10 +347,11 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
     missing_id.write_text(
         json.dumps(
             {
+                "schema_version": "atlas-a1-v1-inventory.v1",
                 "rows": [
                     {"id": "r1", "key": "адреса", "mapping": {"resolution": "resolved", "lemma": "адреса"}},
                     {"key": "мова", "mapping": {"resolution": "resolved", "lemma": "мова"}},
-                ]
+                ],
             }
         ),
         encoding="utf-8",
@@ -529,6 +520,11 @@ def test_build_refuses_unpinned_corpus(
         str(missing_a1),
     ]
 
+    def _registry(sources_corpus: object) -> str:
+        # The top-level shape the build writes; only sources_corpus varies between cases.
+        shape = {"schema_version": "atlas-paronyms.v1", "sources_corpus": sources_corpus, "counts": {}}
+        return json.dumps({**shape, "a1_coverage": {}, "pairs": [], "unverified": []}, ensure_ascii=False)
+
     def _assert_refused(registry_text: str, reason: str, run_argv: list[str] = argv) -> None:
         # Every refusal is exit 2, so each case also asserts its own reason: a later stage that
         # refuses for another cause must not stand in for the gate under test.
@@ -544,14 +540,14 @@ def test_build_refuses_unpinned_corpus(
 
     # A registry without a recorded corpus fingerprint (the pre-pin shape) pins nothing.
     _assert_refused(
-        json.dumps({"schema_version": "atlas-paronyms.v1", "sources_corpus": {}}),
+        _registry({}),
         "records no sources_corpus.corpus_fingerprint",
     )
 
     # A registry pinned to a different textbook result set refuses the live corpus.
     stale_pin = {"textbooks_fts_query": "паронім*", "textbooks_result_rows": 1, "textbooks_result_sha256": "0" * 64}
     _assert_refused(
-        json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False),
+        _registry({"corpus_fingerprint": stale_pin}),
         "corpus differs from the reviewed corpus",
     )
 
@@ -563,7 +559,7 @@ def test_build_refuses_unpinned_corpus(
     with monkeypatch.context() as patched:
         patched.setattr(paronym_build, "require_pinned_corpus", _overflow)
         _assert_refused(
-            json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False),
+            _registry({"corpus_fingerprint": stale_pin}),
             "RecursionError: maximum recursion depth exceeded",
         )
 
@@ -574,7 +570,7 @@ def test_build_refuses_unpinned_corpus(
     live = paronym_build.compute_corpus_fingerprint(
         paronym_build.load_textbook_paronym_documents(sources_db), load_miyklas_documents(snapshot_path)[0]
     )
-    pinned_registry = json.dumps({"sources_corpus": {"corpus_fingerprint": live}}, ensure_ascii=False)
+    pinned_registry = _registry({"corpus_fingerprint": live})
     _assert_refused(pinned_registry, f"REFUSED: {A1InventoryError.__name__}: Missing A1 inventory")
 
     # Every JSON input is parsed as I-JSON (RFC 7493): a duplicate member name refuses, even when
@@ -582,7 +578,7 @@ def test_build_refuses_unpinned_corpus(
     _assert_refused('{"sources_corpus": "\\ud800", ' + pinned_registry[1:], "duplicate member name 'sources_corpus'")
     bad_a1 = tmp_path / "bad-a1-inventory.json"
     bad_row = {"id": "r1", "key": "адресат", "mapping": {"resolution": "resolved", "lemma": "\ud800"}}
-    bad_a1.write_text(json.dumps({"rows": [bad_row]}), encoding="utf-8")
+    bad_a1.write_text(json.dumps({"schema_version": "atlas-a1-v1-inventory.v1", "rows": [bad_row]}), encoding="utf-8")
     _assert_refused(pinned_registry, "surrogates not allowed", [*argv[:-1], str(bad_a1)])
 
     # A changed MiyKlas snapshot under the same pin refuses.
@@ -605,5 +601,5 @@ def test_build_refuses_unpinned_corpus(
     # An extra pinned key, even one set to null, is not the reviewed pin.
     snapshot["pages"][0]["title"] = "Пароніми"
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
-    extra_key = json.dumps({"sources_corpus": {"corpus_fingerprint": {**live, "unknown_field": None}}})
+    extra_key = _registry({"corpus_fingerprint": {**live, "unknown_field": None}})
     _assert_refused(extra_key, "unknown_field: pinned None")

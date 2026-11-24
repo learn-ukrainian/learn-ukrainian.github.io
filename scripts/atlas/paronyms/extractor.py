@@ -225,14 +225,6 @@ _INLINE_DIGIT_STRESS_RE = re.compile(rf"(?<=[{UK_LETTER}])5(?=[{UK_LOWER}])")
 _LINE_WRAP_HYPHEN_RE = re.compile(rf"([{UK_LOWER}{APOS}])-\s*\n\s*([{UK_LOWER}])")
 _TOC_RE = re.compile(r"(?:\.{5,}|(?:\.\s){5,})")
 
-_AUTHOR_OR_SOURCE_PAREN_RE = re.compile(
-    rf"^(?:[{UK_UPPER}]\.\s*[{UK_UPPER}][{UK_LOWER}]+|"
-    rf"(?:За|Із|З)\s+(?:[{UK_UPPER}]\.|журнал|газет|інтернет|подруч|словник|тв)|"
-    r"Нар\.\s*тв)",
-    re.IGNORECASE,
-)
-_ETYMOLOGY_PAREN_PREFIXES = ("від ", "грец", "лат", "франц", "англ", "італ", "нім")
-
 
 @dataclass(frozen=True)
 class SourceDocument:
@@ -258,8 +250,6 @@ class MemberNote:
 
     word: str
     attested_form: str
-    meaning: str | None = None
-    example: str | None = None
 
 
 @dataclass(frozen=True)
@@ -274,7 +264,6 @@ class RawPairAttestation:
     locator: str
     pattern: str
     quoted_line: str
-    shared_context: str | None = None
     source_url: str = ""
 
 
@@ -346,19 +335,14 @@ def _clean_text_for_parsing(raw_text: str) -> str:
     return clean_text
 
 
-def _fold_whitespace(snippet: str) -> str:
-    """Fold whitespace only, preserving every non-whitespace source character verbatim."""
-    return " ".join(snippet.replace("\u00a0", " ").split())
-
-
 def _raw_quote(raw_text: str, clean_to_raw: list[int], clean_start: int, clean_end: int) -> str:
-    """Slice ``raw_text`` for ``clean_text[clean_start:clean_end]`` and fold whitespace only."""
+    """The verbatim ``raw_text`` span behind ``clean_text[clean_start:clean_end]``."""
     limit = len(clean_to_raw) - 1
     s = max(0, min(clean_start, limit))
     e = max(s, min(clean_end, limit))
     raw_start = clean_to_raw[s]
     raw_end = clean_to_raw[e]
-    return _fold_whitespace(raw_text[raw_start:raw_end])
+    return raw_text[raw_start:raw_end]
 
 
 def _flatten_with_map(text: str, base_offset: int) -> tuple[str, list[int]]:
@@ -388,7 +372,7 @@ def _flatten_with_map(text: str, base_offset: int) -> tuple[str, list[int]]:
 
 
 def _clean_note_text(snippet: str) -> str:
-    """Clean parsed meaning/example note text (NFC, collapsed whitespace)."""
+    """Normalise source text for parsing (NFC, collapsed whitespace)."""
     return " ".join(unicodedata.normalize("NFC", snippet).replace("\u00a0", " ").split())
 
 
@@ -414,100 +398,12 @@ def _is_valid_headword(token: str) -> bool:
     return False
 
 
-def _contains_headword_form(text: str, headword: str) -> bool:
-    """True when ``text`` actually illustrates ``headword`` (inflected or stem-matched form)."""
-    hw = normalize_token(headword)
-    if not hw:
-        return True
-    hw_parts = [p for p in hw.split() if len(p) >= 2 and p not in _STOPWORDS] or hw.split()
-    tokens = [normalize_token(t) for t in re.findall(WORD_CORE, text)]
-    if not tokens:
-        return False
-    for hp in hw_parts:
-        stem_len = len(hp) if len(hp) <= 3 else max(3, min(4, len(hp) - 1))
-        prefix = hp[:stem_len]
-        if any(tok.startswith(prefix) for tok in tokens):
-            return True
-    return False
-
-
-_NOTE_ABBREVIATION_END_RE = re.compile(r"(?:\bта\s+ін|\bі\s+т\.\s*ін|\bі\s+т\.\s*д|\bта\s+под)\.$")
-# A comma right after the relative pronoun that opens a gloss ("який, викликає") is a source
-# punctuation error; such a gloss is withheld rather than shown to learners.
-_RELATIVE_PRONOUN_COMMA_RE = re.compile(r"^(?:який|яка|яке|які|котрий|котра|котре|котрі)\s*,", re.IGNORECASE)
-
-
-def _finish_note(text: str | None) -> str | None:
-    """Trim separators a split leaves at a note's ends; withhold a note with a source comma error."""
-    if text is None:
-        return None
-    note = text.strip(" ,;:")
-    if note.endswith(".") and not _NOTE_ABBREVIATION_END_RE.search(note):
-        note = note.rstrip(".").rstrip(" ,;:")
-    if _NOTE_ABBREVIATION_END_RE.search(f"{note}."):
-        # A split that consumed the sentence period also took the abbreviation's own period.
-        note = f"{note}."
-    if not note or _RELATIVE_PRONOUN_COMMA_RE.match(note):
-        return None
-    return note
-
-
-def _split_meaning_and_example(definition: str, *, headword: str = "") -> tuple[str | None, str | None]:
-    """Split a source's short meaning from an explicit usage example, then finish both notes."""
-    meaning, example = _split_note_parts(definition, headword=headword)
-    return _finish_note(meaning), _finish_note(example)
-
-
-def _split_note_parts(definition: str, *, headword: str = "") -> tuple[str | None, str | None]:
-    """Split a source's short meaning from an explicit usage example.
-
-    Order prevents literary author credits ``(А. Кащенко)`` or orthographic notes
-    ``(без крапки в кінці)`` from being misclassified as usage examples.
-    """
-    body = _clean_note_text(definition).strip(" ;")
-    if not body:
-        return None, None
-
-    # Pattern 1: meaning followed by ": example" (keeps any trailing author credit
-    # attached to the example sentence, e.g. "... (А. Кащенко)").
-    if ":" in body:
-        left, right = body.split(":", 1)
-        left = left.strip(" ;")
-        right = right.strip(" ;")
-        if left and right and len(left) >= 6:
-            return left, right
-
-    # Pattern 2: trailing parenthesized example "(авторитарний уряд)" at end of a single-clause gloss.
-    m_paren = re.search(r"^(.*?)\s*\(([^()]{3,160})\)\s*\.?$", body)
-    if m_paren:
-        gloss = m_paren.group(1).strip(" ;:")
-        ex = m_paren.group(2).strip(" ;")
-        if (
-            gloss
-            and ". " not in gloss
-            and not ex.lower().startswith(_ETYMOLOGY_PAREN_PREFIXES)
-            and not _AUTHOR_OR_SOURCE_PAREN_RE.match(ex)
-            and _contains_headword_form(ex, headword)
-        ):
-            return gloss, ex
-
-    # Pattern 3: sentence meaning followed by an illustrating example sentence (e.g. Zabolotnyi).
-    m_sent = re.match(rf"^([^.]{{6,200}})\.\s+([{UK_UPPER}].+)$", body)
-    if m_sent:
-        candidate_ex = m_sent.group(2).strip()
-        if _contains_headword_form(candidate_ex, headword):
-            return m_sent.group(1).strip(), candidate_ex
-
-    return body, None
-
-
 def _emit_group_pairs(
     members: list[MemberNote],
     doc: SourceDocument,
     *,
     pattern: str,
     quoted_line: str,
-    shared_context: str | None = None,
 ) -> list[RawPairAttestation]:
     """Expand a 2..4-member paronym group into canonical unordered pairs."""
     out: list[RawPairAttestation] = []
@@ -519,7 +415,6 @@ def _emit_group_pairs(
             deduped.append(m)
     if len(deduped) < 2 or len(deduped) > 4:
         return out
-    quote = _fold_whitespace(quoted_line)
     for left, right in combinations(deduped, 2):
         a, b = (left, right) if left.word <= right.word else (right, left)
         out.append(
@@ -531,8 +426,7 @@ def _emit_group_pairs(
                 chunk_id=doc.chunk_id,
                 locator=doc.locator,
                 pattern=pattern,
-                quoted_line=quote,
-                shared_context=_clean_note_text(shared_context) if shared_context else None,
+                quoted_line=quoted_line,
                 source_url=doc.source_url,
             )
         )
@@ -608,8 +502,7 @@ def _extract_slash_dictionary(
         block_quote = _raw_quote(doc.text, clean_to_raw, block_start, block_end)
         members: list[MemberNote] = []
         for norm_w, raw_w in norm_targets.items():
-            meaning, example = _split_meaning_and_example(entries.get(norm_w, ""), headword=raw_w)
-            members.append(MemberNote(word=norm_w, attested_form=raw_w, meaning=meaning, example=example))
+            members.append(MemberNote(word=norm_w, attested_form=raw_w))
         out.extend(_emit_group_pairs(members, doc, pattern="slash_dictionary", quoted_line=block_quote))
     return out
 
@@ -648,15 +541,7 @@ def _extract_miyklas_dictionary(
             raw_hw = m.group(1).strip()
             if not _is_valid_headword(raw_hw):
                 continue
-            meaning, example = _split_meaning_and_example(m.group(2), headword=raw_hw)
-            members.append(
-                MemberNote(
-                    word=normalize_token(raw_hw),
-                    attested_form=raw_hw,
-                    meaning=meaning,
-                    example=example,
-                )
-            )
+            members.append(MemberNote(word=normalize_token(raw_hw), attested_form=raw_hw))
         if 2 <= len(members) <= 4:
             quote = _raw_quote(doc.text, clean_to_raw, block_start, block_end)
             out.extend(
@@ -708,9 +593,6 @@ _INLINE_HEADWORD_DEF_RE = re.compile(
 )
 
 
-_TERMINAL_PUNCT_RE = re.compile(r"[.!?)»…]\s*$")
-
-
 def _extract_named_definition_boxes(
     clean_text: str, clean_to_raw: list[int], doc: SourceDocument
 ) -> tuple[list[RawPairAttestation], list[tuple[int, int]]]:
@@ -735,15 +617,7 @@ def _extract_named_definition_boxes(
                 raw_hw = em.group(1).strip()
                 if not _is_valid_single_word(raw_hw):
                     continue
-                meaning, example = _split_meaning_and_example(em.group(2), headword=raw_hw)
-                members.append(
-                    MemberNote(
-                        word=normalize_token(raw_hw),
-                        attested_form=raw_hw,
-                        meaning=meaning,
-                        example=example,
-                    )
-                )
+                members.append(MemberNote(word=normalize_token(raw_hw), attested_form=raw_hw))
             if 2 <= len(members) <= 4:
                 span_end = tail_start + (stop_m.start() if stop_m else len(tail))
                 # Trim trailing whitespace from span_end for clean raw slice.
@@ -794,19 +668,7 @@ def _extract_named_definition_boxes(
             if len(g1.split()) < 2 or len(g2.split()) < 2:
                 continue
             raw_pair_quote = _raw_quote(doc.text, clean_to_raw, s1, e2)
-            meaning1, ex1 = _split_meaning_and_example(g1, headword=w1)
-            meaning2, ex2 = _split_meaning_and_example(g2, headword=w2)
-            # A definition line that stops without terminal punctuation while its partner ends
-            # properly lost its tail in the source layout; withhold that truncated gloss.
-            ends1, ends2 = bool(_TERMINAL_PUNCT_RE.search(g1)), bool(_TERMINAL_PUNCT_RE.search(g2))
-            if ends2 and not ends1:
-                meaning1, ex1 = None, None
-            if ends1 and not ends2:
-                meaning2, ex2 = None, None
-            members = [
-                MemberNote(word=n1, attested_form=w1, meaning=meaning1, example=ex1),
-                MemberNote(word=n2, attested_form=w2, meaning=meaning2, example=ex2),
-            ]
+            members = [MemberNote(word=n1, attested_form=w1), MemberNote(word=n2, attested_form=w2)]
             out.extend(
                 _emit_group_pairs(
                     members,
@@ -1024,6 +886,10 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
             continue
 
         has_local_cue = _has_active_paronym_cue(seg)
+        # A prompt that also asks about another lexical relation ("Які слова є синонімами, а які
+        # паронімами?") is a mixed classification exercise, not a paronym presentation.
+        if has_local_cue and _OTHER_LEXICAL_TOPIC_RE.search(prompt_first_sent):
+            has_local_cue = False
         # A choice exercise whose own prompt sends the learner to a paronym dictionary
         # ("Спишіть, добираючи з дужок потрібне слово. Скористайтеся словничком паронімів")
         # asks about paronyms; a bare prose mention of that dictionary does not.
@@ -1031,14 +897,6 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
             not has_local_cue
             and _CHOICE_EXERCISE_PROMPT_RE.search(prompt_head)
             and _PARONYM_DICTIONARY_REFERENCE_RE.search(prompt_head)
-        ):
-            has_local_cue = True
-        # Lead-in exercise immediately before "Пароніми (від гр. ...)" (e.g. 11-klas Glazova 294).
-        if (
-            not has_local_cue
-            and idx + 1 < len(raw_segments)
-            and re.match(r"^Пароніми\s*\(", raw_segments[idx + 1][2], re.IGNORECASE)
-            and re.search(r"словосполучення|лексичне\s+значення", seg, re.IGNORECASE)
         ):
             has_local_cue = True
         # Activate ONE immediate choice exercise ONLY when the adjacent segment provides
@@ -1167,16 +1025,14 @@ def _extract_from_segment(
 
     # 1. Parenthesized gloss pairs: "word1 (gloss1) — word2 (gloss2)"
     for m in _PAREN_GLOSS_PAIR_RE.finditer(flat_seg):
-        w1, g1, w2, g2 = m.group(1), m.group(2), m.group(3), m.group(4)
+        w1, w2 = m.group(1), m.group(3)
         if not (_is_valid_single_word(w1) and _is_valid_single_word(w2)):
             continue
         if not _is_similar_enough_for_paronym(w1, w2):
             continue
-        m1, e1 = _split_meaning_and_example(g1, headword=w1)
-        m2, e2 = _split_meaning_and_example(g2, headword=w2)
         members = [
-            MemberNote(word=normalize_token(w1), attested_form=w1, meaning=m1, example=e1),
-            MemberNote(word=normalize_token(w2), attested_form=w2, meaning=m2, example=e2),
+            MemberNote(word=normalize_token(w1), attested_form=w1),
+            MemberNote(word=normalize_token(w2), attested_form=w2),
         ]
         atts = _emit_group_pairs(
             members, doc, pattern="parenthesized_gloss_pair", quoted_line=_quote_flat(m.start(), m.end())
@@ -1187,7 +1043,7 @@ def _extract_from_segment(
 
     # 2. Inline definition pairs: "word1 — def1 і/а word2 — def2"
     for m in _INLINE_DEF_PAIR_RE.finditer(flat_seg):
-        w1, g1, w2, g2 = m.group(1), m.group(2), m.group(3), m.group(4)
+        w1, w2 = m.group(1), m.group(3)
         if not (_is_valid_single_word(w1) and _is_valid_single_word(w2)):
             continue
         if not _is_similar_enough_for_paronym(w1, w2):
@@ -1195,11 +1051,9 @@ def _extract_from_segment(
         pair_key = tuple(sorted((normalize_token(w1), normalize_token(w2))))
         if pair_key in rich_pairs:
             continue
-        m1, e1 = _split_meaning_and_example(g1, headword=w1)
-        m2, e2 = _split_meaning_and_example(g2, headword=w2)
         members = [
-            MemberNote(word=normalize_token(w1), attested_form=w1, meaning=m1, example=e1),
-            MemberNote(word=normalize_token(w2), attested_form=w2, meaning=m2, example=e2),
+            MemberNote(word=normalize_token(w1), attested_form=w1),
+            MemberNote(word=normalize_token(w2), attested_form=w2),
         ]
         atts = _emit_group_pairs(
             members, doc, pattern="inline_definition_pair", quoted_line=_quote_flat(m.start(), m.end())
@@ -1213,11 +1067,11 @@ def _extract_from_segment(
         rf"\d\)\s*({WORD_CORE})\s*[{DASH_CHARS}]\s*({WORD_CORE})\s*\n\s*\(([^)]+)\)\s*\(([^)]+)\)",
         masked_seg,
     ):
-        w1, w2, g1, g2 = m.group(1), m.group(2), m.group(3), m.group(4)
+        w1, w2 = m.group(1), m.group(2)
         if _is_valid_single_word(w1) and _is_valid_single_word(w2) and _is_similar_enough_for_paronym(w1, w2):
             members = [
-                MemberNote(word=normalize_token(w1), attested_form=w1, meaning=_clean_note_text(g1)),
-                MemberNote(word=normalize_token(w2), attested_form=w2, meaning=_clean_note_text(g2)),
+                MemberNote(word=normalize_token(w1), attested_form=w1),
+                MemberNote(word=normalize_token(w2), attested_form=w2),
             ]
             atts = _emit_group_pairs(
                 members, doc, pattern="parenthesized_gloss_pair", quoted_line=_quote_seg(m.start(), m.end())
@@ -1293,7 +1147,7 @@ def _extract_from_segment(
 
     # 5b. Single-slash collocation headers: "Особистий / особовий: власність, господарство..."
     for m in _COLON_SLASH_CHAIN_RE.finditer(flat_seg):
-        w1, w2, shared = m.group(1), m.group(2), m.group(3).strip()
+        w1, w2 = m.group(1), m.group(2)
         if not (_is_valid_single_word(w1) and _is_valid_single_word(w2)):
             continue
         if not _is_similar_enough_for_paronym(w1, w2):
@@ -1307,7 +1161,6 @@ def _extract_from_segment(
             doc,
             pattern="slash_pair_list",
             quoted_line=_quote_flat(m.start(), m.end()),
-            shared_context=shared,
         ):
             if (att.member_a.word, att.member_b.word) not in rich_pairs:
                 out.append(att)
@@ -1389,14 +1242,12 @@ def _extract_from_segment(
                     _is_similar_enough_for_paronym(raw_words[k], raw_words[k + 1]) for k in range(len(raw_words) - 1)
                 ):
                     continue
-                shared = mi.group(2).strip() if mi.group(2) else None
                 members = [MemberNote(word=normalize_token(w), attested_form=w) for w in raw_words]
                 for att in _emit_group_pairs(
                     members,
                     doc,
                     pattern="semicolon_comma_group",
                     quoted_line=_quote_flat(ps, pe),
-                    shared_context=shared,
                 ):
                     if (att.member_a.word, att.member_b.word) not in rich_pairs:
                         out.append(att)
@@ -1498,15 +1349,7 @@ def extract_from_document(doc: SourceDocument) -> list[RawPairAttestation]:
             for part in clean_row.split(";"):
                 md = re.match(rf"^\s*({WORD_CORE})\s*[{DASH_CHARS}]\s*(.+)$", part.strip())
                 if md:
-                    meaning, ex = _split_meaning_and_example(md.group(2), headword=md.group(1))
-                    members.append(
-                        MemberNote(
-                            word=normalize_token(md.group(1)),
-                            attested_form=md.group(1),
-                            meaning=meaning,
-                            example=ex,
-                        )
-                    )
+                    members.append(MemberNote(word=normalize_token(md.group(1)), attested_form=md.group(1)))
             attestations.extend(_emit_group_pairs(members, doc, pattern="inline_definition_pair", quoted_line=raw_row))
         heading_start = next(
             (

@@ -31,15 +31,18 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      non-paronym exercises), multiple-choice distractor items (`А/Б/В/Г` or `а)/б)/в)`), mixed
      euphony quizzes, and explicit non-paronym disclaimers (`не є паронімічними`, `від паронімів
      слід відрізняти`).
+   - A prompt that also asks about another lexical relation (`Які із цих слів є
+     спільнокореневими? антонімами? синонімами?`) is a mixed classification exercise, not a
+     paronym presentation, even next to a paronym heading or with its own paronym cue.
    - Records every pair with `source_file`, `chunk_id`, `locator`, extraction `pattern`, exact
-     `attested_forms`, verbatim `quoted_line` (sliced directly from raw source text via
-     offset-mapped spans with whitespace folding only), and any short meaning or example stated
-     by the source. Zero pairs come from model memory.
-   - A source gloss shown to learners loses separators left by the split (a trailing comma, a
-     sentence period; `та ін.` keeps its period). A gloss with a source comma error right after
-     its opening relative pronoun (`який, викликає`) or a definition line cut off by the page
-     layout (no terminal punctuation while its partner line has it) is withheld. The
-     `quoted_line` always stays verbatim.
+     `attested_forms` and a verbatim `quoted_line`: the exact span of the raw source text, line
+     breaks and line-wrap hyphens included (a display may fold whitespace). Zero pairs come from
+     model memory.
+   - The registry publishes no gloss, example or shared-context text of its own. A source's
+     definition of a member is read only to find the pair; it stays inside `quoted_line`, and a
+     word card takes its definitions from СУМ-20 / ВТС, the authorities for meaning. Parsed
+     textbook glosses carried layout repairs, misplaced senses and nonstandard wording (#13398
+     review), so the registry no longer derives display text from them.
 2. **VESUM verification (`scripts/atlas/paronyms/build.py`)**
    - Batch-verifies every single-token member against VESUM (`verify_words`) and re-gates any
      lemmatized canonical pair against pass-2 canonical lookup results before admission.
@@ -67,13 +70,6 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      The lookup reads the local СУМ-20 mirror (`sum20_mirror_articles` in `data/sources.db`,
      read-only). A reference in a later, rare or obsolete sense (`людний` / `людяний`) does not
      withhold a pair.
-   - A meaning gloss is shown only when VESUM attests every Ukrainian word in it, a
-     sentence-initial capital included (each part of a hyphenated compound); a gloss with a
-     source typo or a VESUM `bad` form (`оспівний`, `прийомів`) is withheld. A gloss headed by a
-     verb infinitive is withheld for a member that VESUM analyses only as a non-verb, because it
-     defines an action rather than the member (`мимохідь`, an adverb, glossed by МійКлас as
-     `проходити мимо по дорозі, побіжно`; СУМ-20 defines it as `Проходячи мимо кого-, чого-небудь`).
-     The source's `quoted_line` stays verbatim.
    - Any pair with an unattested or multiword member is routed to `"unverified"` with an
      explicit reason (`not_attested_in_vesum` or `multiword_not_in_vesum`), never into
      `"pairs"`.
@@ -104,8 +100,11 @@ The registry records that corpus in `sources_corpus.corpus_fingerprint`:
 Before any extraction, both the build and `--check` compute the live fingerprint and compare it
 with the one recorded in the registry at `--output`; each field is compared as canonical JSON, so
 a missing or extra key (even one set to `null`) and a value of another type (`5.0` for `5`)
-differ. When they differ, or when the registry is missing or records no fingerprint, the build
-refuses with `CorpusFingerprintError`. Every step from reading the first input to the final
+differ. When they differ, when the registry is missing or records no fingerprint, or when it is not
+an `atlas-paronyms.v1` registry with exactly the top-level members and JSON types the build writes,
+the build refuses with `CorpusFingerprintError`. Each input declares its schema: the registry
+`atlas-paronyms.v1`, the МійКлас snapshot `miyklas-paronyms-raw.v1` and the A1 inventory
+`atlas-a1-v1-inventory.v1`. Every step from reading the first input to the final
 comparison (the pin gate, the rebuild and, under `--check`, the byte comparison) runs inside one
 fail-closed boundary: any failure there, whatever its type, is also a refusal. The three JSON
 inputs (the registry at `--output`, the МійКлас snapshot and the A1 inventory) are parsed in full
@@ -116,7 +115,8 @@ double holds (`3.141592653589793238462643383279`, or `1e-400`, which underflows 
 value its double reproduces when rounded to the digits the value needs is valid however it is
 written (`0.1`, `0.10000000000000000`, `999999999999999.875`; trailing zeros add no digits);
 an integer value outside ±(2^53 − 1) however it is written (`9007199254740992`,
-`9007199254740992.0`, `9.007199254740992e15`): every number these files carry is an integer count,
+`9007199254740992.0`, `9.007199254740992e15`, or an integer literal of thousands of digits, refused
+by its length before conversion): every number these files carry is an integer count,
 and every double of that size is an integer, so no number of magnitude 2^53 or more is accepted; a
 surrogate (an escape such as `\ud800`) or a noncharacter (such as U+FDD0) in a string or member
 name. The boundary also covers an unreadable or non-UTF-8 file, wrong
@@ -151,20 +151,19 @@ bytes are compared, so a line-ending change is `DRIFT`); exit 1 is `DRIFT`; exit
 | Textbook chunks yielding at least one pair | 43 |
 | Textbook source files yielding verified pairs | 14 |
 | МійКлас pages acquired and parsed | 5 |
-| **Verified unique paronym pairs (`pairs`)** | **173** |
-| Verified pairs with at least one source-quoted meaning | 68 |
-| Total verified source attestations | 298 |
-| Distinct VESUM-verified member words | 311 |
+| **Verified unique paronym pairs (`pairs`)** | **169** |
+| Total verified source attestations | 291 |
+| Distinct VESUM-verified member words | 303 |
 | Unverified pairs routed to `unverified` | 19 |
 
 ### Verified pairs by source overlap
 
 | Source coverage | Unique verified pairs |
 | --- | ---: |
-| Textbooks only | 111 |
+| Textbooks only | 107 |
 | МійКлас only | 33 |
 | Both textbooks and МійКлас | 29 |
-| **Total unique verified pairs** | **173** |
+| **Total unique verified pairs** | **169** |
 
 ### Verified pairs per source file
 
@@ -176,11 +175,11 @@ bytes are compared, so a line-ending change is `DRIFT`); exit 1 is `DRIFT`; exit
 | `10-klas-ukrmova-glazova-2018` | textbook | 20 |
 | `5-klas-ukrmova-golub-2022` | textbook | 19 |
 | `7-klas-ukrmova-avramenko-2024` | textbook | 18 |
-| `11-klas-ukrajinska-mova-glazova-2019` | textbook | 16 |
 | `5-klas-ukrmova-avramenko-2022` | textbook | 16 |
 | `6-klas-ukrmova-avramenko-2023` | textbook | 14 |
 | `5-klas-ukrmova-zabolotnyi-2023` | textbook | 12 |
 | `10-klas-ukrmova-karaman-2018` | textbook | 11 |
+| `11-klas-ukrajinska-mova-glazova-2019` | textbook | 9 |
 | `6-klas-ukrmova-litvinova-2023` | textbook | 8 |
 | `miyklas-10-klas-paronimy` | miyklas | 8 |
 | `11-klas-ukrajinska-mova-avramenko-2019` | textbook | 7 |
@@ -194,7 +193,8 @@ bytes are compared, so a line-ending change is `DRIFT`); exit 1 is `DRIFT`; exit
 
 Measured only against [`registry/atlas/a1-v1-inventory.json`](../../registry/atlas/a1-v1-inventory.json).
 The builder opens that file directly and stops with `A1InventoryError`, naming the file, when it
-is missing or unreadable, is not JSON, or has a row without a unique non-empty `id`, a valid
+is missing or unreadable, is not JSON, does not declare `schema_version`
+`atlas-a1-v1-inventory.v1`, or has a row without a unique non-empty `id`, a valid
 `mapping` or a string `key`. Slice allocation manifests are not read: their validation belongs
 to the canonical Atlas slice loaders, not to this registry.
 
@@ -217,13 +217,9 @@ The 13 matched A1 inventory lemmas are:
    concrete A1 nouns and verbs. Expanding A1–A2 coverage requires dedicated lexical sources
    (for example, the structured paronym entries in `data/movaua.db`, ZNO/NMT worksheets, or a
    cleared paronym dictionary).
-2. **Meanings present on 68 / 173 pairs:** Dictionary blocks (`miyklas-5-klas-slovnyk-paronimiv`,
-   `5-klas-ukrmova-zabolotnyi-2023`, `6-klas-ukrmova-avramenko-2023`,
-   `7-klas-ukrmova-avramenko-2024`) provide short meanings and examples for both members;
-   exercise lists (`10-klas-ukrajinska-mova-avramenko-2018`,
-   `11-klas-ukrajinska-mova-glazova-2019`) attest the pair without inline glosses, so the
-   word-card builder will fall back to each card's own СУМ-20 / ВТС definition for the remaining
-   105 pairs.
+2. **No registry glosses:** the registry carries pairs and verbatim source attestations only. A
+   word card shows each member's own СУМ-20 / ВТС definition; a source's definition is visible
+   only inside its `quoted_line`.
 3. **19 unverified pairs withheld from `pairs`:**
    - 1 multiword expression (`на протязі | протягом`, `multiword_not_in_vesum`).
    - 1 textbook PDF typo (`мимохіть | михохідь` in `10-klas-ukrmova-glazova-2018`, caught by
@@ -244,7 +240,7 @@ The 13 matched A1 inventory lemmas are:
    later chunk without repeating the stem `паронім*` (e.g. `uni-ukrmova-prof-haluzynska-2006_s0038`)
    are intentionally excluded by the single-query scope.
 5. **Extractor tool residuals (owner: the `scripts/atlas/paronyms` owner, `claude-opus-5-5`).**
-   Review of the predecessor PRs found four classes of held-out synthetic input that the
+   Review of the predecessor PRs found three remaining classes of held-out synthetic input that the
    extractor mishandles. None of them occurs in the pinned corpus, so none reaches a published
    record; the corpus pin above keeps the tool from running on any input where they could.
    They must be fixed before the extractor is certified on another corpus:
@@ -253,9 +249,7 @@ The 13 matched A1 inventory lemmas are:
    - instruction cues: a prohibition, or an instruction aimed at the next exercise, still
      activates a paronym cue (`extractor.py`, cue matching);
    - the СУМ-20 header-token test is too lax (`Знак.`) and too strict (`тільки одн.`,
-     `у́ється, недок.`) (`build.py`, `_is_sum20_header_token`);
-   - gloss names: a capitalised proper name (`Шевченка`) is lower-cased to an unattested key,
-     and a hyphenated place name (`Івано-Франківська`) is cut (`build.py`, `_gloss_words`).
+     `у́ється, недок.`) (`build.py`, `_is_sum20_header_token`).
 6. **Live `sources.db` indexing:** `registry/miyklas/paronyms-raw-v1.json` is not yet indexed in
    `data/sources.db`; indexing it into a new `sources.db` generation remains a separate
    primary-checkout driver action if full-text MCP search over МійКлас is wanted later.
