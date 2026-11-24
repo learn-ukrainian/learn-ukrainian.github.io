@@ -142,6 +142,17 @@ dev = [
     # (docs/runbooks/secret-scanning.md).
 ]
 # Narrow workflow environments (uv sync --only-group) limit each job to its tools.
+pyyaml = ["pyyaml==6.0.3"]
+# Local pronunciation uses the packed stress trie without Stanza.
+tts = [
+    { include-group = "pyyaml" },
+    "marisa-trie==1.4.1",
+    # Preserve the existing pronunciation pins shared with the main runtime.
+    "numpy==2.5.5",
+    "onnxruntime==1.32.0",
+    "piper-tts==1.3.0",
+    "ukrainian-word-stress==2.1.0",
+]
 # The lu-machinery release and its closure: jobs that run only its entry points.
 machinery = ["lu-machinery[api,postgres,pytest]==0.1.66"]
 # Python advisory audits use the release and its resolver-free pip-audit entry point.

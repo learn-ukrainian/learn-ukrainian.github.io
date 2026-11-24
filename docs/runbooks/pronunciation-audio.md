@@ -38,12 +38,22 @@ make pronunciation-audio PYTHON=/absolute/path/to/shared/project/python
 make pronunciation-audio PYTHON=/absolute/path/to/shared/project/python PRONUNCIATION_LIMIT=5
 ```
 
-`pronunciation-setup` runs `uv pip sync` with the specified interpreter and
-installs into the ignored `batch_state/tts-runtime` directory. It uses
-`requirements-tts.txt` and `requirements-tts-stress.txt` together. The sync
-requires matching hashes and accepts only wheels uploaded at least seven days
-earlier. The stress lock omits Stanza because the dictionary oracle looks up
-stress with marisa-trie.
+`pronunciation-setup` exports the `tts` group from `uv.lock` and installs it
+with the specified interpreter into the ignored `batch_state/tts-runtime`
+directory. The export prunes Stanza because the stress oracle reads the packed
+dictionary with marisa-trie. To install directly, use the same commands in Bash.
+
+```bash
+set -o pipefail
+uv export --locked --no-python-downloads --python /absolute/path/to/shared/project/python \
+  --only-group tts --prune stanza |
+  uv --no-config pip sync --python /absolute/path/to/shared/project/python --no-python-downloads \
+    --target batch_state/tts-runtime --reinstall --require-hashes --only-binary :all: --exclude-newer '7 days' -
+```
+
+The sync requires a matching hash and accepts only wheels uploaded at least
+seven days earlier.
+
 `pronunciation-audio` hydrates the current practice deck and downloads missing
 model files from a pinned revision, checking both SHA-256 values. Subsequent
 runs use the local model. For an offline run after hydration/download:

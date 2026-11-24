@@ -44,6 +44,7 @@ jobs:
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          with-uv: 'true'
 
       # This remains in the existing always-on workflow so a PR cannot add a
       # runner job without checking the complete PR workflow inventory.
@@ -53,15 +54,13 @@ jobs:
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
           LU_PRODUCT_ROOT: ${{ github.workspace }}
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          python -m venv .venv
-          .venv/bin/python -m pip install --disable-pip-version-check --require-hashes --only-binary :all: \
-            --uploaded-prior-to P7D -r .github/requirements-pyyaml.txt
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group pyyaml
           # The locked lu-machinery wheel alone; the lock's hash decides which bytes install.
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
           .venv/bin/python -m lu_machinery.ci.slot_inventory --check
 
       - name: Check workflow interpolation
