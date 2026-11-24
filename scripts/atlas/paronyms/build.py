@@ -185,10 +185,20 @@ def load_a1_lemma_sets(
     rows = inv["rows"]
     inventory_lemmas: set[str] = set()
     single_token_keys: set[str] = set()
+    inv_row_ids_ordered: list[str] = []
+    inv_row_id_set: set[str] = set()
     valid_resolutions = {"resolved", "unresolved", "ambiguous"}
     for row in rows:
         if not isinstance(row, dict):
             raise ValueError(f"Expected dict row in {a1_inventory_path.name}")
+        if "id" in row:
+            rid = row["id"]
+            if not isinstance(rid, str) or not rid.strip():
+                raise ValueError(f"Invalid non-string or empty row 'id' in {a1_inventory_path.name}")
+            if rid in inv_row_id_set:
+                raise ValueError(f"Duplicate row 'id' {rid!r} in {a1_inventory_path.name}")
+            inv_row_ids_ordered.append(rid)
+            inv_row_id_set.add(rid)
         if "mapping" not in row or not isinstance(row["mapping"], dict):
             raise ValueError(f"Missing or non-dict 'mapping' in {a1_inventory_path.name}")
         mapping = row["mapping"]
@@ -363,20 +373,127 @@ def load_a1_lemma_sets(
                     f"Inconsistent 'card_ids' count ({len(cid_set)}) vs "
                     f"'denominator.{denom_key}' ({expected_count}) in {slice_path.name}"
                 )
+            selected_rows_expected = denom.get("selected_rows")
+            if (
+                isinstance(selected_rows_expected, bool)
+                or not isinstance(selected_rows_expected, int)
+                or selected_rows_expected <= 0
+            ):
+                raise ValueError(f"Missing or invalid positive int 'denominator.selected_rows' in {slice_path.name}")
 
+            row_card_ids: dict[str, str] | None = None
             if slice_num >= 3 or "row_card_ids" in sdata:
-                row_card_ids = sdata.get("row_card_ids")
+                raw_rc = sdata.get("row_card_ids")
                 if (
-                    not isinstance(row_card_ids, dict)
-                    or not row_card_ids
+                    not isinstance(raw_rc, dict)
+                    or not raw_rc
                     or any(
                         not isinstance(k, str) or not k.strip() or not isinstance(v, str) or not v.strip()
-                        for k, v in row_card_ids.items()
+                        for k, v in raw_rc.items()
                     )
                 ):
                     raise ValueError(f"Missing or malformed 'row_card_ids' mapping in {slice_path.name}")
-                if set(row_card_ids.values()) != cid_set:
+                if set(raw_rc.values()) != cid_set:
                     raise ValueError(f"Inconsistent 'card_ids' vs 'row_card_ids' in {slice_path.name}")
+                if len(raw_rc) != selected_rows_expected:
+                    raise ValueError(
+                        f"Inconsistent 'row_card_ids' count ({len(raw_rc)}) vs "
+                        f"'denominator.selected_rows' ({selected_rows_expected}) in {slice_path.name}"
+                    )
+                row_card_ids = raw_rc
+
+            if slice_num >= 3:
+                sel = sdata.get("selection")
+                if not isinstance(sel, dict):
+                    raise ValueError(f"Missing or non-dict 'selection' in {slice_path.name}")
+                inputs_path = atlas_dir / f"a1-v1-slice{slice_num}-inputs.json"
+                if slice_num >= 4 and inputs_path.exists():
+                    pinned_inputs = _load_json_dict(inputs_path)
+                    if sel != pinned_inputs:
+                        raise ValueError(
+                            f"Inconsistent 'selection' vs {inputs_path.name} in {slice_path.name}"
+                        )
+                sel_row_key = "row_ids" if slice_num == 3 else "selected_row_ids"
+                sel_target_key = "targets" if slice_num == 3 else "selected_targets"
+                target_rows_key = "rows" if slice_num == 3 else "row_ids"
+
+                sel_row_ids = sel.get(sel_row_key)
+                if (
+                    not isinstance(sel_row_ids, list)
+                    or not sel_row_ids
+                    or any(not isinstance(r, str) or not r.strip() for r in sel_row_ids)
+                ):
+                    raise ValueError(
+                        f"Missing or malformed 'selection.{sel_row_key}' list in {slice_path.name}"
+                    )
+                sel_row_id_set = set(sel_row_ids)
+                if len(sel_row_id_set) != len(sel_row_ids):
+                    raise ValueError(f"Duplicate entries in 'selection.{sel_row_key}' in {slice_path.name}")
+                if len(sel_row_ids) != selected_rows_expected:
+                    raise ValueError(
+                        f"Inconsistent 'selection.{sel_row_key}' count ({len(sel_row_ids)}) vs "
+                        f"'denominator.selected_rows' ({selected_rows_expected}) in {slice_path.name}"
+                    )
+                if row_card_ids is None or set(row_card_ids.keys()) != sel_row_id_set:
+                    raise ValueError(
+                        f"Inconsistent 'row_card_ids' keys vs 'selection.{sel_row_key}' in {slice_path.name}"
+                    )
+                if inv_row_ids_ordered:
+                    inv_selected_rows = [rid for rid in inv_row_ids_ordered if rid in row_card_ids]
+                    if inv_selected_rows != sel_row_ids:
+                        raise ValueError(
+                            f"Inconsistent inventory row selection vs 'selection.{sel_row_key}' in {slice_path.name}"
+                        )
+
+                sel_targets = sel.get(sel_target_key)
+                if not isinstance(sel_targets, list) or len(sel_targets) != len(cid_set):
+                    raise ValueError(
+                        f"Missing or inconsistent 'selection.{sel_target_key}' list in {slice_path.name}"
+                    )
+                target_row_union: set[str] = set()
+                target_cid_union: set[str] = set()
+                for target in sel_targets:
+                    if not isinstance(target, dict):
+                        raise ValueError(
+                            f"Expected dict entry in 'selection.{sel_target_key}' of {slice_path.name}"
+                        )
+                    t_lemma = target.get("lemma")
+                    t_rows = target.get(target_rows_key)
+                    if (
+                        not isinstance(t_lemma, str)
+                        or not t_lemma.strip()
+                        or not normalize_token(t_lemma)
+                        or not isinstance(t_rows, list)
+                        or not t_rows
+                        or any(not isinstance(r, str) or not r.strip() for r in t_rows)
+                    ):
+                        raise ValueError(
+                            f"Malformed target in 'selection.{sel_target_key}' of {slice_path.name}"
+                        )
+                    if any(r not in row_card_ids for r in t_rows):
+                        raise ValueError(
+                            f"Unmapped target row in 'selection.{sel_target_key}' of {slice_path.name}"
+                        )
+                    t_cids = {row_card_ids[r] for r in t_rows}
+                    if len(t_cids) != 1:
+                        raise ValueError(
+                            f"Target rows map to multiple card_ids in {slice_path.name}"
+                        )
+                    t_cid = next(iter(t_cids))
+                    if t_cid not in card_to_spelling:
+                        raise ValueError(
+                            f"Allocated card_id {t_cid!r} in {slice_path.name} missing from identity registries"
+                        )
+                    if card_to_spelling[t_cid] != normalize_token(t_lemma):
+                        raise ValueError(
+                            f"Target lemma {t_lemma!r} disagrees with identity spelling for {t_cid!r} in {slice_path.name}"
+                        )
+                    target_row_union.update(t_rows)
+                    target_cid_union.add(t_cid)
+                if target_row_union != sel_row_id_set or target_cid_union != cid_set:
+                    raise ValueError(
+                        f"Inconsistent target coverage in 'selection.{sel_target_key}' of {slice_path.name}"
+                    )
 
             claims = sdata.get("claims")
             if not isinstance(claims, list) or not claims:

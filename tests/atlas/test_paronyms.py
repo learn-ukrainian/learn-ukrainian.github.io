@@ -416,18 +416,40 @@ def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> 
         ("адресант", "адресат")
     }
 
-    # Unnumbered generic choice exercise immediately after an inline definition must NOT inherit its local cue.
+    # Unnumbered generic choice exercise (indented next-line or same-line after `».`) after an
+    # inline definition must NOT inherit its local cue.
     unnumbered_choice_doc = _doc(
         "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
         "Пароніми — це слова, близькі за звучанням: ефектний — ефективний.\n"
-        "Виберіть із дужок потрібне слово.\n"
+        "   Виберіть із дужок потрібне слово.\n"
         "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
     )
     assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(unnumbered_choice_doc)} == {
         ("ефективний", "ефектний")
     }
 
-    # Bare dedicated heading later in a mixed-topic chunk STILL opens paronym lesson mode.
+    quoted_sameline_doc = _doc(
+        "Лексикологія\n"
+        "Пароніми — це слова типу «ефектний — ефективний». Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(quoted_sameline_doc)} == {
+        ("ефективний", "ефектний")
+    }
+
+    # Explicit § heading followed by a lowercase pair list and bare dedicated heading later in a
+    # mixed-topic chunk STILL open paronym lesson mode.
+    section_lower_pair_doc = _doc(
+        "§ 9. Пароніми\n"
+        "ефектний — ефективний.\n"
+        "1. Виберіть із дужок потрібне слово.\n"
+        "У нашій школі дуже (дружний, дружній) колектив.\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(section_lower_pair_doc)} == {
+        ("дружний", "дружній"),
+        ("ефективний", "ефектний"),
+    }
+
     bare_later_heading_doc = _doc(
         "Антонімами називають протилежні за значенням слова: чорний — білий.\n"
         "Пароніми\n"
@@ -448,6 +470,7 @@ def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> 
         ("missing_companion", "a1-v1-slice2.json"),
         ("missing_both_slice6", "a1-v1-slice6.json"),
         ("truncated_card_ids", "a1-v1-slice6.json"),
+        ("truncated_selected_rows", "a1-v1-slice6.json"),
         ("dropped_crosschecks", "a1-v1-slice6.json"),
         ("null_event", "a1-v1-slice6.json"),
         ("duplicate_card_ids", "a1-v1-slice6.json"),
@@ -465,18 +488,16 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
     identity_dir = atlas_dir / "identity"
     identity_dir.mkdir(parents=True)
 
+    inv_rows = [
+        {"id": "r-2-1", "key": "адреса", "mapping": {"resolution": "resolved", "lemma": "адреса"}},
+        {"id": "r-3-1", "key": "мова", "mapping": {"resolution": "resolved", "lemma": "мова"}},
+        {"id": "r-4-1", "key": "день", "mapping": {"resolution": "resolved", "lemma": "день"}},
+        {"id": "r-5-1", "key": "вода", "mapping": {"resolution": "resolved", "lemma": "вода"}},
+        {"id": "r-6-1", "key": "книга", "mapping": {"resolution": "resolved", "lemma": "книга"}},
+        {"id": "r-6-2", "key": "слово", "mapping": {"resolution": "resolved", "lemma": "слово"}},
+    ]
     inv_path = atlas_dir / "a1-v1-inventory.json"
-    inv_path.write_text(
-        json.dumps(
-            {
-                "rows": [
-                    {"key": w, "mapping": {"resolution": "resolved", "lemma": w}}
-                    for w in ("адреса", "книга", "слово", "мова", "день", "вода")
-                ]
-            }
-        ),
-        encoding="utf-8",
-    )
+    inv_path.write_text(json.dumps({"rows": inv_rows}), encoding="utf-8")
     reg_path = identity_dir / "registry.json"
     reg_path.write_text(
         json.dumps(
@@ -499,7 +520,7 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
             {
                 "schema_version": "atlas-a1-v1-slice2.v1",
                 "card_ids": ["card-2"],
-                "denominator": {"cards": 1},
+                "denominator": {"cards": 1, "selected_rows": 1},
                 "claims": [{"card_id": "card-2"}],
             }
         ),
@@ -513,7 +534,20 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
             for i, w in enumerate(words, start=1)
         ]
         cids = [e["card_id"] for e in entries]
+        row_ids = [f"r-{snum}-{i}" for i in range(1, len(words) + 1)]
         denom_key = "cards" if snum == 3 else "targets"
+        if snum == 3:
+            selection: dict[str, object] = {
+                "row_ids": row_ids,
+                "targets": [{"lemma": w, "rows": [r]} for w, r in zip(words, row_ids, strict=True)],
+            }
+        else:
+            selection = {
+                "selected_row_ids": row_ids,
+                "selected_targets": [
+                    {"lemma": w, "row_ids": [r]} for w, r in zip(words, row_ids, strict=True)
+                ],
+            }
         (identity_dir / f"a1-v1-slice{snum}.json").write_text(
             json.dumps(
                 {
@@ -529,8 +563,9 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
                 {
                     "schema_version": f"atlas-a1-slice{snum}-manifest.v1",
                     "card_ids": cids,
-                    "row_card_ids": {f"r-{snum}-{i}": cid for i, cid in enumerate(cids, start=1)},
-                    "denominator": {denom_key: len(cids)},
+                    "row_card_ids": dict(zip(row_ids, cids, strict=True)),
+                    "denominator": {denom_key: len(cids), "selected_rows": len(row_ids)},
+                    "selection": selection,
                     "claims": [{"card_id": cid} for cid in cids],
                 }
             ),
@@ -558,6 +593,25 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
         comp6_path.unlink()
     elif defect_case == "truncated_card_ids":
         sel6_path.write_text(json.dumps({**sel6_data, "card_ids": ["card-6-1"]}), encoding="utf-8")
+    elif defect_case == "truncated_selected_rows":
+        # Removes one card from card_ids, row_card_ids, claims, companion, and decrements targets
+        # while pinned selection and selected_rows still declare both rows.
+        comp6_path.write_text(
+            json.dumps({**comp6_data, "entries": comp6_data["entries"][:1]}),
+            encoding="utf-8",
+        )
+        sel6_path.write_text(
+            json.dumps(
+                {
+                    **sel6_data,
+                    "card_ids": ["card-6-1"],
+                    "row_card_ids": {"r-6-1": "card-6-1"},
+                    "denominator": {"targets": 1, "selected_rows": 2},
+                    "claims": [{"card_id": "card-6-1"}],
+                }
+            ),
+            encoding="utf-8",
+        )
     elif defect_case == "dropped_crosschecks":
         comp6_path.write_text(
             json.dumps({**comp6_data, "entries": comp6_data["entries"][:1]}),

@@ -826,10 +826,9 @@ _QUESTION_PAIR_RE = re.compile(
     rf"(?:^|\n)\s*({WORD_CORE})\?\s*\n?\s*({WORD_CORE})\?(?=\s*(?:\n|$))"
 )
 
-_PARONYM_SECTION_HEADER_RE = re.compile(
+_EXPLICIT_PARONYM_SECTION_HEADER_RE = re.compile(
     r"^\s*(?:"
-    r"(?:§\s*\d+\.?|\d+\.)\s*пароніми(?:\.\s*запобігання(?:\s+помилкам(?:\s+у\s+вживанні\s+паронімів)?)?)?\.?|"
-    r"пароніми\.?|"
+    r"§\s*\d+\.?\s*пароніми(?:\.\s*запобігання(?:\s+помилкам(?:\s+у\s+вживанні\s+паронімів)?)?)?\.?|"
     r"пароніми\.\s*запобігання(?:\s+помилкам(?:\s+у\s+вживанні\s+паронімів)?)?(?:\s*§\s*\d+\.?)?\.?|"
     r"\d+(?:\.\d+)+\.?\s*явище\s+паронімії(?:\s+в\s+українській\s+мові)?\.?|"
     r"(?:словнич[оа]к|короткий\s+словник)\s+паронімів\.?"
@@ -837,15 +836,24 @@ _PARONYM_SECTION_HEADER_RE = re.compile(
     re.IGNORECASE,
 )
 
+_BARE_OR_NUMBERED_PARONYM_HEADER_RE = re.compile(
+    r"^\s*(?:\d+\.\s*)?пароніми\.?\s*$",
+    re.IGNORECASE,
+)
+
 # A line starting with a dash, opening parenthesis, colon/comma/semicolon, or lowercase
-# Ukrainian word continues a prose/definition sentence rather than following a heading.
+# Ukrainian word continues a prose/definition sentence rather than following a bare heading.
 _DEFINITION_CONTINUATION_RE = re.compile(rf"^\s*(?:[{DASH_CHARS}\-:(,;]|[{UK_LOWER}])")
 
 
 def _is_dedicated_paronym_heading(seg: str, next_seg: str = "") -> bool:
     """True only when ``seg`` starts with a standalone dedicated heading (not a wrapped definition)."""
     lines = [ln.strip() for ln in seg.splitlines() if ln.strip()]
-    if not lines or not _PARONYM_SECTION_HEADER_RE.match(lines[0]):
+    if not lines:
+        return False
+    if _EXPLICIT_PARONYM_SECTION_HEADER_RE.match(lines[0]):
+        return True
+    if not _BARE_OR_NUMBERED_PARONYM_HEADER_RE.match(lines[0]):
         return False
     next_line = ""
     if len(lines) > 1:
@@ -865,7 +873,9 @@ def _has_dedicated_paronym_heading(clean_text: str, doc: SourceDocument) -> bool
     if _PASSING_MENTION_RE.search("\n".join(non_empty[:4])):
         return False
     for idx, line in enumerate(non_empty[:4]):
-        if _PARONYM_SECTION_HEADER_RE.match(line):
+        if _EXPLICIT_PARONYM_SECTION_HEADER_RE.match(line):
+            return True
+        if _BARE_OR_NUMBERED_PARONYM_HEADER_RE.match(line):
             next_line = non_empty[idx + 1] if idx + 1 < len(non_empty) else ""
             if not (next_line and _DEFINITION_CONTINUATION_RE.match(next_line)):
                 return True
@@ -890,7 +900,7 @@ def _split_paronym_segments(
     has_doc_paronym_heading = _has_dedicated_paronym_heading(clean_text, doc)
 
     boundary_re = re.compile(
-        r"(?=\n(?:§\s*\d+|(?-i:І{1,3}\s+[А-ЯІЇЄҐ])|Вправа\s+\d+|Зауважте!|Зверни\s+увагу!|"
+        r"(?=\n[ \t]*(?:§\s*\d+|(?-i:І{1,3}\s+[А-ЯІЇЄҐ])|Вправа\s+\d+|Зауважте!|Зверни\s+увагу!|"
         r"Культура\s+(?:слова|мовлення)|Рекомендована\s+література|Перевірте\s+себе|"
         r"Домашнє\s+завдання|Практикум\b|ПОРУШЕННЯ\s+ЛЕКСИЧНИХ|У\s+словнику\s+|"
         r"Антонімами\s+називають|Антоніми\s+|Синоніми\s+|Синонімічне\s+значення|"
@@ -918,7 +928,10 @@ def _split_paronym_segments(
         r"Іншим\s+різновидом\s+парадигматичних|"
         r"8[1-9]\.\s|23[5-9]\s|29[4-9]\.\s|Чи\s+є\s+слова\b|З['’ʼ]ясуйте\s+рід\s+паронімів\b|"
         r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари))|"
-        rf"(?<=(?-i:[{UK_LOWER})])\.\s)(?=(?-i:(?:Перепишіть|Спишіть|Запишіть|Виберіть|Розкрийте|"
+        rf"(?<=(?-i:[{UK_LOWER})»\"'’ʼ\]\.])[.!?]\s)(?=[ \t]*(?-i:(?:Перепишіть|Спишіть|Запишіть|Виберіть|Розкрийте|"
+        r"Вибираючи|Добираючи|Вибравши|Розкривши)\b"
+        r"[^\n.]{0,120}(?:дуж|потрібне\s+слово|потрібні\s+слова|доцільне)))|"
+        r"(?<=[.!?][»\"'’ʼ)]\s)(?=[ \t]*(?-i:(?:Перепишіть|Спишіть|Запишіть|Виберіть|Розкрийте|"
         r"Вибираючи|Добираючи|Вибравши|Розкривши)\b"
         r"[^\n.]{0,120}(?:дуж|потрібне\s+слово|потрібні\s+слова|доцільне)))",
         re.IGNORECASE,
