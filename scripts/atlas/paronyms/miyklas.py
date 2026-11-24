@@ -7,6 +7,7 @@ plain text suitable for the shared paronym extractor.
 
 from __future__ import annotations
 
+import decimal
 import hashlib
 import json
 import math
@@ -90,6 +91,13 @@ DEFAULT_MIYKLAS_PAGES: tuple[dict[str, str], ...] = (
 _DASH_RE = re.compile(r"\s+[–—−]\s+|\s+[–—−](?=\S)|(?<=\S)[–—−]\s+")
 _SINGLE_LETTER_RE = re.compile(r"^[А-ЩЬЮЯЄІЇҐ]$")
 _SHA256_HEX_RE = re.compile(r"^[0-9a-f]{64}$")
+# RFC 7493 §2.1: I-JSON text contains no noncharacter (U+FDD0..U+FDEF and the last two code
+# points of every plane).
+_NONCHARACTER_RE = re.compile(
+    "[\ufdd0-\ufdef" + "".join(chr(plane | 0xFFFE) + chr(plane | 0xFFFF) for plane in range(0, 0x110000, 0x10000)) + "]"
+)
+# RFC 7493 §2.2: an integer is exact and interoperable only within ±(2**53 - 1).
+_I_JSON_MAX_INT = 2**53 - 1
 
 
 class MiyKlasFetchError(RuntimeError):
@@ -396,11 +404,17 @@ def validate_miyklas_page_dict(page: Any, *, verify_text_digest: bool = True) ->
 def loads_i_json(text: str) -> Any:
     """Parse ``text`` as I-JSON (RFC 7493), or raise ``ValueError``.
 
-    I-JSON is RFC 8259 JSON with unique member names and only valid Unicode strings. A duplicate
-    name (the parser would silently keep the last value), a ``NaN`` or ``Infinity`` constant, a
-    number beyond the double range (``1e400`` would become infinity), and a string that is not
-    Unicode text (an escape such as ``\\ud800`` decodes to a lone surrogate) are all refused,
-    wherever they occur in the document.
+    The rules are RFC 7493 section 2, applied wherever the value occurs in the document:
+
+    * 2.1: UTF-8 (the callers decode strictly), and no surrogate (an escape such as ``\\ud800``)
+      or noncharacter (U+FDD0..U+FDEF and the last two code points of every plane) in a member
+      name or string;
+    * 2.2: no number beyond a double's magnitude (``1e400``) or precision (``1e-400``,
+      ``3.141592653589793238462643383279``), and no integer outside ±(2**53 - 1); the ``NaN`` and
+      ``Infinity`` constants Python's parser accepts are not RFC 8259 JSON and refuse too;
+    * 2.3: no duplicate member name (the parser would silently keep the last value).
+
+    Section 2.4 (top-level kind) is a protocol recommendation; callers check the types they read.
     """
 
     def _unique_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -414,14 +428,38 @@ def loads_i_json(text: str) -> Any:
     def _no_constant(name: str) -> Any:
         raise ValueError(f"{name} is not a JSON value")
 
-    def _finite_float(literal: str) -> float:
+    def _double(literal: str) -> float:
         number = float(literal)
         if not math.isfinite(number):
             raise ValueError(f"number {literal[:40]} is beyond the double range")
+        try:
+            exact = decimal.Decimal(literal) == decimal.Decimal(repr(number))
+        except decimal.InvalidOperation:
+            # The decimal module refuses an exponent beyond about ±10**18; at that scale only a
+            # zero significand (``0e-99999999999999999999``) still names a double exactly.
+            exact = not re.search(r"[1-9]", re.split(r"[eE]", literal)[0])
+        if not exact:
+            raise ValueError(f"number {literal[:40]} expresses more precision than a double")
         return number
 
-    value = json.loads(text, object_pairs_hook=_unique_members, parse_constant=_no_constant, parse_float=_finite_float)
-    json.dumps(value, ensure_ascii=False).encode("utf-8")  # UnicodeEncodeError on a lone surrogate
+    def _exact_int(literal: str) -> int:
+        number = int(literal)
+        if abs(number) > _I_JSON_MAX_INT:
+            raise ValueError(f"integer {literal[:40]} is outside the exact range ±(2**53 - 1)")
+        return number
+
+    value = json.loads(
+        text,
+        object_pairs_hook=_unique_members,
+        parse_constant=_no_constant,
+        parse_float=_double,
+        parse_int=_exact_int,
+    )
+    canonical = json.dumps(value, ensure_ascii=False)
+    canonical.encode("utf-8")  # UnicodeEncodeError on a lone surrogate
+    found = _NONCHARACTER_RE.search(canonical)
+    if found:
+        raise ValueError(f"noncharacter U+{ord(found.group()):04X} is not I-JSON text")
     return value
 
 

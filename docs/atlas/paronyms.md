@@ -109,9 +109,11 @@ refuses with `CorpusFingerprintError`. Every step from reading the first input t
 comparison (the pin gate, the rebuild and, under `--check`, the byte comparison) runs inside one
 fail-closed boundary: any failure there, whatever its type, is also a refusal. The three JSON
 inputs (the registry at `--output`, the МійКлас snapshot and the A1 inventory) are parsed in full
-as I-JSON (RFC 7493), so a duplicate member name, a `NaN` or `Infinity` constant, a number beyond the double range
-(`1e400`), or a string that is not valid Unicode (an escape such as `\ud800`) anywhere in the file refuses, even where the
-build would not read the value. The boundary also covers an unreadable or non-UTF-8 file, wrong
+as I-JSON (RFC 7493 section 2), so any of these anywhere in the file refuses, even where the
+build would not read the value: a duplicate member name; a `NaN` or `Infinity` constant; a number
+beyond a double's magnitude (`1e400`) or precision (`1e-400`, `3.141592653589793238462643383279`);
+an integer outside ±(2^53 − 1); a surrogate (an escape such as `\ud800`) or a noncharacter (such
+as U+FDD0) in a string or member name. The boundary also covers an unreadable or non-UTF-8 file, wrong
 JSON types, missing keys, nesting deep enough to exhaust the stack, an oversize value, a МійКлас
 page whose text no longer matches its `text_sha256`, a broken A1 inventory and an unreadable
 `sources.db`. A refusal prints `REFUSED:` and the reason: a
