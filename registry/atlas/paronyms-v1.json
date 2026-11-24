@@ -3,7 +3,7 @@
   "sources_corpus": {
     "textbooks_fts_query": "паронім*",
     "textbooks_chunks_scanned": 117,
-    "textbooks_chunks_with_pairs": 45,
+    "textbooks_chunks_with_pairs": 43,
     "textbooks_source_files_with_pairs": 14,
     "miyklas_included": true,
     "miyklas_pages": [
@@ -56,42 +56,42 @@
     "corpus_recipe_note": "MiyKlas raw snapshot stored with canonical URL, UTC fetch timestamp, HTTP status, and raw HTML + extracted text SHA-256 digests; live data/sources.db is left untouched because docs/corpus-inventory.md requires a mounted bulk corpus root and primary-checkout generation publication to add literary sources."
   },
   "counts": {
-    "verified_pairs": 186,
-    "unverified_pairs": 10,
-    "total_attestations_verified": 324,
-    "total_attestations_unverified": 11,
-    "distinct_verified_members": 331,
+    "verified_pairs": 173,
+    "unverified_pairs": 19,
+    "total_attestations_verified": 298,
+    "total_attestations_unverified": 28,
+    "distinct_verified_members": 311,
     "verified_pairs_by_source_type": {
-      "textbook": 120,
-      "miyklas": 36,
-      "both": 30
+      "textbook": 111,
+      "miyklas": 33,
+      "both": 29
     },
     "verified_pairs_by_source_file": {
-      "10-klas-ukrajinska-mova-avramenko-2018": 42,
+      "10-klas-ukrajinska-mova-avramenko-2018": 38,
       "10-klas-ukrmova-glazova-2018": 20,
       "10-klas-ukrmova-karaman-2018": 11,
-      "11-klas-ukrajinska-mova-avramenko-2019": 8,
-      "11-klas-ukrajinska-mova-glazova-2019": 22,
-      "5-klas-ukrmova-avramenko-2022": 19,
+      "11-klas-ukrajinska-mova-avramenko-2019": 7,
+      "11-klas-ukrajinska-mova-glazova-2019": 16,
+      "5-klas-ukrmova-avramenko-2022": 16,
       "5-klas-ukrmova-golub-2022": 19,
-      "5-klas-ukrmova-zabolotnyi-2023": 13,
+      "5-klas-ukrmova-zabolotnyi-2023": 12,
       "6-klas-ukrmova-avramenko-2023": 14,
-      "6-klas-ukrmova-litvinova-2023": 9,
-      "7-klas-ukrmova-avramenko-2024": 19,
+      "6-klas-ukrmova-litvinova-2023": 8,
+      "7-klas-ukrmova-avramenko-2024": 18,
       "8-klas-ukrmova-avramenko-2025": 1,
       "miyklas-10-klas-paronimy": 8,
-      "miyklas-11-klas-paronimy": 6,
+      "miyklas-11-klas-paronimy": 5,
       "miyklas-5-klas-paronimy": 6,
-      "miyklas-5-klas-slovnyk-paronimiv": 46,
-      "miyklas-6-klas-paronimy": 7,
+      "miyklas-5-klas-slovnyk-paronimiv": 44,
+      "miyklas-6-klas-paronimy": 6,
       "uni-ukrmova-lexicology-filon-khomik-2010": 24,
-      "uni-ukrmova-sulm-attestation-vspu-2021": 4
+      "uni-ukrmova-sulm-attestation-vspu-2021": 3
     },
-    "verified_pairs_with_meaning": 74,
+    "verified_pairs_with_meaning": 68,
     "a1_inventory_lemmas_total": 714,
     "a1_inventory_lemmas_with_paronym": 13,
     "a1_single_token_keys_total": 1112,
-    "a1_single_token_keys_with_paronym": 15
+    "a1_single_token_keys_with_paronym": 14
   },
   "a1_coverage": {
     "inventory_path": "registry/atlas/a1-v1-inventory.json",
@@ -265,7 +265,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 2,
+      "source_count": 1,
       "source_types": [
         "textbook"
       ],
@@ -281,18 +281,6 @@
             "абонент"
           ],
           "quoted_line": "абонемент (документ, що дає право на користування) — абонент (той, хто користується абонементом)"
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "exercise_choice_pair",
-          "attested_forms": [
-            "абонемент",
-            "абонент"
-          ],
-          "quoted_line": "Для відвідування лекцій у планетарії потрібно придбати (абонент, абонемент)."
         }
       ]
     },
@@ -1317,12 +1305,6 @@
               "source_file": "5-klas-ukrmova-avramenko-2022",
               "chunk_id": "5-klas-ukrmova-avramenko-2022_s0055",
               "locator": "Сторінка 54"
-            },
-            {
-              "text": "оспівний у народній творчості герой з надзвичайною силою і відвагою",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -1696,7 +1678,7 @@
           ],
           "examples": [
             {
-              "text": "«Чумак», «Світоч», «Mercedes-Benz», «Zara» та ін",
+              "text": "«Чумак», «Світоч», «Mercedes-Benz», «Zara» та ін.",
               "source_file": "8-klas-ukrmova-avramenko-2025",
               "chunk_id": "8-klas-ukrmova-avramenko-2025_s0100",
               "locator": "Сторінка 79"
@@ -1722,7 +1704,7 @@
           ],
           "examples": [
             {
-              "text": "засукані штанини джинсів, шуба без рукавів та ін",
+              "text": "засукані штанини джинсів, шуба без рукавів та ін.",
               "source_file": "8-klas-ukrmova-avramenko-2025",
               "chunk_id": "8-klas-ukrmova-avramenko-2025_s0100",
               "locator": "Сторінка 79"
@@ -1747,83 +1729,6 @@
             "Тренд"
           ],
           "quoted_line": "Бренд і тренд — пароніми, їх розрізняємо за значенням. Бренд — торгова марка: «Чумак», «Світоч», «Mercedes-Benz», «Zara» та ін. Тренд — це одяг або стиль, що нині в моді; модна тенденція сезону: засукані штани- ни джинсів, шуба без рукавів та ін."
-        }
-      ]
-    },
-    {
-      "pair_id": "будівельник|будівник",
-      "members": [
-        {
-          "word": "будівельник",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "будівельник"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "людина, яка має будівельну спеціальність",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ],
-          "examples": [
-            {
-              "text": "досвідчений будівельник",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ]
-        },
-        {
-          "word": "будівник",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "будівник"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "узагальнена назва для людини, яка бере участь у спорудженні чогось; творець",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ],
-          "examples": [
-            {
-              "text": "будівник нового життя",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ]
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "miyklas"
-      ],
-      "sources": [
-        {
-          "source_type": "miyklas",
-          "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-          "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038",
-          "pattern": "dictionary_block",
-          "attested_forms": [
-            "Будівельник",
-            "Будівник"
-          ],
-          "quoted_line": "Будівельник – людина, яка має будівельну спеціальність (досвідчений будівельник). Будівник – узагальнена назва для людини, яка бере участь у спорудженні чогось; творець (будівник нового життя). Будівничий – архітектор; засновник, творець.",
-          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
         }
       ]
     },
@@ -2094,10 +1999,10 @@
       ]
     },
     {
-      "pair_id": "в'яз|м'яз",
+      "pair_id": "в'язи|м'язи",
       "members": [
         {
-          "word": "в'яз",
+          "word": "в'язи",
           "vesum_verified": true,
           "vesum_lemmas": [
             "в'яз"
@@ -2109,7 +2014,7 @@
           "examples": []
         },
         {
-          "word": "м'яз",
+          "word": "м'язи",
           "vesum_verified": true,
           "vesum_lemmas": [
             "м'яз"
@@ -2121,7 +2026,7 @@
           "examples": []
         }
       ],
-      "surface_form_pair": false,
+      "surface_form_pair": true,
       "source_count": 1,
       "source_types": [
         "textbook"
@@ -2632,54 +2537,6 @@
       ]
     },
     {
-      "pair_id": "вирізнятися|відрізнятися",
-      "members": [
-        {
-          "word": "вирізнятися",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "вирізнятися"
-          ],
-          "vesum_pos": [
-            "verb"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "відрізнятися",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "відрізнятися"
-          ],
-          "vesum_pos": [
-            "verb"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "вирізнятися",
-            "відрізнятися"
-          ],
-          "quoted_line": "Складіть висловлення (усно), обігравши такі пари слів: фантазія — фантастика, відрізнятися — вирізнятися, уява — уявлення."
-        }
-      ]
-    },
-    {
       "pair_id": "вистава|виставка",
       "members": [
         {
@@ -2764,68 +2621,6 @@
             "виставка"
           ],
           "quoted_line": "1) вистава – виставка (спектакль) (показ картин, книжок, квітів тощо)"
-        }
-      ]
-    },
-    {
-      "pair_id": "вклад|уклад",
-      "members": [
-        {
-          "word": "вклад",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "вклад"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "внесок",
-              "source_file": "5-klas-ukrmova-avramenko-2022",
-              "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-              "locator": "Сторінка 118"
-            }
-          ],
-          "examples": []
-        },
-        {
-          "word": "уклад",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "уклад"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "спосіб життя",
-              "source_file": "5-klas-ukrmova-avramenko-2022",
-              "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-              "locator": "Сторінка 118"
-            }
-          ],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-avramenko-2022",
-          "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-          "locator": "Сторінка 118",
-          "pattern": "parenthesized_gloss_pair",
-          "attested_forms": [
-            "вклад",
-            "уклад"
-          ],
-          "quoted_line": "уклад (спосіб життя) — вклад (внесок)"
         }
       ]
     },
@@ -3209,68 +3004,6 @@
             "Військовий"
           ],
           "quoted_line": "Військовий // воєнний Військовий – який стосується війська. Військовий лікар, військова техніка, форма. Воєнний – який стосується війни. Воєнний час."
-        }
-      ]
-    },
-    {
-      "pair_id": "вступ|уступ",
-      "members": [
-        {
-          "word": "вступ",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "вступ"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "початкова частина книжки, статті",
-              "source_file": "5-klas-ukrmova-avramenko-2022",
-              "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-              "locator": "Сторінка 118"
-            }
-          ],
-          "examples": []
-        },
-        {
-          "word": "уступ",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "уступ"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "виїмка",
-              "source_file": "5-klas-ukrmova-avramenko-2022",
-              "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-              "locator": "Сторінка 118"
-            }
-          ],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-avramenko-2022",
-          "chunk_id": "5-klas-ukrmova-avramenko-2022_s0119",
-          "locator": "Сторінка 118",
-          "pattern": "parenthesized_gloss_pair",
-          "attested_forms": [
-            "вступ",
-            "уступ"
-          ],
-          "quoted_line": "уступ (виїмка) — вступ (початкова частина книжки, статті)"
         }
       ]
     },
@@ -3715,55 +3448,6 @@
             "гарнітура"
           ],
           "quoted_line": "гарнітур, гарнітура"
-        }
-      ]
-    },
-    {
-      "pair_id": "геройський|героїчний",
-      "members": [
-        {
-          "word": "геройський",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "геройський"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "героїчний",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "героїчний"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "miyklas"
-      ],
-      "sources": [
-        {
-          "source_type": "miyklas",
-          "source_file": "miyklas-11-klas-paronimy",
-          "chunk_id": "miyklas-11-klas-paronimy",
-          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/stilistichna-norma-392237/stilistichne-vikoristannia-sinonimiv-antonimiv-i-paronimiv-393241/re-3f5815a8-529f-44ae-8aa6-372a9b5ecc9d",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "геройський",
-            "героїчний"
-          ],
-          "quoted_line": "Приклад: Громадський — громадянський, годівниця — годувальниця, геройський — героїчний.",
-          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/stilistichna-norma-392237/stilistichne-vikoristannia-sinonimiv-antonimiv-i-paronimiv-393241/re-3f5815a8-529f-44ae-8aa6-372a9b5ecc9d"
         }
       ]
     },
@@ -4569,7 +4253,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 4,
+      "source_count": 3,
       "source_types": [
         "textbook"
       ],
@@ -4597,18 +4281,6 @@
             "Дипломат"
           ],
           "quoted_line": "Дипломат — дипломант, крикливий — кричущий, плоский — плаский, слимак — слизняк, кристал — кришталь, регрес — прогрес, ніготь — кіготь, уява — уявлення, еміграція — іммігра- ція, степінь — ступінь, капля — крапля, густо — пусто, рипіти — скрипіти, експорт — імпорт, доля — воля, уподібнення — розподібнення, радити — раяти, імпресіонізм — експресіонізм, привабливий — принадливий."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "exercise_choice_pair",
-          "attested_forms": [
-            "дипломантів",
-            "дипломатів"
-          ],
-          "quoted_line": "Після вручення нагород журналісти оточили пе- реможців і (дипломантів, дипломатів)."
         },
         {
           "source_type": "textbook",
@@ -5114,12 +4786,6 @@
               "source_file": "5-klas-ukrmova-zabolotnyi-2023",
               "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
               "locator": "Сторінка 239"
-            },
-            {
-              "text": "доброзичливий, дружелюбний",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -5335,12 +5001,6 @@
               "source_file": "11-klas-ukrajinska-mova-glazova-2019",
               "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0219",
               "locator": "Сторінка 160"
-            },
-            {
-              "text": "ощадливий, який бережливо витрачає гроші, сили; оснований на економії",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
             }
           ],
           "examples": [
@@ -5853,12 +5513,6 @@
           ],
           "meanings": [
             {
-              "text": "холонучи, застигаючи, стати твердим, перетворитися",
-              "source_file": "6-klas-ukrmova-avramenko-2023",
-              "chunk_id": "6-klas-ukrmova-avramenko-2023_s0041",
-              "locator": "Сторінка 42"
-            },
-            {
               "text": "стати твердим від холоду, перетворитися на кригу",
               "source_file": "7-klas-ukrmova-avramenko-2024",
               "chunk_id": "7-klas-ukrmova-avramenko-2024_s0111",
@@ -6214,7 +5868,7 @@
           ],
           "meanings": [
             {
-              "text": "риб’яча ікра,",
+              "text": "риб’яча ікра",
               "source_file": "6-klas-ukrmova-avramenko-2023",
               "chunk_id": "6-klas-ukrmova-avramenko-2023_s0058",
               "locator": "Сторінка 57"
@@ -6305,7 +5959,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 7,
+      "source_count": 6,
       "source_types": [
         "miyklas",
         "textbook"
@@ -6347,18 +6001,6 @@
             "компанія"
           ],
           "quoted_line": "Звукова близькість паронімів іноді призводить до їхнього помилкового вживання, найчастіше безпідставно використовують одне замість іншого слова з таких пар: музич- ний — музикальний, місто — місце, індієць — індіанець, ефектний — ефективний, компа- нія — кампанія, особовий — особистий."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "exercise_choice_pair",
-          "attested_forms": [
-            "кампанія",
-            "компанія"
-          ],
-          "quoted_line": "Вступна (компанія, кампанія) у вишах розпочнеться в липні."
         },
         {
           "source_type": "textbook",
@@ -6802,54 +6444,6 @@
           ],
           "quoted_line": "Контингент – сукупність людей, що становить якусь однорідність. Континент – материк.",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-        }
-      ]
-    },
-    {
-      "pair_id": "копіткий|кропіткий",
-      "members": [
-        {
-          "word": "копіткий",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "копіткий"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "кропіткий",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "кропіткий"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-avramenko-2022",
-          "chunk_id": "5-klas-ukrmova-avramenko-2022_s0053",
-          "locator": "Сторінка 52",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "копіткий",
-            "кропіткий"
-          ],
-          "quoted_line": "Промінь — пломінь, кропіткий — клопіткий — копіткий, емігрант — іммігрант, прогрес — регрес."
         }
       ]
     },
@@ -7442,68 +7036,6 @@
       ]
     },
     {
-      "pair_id": "листопад|падолист",
-      "members": [
-        {
-          "word": "листопад",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "листопад"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "назва місяця; процес опадання листя",
-              "source_file": "6-klas-ukrmova-litvinova-2023",
-              "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
-              "locator": "Сторінка 73"
-            }
-          ],
-          "examples": []
-        },
-        {
-          "word": "падолист",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "падолист"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [
-            {
-              "text": "процес опадання листя",
-              "source_file": "6-klas-ukrmova-litvinova-2023",
-              "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
-              "locator": "Сторінка 73"
-            }
-          ],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "6-klas-ukrmova-litvinova-2023",
-          "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
-          "locator": "Сторінка 73",
-          "pattern": "dictionary_block",
-          "attested_forms": [
-            "Листопад",
-            "Падолист"
-          ],
-          "quoted_line": "Листопад — назва місяця; процес опадання листя. Падолист — процес опадання листя."
-        }
-      ]
-    },
-    {
       "pair_id": "людний|людяний",
       "members": [
         {
@@ -7902,180 +7434,6 @@
             "мимохіть"
           ],
           "quoted_line": "мимохідь, мимо- хіть"
-        }
-      ]
-    },
-    {
-      "pair_id": "музикальний|музичний",
-      "members": [
-        {
-          "word": "музикальний",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "музикальний"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [
-            {
-              "text": "обдарований здатністю тонко сприймати музику, виконувати музичні твори; мелодійний",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
-            }
-          ],
-          "examples": [
-            {
-              "text": "Музикальний слух",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
-            }
-          ]
-        },
-        {
-          "word": "музичний",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "музичний"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [
-            {
-              "text": "який стосується музики як виду мистецтва",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
-            }
-          ],
-          "examples": [
-            {
-              "text": "Музична школа, музичний фільм",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
-            }
-          ]
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 9,
-      "source_types": [
-        "miyklas",
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "miyklas",
-          "source_file": "miyklas-6-klas-paronimy",
-          "chunk_id": "miyklas-6-klas-paronimy",
-          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/leksika-40149/paronimi-448803/re-8f6c25c7-b816-4a41-9f08-fed96b9fa79b",
-          "pattern": "conjunction_pair",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "вживаємо слово музичний, а коли — музикальний",
-          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/leksika-40149/paronimi-448803/re-8f6c25c7-b816-4a41-9f08-fed96b9fa79b"
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
-          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
-          "locator": "Сторінка 32",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "Адресат — адресант, дипломат — дипломант, мимохідь — мимохіть, танк — танкер, уява — уявлення, музичний — музикальний, особистий — особовий, жилий — житловий, громад- ський — громадянський, змерзнути — замерзнути."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
-          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
-          "locator": "Сторінка 32",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "Пароніми (пари слів) — близькі за звучанням слова: музичний — музикальний, уява — уявлення."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-avramenko-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-avramenko-2019_s0213",
-          "locator": "Сторінка 154",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "Звукова близькість паронімів іноді призводить до їхнього помилкового вживання, найчастіше безпідставно використовують одне замість іншого слова з таких пар: музич- ний — музикальний, місто — місце, індієць — індіанець, ефектний — ефективний, компа- нія — кампанія, особовий — особистий."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0219",
-          "locator": "Сторінка 160",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "Пароніми можуть бути: синонімами: капля — крапля, тяжкий — важкий; антонімами: емігрант — іммігрант, прогрес — регрес; однокореневими словами: музичний — музикальний, організаційний — ор- ганізований; близькими за звуковим складом словами: ефект — афект, чисельний — численний."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0028",
-          "locator": "Сторінка 38",
-          "pattern": "exercise_choice_pair",
-          "attested_forms": [
-            "музикальні",
-            "музичні"
-          ],
-          "quoted_line": "Захар потис довгі, трохи ніби пере­ сохлі (музичні, музикальні) пальці піаніста (І."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0029",
-          "locator": "Сторінка 40",
-          "pattern": "slash_pair_list",
-          "attested_forms": [
-            "музикальний",
-            "музичний"
-          ],
-          "quoted_line": "музичний // музикальний"
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-          "locator": "Сторінка 239",
-          "pattern": "slash_dictionary",
-          "attested_forms": [
-            "музикальний",
-            "Музичний"
-          ],
-          "quoted_line": "Музичний // музикальний Музикальний – обдарований здатністю тонко сприймати музику, ви- конувати музичні твори; мелодійний. Музикальний слух. Музичний – який стосується музики як виду мистецтва. Музична школа, музичний фільм."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "7-klas-ukrmova-avramenko-2024",
-          "chunk_id": "7-klas-ukrmova-avramenko-2024_s0053",
-          "locator": "Сторінка 47",
-          "pattern": "exercise_choice_pair",
-          "attested_forms": [
-            "музикальній",
-            "музичній"
-          ],
-          "quoted_line": "У (музичній, музикальній) школі навчаються від чотирьох до семи ро- ків."
         }
       ]
     },
@@ -8891,7 +8249,7 @@
           ],
           "meanings": [
             {
-              "text": "здатний горіти,",
+              "text": "здатний горіти",
               "source_file": "5-klas-ukrmova-golub-2022",
               "chunk_id": "5-klas-ukrmova-golub-2022_s0020",
               "locator": "Сторінка 21"
@@ -9223,54 +8581,6 @@
       ]
     },
     {
-      "pair_id": "плаский|плоский",
-      "members": [
-        {
-          "word": "плаский",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "плаский"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "плоский",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "плоский"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
-          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
-          "locator": "Сторінка 32",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "плаский",
-            "плоский"
-          ],
-          "quoted_line": "Дипломат — дипломант, крикливий — кричущий, плоский — плаский, слимак — слизняк, кристал — кришталь, регрес — прогрес, ніготь — кіготь, уява — уявлення, еміграція — іммігра- ція, степінь — ступінь, капля — крапля, густо — пусто, рипіти — скрипіти, експорт — імпорт, доля — воля, уподібнення — розподібнення, радити — раяти, імпресіонізм — експресіонізм, привабливий — принадливий."
-        }
-      ]
-    },
-    {
       "pair_id": "пломінь|промінь",
       "members": [
         {
@@ -9377,66 +8687,6 @@
           ],
           "quoted_line": "Між паронімами можуть встановлюватися синонімічні (блискучий — лискучий, блукати — блудити, повноваження — уповноваження, особистий — особовий), антонімічні (прогресивний — регресивний, густо — пусто, іммігрант — емігрант) відношення.",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/10-klas/poniattia-normi-v-suchasnii-ukrayinskii-literaturnii-movi-326692/paronimi-zapobigannia-pomilok-u-vzhivanni-paronimiv-327792/re-a41e4695-f4ff-4642-af7f-e901c2e73a91"
-        }
-      ]
-    },
-    {
-      "pair_id": "повідь|повінь",
-      "members": [
-        {
-          "word": "повідь",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "повідь"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "повінь",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "повінь"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 2,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
-          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
-          "locator": "Сторінка 32",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "повідь",
-            "повінь"
-          ],
-          "quoted_line": "Пароніми можуть бути близькими за значенням (повідь — повінь), протилежни- ми (логічний — алогічний), а найчастіше — різними (орден — ордер)."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "uni-ukrmova-sulm-attestation-vspu-2021",
-          "chunk_id": "uni-ukrmova-sulm-attestation-vspu-2021_p0033",
-          "locator": "Сторінка 33",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "повідь",
-            "повінь"
-          ],
-          "quoted_line": "para – біля і onyma – ім’я) – це слова, звучання яких відрізняється одним чи двома звуками, при цьому значення таких лексичних одиниць може бути як близьким, так і не належати до однієї логіко-поняттєвої категорії: афект – ефект, газ – гас, повінь – повідь, кіготь – ніготь."
         }
       ]
     },
@@ -9840,83 +9090,6 @@
           "attested_forms": [
             "Програмний",
             "Програмований"
-          ],
-          "quoted_line": "Програмний – який містить у собі програму (програмний документ). Програмовий – який є в навчальній програмі (програмовий матеріал з фізики). Програмований – який здійснюється за допомогою програмування (програмоване навчання).",
-          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-        }
-      ]
-    },
-    {
-      "pair_id": "програмний|програмовий",
-      "members": [
-        {
-          "word": "програмний",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "програмний"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [
-            {
-              "text": "який містить у собі програму",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ],
-          "examples": [
-            {
-              "text": "програмний документ",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ]
-        },
-        {
-          "word": "програмовий",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "програмовий"
-          ],
-          "vesum_pos": [
-            "adj"
-          ],
-          "meanings": [
-            {
-              "text": "який є в навчальній програмі",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ],
-          "examples": [
-            {
-              "text": "програмовий матеріал з фізики",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-            }
-          ]
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "miyklas"
-      ],
-      "sources": [
-        {
-          "source_type": "miyklas",
-          "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-          "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038",
-          "pattern": "dictionary_block",
-          "attested_forms": [
-            "Програмний",
-            "Програмовий"
           ],
           "quoted_line": "Програмний – який містить у собі програму (програмний документ). Програмовий – який є в навчальній програмі (програмовий матеріал з фізики). Програмований – який здійснюється за допомогою програмування (програмоване навчання).",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
@@ -10740,12 +9913,6 @@
               "source_file": "6-klas-ukrmova-avramenko-2023",
               "chunk_id": "6-klas-ukrmova-avramenko-2023_s0064",
               "locator": "Сторінка 63"
-            },
-            {
-              "text": "який, викликає співчуття, нещасний",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -10902,12 +10069,6 @@
               "source_file": "6-klas-ukrmova-avramenko-2023",
               "chunk_id": "6-klas-ukrmova-avramenko-2023_s0064",
               "locator": "Сторінка 63"
-            },
-            {
-              "text": "який, стосується серця; пов’язаний з хворобами серця",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -11026,12 +10187,6 @@
               "source_file": "6-klas-ukrmova-avramenko-2023",
               "chunk_id": "6-klas-ukrmova-avramenko-2023_s0064",
               "locator": "Сторінка 63"
-            },
-            {
-              "text": "який, викликає співчуття, нещасний",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -11076,12 +10231,6 @@
               "source_file": "6-klas-ukrmova-avramenko-2023",
               "chunk_id": "6-klas-ukrmova-avramenko-2023_s0064",
               "locator": "Сторінка 63"
-            },
-            {
-              "text": "який, стосується серця; пов’язаний з хворобами серця",
-              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
-              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
-              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
             }
           ],
           "examples": [
@@ -11261,54 +10410,6 @@
       ]
     },
     {
-      "pair_id": "слизняк|слимак",
-      "members": [
-        {
-          "word": "слизняк",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "слизняк"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "слимак",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "слимак"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
-          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
-          "locator": "Сторінка 32",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "слизняк",
-            "слимак"
-          ],
-          "quoted_line": "Дипломат — дипломант, крикливий — кричущий, плоский — плаский, слимак — слизняк, кристал — кришталь, регрес — прогрес, ніготь — кіготь, уява — уявлення, еміграція — іммігра- ція, степінь — ступінь, капля — крапля, густо — пусто, рипіти — скрипіти, експорт — імпорт, доля — воля, уподібнення — розподібнення, радити — раяти, імпресіонізм — експресіонізм, привабливий — принадливий."
-        }
-      ]
-    },
-    {
       "pair_id": "споруда|спорудження",
       "members": [
         {
@@ -11341,7 +10442,7 @@
           ],
           "meanings": [
             {
-              "text": "будування чогось,",
+              "text": "будування чогось",
               "source_file": "5-klas-ukrmova-golub-2022",
               "chunk_id": "5-klas-ukrmova-golub-2022_s0020",
               "locator": "Сторінка 21"
@@ -11543,12 +10644,6 @@
             "adj"
           ],
           "meanings": [
-            {
-              "text": "який стосується тактики як сукупності прийомів та способів для досягнення мети (у політиці, спорті) або здійснення певної бойової операції",
-              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
-              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
-              "locator": "Сторінка 239"
-            },
             {
               "text": "який стосується тактики",
               "source_file": "miyklas-5-klas-slovnyk-paronimiv",
@@ -12059,7 +11154,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 5,
+      "source_count": 4,
       "source_types": [
         "miyklas",
         "textbook"
@@ -12113,18 +11208,6 @@
             "уявлення"
           ],
           "quoted_line": "Пароніми (пари слів) — близькі за звучанням слова: музичний — музикальний, уява — уявлення."
-        },
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "уява",
-            "уявлення"
-          ],
-          "quoted_line": "Складіть висловлення (усно), обігравши такі пари слів: фантазія — фантастика, відрізнятися — вирізнятися, уява — уявлення."
         }
       ]
     },
@@ -12342,54 +11425,6 @@
           ],
           "quoted_line": "Факт — дійсна, невигадана подія, явище, приклад; те, що служить підтвердженням певного положення, висновку (неспростовний факт, історичний факт, аналізувати факти). Фактаж — сукупність фактів. Фактор — умова, рушійна сила, причина будь-якого процесу, явища; чинник (важливий фактор, моральний фактор, фактор стабілізації).",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
-        }
-      ]
-    },
-    {
-      "pair_id": "фантазія|фантастика",
-      "members": [
-        {
-          "word": "фантазія",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "фантазія"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        },
-        {
-          "word": "фантастика",
-          "vesum_verified": true,
-          "vesum_lemmas": [
-            "фантастика"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
-          "meanings": [],
-          "examples": []
-        }
-      ],
-      "surface_form_pair": false,
-      "source_count": 1,
-      "source_types": [
-        "textbook"
-      ],
-      "sources": [
-        {
-          "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "dash_pair_list",
-          "attested_forms": [
-            "фантазія",
-            "фантастика"
-          ],
-          "quoted_line": "Складіть висловлення (усно), обігравши такі пари слів: фантазія — фантастика, відрізнятися — вирізнятися, уява — уявлення."
         }
       ]
     },
@@ -12882,6 +11917,85 @@
       ]
     },
     {
+      "pair_id": "будівельник|будівник",
+      "unverified_members": [
+        {
+          "word": "будівник",
+          "reason": "same_meaning_variant",
+          "evidence": "будівник БУДІВНИ́К, а́, ч. 1. Те саме, що будіве́льник"
+        }
+      ],
+      "members": [
+        {
+          "word": "будівельник",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "будівельник"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [
+            {
+              "text": "людина, яка має будівельну спеціальність",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ],
+          "examples": [
+            {
+              "text": "досвідчений будівельник",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ]
+        },
+        {
+          "word": "будівник",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "будівник"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [
+            {
+              "text": "узагальнена назва для людини, яка бере участь у спорудженні чогось; творець",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ],
+          "examples": [
+            {
+              "text": "будівник нового життя",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "miyklas",
+          "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+          "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038",
+          "pattern": "dictionary_block",
+          "attested_forms": [
+            "Будівельник",
+            "Будівник"
+          ],
+          "quoted_line": "Будівельник – людина, яка має будівельну спеціальність (досвідчений будівельник). Будівник – узагальнена назва для людини, яка бере участь у спорудженні чогось; творець (будівник нового життя). Будівничий – архітектор; засновник, творець.",
+          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+        }
+      ]
+    },
+    {
       "pair_id": "вимисел|домисел",
       "unverified_members": [
         {
@@ -13033,6 +12147,57 @@
       ]
     },
     {
+      "pair_id": "геройський|героїчний",
+      "unverified_members": [
+        {
+          "word": "геройський",
+          "reason": "same_meaning_variant",
+          "evidence": "геройський ГЕРО́ЙСЬКИЙ, а, е. 1. Те саме, що герої́чний"
+        }
+      ],
+      "members": [
+        {
+          "word": "геройський",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "геройський"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        },
+        {
+          "word": "героїчний",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "героїчний"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "miyklas",
+          "source_file": "miyklas-11-klas-paronimy",
+          "chunk_id": "miyklas-11-klas-paronimy",
+          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/stilistichna-norma-392237/stilistichne-vikoristannia-sinonimiv-antonimiv-i-paronimiv-393241/re-3f5815a8-529f-44ae-8aa6-372a9b5ecc9d",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "геройський",
+            "героїчний"
+          ],
+          "quoted_line": "Приклад: Громадський — громадянський, годівниця — годувальниця, геройський — героїчний.",
+          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/stilistichna-norma-392237/stilistichne-vikoristannia-sinonimiv-antonimiv-i-paronimiv-393241/re-3f5815a8-529f-44ae-8aa6-372a9b5ecc9d"
+        }
+      ]
+    },
+    {
       "pair_id": "дерзати|терзати",
       "unverified_members": [
         {
@@ -13074,6 +12239,56 @@
             "терзати"
           ],
           "quoted_line": "Авторитетний — авторитарний; вникати — уникати; кришталь — кристал; чисельний — численний; шукати — ошукати; знаменитий — знаменний; спиратися — опиратися; дерзати — терзати."
+        }
+      ]
+    },
+    {
+      "pair_id": "копіткий|кропіткий",
+      "unverified_members": [
+        {
+          "word": "кропіткий",
+          "reason": "same_meaning_variant",
+          "evidence": "кропіткий КРОПІТКИ́Й, а́, е́, рідко. Те саме, що копітки́й"
+        }
+      ],
+      "members": [
+        {
+          "word": "копіткий",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "копіткий"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        },
+        {
+          "word": "кропіткий",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "кропіткий"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "textbook",
+          "source_file": "5-klas-ukrmova-avramenko-2022",
+          "chunk_id": "5-klas-ukrmova-avramenko-2022_s0053",
+          "locator": "Сторінка 52",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "копіткий",
+            "кропіткий"
+          ],
+          "quoted_line": "Промінь — пломінь, кропіткий — клопіткий — копіткий, емігрант — іммігрант, прогрес — регрес."
         }
       ]
     },
@@ -13123,6 +12338,70 @@
       ]
     },
     {
+      "pair_id": "листопад|падолист",
+      "unverified_members": [
+        {
+          "word": "падолист",
+          "reason": "same_meaning_variant",
+          "evidence": "падолист ПАДОЛИ́СТ, ч. 1. род. у. Те саме, що листопа́д"
+        }
+      ],
+      "members": [
+        {
+          "word": "листопад",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "листопад"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [
+            {
+              "text": "назва місяця; процес опадання листя",
+              "source_file": "6-klas-ukrmova-litvinova-2023",
+              "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
+              "locator": "Сторінка 73"
+            }
+          ],
+          "examples": []
+        },
+        {
+          "word": "падолист",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "падолист"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [
+            {
+              "text": "процес опадання листя",
+              "source_file": "6-klas-ukrmova-litvinova-2023",
+              "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
+              "locator": "Сторінка 73"
+            }
+          ],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "textbook",
+          "source_file": "6-klas-ukrmova-litvinova-2023",
+          "chunk_id": "6-klas-ukrmova-litvinova-2023_s0078",
+          "locator": "Сторінка 73",
+          "pattern": "dictionary_block",
+          "attested_forms": [
+            "Листопад",
+            "Падолист"
+          ],
+          "quoted_line": "Листопад — назва місяця; процес опадання листя. Падолист — процес опадання листя."
+        }
+      ]
+    },
+    {
       "pair_id": "мимохіть|михохідь",
       "unverified_members": [
         {
@@ -13164,6 +12443,181 @@
             "михохідь"
           ],
           "quoted_line": "Пароніми — слова, близькі за звуковим складом і вимовою, але різні за значенням і написанням: пригода — нагода, дружний — дружній, ринути — ли- нути, мимохіть — михохідь."
+        }
+      ]
+    },
+    {
+      "pair_id": "музикальний|музичний",
+      "unverified_members": [
+        {
+          "word": "музикальний",
+          "reason": "same_meaning_variant",
+          "evidence": "музикальний МУЗИКА́ЛЬНИЙ, а, е. Те саме, що музи́чний"
+        }
+      ],
+      "members": [
+        {
+          "word": "музикальний",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "музикальний"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [
+            {
+              "text": "обдарований здатністю тонко сприймати музику, виконувати музичні твори; мелодійний",
+              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
+              "locator": "Сторінка 239"
+            }
+          ],
+          "examples": [
+            {
+              "text": "Музикальний слух",
+              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
+              "locator": "Сторінка 239"
+            }
+          ]
+        },
+        {
+          "word": "музичний",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "музичний"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [
+            {
+              "text": "який стосується музики як виду мистецтва",
+              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
+              "locator": "Сторінка 239"
+            }
+          ],
+          "examples": [
+            {
+              "text": "Музична школа, музичний фільм",
+              "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+              "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
+              "locator": "Сторінка 239"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "miyklas",
+          "source_file": "miyklas-6-klas-paronimy",
+          "chunk_id": "miyklas-6-klas-paronimy",
+          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/leksika-40149/paronimi-448803/re-8f6c25c7-b816-4a41-9f08-fed96b9fa79b",
+          "pattern": "conjunction_pair",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "вживаємо слово музичний, а коли — музикальний",
+          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/leksika-40149/paronimi-448803/re-8f6c25c7-b816-4a41-9f08-fed96b9fa79b"
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
+          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
+          "locator": "Сторінка 32",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "Адресат — адресант, дипломат — дипломант, мимохідь — мимохіть, танк — танкер, уява — уявлення, музичний — музикальний, особистий — особовий, жилий — житловий, громад- ський — громадянський, змерзнути — замерзнути."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
+          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
+          "locator": "Сторінка 32",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "Пароніми (пари слів) — близькі за звучанням слова: музичний — музикальний, уява — уявлення."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "11-klas-ukrajinska-mova-avramenko-2019",
+          "chunk_id": "11-klas-ukrajinska-mova-avramenko-2019_s0213",
+          "locator": "Сторінка 154",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "Звукова близькість паронімів іноді призводить до їхнього помилкового вживання, найчастіше безпідставно використовують одне замість іншого слова з таких пар: музич- ний — музикальний, місто — місце, індієць — індіанець, ефектний — ефективний, компа- нія — кампанія, особовий — особистий."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
+          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0219",
+          "locator": "Сторінка 160",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "Пароніми можуть бути: синонімами: капля — крапля, тяжкий — важкий; антонімами: емігрант — іммігрант, прогрес — регрес; однокореневими словами: музичний — музикальний, організаційний — ор- ганізований; близькими за звуковим складом словами: ефект — афект, чисельний — численний."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0028",
+          "locator": "Сторінка 38",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "музикальні",
+            "музичні"
+          ],
+          "quoted_line": "Захар потис довгі, трохи ніби пере­ сохлі (музичні, музикальні) пальці піаніста (І."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0029",
+          "locator": "Сторінка 40",
+          "pattern": "slash_pair_list",
+          "attested_forms": [
+            "музикальний",
+            "музичний"
+          ],
+          "quoted_line": "музичний // музикальний"
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "5-klas-ukrmova-zabolotnyi-2023",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0200",
+          "locator": "Сторінка 239",
+          "pattern": "slash_dictionary",
+          "attested_forms": [
+            "музикальний",
+            "Музичний"
+          ],
+          "quoted_line": "Музичний // музикальний Музикальний – обдарований здатністю тонко сприймати музику, ви- конувати музичні твори; мелодійний. Музикальний слух. Музичний – який стосується музики як виду мистецтва. Музична школа, музичний фільм."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "7-klas-ukrmova-avramenko-2024",
+          "chunk_id": "7-klas-ukrmova-avramenko-2024_s0053",
+          "locator": "Сторінка 47",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "музикальній",
+            "музичній"
+          ],
+          "quoted_line": "У (музичній, музикальній) школі навчаються від чотирьох до семи ро- ків."
         }
       ]
     },
@@ -13241,6 +12695,56 @@
           ],
           "quoted_line": "На протязі – під дією різкого струменя повітря, що продуває (стояти на протязі). Протягом – упродовж певного часу тривання дії чи процесу (протягом тижня).",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+        }
+      ]
+    },
+    {
+      "pair_id": "плаский|плоский",
+      "unverified_members": [
+        {
+          "word": "плаский",
+          "reason": "same_meaning_variant",
+          "evidence": "плаский ПЛАСКИ́Й див. пло́ский"
+        }
+      ],
+      "members": [
+        {
+          "word": "плаский",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "плаский"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        },
+        {
+          "word": "плоский",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "плоский"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
+          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
+          "locator": "Сторінка 32",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "плаский",
+            "плоский"
+          ],
+          "quoted_line": "Дипломат — дипломант, крикливий — кричущий, плоский — плаский, слимак — слизняк, кристал — кришталь, регрес — прогрес, ніготь — кіготь, уява — уявлення, еміграція — іммігра- ція, степінь — ступінь, капля — крапля, густо — пусто, рипіти — скрипіти, експорт — імпорт, доля — воля, уподібнення — розподібнення, радити — раяти, імпресіонізм — експресіонізм, привабливий — принадливий."
         }
       ]
     },
@@ -13346,18 +12850,197 @@
             "путає"
           ],
           "quoted_line": "Дехто з нас досі (плутає, путає) загальномовні та контекстуаль- ні синоніми."
+        }
+      ]
+    },
+    {
+      "pair_id": "повідь|повінь",
+      "unverified_members": [
+        {
+          "word": "повідь",
+          "reason": "same_meaning_variant",
+          "evidence": "ідь ПО́ВІДЬ¹, воді, ж., ПОВІ́ДДЯ, я, с. Те саме, що по́вінь"
+        }
+      ],
+      "members": [
+        {
+          "word": "повідь",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "повідь"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [],
+          "examples": []
+        },
+        {
+          "word": "повінь",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "повінь"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
+          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
+          "locator": "Сторінка 32",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "повідь",
+            "повінь"
+          ],
+          "quoted_line": "Пароніми можуть бути близькими за значенням (повідь — повінь), протилежни- ми (логічний — алогічний), а найчастіше — різними (орден — ордер)."
         },
         {
           "source_type": "textbook",
-          "source_file": "11-klas-ukrajinska-mova-glazova-2019",
-          "chunk_id": "11-klas-ukrajinska-mova-glazova-2019_s0220",
-          "locator": "Сторінка 161",
-          "pattern": "exercise_choice_pair",
+          "source_file": "uni-ukrmova-sulm-attestation-vspu-2021",
+          "chunk_id": "uni-ukrmova-sulm-attestation-vspu-2021_p0033",
+          "locator": "Сторінка 33",
+          "pattern": "dash_pair_list",
           "attested_forms": [
-            "плутає",
-            "путає"
+            "повідь",
+            "повінь"
           ],
-          "quoted_line": "Дехто з нас досі (плутає, путає) загальномовні та контекстуальні синоніми."
+          "quoted_line": "para – біля і onyma – ім’я) – це слова, звучання яких відрізняється одним чи двома звуками, при цьому значення таких лексичних одиниць може бути як близьким, так і не належати до однієї логіко-поняттєвої категорії: афект – ефект, газ – гас, повінь – повідь, кіготь – ніготь."
+        }
+      ]
+    },
+    {
+      "pair_id": "програмний|програмовий",
+      "unverified_members": [
+        {
+          "word": "програмовий",
+          "reason": "same_meaning_variant",
+          "evidence": "програмовий ПРОГРАМО́ВИЙ, а, е. Те саме, що програ́мний"
+        }
+      ],
+      "members": [
+        {
+          "word": "програмний",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "програмний"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [
+            {
+              "text": "який містить у собі програму",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ],
+          "examples": [
+            {
+              "text": "програмний документ",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ]
+        },
+        {
+          "word": "програмовий",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "програмовий"
+          ],
+          "vesum_pos": [
+            "adj"
+          ],
+          "meanings": [
+            {
+              "text": "який є в навчальній програмі",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ],
+          "examples": [
+            {
+              "text": "програмовий матеріал з фізики",
+              "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+              "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+              "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "miyklas",
+          "source_file": "miyklas-5-klas-slovnyk-paronimiv",
+          "chunk_id": "miyklas-5-klas-slovnyk-paronimiv",
+          "locator": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038",
+          "pattern": "dictionary_block",
+          "attested_forms": [
+            "Програмний",
+            "Програмовий"
+          ],
+          "quoted_line": "Програмний – який містить у собі програму (програмний документ). Програмовий – який є в навчальній програмі (програмовий матеріал з фізики). Програмований – який здійснюється за допомогою програмування (програмоване навчання).",
+          "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+        }
+      ]
+    },
+    {
+      "pair_id": "слизняк|слимак",
+      "unverified_members": [
+        {
+          "word": "слизняк",
+          "reason": "same_meaning_variant",
+          "evidence": "слизняк СЛИЗНЯ́К, а́, ч. Те саме, що слима́к"
+        }
+      ],
+      "members": [
+        {
+          "word": "слизняк",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "слизняк"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [],
+          "examples": []
+        },
+        {
+          "word": "слимак",
+          "vesum_verified": true,
+          "vesum_lemmas": [
+            "слимак"
+          ],
+          "vesum_pos": [
+            "noun"
+          ],
+          "meanings": [],
+          "examples": []
+        }
+      ],
+      "sources": [
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrajinska-mova-avramenko-2018",
+          "chunk_id": "10-klas-ukrajinska-mova-avramenko-2018_s0042",
+          "locator": "Сторінка 32",
+          "pattern": "dash_pair_list",
+          "attested_forms": [
+            "слизняк",
+            "слимак"
+          ],
+          "quoted_line": "Дипломат — дипломант, крикливий — кричущий, плоский — плаский, слимак — слизняк, кристал — кришталь, регрес — прогрес, ніготь — кіготь, уява — уявлення, еміграція — іммігра- ція, степінь — ступінь, капля — крапля, густо — пусто, рипіти — скрипіти, експорт — імпорт, доля — воля, уподібнення — розподібнення, радити — раяти, імпресіонізм — експресіонізм, привабливий — принадливий."
         }
       ]
     }

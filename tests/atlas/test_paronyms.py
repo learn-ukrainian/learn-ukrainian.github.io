@@ -277,6 +277,7 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
     registry = build_paronym_registry(
         [tb_doc, mk_doc],
         vesum_lookup=fake_vesum,
+        sum20_lookup=lambda words: {},
         a1_lemma_sets={
             "inventory_lemmas": {"адреса", "книга"},
             "single_token_keys": {"адреса", "книга"},

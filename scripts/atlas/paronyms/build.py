@@ -12,7 +12,9 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
+import unicodedata
 from collections import defaultdict
 from collections.abc import Callable
 from pathlib import Path
@@ -46,6 +48,12 @@ DEFAULT_MIYKLAS_RAW = Path("registry/miyklas/paronyms-raw-v1.json")
 TEXTBOOK_FTS_QUERY = "паронім*"
 
 VesumBatchLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
+# word -> СУМ-20 article texts whose headword key is that word.
+Sum20ArticleLookup = Callable[[list[str]], dict[str, list[str]]]
+
+# A СУМ-20 article that sends its headword to another word ("ПЛАСКИ́Й див. пло́ский",
+# "СЛИЗНЯ́К ... Те саме, що слима́к") marks the two as one meaning, not a paronym contrast.
+_SUM20_VARIANT_REF_RE = re.compile(r"(?:(?<!\w)див\.|(?<!\w)те\s+саме,\s+що)\s+([^\s,.;:()\d¹²³⁴]+)", re.IGNORECASE)
 
 
 def _resolve_sources_db(repo_root: Path, override: Path | None) -> Path:
@@ -86,6 +94,49 @@ def load_textbook_paronym_documents(sources_db: Path) -> list[SourceDocument]:
     return docs
 
 
+def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
+    """Read СУМ-20 mirror articles for the given words from the local sources store (read-only)."""
+
+    def lookup(words: list[str]) -> dict[str, list[str]]:
+        found: dict[str, list[str]] = defaultdict(list)
+        placeholders = ",".join("?" * len(words))
+        with open_readonly(sources_db) as conn:
+            rows = conn.execute(
+                "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
+                f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
+                words,
+            ).fetchall()
+        for key, text in rows:
+            found[str(key)].append(str(text or ""))
+        return dict(found)
+
+    return lookup
+
+
+# The primary meaning ends where sense 2 or the next homonym (a headword with a superscript) starts.
+_SUM20_PRIMARY_END_RE = re.compile(r"\s2\.\s|[А-ЯІЇЄҐ'’ʼ\u0301]{2,}[²³⁴⁵]")
+
+
+def _sum20_variant_evidence(word: str, other: str, articles: dict[str, list[str]]) -> str | None:
+    """The СУМ-20 excerpt whose primary meaning refers ``word`` directly to ``other``, or None.
+
+    Only the first sense of the first homonym counts: textbook paronyms such as
+    людний/людяний overlap in a rare or obsolete later sense but differ in their main one.
+    A parenthetical cross-reference ("(див. вага́¹ 1)") is not a definition.
+    """
+    for text in articles.get(word, []):
+        end = _SUM20_PRIMARY_END_RE.search(text)
+        primary = text[: end.start()] if end else text
+        for m in _SUM20_VARIANT_REF_RE.finditer(primary):
+            before = primary[: m.start()]
+            if before.count("(") > before.count(")"):
+                continue
+            target = normalize_token(unicodedata.normalize("NFC", m.group(1)).replace("\u0301", ""))
+            if target == other:
+                return " ".join(text[max(0, m.start() - 40) : m.end()].split())
+    return None
+
+
 def _default_vesum_lookup(vesum_db: Path | None) -> VesumBatchLookup:
     def lookup(words: list[str]) -> dict[str, list[dict[str, Any]]]:
         return vesum_mod.verify_words(words, db_path=vesum_db)
@@ -95,6 +146,14 @@ def _default_vesum_lookup(vesum_db: Path | None) -> VesumBatchLookup:
 
 def _unique_sorted(items: list[str]) -> list[str]:
     return sorted({x for x in items if x})
+
+
+_GLOSS_WORD_RE = re.compile(r"(?<![\w'’ʼ-])[а-щьюяєіїґ][а-щьюяєіїґ'’ʼ]*(?:-[а-щьюяєіїґ'’ʼ]+)*")
+
+
+def _gloss_words(text: str) -> list[str]:
+    """Lowercase Ukrainian words of a gloss (capitalised names and Latin text are not checked)."""
+    return [normalize_token(m.group(0)) for m in _GLOSS_WORD_RE.finditer(text)]
 
 
 def _resolve_canonical_pair(
@@ -135,6 +194,11 @@ def _resolve_canonical_pair(
 
     if is_lemma_a and is_lemma_b:
         return (wa, wb, False, []) if wa <= wb else (wb, wa, False, [])
+
+    # Only a choice exercise inflects its options to fit a sentence. Any other pattern cites the
+    # words as the source chose them (e.g. plural-only "в'язи" vs "м'язи"), so keep that pair.
+    if att.pattern != "exercise_choice_pair":
+        return (wa, wb, True, []) if wa <= wb else (wb, wa, True, [])
 
     # Inflected exercise forms: check if both share a POS with unambiguous distinct lemmas.
     pos_to_lemmas_a: dict[str, set[str]] = defaultdict(set)
@@ -210,7 +274,7 @@ def load_a1_lemma_sets(a1_inventory_path: Path) -> dict[str, set[str]]:
         if not isinstance(mapping, dict):
             raise A1InventoryError(f"Missing or non-object 'mapping' in row {rid!r} of {name}")
         resolution = mapping.get("resolution")
-        if resolution not in valid_resolutions:
+        if not isinstance(resolution, str) or resolution not in valid_resolutions:
             raise A1InventoryError(f"Missing or invalid 'mapping.resolution' {resolution!r} in row {rid!r} of {name}")
         lemma = mapping.get("lemma")
         if resolution == "resolved":
@@ -218,12 +282,11 @@ def load_a1_lemma_sets(a1_inventory_path: Path) -> dict[str, set[str]]:
                 raise A1InventoryError(f"Resolved row {rid!r} lacks a non-empty string 'mapping.lemma' in {name}")
             inventory_lemmas.add(normalize_token(lemma))
         elif lemma is not None:
-            if not isinstance(lemma, str):
-                raise A1InventoryError(
-                    f"Expected string or null 'mapping.lemma' in row {rid!r} of {name}, got {type(lemma).__name__}"
-                )
-            if normalize_token(lemma):
-                inventory_lemmas.add(normalize_token(lemma))
+            # The inventory producer (scripts/atlas/a1_vocabulary_inventory.py) writes a null
+            # lemma for every unresolved or ambiguous row; anything else is an inconsistent row.
+            raise A1InventoryError(
+                f"{resolution.capitalize()} row {rid!r} has non-null 'mapping.lemma' {lemma!r} in {name}"
+            )
         key = row.get("key")
         if not isinstance(key, str):
             raise A1InventoryError(f"Missing or non-string 'key' in row {rid!r} of {name}")
@@ -252,6 +315,7 @@ def build_paronym_registry(
     documents: list[SourceDocument],
     *,
     vesum_lookup: VesumBatchLookup,
+    sum20_lookup: Sum20ArticleLookup,
     a1_lemma_sets: dict[str, set[str]],
     miyklas_meta: dict[str, Any] | None = None,
     corpus_recipe_note: str = "",
@@ -382,7 +446,54 @@ def build_paronym_registry(
         _attach_member_notes(bucket, w1, n1, att)
         _attach_member_notes(bucket, w2, n2, att)
 
+    # Same-meaning variants are not "do not confuse" pairs: withhold a pair when a СУМ-20 article
+    # refers one member directly to the other. Antonymic and synonymic paronyms that the sources
+    # teach as paronyms stay (see docs/atlas/paronyms.md).
+    variant_words = sorted({w for pair_key in verified_groups for w in pair_key})
+    sum20_articles = sum20_lookup(variant_words) if variant_words else {}
+    for pair_key in sorted(verified_groups):
+        ca, cb = pair_key
+        for word, other in ((ca, cb), (cb, ca)):
+            evidence = _sum20_variant_evidence(word, other, sum20_articles)
+            if evidence is None:
+                continue
+            bucket = verified_groups.pop(pair_key)
+            bucket["unverified_members"] = [{"word": word, "reason": "same_meaning_variant", "evidence": evidence}]
+            if pair_key in unverified_groups:
+                merged = unverified_groups[pair_key]
+                merged["sources"].extend(src for src in bucket["sources"] if src not in merged["sources"])
+                merged["unverified_members"].extend(bucket["unverified_members"])
+            else:
+                unverified_groups[pair_key] = bucket
+            break
+
+    # A source gloss is shown to learners only when VESUM attests every lowercase word in it;
+    # a gloss carrying a source typo (e.g. "оспівний") is withheld. The quoted line stays verbatim.
+    gloss_words = sorted(
+        {
+            w
+            for buckets in (verified_groups, unverified_groups)
+            for bucket in buckets.values()
+            for m_bucket in bucket["members_map"].values()
+            for note in m_bucket["meanings"]
+            for word in _gloss_words(note["text"])
+            for w in (word, *word.split("-"))
+            if w
+        }
+        - set(vesum_results)
+    )
+    if gloss_words:
+        vesum_results = {**vesum_results, **vesum_lookup(gloss_words)}
+
+    def _attested_word(word: str) -> bool:
+        # A hyphenated compound ("писемно-літературного") counts when each part is attested.
+        return bool(vesum_results.get(word)) or all(vesum_results.get(part) for part in word.split("-"))
+
+    def _attested_gloss(note: dict[str, str]) -> bool:
+        return all(_attested_word(w) for w in _gloss_words(note["text"]))
+
     def _finalize_member(word: str, m_bucket: dict[str, Any]) -> dict[str, Any]:
+        m_bucket = {**m_bucket, "meanings": [n for n in m_bucket["meanings"] if _attested_gloss(n)]}
         analyses = vesum_results.get(word, []) if " " not in word else []
         lemmas = _unique_sorted([normalize_token(str(r.get("lemma", ""))) for r in analyses])
         pos_list = _unique_sorted([str(r.get("pos", "")) for r in analyses])
@@ -609,6 +720,7 @@ def main(argv: list[str] | None = None) -> int:
     payload = build_paronym_registry(
         docs,
         vesum_lookup=_default_vesum_lookup(args.vesum_db),
+        sum20_lookup=_default_sum20_lookup(sources_db),
         a1_lemma_sets=a1_sets,
         miyklas_meta=miyklas_meta,
         corpus_recipe_note=recipe_note,

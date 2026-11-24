@@ -14,6 +14,12 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      `Запам’ятайте значення паронімічних прикметників`, `Розрізняйте пароніми`), dash/slash pair
      lists, parenthesized gloss pairs, inline definitions, semicolon-separated comma groups, and
      paronym-choice exercises.
+   - A textbook chunk is read as a paronym lesson only from the segment that itself opens with a
+     dedicated paronym heading (`§ 9. Пароніми`, `Пароніми`, `2.1. Явище паронімії`, …); text
+     above that heading in the same chunk is never in lesson mode. Dictionary headings
+     (`Словничок паронімів`, `Короткий словник паронімів`) count only as a standalone line, and
+     their scan starts at that line. A МійКлас page is a paronym page as a whole. Outside lesson
+     mode a segment needs its own local paronym cue.
    - Fails closed on mixed-topic switches (`антоніми`, `синоніми`, `омоніми`, numbered
      non-paronym exercises), multiple-choice distractor items (`А/Б/В/Г` or `а)/б)/в)`), mixed
      euphony quizzes, and explicit non-paronym disclaimers (`не є паронімічними`, `від паронімів
@@ -22,13 +28,36 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      `attested_forms`, verbatim `quoted_line` (sliced directly from raw source text via
      offset-mapped spans with whitespace folding only), and any short meaning or example stated
      by the source. Zero pairs come from model memory.
+   - A source gloss shown to learners loses separators left by the split (a trailing comma, a
+     sentence period; `та ін.` keeps its period). A gloss with a source comma error right after
+     its opening relative pronoun (`який, викликає`) or a definition line cut off by the page
+     layout (no terminal punctuation while its partner line has it) is withheld. The
+     `quoted_line` always stays verbatim.
 2. **VESUM verification (`scripts/atlas/paronyms/build.py`)**
    - Batch-verifies every single-token member against VESUM (`verify_words`) and re-gates any
      lemmatized canonical pair against pass-2 canonical lookup results before admission.
    - Inflected forms from choice exercises (e.g. `(громадською, громадянською)`) resolve to
      VESUM lemmas only when both forms share a POS with unique distinct lemmas; pairs whose
      paronymy holds only on specific inflected forms across different POS (`греби` / `гриби`)
-     stay marked `surface_form_pair: true`.
+     stay marked `surface_form_pair: true`. Every other pattern keeps the words exactly as the
+     source cites them (`в'язи` / `м'язи`, not the unrelated lemma `в'яз` "elm").
+   - **Antonymic and synonymic paronyms stay.** Ukrainian lexicology classes semantic relations
+     between paronyms as antonymic, synonymic, ideographic and morphological-semantic:
+     «Семантичні відношення між паронімами охоплюють такі вияви: 1) антонімічні зв’язки:
+     еволюція − революція; прогрес − регрес; еміграція − імміграція; 2) синонімічні зв’язки:
+     говорити − гомоніти; вивільняти − визволяти − звільняти; хиткий − хибкий; 3) ідеографічні
+     зв’язки … м’язи − в’язи» (Філон, Хомик 2010, `uni-ukrmova-lexicology-filon-khomik-2010_s0173`,
+     p. 160). A source-taught paronym pair is therefore admitted whatever that relation is.
+   - **Same-meaning variants are withheld** (`same_meaning_variant`). When the primary meaning
+     (first sense of the first homonym) of one member's СУМ-20 article refers directly to the
+     other member with `див.` or `Те саме, що` (`ПЛАСКИ́Й див. пло́ский`), the two words do not
+     contrast in meaning, so the pair moves to `"unverified"` with that excerpt as `evidence`.
+     The lookup reads the local СУМ-20 mirror (`sum20_mirror_articles` in `data/sources.db`,
+     read-only). A reference in a later, rare or obsolete sense (`людний` / `людяний`) does not
+     withhold a pair.
+   - A meaning gloss is shown only when VESUM attests every lowercase word in it (each part of
+     a hyphenated compound); a gloss with a source typo or a VESUM `bad` form (`оспівний`,
+     `прийомів`) is withheld.
    - Any pair with an unattested or multiword member is routed to `"unverified"` with an
      explicit reason (`not_attested_in_vesum` or `multiword_not_in_vesum`), never into
      `"pairs"`.
@@ -55,46 +84,46 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
 | Metric | Count |
 | --- | ---: |
 | Textbook chunks scanned (`textbooks_fts MATCH 'паронім*'`) | 117 |
-| Textbook chunks yielding at least one pair | 45 |
+| Textbook chunks yielding at least one pair | 43 |
 | Textbook source files yielding verified pairs | 14 |
 | МійКлас pages acquired and parsed | 5 |
-| **Verified unique paronym pairs (`pairs`)** | **186** |
-| Verified pairs with at least one source-quoted meaning | 74 |
-| Total verified source attestations | 324 |
-| Distinct VESUM-verified member words | 331 |
-| Unverified pairs routed to `unverified` | 10 |
+| **Verified unique paronym pairs (`pairs`)** | **173** |
+| Verified pairs with at least one source-quoted meaning | 68 |
+| Total verified source attestations | 298 |
+| Distinct VESUM-verified member words | 311 |
+| Unverified pairs routed to `unverified` | 19 |
 
 ### Verified pairs by source overlap
 
 | Source coverage | Unique verified pairs |
 | --- | ---: |
-| Textbooks only | 120 |
-| МійКлас only | 36 |
-| Both textbooks and МійКлас | 30 |
-| **Total unique verified pairs** | **186** |
+| Textbooks only | 111 |
+| МійКлас only | 33 |
+| Both textbooks and МійКлас | 29 |
+| **Total unique verified pairs** | **173** |
 
 ### Verified pairs per source file
 
 | Source file | Type | Verified pairs |
 | --- | --- | ---: |
-| `miyklas-5-klas-slovnyk-paronimiv` | miyklas | 46 |
-| `10-klas-ukrajinska-mova-avramenko-2018` | textbook | 42 |
+| `miyklas-5-klas-slovnyk-paronimiv` | miyklas | 44 |
+| `10-klas-ukrajinska-mova-avramenko-2018` | textbook | 38 |
 | `uni-ukrmova-lexicology-filon-khomik-2010` | textbook | 24 |
-| `11-klas-ukrajinska-mova-glazova-2019` | textbook | 22 |
 | `10-klas-ukrmova-glazova-2018` | textbook | 20 |
-| `5-klas-ukrmova-avramenko-2022` | textbook | 19 |
 | `5-klas-ukrmova-golub-2022` | textbook | 19 |
-| `7-klas-ukrmova-avramenko-2024` | textbook | 19 |
+| `7-klas-ukrmova-avramenko-2024` | textbook | 18 |
+| `11-klas-ukrajinska-mova-glazova-2019` | textbook | 16 |
+| `5-klas-ukrmova-avramenko-2022` | textbook | 16 |
 | `6-klas-ukrmova-avramenko-2023` | textbook | 14 |
-| `5-klas-ukrmova-zabolotnyi-2023` | textbook | 13 |
+| `5-klas-ukrmova-zabolotnyi-2023` | textbook | 12 |
 | `10-klas-ukrmova-karaman-2018` | textbook | 11 |
-| `6-klas-ukrmova-litvinova-2023` | textbook | 9 |
-| `11-klas-ukrajinska-mova-avramenko-2019` | textbook | 8 |
+| `6-klas-ukrmova-litvinova-2023` | textbook | 8 |
 | `miyklas-10-klas-paronimy` | miyklas | 8 |
-| `miyklas-6-klas-paronimy` | miyklas | 7 |
-| `miyklas-11-klas-paronimy` | miyklas | 6 |
+| `11-klas-ukrajinska-mova-avramenko-2019` | textbook | 7 |
 | `miyklas-5-klas-paronimy` | miyklas | 6 |
-| `uni-ukrmova-sulm-attestation-vspu-2021` | textbook | 4 |
+| `miyklas-6-klas-paronimy` | miyklas | 6 |
+| `miyklas-11-klas-paronimy` | miyklas | 5 |
+| `uni-ukrmova-sulm-attestation-vspu-2021` | textbook | 3 |
 | `8-klas-ukrmova-avramenko-2025` | textbook | 1 |
 
 ## A1 word-card coverage
@@ -108,7 +137,7 @@ to the canonical Atlas slice loaders, not to this registry.
 | A1 denominator | Total | With ≥ 1 verified paronym |
 | --- | ---: | ---: |
 | A1 inventory resolved lemmas (`mapping.lemma`) | 714 | **13** (1.8%) |
-| A1 inventory single-token vocabulary keys | 1,112 | **15** (1.3%) |
+| A1 inventory single-token vocabulary keys | 1,112 | **14** (1.3%) |
 
 The 13 matched A1 inventory lemmas are:
 `адреса` (`адрес`, `адресант`, `адресат`), `вода` (`хода`), `відпустка` (`відпуск`),
@@ -124,20 +153,28 @@ The 13 matched A1 inventory lemmas are:
    concrete A1 nouns and verbs. Expanding A1–A2 coverage requires dedicated lexical sources
    (for example, the structured paronym entries in `data/movaua.db`, ZNO/NMT worksheets, or a
    cleared paronym dictionary).
-2. **Meanings present on 74 / 186 pairs:** Dictionary blocks (`miyklas-5-klas-slovnyk-paronimiv`,
+2. **Meanings present on 68 / 173 pairs:** Dictionary blocks (`miyklas-5-klas-slovnyk-paronimiv`,
    `5-klas-ukrmova-zabolotnyi-2023`, `6-klas-ukrmova-avramenko-2023`,
    `7-klas-ukrmova-avramenko-2024`) provide short meanings and examples for both members;
    exercise lists (`10-klas-ukrajinska-mova-avramenko-2018`,
    `11-klas-ukrajinska-mova-glazova-2019`) attest the pair without inline glosses, so the
    word-card builder will fall back to each card's own СУМ-20 / ВТС definition for the remaining
-   112 pairs.
-3. **10 unverified pairs withheld from `pairs`:**
+   105 pairs.
+3. **19 unverified pairs withheld from `pairs`:**
    - 1 multiword expression (`на протязі | протягом`, `multiword_not_in_vesum`).
    - 1 textbook PDF typo (`мимохіть | михохідь` in `10-klas-ukrmova-glazova-2018`, caught by
      VESUM as `not_attested_in_vesum`).
    - 8 pairs containing a member marked `bad` / nonstandard or absent in VESUM clean forms
      (`бережливий`, `вимисел`, `вникати`, `віла`, `дерзати`/`терзати`, `криштальний`,
      `путати`/`путає`).
+   - 9 same-meaning variants by СУМ-20 (`same_meaning_variant`): `будівельник | будівник`,
+     `геройський | героїчний`, `копіткий | кропіткий`, `листопад | падолист`,
+     `музикальний | музичний`, `плаский | плоский`, `повідь | повінь`,
+     `програмний | програмовий`, `слизняк | слимак`.
+   - Residual: the direct-reference rule misses variants whose СУМ-20 article defines one member
+     through a third word or with a bare synonym (`клопіткий`, `раяти` "Радити",
+     `принадливий` "Те саме, що принадний") or that have no mirror article (`капля`). These
+     stay in `pairs` until a rule that follows such chains is approved.
 4. **Continuation chunks without `паронім*`:** The textbook query scans only chunks matching
    `textbooks_fts MATCH 'паронім*'`. Multi-chunk discussions where an exercise continues onto a
    later chunk without repeating the stem `паронім*` (e.g. `uni-ukrmova-prof-haluzynska-2006_s0038`)
