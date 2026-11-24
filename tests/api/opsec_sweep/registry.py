@@ -46,14 +46,16 @@ class FrozenDenominator:
 
 
 # Measured from the live app. The count and the digest are one snapshot:
-# A tree matches only when all three fields match. lu-machinery 0.1.55
-# adds the read-only GET /api/fleet/seats and GET /api/fleet/deliveries
-# (machinery PR 1227). Both use the ordinary read exercise without exemptions.
+# A tree matches only when all three fields match. lu-machinery 0.1.69
+# adds the read-only GET /api/journal (machinery PR 1365) and replaces
+# GET /api/runtime/routing-assignments with the read-only
+# GET /api/runtime/routing (machinery PR 1366). Both use the ordinary read
+# exercise without exemptions.
 ACCEPTED_DENOMINATORS = (
     FrozenDenominator(
-        http_count=171,
+        http_count=172,
         websocket_count=1,
-        sha256="e945d923bc0328566fe9aef47b1f75c60ac5fa697d99a25acaf03adbfb763ebb",
+        sha256="6dfea6acfbc52ce01ed206e387d379451757cbc7e2c0f1e9fa65855a5ee20103",
     ),
 )
 
