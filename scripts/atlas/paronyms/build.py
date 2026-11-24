@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    sys.path.insert(0, str(Path(__file__).resolve(strict=True).parents[3]))
 
 from lu_machinery.common.repo_root import main_checkout_root
 from lu_machinery.lib.readonly_sqlite import open_readonly
@@ -32,7 +32,11 @@ from scripts.atlas.paronyms.extractor import (
     extract_from_document,
     normalize_token,
 )
-from scripts.atlas.paronyms.miyklas import fetch_miyklas_pages, load_miyklas_documents
+from scripts.atlas.paronyms.miyklas import (
+    fetch_miyklas_pages,
+    load_miyklas_documents,
+    validate_miyklas_page_dict,
+)
 from scripts.verification import vesum as vesum_mod
 
 SCHEMA_VERSION = "atlas-paronyms.v1"
@@ -173,22 +177,30 @@ def load_a1_lemma_sets(
 ) -> dict[str, set[str]]:
     """Load A1 card lemma sets from ``a1-v1-inventory.json`` and sibling slice manifests."""
     inv = _load_json_dict(a1_inventory_path)
-    rows = inv.get("rows", [])
-    if not isinstance(rows, list):
-        raise ValueError(f"Expected 'rows' list in {a1_inventory_path.name}")
+    if "rows" not in inv or not isinstance(inv["rows"], list):
+        raise ValueError(f"Missing or non-list 'rows' in {a1_inventory_path.name}")
+    rows = inv["rows"]
     inventory_lemmas: set[str] = set()
     single_token_keys: set[str] = set()
     for row in rows:
         if not isinstance(row, dict):
             raise ValueError(f"Expected dict row in {a1_inventory_path.name}")
-        mapping = row.get("mapping", {})
-        if not isinstance(mapping, dict):
-            raise ValueError(f"Expected dict 'mapping' in {a1_inventory_path.name}")
+        if "mapping" not in row or not isinstance(row["mapping"], dict):
+            raise ValueError(f"Missing or non-dict 'mapping' in {a1_inventory_path.name}")
+        mapping = row["mapping"]
         lemma = mapping.get("lemma")
+        if lemma is not None and not isinstance(lemma, str):
+            raise ValueError(
+                f"Expected string or null 'mapping.lemma' in {a1_inventory_path.name}, got {type(lemma).__name__}"
+            )
         if isinstance(lemma, str) and lemma.strip():
             inventory_lemmas.add(normalize_token(lemma))
-        key = row.get("key", "")
-        if isinstance(key, str) and key.strip() and " " not in key and "/" not in key:
+        if "key" not in row or not isinstance(row["key"], str):
+            raise ValueError(
+                f"Missing or non-string 'key' in {a1_inventory_path.name}"
+            )
+        key = row["key"]
+        if key.strip() and " " not in key and "/" not in key:
             single_token_keys.add(normalize_token(key))
 
     # Also collect lemmas of cards allocated in A1 slices 2..6 beside this inventory.
@@ -197,18 +209,20 @@ def load_a1_lemma_sets(
     reg_path = atlas_dir / "identity" / "registry.json"
     if reg_path.exists():
         reg = _load_json_dict(reg_path)
-        reg_entries = reg.get("entries", [])
-        if not isinstance(reg_entries, list):
-            raise ValueError(f"Expected 'entries' list in {reg_path.name}")
+        if "entries" not in reg or not isinstance(reg["entries"], list):
+            raise ValueError(f"Missing or non-list 'entries' in {reg_path.name}")
         card_to_spelling: dict[str, str] = {}
-        for entry in reg_entries:
+        for entry in reg["entries"]:
             if not isinstance(entry, dict):
                 raise ValueError(f"Expected dict entry in {reg_path.name}")
             cid = entry.get("card_id")
             key_info = entry.get("key_at_creation")
-            spelling = key_info.get("spelling") if isinstance(key_info, dict) else None
-            if isinstance(cid, str) and isinstance(spelling, str) and cid and spelling:
-                card_to_spelling[cid] = normalize_token(spelling)
+            if not isinstance(cid, str) or not cid or not isinstance(key_info, dict):
+                raise ValueError(f"Malformed identity entry in {reg_path.name}")
+            spelling = key_info.get("spelling")
+            if not isinstance(spelling, str) or not spelling:
+                raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {reg_path.name}")
+            card_to_spelling[cid] = normalize_token(spelling)
         for slice_num in (2, 3, 4, 5, 6):
             comp_path = atlas_dir / "identity" / f"a1-v1-slice{slice_num}.json"
             if comp_path.exists():
@@ -221,22 +235,25 @@ def load_a1_lemma_sets(
                         raise ValueError(f"Expected dict entry in {comp_path.name}")
                     cid = entry.get("card_id")
                     key_info = entry.get("key_at_creation")
-                    spelling = key_info.get("spelling") if isinstance(key_info, dict) else None
-                    if isinstance(cid, str) and isinstance(spelling, str) and cid and spelling:
-                        card_to_spelling[cid] = normalize_token(spelling)
+                    if not isinstance(cid, str) or not cid or not isinstance(key_info, dict):
+                        raise ValueError(f"Malformed identity entry in {comp_path.name}")
+                    spelling = key_info.get("spelling")
+                    if not isinstance(spelling, str) or not spelling:
+                        raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {comp_path.name}")
+                    card_to_spelling[cid] = normalize_token(spelling)
             slice_path = atlas_dir / f"a1-v1-slice{slice_num}.json"
             if slice_path.exists():
                 sdata = _load_json_dict(slice_path)
-                selection = sdata.get("selection")
-                cids = sdata.get("card_ids")
-                if cids is None and isinstance(selection, dict):
-                    cids = selection.get("card_ids")
-                if cids is None:
-                    cids = []
-                if not isinstance(cids, list):
-                    raise ValueError(f"Expected 'card_ids' list in {slice_path.name}")
+                if "card_ids" in sdata:
+                    cids = sdata["card_ids"]
+                elif isinstance(sdata.get("selection"), dict) and "card_ids" in sdata["selection"]:
+                    cids = sdata["selection"]["card_ids"]
+                else:
+                    raise ValueError(f"Missing 'card_ids' list in {slice_path.name}")
+                if not isinstance(cids, list) or any(not isinstance(cid, str) for cid in cids):
+                    raise ValueError(f"Expected list of string 'card_ids' in {slice_path.name}")
                 for cid in cids:
-                    if isinstance(cid, str) and cid in card_to_spelling:
+                    if cid in card_to_spelling:
                         slice_lemmas.add(card_to_spelling[cid])
 
     return {
@@ -371,6 +388,15 @@ def build_paronym_registry(
         return (ca, att.member_b), (cb, att.member_a)
 
     for att, ca, cb, is_surf, unv in resolved_rows:
+        if not unv:
+            # Fail closed if pass-2 canonical lemma lookup returned empty analyses.
+            canon_unv = [
+                {"word": w, "reason": "not_attested_in_vesum"}
+                for w in (ca, cb)
+                if " " in w or not vesum_results.get(w)
+            ]
+            if canon_unv:
+                unv = canon_unv
         pair_key = (ca, cb)
         target_map = unverified_groups if unv else verified_groups
         if pair_key not in target_map:
@@ -486,8 +512,11 @@ def build_paronym_registry(
     matched_a1_slices = sorted(slice_lemmas & set(word_to_paronyms))
 
     miyklas_pages_summary = []
-    if miyklas_meta:
-        for p in miyklas_meta.get("pages", []):
+    if miyklas_meta is not None:
+        if not isinstance(miyklas_meta, dict) or not isinstance(miyklas_meta.get("pages"), list):
+            raise ValueError("Expected miyklas_meta dict with 'pages' list")
+        for raw_p in miyklas_meta["pages"]:
+            p = validate_miyklas_page_dict(raw_p, verify_text_digest=False)
             miyklas_pages_summary.append(
                 {
                     "page_id": p["page_id"],
@@ -588,7 +617,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    worktree_root = Path(__file__).resolve().parents[3]
+    worktree_root = Path(__file__).resolve(strict=True).parents[3]
     primary_root = main_checkout_root(worktree_root)
     sources_db = _resolve_sources_db(primary_root, args.sources_db)
 

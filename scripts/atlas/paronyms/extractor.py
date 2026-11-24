@@ -3,7 +3,8 @@
 Extracts ONLY explicit paronym presentations (dictionary entries, dash/slash
 pairs, explicit paronym exercises) from plain text documents (textbook chunks
 and MiyKlas pages). Every output pair carries the exact source locator and
-verbatim quoted excerpt; nothing is inferred from model knowledge.
+verbatim quoted excerpt sliced directly from the raw source text; nothing is
+inferred from model knowledge.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass
-from itertools import combinations
+from itertools import combinations, pairwise
 
 # Ukrainian alphabet characters (no Russian-only letters ы/э/ё/ъ).
 UK_LOWER = "а-щьюяєіїґ"
@@ -183,6 +184,13 @@ _NON_PARONYM_SECTION_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Non-paronym lexical topics anywhere in a segment lacking an active paronym cue.
+_OTHER_LEXICAL_TOPIC_RE = re.compile(
+    r"(?<![а-яіїєґ'])"
+    r"(?:антонім\w*|синонім\w*|омонім\w*|омограф\w*|омофон\w*|омоформ\w*|фразеологізм\w*)",
+    re.IGNORECASE,
+)
+
 # Explicit non-paronym disclaimers (e.g. narrow-definition exclusions, non-existent words).
 _DISCLAIMER_RE = re.compile(
     r"(?:не\s+є\s+паронім|від\s+паронімів\s+(?:слід|необхідно|а\s+відповідно)|"
@@ -207,6 +215,14 @@ _PDF_PUA_STRESS_RE = re.compile(r"[\u0301\u0300\u02c8\u00ad\u200b\ufeff\ue000-\u
 _INLINE_DIGIT_STRESS_RE = re.compile(rf"(?<=[{UK_LETTER}])5(?=[{UK_LOWER}])")
 _LINE_WRAP_HYPHEN_RE = re.compile(rf"([{UK_LOWER}{APOS}])-\s*\n\s*([{UK_LOWER}])")
 _TOC_RE = re.compile(r"(?:\.{5,}|(?:\.\s){5,})")
+
+_AUTHOR_OR_SOURCE_PAREN_RE = re.compile(
+    rf"^(?:[{UK_UPPER}]\.\s*[{UK_UPPER}][{UK_LOWER}]+|"
+    rf"(?:За|Із|З)\s+(?:[{UK_UPPER}]\.|журнал|газет|інтернет|подруч|словник|тв)|"
+    r"Нар\.\s*тв)",
+    re.IGNORECASE,
+)
+_ETYMOLOGY_PAREN_PREFIXES = ("від ", "грец", "лат", "франц", "англ", "італ", "нім")
 
 
 @dataclass(frozen=True)
@@ -262,19 +278,112 @@ def normalize_token(raw: str) -> str:
     return " ".join(text.strip().lower().split())
 
 
+def _clean_text_with_map(raw_text: str) -> tuple[str, list[int]]:
+    """Clean PDF/HTML artifacts for parsing while mapping every char back to ``raw_text``.
+
+    Returns ``(clean_text, clean_to_raw)`` where ``len(clean_to_raw) == len(clean_text) + 1``
+    so any slice ``clean_text[s:e]`` corresponds to the exact verbatim span
+    ``raw_text[clean_to_raw[s]:clean_to_raw[e]]``.
+    """
+    n = len(raw_text)
+    out_chars: list[str] = []
+    out_map: list[int] = []
+    i = 0
+    while i < n:
+        ch = raw_text[i]
+        if ch == "\r":
+            out_chars.append("\n")
+            out_map.append(i)
+            i += 2 if (i + 1 < n and raw_text[i + 1] == "\n") else 1
+            continue
+        if ch == "\u00a0":
+            out_chars.append(" ")
+            out_map.append(i)
+            i += 1
+            continue
+        if _PDF_PUA_STRESS_RE.fullmatch(ch):
+            i += 1
+            continue
+        if (
+            ch == "5"
+            and out_chars
+            and re.fullmatch(rf"[{UK_LETTER}]", out_chars[-1])
+            and i + 1 < n
+            and re.fullmatch(rf"[{UK_LOWER}]", raw_text[i + 1])
+        ):
+            i += 1
+            continue
+        if (
+            ch == "-"
+            and out_chars
+            and re.fullmatch(rf"[{UK_LOWER}{APOS}]", out_chars[-1])
+        ):
+            j = i + 1
+            saw_nl = False
+            while j < n and raw_text[j] in " \t\r\n\u00a0":
+                if raw_text[j] in "\r\n":
+                    saw_nl = True
+                j += 1
+            if saw_nl and j < n and re.fullmatch(rf"[{UK_LOWER}]", raw_text[j]):
+                # Skip the soft line-wrap hyphen and intervening whitespace/newline.
+                i = j
+                continue
+        out_chars.append(ch)
+        out_map.append(i)
+        i += 1
+    out_map.append(n)
+    return "".join(out_chars), out_map
+
+
 def _clean_text_for_parsing(raw_text: str) -> str:
     """Clean PDF/HTML artifacts while keeping line structure for parsing."""
-    text = unicodedata.normalize("NFC", raw_text)
-    text = text.replace("\r\n", "\n").replace("\r", "\n").replace("\u00a0", " ")
-    text = _PDF_PUA_STRESS_RE.sub("", text)
-    text = _INLINE_DIGIT_STRESS_RE.sub("", text)
-    # Rejoin PDF soft line-wrap hyphenations (e.g. "іммігра-\nція" -> "імміграція").
-    text = _LINE_WRAP_HYPHEN_RE.sub(r"\1\2", text)
-    return text
+    clean_text, _ = _clean_text_with_map(raw_text)
+    return clean_text
 
 
-def _clean_quote(snippet: str) -> str:
-    """Collapse internal newlines/extra spaces for a compact verbatim quote."""
+def _fold_whitespace(snippet: str) -> str:
+    """Fold whitespace only, preserving every non-whitespace source character verbatim."""
+    return " ".join(snippet.replace("\u00a0", " ").split())
+
+
+def _raw_quote(raw_text: str, clean_to_raw: list[int], clean_start: int, clean_end: int) -> str:
+    """Slice ``raw_text`` for ``clean_text[clean_start:clean_end]`` and fold whitespace only."""
+    limit = len(clean_to_raw) - 1
+    s = max(0, min(clean_start, limit))
+    e = max(s, min(clean_end, limit))
+    raw_start = clean_to_raw[s]
+    raw_end = clean_to_raw[e]
+    return _fold_whitespace(raw_text[raw_start:raw_end])
+
+
+def _flatten_with_map(text: str, base_offset: int) -> tuple[str, list[int]]:
+    """Collapse internal whitespace runs to single spaces with an offset map into ``clean_text``."""
+    out_chars: list[str] = []
+    out_map: list[int] = []
+    i = 0
+    n = len(text)
+    # Trim leading whitespace
+    while i < n and text[i].isspace():
+        i += 1
+    end_trim = n
+    while end_trim > i and text[end_trim - 1].isspace():
+        end_trim -= 1
+    while i < end_trim:
+        if text[i].isspace():
+            out_chars.append(" ")
+            out_map.append(base_offset + i)
+            while i < end_trim and text[i].isspace():
+                i += 1
+        else:
+            out_chars.append(text[i])
+            out_map.append(base_offset + i)
+            i += 1
+    out_map.append(base_offset + end_trim)
+    return "".join(out_chars), out_map
+
+
+def _clean_note_text(snippet: str) -> str:
+    """Clean parsed meaning/example note text (NFC, collapsed whitespace)."""
     return " ".join(unicodedata.normalize("NFC", snippet).replace("\u00a0", " ").split())
 
 
@@ -300,21 +409,37 @@ def _is_valid_headword(token: str) -> bool:
     return False
 
 
-def _split_meaning_and_example(definition: str) -> tuple[str | None, str | None]:
-    """Split a source's short meaning from an optional trailing parenthesized or colon example."""
-    body = _clean_quote(definition).strip(" .;")
+def _contains_headword_form(text: str, headword: str) -> bool:
+    """True when ``text`` actually illustrates ``headword`` (inflected or stem-matched form)."""
+    hw = normalize_token(headword)
+    if not hw:
+        return True
+    hw_parts = [p for p in hw.split() if len(p) >= 2 and p not in _STOPWORDS] or hw.split()
+    tokens = [normalize_token(t) for t in re.findall(WORD_CORE, text)]
+    if not tokens:
+        return False
+    for hp in hw_parts:
+        stem_len = len(hp) if len(hp) <= 3 else max(3, min(4, len(hp) - 1))
+        prefix = hp[:stem_len]
+        if any(tok.startswith(prefix) for tok in tokens):
+            return True
+    return False
+
+
+def _split_meaning_and_example(
+    definition: str, *, headword: str = ""
+) -> tuple[str | None, str | None]:
+    """Split a source's short meaning from an explicit usage example.
+
+    Order prevents literary author credits ``(А. Кащенко)`` or orthographic notes
+    ``(без крапки в кінці)`` from being misclassified as usage examples.
+    """
+    body = _clean_note_text(definition).strip(" .;")
     if not body:
         return None, None
 
-    # Pattern 1: trailing parenthesized example "(авторитарний уряд)" at end of gloss.
-    m_paren = re.search(r"^(.*?)\s*\(([^()]{3,160})\)\s*\.?$", body)
-    if m_paren:
-        gloss = m_paren.group(1).strip(" .;:")
-        ex = m_paren.group(2).strip(" .;")
-        if gloss and not ex.lower().startswith(("від ", "грец", "лат", "франц", "англ", "італ", "нім")):
-            return gloss, ex
-
-    # Pattern 2: meaning followed by ": example" (e.g. "сільський багатир", "серцевий м'яз").
+    # Pattern 1: meaning followed by ": example" (keeps any trailing author credit
+    # attached to the example sentence, e.g. "... (А. Кащенко)").
     if ":" in body:
         left, right = body.split(":", 1)
         left = left.strip(" .;")
@@ -322,10 +447,26 @@ def _split_meaning_and_example(definition: str) -> tuple[str | None, str | None]
         if left and right and len(left) >= 6:
             return left, right
 
-    # Pattern 3: sentence meaning followed by example sentence(s) (e.g. Zabolotnyi dictionary).
+    # Pattern 2: trailing parenthesized example "(авторитарний уряд)" at end of a single-clause gloss.
+    m_paren = re.search(r"^(.*?)\s*\(([^()]{3,160})\)\s*\.?$", body)
+    if m_paren:
+        gloss = m_paren.group(1).strip(" .;:")
+        ex = m_paren.group(2).strip(" .;")
+        if (
+            gloss
+            and ". " not in gloss
+            and not ex.lower().startswith(_ETYMOLOGY_PAREN_PREFIXES)
+            and not _AUTHOR_OR_SOURCE_PAREN_RE.match(ex)
+            and _contains_headword_form(ex, headword)
+        ):
+            return gloss, ex
+
+    # Pattern 3: sentence meaning followed by an illustrating example sentence (e.g. Zabolotnyi).
     m_sent = re.match(rf"^([^.]{{6,200}})\.\s+([{UK_UPPER}].+)$", body)
     if m_sent:
-        return m_sent.group(1).strip(), m_sent.group(2).strip()
+        candidate_ex = m_sent.group(2).strip()
+        if _contains_headword_form(candidate_ex, headword):
+            return m_sent.group(1).strip(), candidate_ex
 
     return body, None
 
@@ -348,7 +489,7 @@ def _emit_group_pairs(
             deduped.append(m)
     if len(deduped) < 2 or len(deduped) > 4:
         return out
-    quote = _clean_quote(quoted_line)
+    quote = _fold_whitespace(quoted_line)
     for left, right in combinations(deduped, 2):
         a, b = (left, right) if left.word <= right.word else (right, left)
         out.append(
@@ -361,7 +502,7 @@ def _emit_group_pairs(
                 locator=doc.locator,
                 pattern=pattern,
                 quoted_line=quote,
-                shared_context=_clean_quote(shared_context) if shared_context else None,
+                shared_context=_clean_note_text(shared_context) if shared_context else None,
                 source_url=doc.source_url,
             )
         )
@@ -377,14 +518,30 @@ _INLINE_DICT_SPLIT_RE = re.compile(
 )
 
 
-def _extract_slash_dictionary(clean_text: str, doc: SourceDocument) -> list[RawPairAttestation]:
+def _line_spans(text: str) -> list[tuple[int, int, str]]:
+    """Return ``(start, end, stripped_text)`` for each line in ``text``."""
+    spans: list[tuple[int, int, str]] = []
+    pos = 0
+    for raw_line in text.splitlines(keepends=True):
+        body = raw_line.rstrip("\r\n")
+        lpad = len(body) - len(body.lstrip())
+        stripped = body.strip()
+        spans.append((pos + lpad, pos + lpad + len(stripped), stripped))
+        pos += len(raw_line)
+    return spans
+
+
+def _extract_slash_dictionary(
+    clean_text: str, clean_to_raw: list[int], doc: SourceDocument
+) -> list[RawPairAttestation]:
     if not re.search(r"словнич[оа]к\s+паронімів", clean_text, re.IGNORECASE):
         return []
-    lines = [ln.strip() for ln in clean_text.splitlines()]
+    line_spans = _line_spans(clean_text)
     out: list[RawPairAttestation] = []
     i = 0
-    while i < len(lines):
-        m_hdr = _SLASH_DICT_HEADER_RE.match(lines[i])
+    while i < len(line_spans):
+        l_start, _, ln_text = line_spans[i]
+        m_hdr = _SLASH_DICT_HEADER_RE.match(ln_text)
         if not m_hdr:
             i += 1
             continue
@@ -393,12 +550,13 @@ def _extract_slash_dictionary(clean_text: str, doc: SourceDocument) -> list[RawP
         if len(norm_targets) < 2:
             i += 1
             continue
-        start_i = i
+        block_start = l_start
+        block_end = line_spans[i][1]
         i += 1
         entries: dict[str, str] = {}
         current_key: str | None = None
-        while i < len(lines):
-            ln = lines[i]
+        while i < len(line_spans):
+            _, cur_end, ln = line_spans[i]
             if not ln or _SLASH_DICT_HEADER_RE.match(ln) or re.fullmatch(r"\d{1,3}", ln):
                 break
             m_def = _DEF_LINE_RE.match(ln)
@@ -407,11 +565,12 @@ def _extract_slash_dictionary(clean_text: str, doc: SourceDocument) -> list[RawP
                 entries[current_key] = m_def.group(2).strip()
             elif current_key is not None:
                 entries[current_key] = f"{entries[current_key]} {ln}".strip()
+            block_end = cur_end
             i += 1
-        block_quote = " ".join(ln for ln in lines[start_i:i] if ln)
+        block_quote = _raw_quote(doc.text, clean_to_raw, block_start, block_end)
         members: list[MemberNote] = []
         for norm_w, raw_w in norm_targets.items():
-            meaning, example = _split_meaning_and_example(entries.get(norm_w, ""))
+            meaning, example = _split_meaning_and_example(entries.get(norm_w, ""), headword=raw_w)
             members.append(
                 MemberNote(word=norm_w, attested_form=raw_w, meaning=meaning, example=example)
             )
@@ -423,12 +582,19 @@ def _extract_slash_dictionary(clean_text: str, doc: SourceDocument) -> list[RawP
 
 # ── Pattern 1b: Blank-line-grouped MiyKlas dictionary ("Короткий словник паронімів") ──
 
-def _extract_miyklas_dictionary(clean_text: str, doc: SourceDocument) -> list[RawPairAttestation]:
+
+def _extract_miyklas_dictionary(
+    clean_text: str, clean_to_raw: list[int], doc: SourceDocument
+) -> list[RawPairAttestation]:
     if not re.search(r"короткий\s+словник\s+паронімів", clean_text, re.IGNORECASE):
         return []
     out: list[RawPairAttestation] = []
-    blocks = re.split(r"\n\s*\n", clean_text)
-    for block in blocks:
+    pos = 0
+    for sep_m in [*list(re.finditer(r"\n\s*\n", clean_text)), None]:
+        block_end = sep_m.start() if sep_m is not None else len(clean_text)
+        block_start = pos
+        block = clean_text[block_start:block_end]
+        pos = sep_m.end() if sep_m is not None else len(clean_text)
         if re.match(r"^\s*Джерела\s*:", block, re.IGNORECASE):
             break
         raw_lines = [ln.strip() for ln in block.splitlines() if ln.strip()]
@@ -448,7 +614,7 @@ def _extract_miyklas_dictionary(clean_text: str, doc: SourceDocument) -> list[Ra
             raw_hw = m.group(1).strip()
             if not _is_valid_headword(raw_hw):
                 continue
-            meaning, example = _split_meaning_and_example(m.group(2))
+            meaning, example = _split_meaning_and_example(m.group(2), headword=raw_hw)
             members.append(
                 MemberNote(
                     word=normalize_token(raw_hw),
@@ -458,12 +624,13 @@ def _extract_miyklas_dictionary(clean_text: str, doc: SourceDocument) -> list[Ra
                 )
             )
         if 2 <= len(members) <= 4:
+            quote = _raw_quote(doc.text, clean_to_raw, block_start, block_end)
             out.extend(
                 _emit_group_pairs(
                     members,
                     doc,
                     pattern="dictionary_block",
-                    quoted_line=" ".join(expanded_lines),
+                    quoted_line=quote,
                 )
             )
     return out
@@ -472,7 +639,10 @@ def _extract_miyklas_dictionary(clean_text: str, doc: SourceDocument) -> list[Ra
 # ── Pattern 1c: Named inline dictionary boxes in textbooks ──
 
 _NAMED_DEF_BOX_TRIGGERS = (
-    re.compile(r"запам['’ʼ]ятайте\s+значення\s+паронімів\s*\.", re.IGNORECASE),
+    re.compile(
+        r"запам['’ʼ]ятайте\s+значення\s+паронім(?:ів|ічних\s+[а-яіїєґ']+)?\s*[.:]",
+        re.IGNORECASE,
+    ),
     re.compile(r"розрізняйте\s+пароніми\b[^\n.]*\.", re.IGNORECASE),
     re.compile(r"в\s+українській\s+мові\s+маємо\s+пароніми\b[^\n.]*\.", re.IGNORECASE),
     re.compile(
@@ -483,6 +653,7 @@ _NAMED_DEF_BOX_TRIGGERS = (
 )
 
 _BOX_STOP_RE = re.compile(
+    r"(?:^|\n)\s*\d{1,3}(?:\s+\d{1,3})?\s*(?=\n|$)|"
     r"(?:^|\n|\s)(?:"
     r"\d{1,3}\.\s+[А-ЯІЇЄҐ]|"
     r"у\s+словнику\s+(?:омонімів|антонімів|синонімів)|"
@@ -504,7 +675,7 @@ _INLINE_HEADWORD_DEF_RE = re.compile(
 
 
 def _extract_named_definition_boxes(
-    clean_text: str, doc: SourceDocument
+    clean_text: str, clean_to_raw: list[int], doc: SourceDocument
 ) -> tuple[list[RawPairAttestation], list[tuple[int, int]]]:
     """Extract textbook definition boxes and return (attestations, consumed_char_spans)."""
     out: list[RawPairAttestation] = []
@@ -520,14 +691,14 @@ def _extract_named_definition_boxes(
                 "",
                 segment,
             )
-            flat = _clean_quote(segment_body)
+            flat = _clean_note_text(segment_body)
             entries = list(_INLINE_HEADWORD_DEF_RE.finditer(flat))
             members: list[MemberNote] = []
             for em in entries:
                 raw_hw = em.group(1).strip()
                 if not _is_valid_single_word(raw_hw):
                     continue
-                meaning, example = _split_meaning_and_example(em.group(2))
+                meaning, example = _split_meaning_and_example(em.group(2), headword=raw_hw)
                 members.append(
                     MemberNote(
                         word=normalize_token(raw_hw),
@@ -538,7 +709,10 @@ def _extract_named_definition_boxes(
                 )
             if 2 <= len(members) <= 4:
                 span_end = tail_start + (stop_m.start() if stop_m else len(tail))
-                full_quote = clean_text[m.start() : span_end]
+                # Trim trailing whitespace from span_end for clean raw slice.
+                while span_end > m.start() and clean_text[span_end - 1].isspace():
+                    span_end -= 1
+                full_quote = _raw_quote(doc.text, clean_to_raw, m.start(), span_end)
                 out.extend(
                     _emit_group_pairs(
                         members,
@@ -552,10 +726,15 @@ def _extract_named_definition_boxes(
     # Structured 2-line definition pairs right after a paronym cue (e.g. 6-klas Avramenko
     # "Замерзнути — ... / Змерзнути — ...", MiyKlas 5-klas "Виборний — ... / Виборчий — ...").
     if _PARONYM_CUE_RE.search(clean_text):
-        lines = [ln.strip() for ln in clean_text.splitlines()]
-        for idx in range(len(lines) - 1):
-            m1 = _DEF_LINE_RE.match(lines[idx])
-            m2 = _DEF_LINE_RE.match(lines[idx + 1])
+        line_spans = _line_spans(clean_text)
+        lines = [ln for _, _, ln in line_spans]
+        for idx in range(len(line_spans) - 1):
+            s1, _, l1 = line_spans[idx]
+            _, e2, l2 = line_spans[idx + 1]
+            if any(not (e2 <= cs or s1 >= ce) for cs, ce in consumed):
+                continue
+            m1 = _DEF_LINE_RE.match(l1)
+            m2 = _DEF_LINE_RE.match(l2)
             if not (m1 and m2):
                 continue
             w1, w2 = m1.group(1).strip(), m2.group(1).strip()
@@ -576,11 +755,9 @@ def _extract_named_definition_boxes(
             g1, g2 = m1.group(2).strip(), m2.group(2).strip()
             if len(g1.split()) < 2 or len(g2.split()) < 2:
                 continue
-            raw_pair_line = f"{lines[idx]} {lines[idx + 1]}"
-            if any(raw_pair_line[:25] in clean_text[s:e] for s, e in consumed):
-                continue
-            meaning1, ex1 = _split_meaning_and_example(g1)
-            meaning2, ex2 = _split_meaning_and_example(g2)
+            raw_pair_quote = _raw_quote(doc.text, clean_to_raw, s1, e2)
+            meaning1, ex1 = _split_meaning_and_example(g1, headword=w1)
+            meaning2, ex2 = _split_meaning_and_example(g2, headword=w2)
             members = [
                 MemberNote(word=n1, attested_form=w1, meaning=meaning1, example=ex1),
                 MemberNote(word=n2, attested_form=w2, meaning=meaning2, example=ex2),
@@ -590,9 +767,10 @@ def _extract_named_definition_boxes(
                     members,
                     doc,
                     pattern="dictionary_block",
-                    quoted_line=raw_pair_line,
+                    quoted_line=raw_pair_quote,
                 )
             )
+            consumed.append((s1, e2))
     return out, consumed
 
 
@@ -648,6 +826,13 @@ _QUESTION_PAIR_RE = re.compile(
     rf"(?:^|\n)\s*({WORD_CORE})\?\s*\n?\s*({WORD_CORE})\?(?=\s*(?:\n|$))"
 )
 
+_PARONYM_SECTION_HEADER_RE = re.compile(
+    r"^(?:§\s*\d+\.?\s*пароніми\b|\d+\.\s*пароніми\b|пароніми\s*[(—–−-]|"
+    r"пароніми\s*$|пароніми\.\s*запобігання|3\.5\.\s*явище\s+паронімії|"
+    r"паронімічне\s+значення)",
+    re.IGNORECASE,
+)
+
 
 def _has_dedicated_paronym_heading(clean_text: str, doc: SourceDocument) -> bool:
     """True only when the document/page itself is dedicated to paronyms (not mixed homonyms/synonyms)."""
@@ -670,13 +855,14 @@ def _has_active_paronym_cue(seg: str) -> bool:
     """True when a segment explicitly introduces or asks about paronyms (not a passing book/topic list)."""
     if not _PARONYM_CUE_RE.search(seg):
         return False
-    # Check if every occurrence of "паронім" in this segment is just a passing mention.
     stripped = _PASSING_MENTION_RE.sub("", seg)
     return bool(_PARONYM_CUE_RE.search(stripped))
 
 
-def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[str, bool]]:
-    """Split document into segments tagged with whether they are active paronym contexts."""
+def _split_paronym_segments(
+    clean_text: str, doc: SourceDocument
+) -> list[tuple[int, int, str, bool]]:
+    """Split document into offset-preserving segments tagged with active paronym context."""
     if _TOC_RE.search(clean_text):
         return []
 
@@ -686,53 +872,77 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
         r"(?=\n(?:§\s*\d+|І{1,3}\s+[А-ЯІЇЄҐ]|Вправа\s+\d+|Зауважте!|Зверни\s+увагу!|"
         r"Культура\s+(?:слова|мовлення)|Рекомендована\s+література|Перевірте\s+себе|"
         r"Домашнє\s+завдання|Практикум\b|ПОРУШЕННЯ\s+ЛЕКСИЧНИХ|У\s+словнику\s+|"
-        r"Антонімами\s+називають|Синоніми\s+|Синонімічне\s+значення|"
+        r"Антонімами\s+називають|Антоніми\s+|Синоніми\s+|Синонімічне\s+значення|"
         r"Омоніми\s+|Омонімічне\s+значення|ФУНКЦІОНАЛЬНІ\s+АСПЕКТИ|"
         r"Пароніми\s*\(|Пароніми\s*[—–−-]|Паронімічне\s+значення|3\.5\.\s*Явище\s+паронімії|"
         r"До\s+речі…|•\s*паронімів\s*:|"
         r"З['’ʼ]ясуйте\s+за\s+словником\s+значення\s+паронімів|"
         r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари|"
-        r"(?:[2-9]|[1-9]\d{1,2})\.\s+(?:Прочитайте|Перепишіть|Спишіть|Запишіть|Виберіть|"
+        r"[1-9]\d{0,2}\.\s+(?:Антонім|Синонім|Омонім|Паронім|"
+        r"[А-ЯІЇЄҐ][а-яіїєґ']+(?:\s+[а-яіїєґ']+){0,3}\s+(?:антонім|синонім|омонім|паронім)|"
+        r"Прочитайте|Перепишіть|Спишіть|Запишіть|Виберіть|"
         r"Розподіліть|Розкрийте|Утворіть|утворіть|Розгляньте|Виконайте|З['’ʼ]ясуйте|Витлумачте|"
-        r"Складіть|З\s+кожним|Поєднайте|Знайдіть|Випишіть|Доберіть|Підготуйте|Поміркуйте|"
-        r"Відредагуйте|Чому\s+так|Я\s*—\s*редактор|Поясніть|Дослідіть|Запам['’ʼ]ятайте)))|"
+        r"Складіть|З\s+кожним|Поєднайте|Знайдіть|Випишіть|Доберіть|Підберіть|Наведіть|Подайте|"
+        r"Підготуйте|Поміркуйте|Відредагуйте|Чому\s+так|Я\s*—\s*редактор|Поясніть|Дослідіть|"
+        r"Запам['’ʼ]ятайте|Провідміняйте|Розгадайте|Назвіть|Укажіть|Замініть|Виправте|"
+        r"Поставте|Порівняйте|Визначте|Уведіть|Поділіть|Згрупуйте|Зіставте)))|"
         r"(?<=\.\s)(?=(?:Антонімами\s+називають|Синонімами\s+називають|Омонімами\s+називають|"
         r"Синонімічне\s+значення|Омонімічне\s+значення|Паронімічне\s+значення|"
         r"Іншим\s+різновидом\s+парадигматичних|"
         r"8[1-9]\.\s|23[5-9]\s|29[4-9]\.\s|Чи\s+є\s+слова\b|З['’ʼ]ясуйте\s+рід\s+паронімів\b|"
-        r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари))"
+        r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари))",
+        re.IGNORECASE,
     )
-    raw_segments = [s.strip() for s in boundary_re.split(clean_text) if s.strip()]
 
-    tagged: list[tuple[str, bool]] = []
+    cut_points = [0, *(m.start() for m in boundary_re.finditer(clean_text)), len(clean_text)]
+    raw_segments: list[tuple[int, int, str]] = []
+    for a, b in pairwise(cut_points):
+        chunk = clean_text[a:b]
+        if not chunk.strip():
+            continue
+        ltrim = len(chunk) - len(chunk.lstrip())
+        rtrim = len(chunk) - len(chunk.rstrip())
+        s = a + ltrim
+        e = b - rtrim
+        raw_segments.append((s, e, clean_text[s:e]))
+
+    tagged: list[tuple[int, int, str, bool]] = []
     in_paronym_lesson = has_doc_paronym_heading
-    for idx, seg in enumerate(raw_segments):
+    for idx, (seg_start, seg_end, seg) in enumerate(raw_segments):
         if _MULTIPLE_CHOICE_RE.search(seg):
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
             continue
         # Reject lowercase multiple-choice options "а) ... б) ... в)" UNLESS it's a
         # categorization exercise ("Розподіліть пароніми за значенням так: а) ... б) ...").
         if re.search(r"(?:^|\n)\s*а\)\s+.+\n\s*б\)\s+", seg, re.IGNORECASE) and not re.search(
             r"розподіліть\s+пароніми", seg, re.IGNORECASE
         ):
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
             continue
         if _DISCLAIMER_RE.search(seg) and not re.search(
             r"пароніми[^.]{0,120}:", seg, re.IGNORECASE
         ):
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
             continue
         first_line = seg.splitlines()[0] if seg else ""
+        # Check topic switches on the segment's header/instruction (not inside example sentences).
+        prompt_head = re.split(r"\n(?=[1-9]\.\s)", seg, maxsplit=1)[0].strip()
+        prompt_body = re.sub(r"^\d{1,3}\.\s+", "", prompt_head)
+        prompt_first_sent = re.split(r"(?<=[.!?])\s+", prompt_body, maxsplit=1)[0]
         if _NON_PARONYM_SECTION_RE.search(first_line) and not _has_active_paronym_cue(first_line):
             in_paronym_lesson = False
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
             continue
         if (
             re.search(r"^(?:антонім|синонім|омонім|омограф|омофон)", first_line, re.IGNORECASE)
             and not _has_active_paronym_cue(seg)
         ):
             in_paronym_lesson = False
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
+            continue
+        if _OTHER_LEXICAL_TOPIC_RE.search(prompt_first_sent) and not _has_active_paronym_cue(seg):
+            in_paronym_lesson = False
+            tagged.append((seg_start, seg_end, seg, False))
             continue
         if re.search(
             r"(?:словником\s+синонімів|вжиті\s+в\s+реченнях\s+синоніми|доберіть\s+до\s+слів.*синоніми|"
@@ -746,7 +956,7 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
             seg,
             re.IGNORECASE,
         ):
-            tagged.append((seg, False))
+            tagged.append((seg_start, seg_end, seg, False))
             continue
 
         has_local_cue = _has_active_paronym_cue(seg)
@@ -756,7 +966,7 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
         if (
             not has_local_cue
             and idx + 1 < len(raw_segments)
-            and re.match(r"^Пароніми\s*\(", raw_segments[idx + 1], re.IGNORECASE)
+            and re.match(r"^Пароніми\s*\(", raw_segments[idx + 1][2], re.IGNORECASE)
             and re.search(r"словосполучення|лексичне\s+значення", seg, re.IGNORECASE)
         ):
             has_local_cue = True
@@ -765,10 +975,20 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
             r"^Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари", seg, re.IGNORECASE
         ):
             has_local_cue = True
-        if has_local_cue:
+        # Continue paronym lesson mode on section headers or immediately into a choice exercise
+        # following a paronym-cue lead-in (e.g. 7-klas Avramenko § 20).
+        if has_local_cue and _PARONYM_SECTION_HEADER_RE.match(first_line):
             in_paronym_lesson = True
         active = has_local_cue or in_paronym_lesson
-        tagged.append((seg, active))
+        if (
+            not active
+            and idx > 0
+            and tagged[-1][3]
+            and _CHOICE_EXERCISE_PROMPT_RE.search(prompt_first_sent)
+            and not _OTHER_LEXICAL_TOPIC_RE.search(prompt_first_sent)
+        ):
+            active = True
+        tagged.append((seg_start, seg_end, seg, active))
     return tagged
 
 
@@ -807,31 +1027,66 @@ def _is_similar_enough_for_paronym(w1: str, w2: str) -> bool:
     return False
 
 
-def _strip_subclause_disclaimers(seg: str) -> str:
-    """Remove disclaimer sentences inside an otherwise valid paronym paragraph."""
-    sentences = re.split(r"(?<=[.!?])\s+", seg)
-    kept = [s for s in sentences if not _DISCLAIMER_RE.search(s)]
-    return " ".join(kept)
+def _mask_subclause_disclaimers(seg: str) -> str:
+    """Mask disclaimer sentences with equal-length spaces so character offsets stay exact."""
+    chars = list(seg)
+    pos = 0
+    for m in [*list(re.finditer(r"(?<=[.!?])\s+", seg)), None]:
+        end = m.start() if m is not None else len(seg)
+        sent = seg[pos:end]
+        if _DISCLAIMER_RE.search(sent):
+            for idx in range(pos, end):
+                if chars[idx] != "\n":
+                    chars[idx] = " "
+        pos = m.end() if m is not None else len(seg)
+    return "".join(chars)
 
 
-def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestation]:
+def _sentence_spans(flat_text: str) -> list[tuple[int, int, str]]:
+    """Split ``flat_text`` into sentences with exact ``(start, end, trimmed_text)`` spans."""
+    spans: list[tuple[int, int, str]] = []
+    pos = 0
+    for m in [*list(re.finditer(r"(?<=[.!?])\s+", flat_text)), None]:
+        end = m.start() if m is not None else len(flat_text)
+        raw = flat_text[pos:end]
+        if raw.strip():
+            lpad = len(raw) - len(raw.lstrip())
+            rpad = len(raw) - len(raw.rstrip())
+            s = pos + lpad
+            e = end - rpad
+            spans.append((s, e, flat_text[s:e]))
+        pos = m.end() if m is not None else len(flat_text)
+    return spans
+
+
+def _extract_from_segment(
+    seg: str, seg_start: int, clean_to_raw: list[int], doc: SourceDocument
+) -> list[RawPairAttestation]:
     out: list[RawPairAttestation] = []
     # Never extract from multiple-choice options A/B/V/G.
     if re.search(r"(?:^|\n)\s*[Аа]\s+\S+.*\n\s*[Бб]\s+\S+.*\n\s*[Вв]\s+\S+", seg):
         return out
 
     # Special case: 10-klas Avramenko s0131 bullet list — keep ONLY the "• паронімів:" bullet.
+    base_offset = seg_start
     if re.search(r"•\s*паронімів\s*:", seg, re.IGNORECASE):
         m_b = re.search(r"(•\s*паронімів\s*:[^\n•]+)", seg, re.IGNORECASE)
         if m_b:
+            base_offset = seg_start + m_b.start(1)
             seg = m_b.group(1)
 
-    clean_seg = _strip_subclause_disclaimers(seg)
-    if not clean_seg.strip():
+    masked_seg = _mask_subclause_disclaimers(seg)
+    if not masked_seg.strip():
         return out
 
-    # Flat single-space view for patterns that can wrap across PDF line breaks.
-    flat_seg = _clean_quote(clean_seg)
+    # Flat single-space view with exact offset map back into clean_text (and thus doc.text).
+    flat_seg, flat_to_clean = _flatten_with_map(masked_seg, base_offset)
+
+    def _quote_flat(f_start: int, f_end: int) -> str:
+        return _raw_quote(doc.text, clean_to_raw, flat_to_clean[f_start], flat_to_clean[f_end])
+
+    def _quote_seg(s_start: int, s_end: int) -> str:
+        return _raw_quote(doc.text, clean_to_raw, base_offset + s_start, base_offset + s_end)
 
     rich_pairs: set[tuple[str, str]] = set()
 
@@ -842,14 +1097,14 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             continue
         if not _is_similar_enough_for_paronym(w1, w2):
             continue
-        m1, e1 = _split_meaning_and_example(g1)
-        m2, e2 = _split_meaning_and_example(g2)
+        m1, e1 = _split_meaning_and_example(g1, headword=w1)
+        m2, e2 = _split_meaning_and_example(g2, headword=w2)
         members = [
             MemberNote(word=normalize_token(w1), attested_form=w1, meaning=m1, example=e1),
             MemberNote(word=normalize_token(w2), attested_form=w2, meaning=m2, example=e2),
         ]
         atts = _emit_group_pairs(
-            members, doc, pattern="parenthesized_gloss_pair", quoted_line=m.group(0)
+            members, doc, pattern="parenthesized_gloss_pair", quoted_line=_quote_flat(m.start(), m.end())
         )
         for att in atts:
             rich_pairs.add((att.member_a.word, att.member_b.word))
@@ -865,14 +1120,14 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
         pair_key = tuple(sorted((normalize_token(w1), normalize_token(w2))))
         if pair_key in rich_pairs:
             continue
-        m1, e1 = _split_meaning_and_example(g1)
-        m2, e2 = _split_meaning_and_example(g2)
+        m1, e1 = _split_meaning_and_example(g1, headword=w1)
+        m2, e2 = _split_meaning_and_example(g2, headword=w2)
         members = [
             MemberNote(word=normalize_token(w1), attested_form=w1, meaning=m1, example=e1),
             MemberNote(word=normalize_token(w2), attested_form=w2, meaning=m2, example=e2),
         ]
         atts = _emit_group_pairs(
-            members, doc, pattern="inline_definition_pair", quoted_line=m.group(0)
+            members, doc, pattern="inline_definition_pair", quoted_line=_quote_flat(m.start(), m.end())
         )
         for att in atts:
             rich_pairs.add((att.member_a.word, att.member_b.word))
@@ -881,26 +1136,26 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
     # 3. Stacked gloss pairs (5-klas Zabolotnyi s0027: "1) вистава – виставка\n(спектакль) (показ...)")
     for m in re.finditer(
         rf"\d\)\s*({WORD_CORE})\s*[{DASH_CHARS}]\s*({WORD_CORE})\s*\n\s*\(([^)]+)\)\s*\(([^)]+)\)",
-        clean_seg,
+        masked_seg,
     ):
         w1, w2, g1, g2 = m.group(1), m.group(2), m.group(3), m.group(4)
         if _is_valid_single_word(w1) and _is_valid_single_word(w2) and _is_similar_enough_for_paronym(w1, w2):
             members = [
-                MemberNote(word=normalize_token(w1), attested_form=w1, meaning=_clean_quote(g1)),
-                MemberNote(word=normalize_token(w2), attested_form=w2, meaning=_clean_quote(g2)),
+                MemberNote(word=normalize_token(w1), attested_form=w1, meaning=_clean_note_text(g1)),
+                MemberNote(word=normalize_token(w2), attested_form=w2, meaning=_clean_note_text(g2)),
             ]
             atts = _emit_group_pairs(
-                members, doc, pattern="parenthesized_gloss_pair", quoted_line=m.group(0)
+                members, doc, pattern="parenthesized_gloss_pair", quoted_line=_quote_seg(m.start(), m.end())
             )
             for att in atts:
                 rich_pairs.add((att.member_a.word, att.member_b.word))
             out.extend(atts)
 
     # 4. Dash-separated paronym chains: "word1 — word2 [— word3]"
-    # Run over flat sentences (not raw lines) so PDF line-wrapped pairs like "уява —\nуявлення"
-    # and "заїхати —\nвід'їхати" are preserved intact.
-    for line_or_sent in re.split(r"(?<=[.!?])\s+", flat_seg):
-        chunk = line_or_sent.strip()
+    # Run over flat sentences with offset map so PDF line-wrapped pairs like "уява —\nуявлення"
+    # and "заїхати —\nвід'їхати" are parsed intact while quoted_line stays verbatim from doc.text.
+    sent_spans = _sentence_spans(flat_seg)
+    for s_start, s_end, chunk in sent_spans:
         if not chunk or _DISCLAIMER_RE.search(chunk):
             continue
         # Skip poetry/pun quotes with attribution like "(Л. Костенко)" or "(Нар. тв.)".
@@ -909,6 +1164,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             chunk,
         ):
             continue
+        sent_quote = _quote_flat(s_start, s_end)
         for m in re.finditer(
             rf"(?<![{UK_LETTER}])({WORD_CORE}(?:{DASH_SEP}{WORD_CORE}){{1,2}})(?![{UK_LETTER}])",
             chunk,
@@ -938,7 +1194,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
                 continue
             members = [MemberNote(word=normalize_token(t), attested_form=t) for t in raw_tokens]
             for att in _emit_group_pairs(
-                members, doc, pattern="dash_pair_list", quoted_line=chunk
+                members, doc, pattern="dash_pair_list", quoted_line=sent_quote
             ):
                 if (att.member_a.word, att.member_b.word) not in rich_pairs:
                     out.append(att)
@@ -957,7 +1213,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             continue
         members = [MemberNote(word=normalize_token(t), attested_form=t) for t in raw_tokens]
         for att in _emit_group_pairs(
-            members, doc, pattern="slash_pair_list", quoted_line=m.group(0)
+            members, doc, pattern="slash_pair_list", quoted_line=_quote_flat(m.start(), m.end())
         ):
             if (att.member_a.word, att.member_b.word) not in rich_pairs:
                 out.append(att)
@@ -977,7 +1233,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             members,
             doc,
             pattern="slash_pair_list",
-            quoted_line=m.group(0),
+            quoted_line=_quote_flat(m.start(), m.end()),
             shared_context=shared,
         ):
             if (att.member_a.word, att.member_b.word) not in rich_pairs:
@@ -999,13 +1255,14 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
                 MemberNote(word=normalize_token(w2), attested_form=w2),
             ]
             for att in _emit_group_pairs(
-                members, doc, pattern="conjunction_pair", quoted_line=m.group(0)
+                members, doc, pattern="conjunction_pair", quoted_line=_quote_flat(m.start(), m.end())
             ):
                 if (att.member_a.word, att.member_b.word) not in rich_pairs:
                     out.append(att)
 
     for m in _COLON_CONJ_LIST_RE.finditer(flat_seg):
         list_body = m.group(1)
+        list_quote = _quote_flat(m.start(), m.end())
         for item in re.split(r"\s*[,;]\s*", list_body):
             mc = re.fullmatch(rf"({WORD_CORE})\s+(?:і|та|й)\s+({WORD_CORE})", item.strip())
             if not mc:
@@ -1020,7 +1277,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
                 MemberNote(word=normalize_token(w2), attested_form=w2),
             ]
             for att in _emit_group_pairs(
-                members, doc, pattern="conjunction_pair", quoted_line=m.group(0)
+                members, doc, pattern="conjunction_pair", quoted_line=list_quote
             ):
                 if (att.member_a.word, att.member_b.word) not in rich_pairs:
                     out.append(att)
@@ -1031,13 +1288,24 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
         flat_seg,
         re.IGNORECASE,
     ):
-        for sent in re.split(r"(?<=[.!?])\s+", flat_seg):
+        for s_start, _, sent in sent_spans:
             if ";" not in sent:
                 continue
-            parts = [p.strip(" .") for p in sent.split(";") if p.strip(" .")]
-            if len(parts) < 2:
+            part_spans: list[tuple[int, int, str]] = []
+            p_pos = 0
+            for pm in [*list(re.finditer(r";", sent)), None]:
+                p_end = pm.start() if pm is not None else len(sent)
+                raw_part = sent[p_pos:p_end]
+                stripped = raw_part.strip(" .")
+                if stripped:
+                    lpad = raw_part.find(stripped)
+                    ps = s_start + p_pos + lpad
+                    pe = ps + len(stripped)
+                    part_spans.append((ps, pe, stripped))
+                p_pos = pm.end() if pm is not None else len(sent)
+            if len(part_spans) < 2:
                 continue
-            for part in parts:
+            for ps, pe, part in part_spans:
                 mi = _SEMICOLON_COMMA_ITEM_RE.match(part)
                 if not mi:
                     continue
@@ -1057,7 +1325,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
                     members,
                     doc,
                     pattern="semicolon_comma_group",
-                    quoted_line=part,
+                    quoted_line=_quote_flat(ps, pe),
                     shared_context=shared,
                 ):
                     if (att.member_a.word, att.member_b.word) not in rich_pairs:
@@ -1079,13 +1347,17 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             members = [MemberNote(word=normalize_token(w), attested_form=w) for w in raw_words]
             out.extend(
                 _emit_group_pairs(
-                    members, doc, pattern="semicolon_comma_group", quoted_line=m.group(0)
+                    members,
+                    doc,
+                    pattern="semicolon_comma_group",
+                    quoted_line=_quote_flat(m.start(), m.end()),
                 )
             )
 
     # 8. Choice-in-parentheses exercises inside paronym lessons: "(плутає, путає)"
     if _CHOICE_EXERCISE_PROMPT_RE.search(flat_seg):
-        for sent in re.split(r"(?<=[.!?])\s+", flat_seg):
+        for s_start, s_end, sent in sent_spans:
+            sent_quote = _quote_flat(s_start, s_end)
             for m in _CHOICE_PAIR_RE.finditer(sent):
                 w1, w2 = m.group(1), m.group(2)
                 if not (_is_valid_single_word(w1) and _is_valid_single_word(w2)):
@@ -1097,13 +1369,13 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
                     MemberNote(word=normalize_token(w2), attested_form=w2),
                 ]
                 for att in _emit_group_pairs(
-                    members, doc, pattern="exercise_choice_pair", quoted_line=sent
+                    members, doc, pattern="exercise_choice_pair", quoted_line=sent_quote
                 ):
                     if (att.member_a.word, att.member_b.word) not in rich_pairs:
                         out.append(att)
 
     # 9. Question pairs in paronym intro ("Адрес? Адреса?", "Шкіряний? Шкірний?")
-    for m in _QUESTION_PAIR_RE.finditer(clean_seg):
+    for m in _QUESTION_PAIR_RE.finditer(masked_seg):
         w1, w2 = m.group(1), m.group(2)
         if not (_is_valid_single_word(w1) and _is_valid_single_word(w2)):
             continue
@@ -1114,7 +1386,7 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
             MemberNote(word=normalize_token(w2), attested_form=w2),
         ]
         for att in _emit_group_pairs(
-            members, doc, pattern="question_pair", quoted_line=m.group(0)
+            members, doc, pattern="question_pair", quoted_line=_quote_seg(m.start(), m.end())
         ):
             if (att.member_a.word, att.member_b.word) not in rich_pairs:
                 out.append(att)
@@ -1124,14 +1396,14 @@ def _extract_from_segment(seg: str, doc: SourceDocument) -> list[RawPairAttestat
 
 def extract_from_document(doc: SourceDocument) -> list[RawPairAttestation]:
     """Deterministically extract all explicit paronym pair attestations from one SourceDocument."""
-    clean_text = _clean_text_for_parsing(doc.text)
+    clean_text, clean_to_raw = _clean_text_with_map(doc.text)
     if not clean_text.strip():
         return []
 
     if re.search(r"словнич[оа]к\s+паронімів", clean_text, re.IGNORECASE):
-        return _extract_slash_dictionary(clean_text, doc)
+        return _extract_slash_dictionary(clean_text, clean_to_raw, doc)
     if re.search(r"короткий\s+словник\s+паронімів", clean_text, re.IGNORECASE):
-        return _extract_miyklas_dictionary(clean_text, doc)
+        return _extract_miyklas_dictionary(clean_text, clean_to_raw, doc)
 
     # Summary-table lexical-group overview (7-klas Avramenko s0242/s0243): extract ONLY the
     # explicit Пароніми example row ("рятувальник — ...; рятівник — ...").
@@ -1145,12 +1417,13 @@ def extract_from_document(doc: SourceDocument) -> list[RawPairAttestation]:
         )
         if not m_row:
             return []
-        raw_row = _clean_quote(m_row.group(1))
+        clean_row = _clean_note_text(m_row.group(1))
+        raw_row = _raw_quote(doc.text, clean_to_raw, m_row.start(1), m_row.end(1))
         members = []
-        for part in raw_row.split(";"):
+        for part in clean_row.split(";"):
             md = re.match(rf"^\s*({WORD_CORE})\s*[{DASH_CHARS}]\s*(.+)$", part.strip())
             if md:
-                meaning, ex = _split_meaning_and_example(md.group(2))
+                meaning, ex = _split_meaning_and_example(md.group(2), headword=md.group(1))
                 members.append(
                     MemberNote(
                         word=normalize_token(md.group(1)),
@@ -1164,16 +1437,20 @@ def extract_from_document(doc: SourceDocument) -> list[RawPairAttestation]:
         )
 
     attestations: list[RawPairAttestation] = []
-    box_atts, consumed_spans = _extract_named_definition_boxes(clean_text, doc)
+    box_atts, consumed_spans = _extract_named_definition_boxes(clean_text, clean_to_raw, doc)
     attestations.extend(box_atts)
 
-    residual_text = clean_text
-    for start, end in sorted(consumed_spans, reverse=True):
-        residual_text = residual_text[:start] + "\n" + residual_text[end:]
+    # Mask consumed spans with spaces (preserving newlines) so character offsets stay 1-to-1.
+    residual_chars = list(clean_text)
+    for start, end in consumed_spans:
+        for idx in range(start, end):
+            if residual_chars[idx] != "\n":
+                residual_chars[idx] = " "
+    residual_text = "".join(residual_chars)
 
-    for seg, active in _split_paronym_segments(residual_text, doc):
+    for seg_start, _, seg, active in _split_paronym_segments(residual_text, doc):
         if active:
-            attestations.extend(_extract_from_segment(seg, doc))
+            attestations.extend(_extract_from_segment(seg, seg_start, clean_to_raw, doc))
 
     deduped: list[RawPairAttestation] = []
     seen: set[tuple[str, str, str, str]] = set()

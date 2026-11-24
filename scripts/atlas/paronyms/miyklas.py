@@ -88,10 +88,36 @@ DEFAULT_MIYKLAS_PAGES: tuple[dict[str, str], ...] = (
 
 _DASH_RE = re.compile(r"\s+[–—−]\s+|\s+[–—−](?=\S)|(?<=\S)[–—−]\s+")
 _SINGLE_LETTER_RE = re.compile(r"^[А-ЩЬЮЯЄІЇҐ]$")
+_SHA256_HEX_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class MiyKlasFetchError(RuntimeError):
     """Raised when a MiyKlas page cannot be fetched or parsed."""
+
+
+def _validate_miyklas_url(url: str) -> None:
+    """Enforce HTTPS origin allowlist on miyklas.com.ua before any request or redirect."""
+    parsed = urllib.parse.urlparse(url)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or not (host == "miyklas.com.ua" or host.endswith(".miyklas.com.ua")):
+        raise MiyKlasFetchError(f"Refusing non-MiyKlas HTTPS URL: {url!r}")
+
+
+class _MiyKlasRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Validate every HTTP redirect target against the MiyKlas HTTPS policy before following."""
+
+    def redirect_request(
+        self,
+        req: urllib.request.Request,
+        fp: Any,
+        code: int,
+        msg: str,
+        headers: Any,
+        newurl: str,
+    ) -> urllib.request.Request | None:
+        target = urllib.parse.urljoin(req.full_url, newurl)
+        _validate_miyklas_url(target)
+        return super().redirect_request(req, fp, code, msg, headers, target)
 
 
 @dataclass(frozen=True)
@@ -281,28 +307,19 @@ def fetch_miyklas_pages(
     """Fetch public MiyKlas paronym pages and return a provenance-pinned snapshot dict."""
     records: list[dict[str, Any]] = []
     fetched_run_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    opener = urllib.request.build_opener(_MiyKlasRedirectHandler())
     for spec in pages:
         url = spec["url"]
-        parsed_req = urllib.parse.urlparse(url)
-        if parsed_req.scheme != "https" or not (
-            parsed_req.hostname == "miyklas.com.ua"
-            or (parsed_req.hostname or "").endswith(".miyklas.com.ua")
-        ):
-            raise MiyKlasFetchError(f"Refusing non-MiyKlas HTTPS URL: {url!r}")
+        _validate_miyklas_url(url)
         req = urllib.request.Request(url, headers={"User-Agent": user_agent})
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
+            with opener.open(req, timeout=timeout) as resp:
                 status = int(resp.status)
                 final_url = resp.geturl()
                 raw_bytes = resp.read()
         except urllib.error.URLError as exc:
             raise MiyKlasFetchError(f"Failed fetching {url}: {exc}") from exc
-        parsed_final = urllib.parse.urlparse(final_url)
-        if parsed_final.scheme != "https" or not (
-            parsed_final.hostname == "miyklas.com.ua"
-            or (parsed_final.hostname or "").endswith(".miyklas.com.ua")
-        ):
-            raise MiyKlasFetchError(f"Unexpected redirect off miyklas.com.ua: {final_url!r}")
+        _validate_miyklas_url(final_url)
         if status != 200:
             raise MiyKlasFetchError(f"Unexpected HTTP {status} for {url}")
         text = parse_miyklas_html(raw_bytes, kind=spec["kind"], title=spec["title"])
@@ -331,8 +348,56 @@ def fetch_miyklas_pages(
     }
 
 
+def validate_miyklas_page_dict(page: Any, *, verify_text_digest: bool = True) -> dict[str, Any]:
+    """Fail closed if a MiyKlas snapshot page record lacks valid typed provenance."""
+    if not isinstance(page, dict):
+        raise ValueError(f"MiyKlas snapshot page must be a JSON object, got {type(page).__name__}")
+    required_str_keys: tuple[str, ...] = (
+        "page_id",
+        "title",
+        "url",
+        "fetched_at_utc",
+        "raw_html_sha256",
+        "text_sha256",
+    )
+    if verify_text_digest:
+        required_str_keys = (*required_str_keys, "text")
+    for key in required_str_keys:
+        val = page.get(key)
+        if not isinstance(val, str) or not val.strip():
+            raise ValueError(f"MiyKlas snapshot page missing or invalid non-empty string key {key!r}")
+    status = page.get("http_status")
+    if isinstance(status, bool) or not isinstance(status, int) or status != 200:
+        raise ValueError(
+            f"MiyKlas snapshot page {page['page_id']!r} requires integer http_status == 200, got {status!r}"
+        )
+    parsed_url = urllib.parse.urlparse(page["url"])
+    if parsed_url.scheme != "https" or not parsed_url.netloc:
+        raise ValueError(f"MiyKlas snapshot page {page['page_id']!r} requires https URL, got {page['url']!r}")
+    for digest_key in ("raw_html_sha256", "text_sha256"):
+        digest = page[digest_key]
+        if not _SHA256_HEX_RE.fullmatch(digest):
+            raise ValueError(
+                f"MiyKlas snapshot page {page['page_id']!r} has invalid {digest_key}: {digest!r}"
+            )
+    if "grade" in page and not isinstance(page["grade"], str):
+        raise ValueError(f"MiyKlas snapshot page {page['page_id']!r} has non-string 'grade'")
+    if "raw_html_bytes" in page:
+        raw_len = page["raw_html_bytes"]
+        if isinstance(raw_len, bool) or not isinstance(raw_len, int) or raw_len < 0:
+            raise ValueError(f"MiyKlas snapshot page {page['page_id']!r} has invalid 'raw_html_bytes'")
+    if verify_text_digest:
+        actual_sha = hashlib.sha256(page["text"].encode("utf-8")).hexdigest()
+        expected_sha = page["text_sha256"]
+        if actual_sha != expected_sha:
+            raise ValueError(
+                f"Text SHA-256 mismatch for {page['page_id']}: expected {expected_sha}, got {actual_sha}"
+            )
+    return page
+
+
 def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[SourceDocument]]:
-    """Load a saved MiyKlas snapshot JSON and validate its SHA-256 text integrity."""
+    """Load a saved MiyKlas snapshot JSON and validate its provenance and SHA-256 integrity."""
     payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(
@@ -342,22 +407,9 @@ def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[So
     pages = payload.get("pages")
     if not isinstance(pages, list) or not pages:
         raise ValueError("MiyKlas snapshot contains no pages")
-    required_keys = ("page_id", "title", "url", "text", "text_sha256", "raw_html_sha256", "fetched_at_utc")
     docs: list[SourceDocument] = []
-    for page in pages:
-        if not isinstance(page, dict) or any(
-            not isinstance(page.get(k), str) for k in required_keys
-        ):
-            raise ValueError(
-                f"MiyKlas snapshot page missing required string provenance keys: {required_keys}"
-            )
-        text = str(page["text"])
-        actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
-        expected_sha = str(page["text_sha256"])
-        if actual_sha != expected_sha:
-            raise ValueError(
-                f"Text SHA-256 mismatch for {page['page_id']}: expected {expected_sha}, got {actual_sha}"
-            )
+    for raw_page in pages:
+        page = validate_miyklas_page_dict(raw_page, verify_text_digest=True)
         docs.append(
             SourceDocument(
                 source_type="miyklas",
@@ -365,13 +417,13 @@ def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[So
                 chunk_id=page["page_id"],
                 locator=page["url"],
                 title=page["title"],
-                text=text,
-                grade=str(page.get("grade", "")),
+                text=page["text"],
+                grade=page.get("grade", ""),
                 author="МійКлас",
                 source_url=page["url"],
-                fetch_date_utc=str(page.get("fetched_at_utc", "")),
-                raw_html_sha256=str(page.get("raw_html_sha256", "")),
-                text_sha256=expected_sha,
+                fetch_date_utc=page["fetched_at_utc"],
+                raw_html_sha256=page["raw_html_sha256"],
+                text_sha256=page["text_sha256"],
             )
         )
     return payload, docs

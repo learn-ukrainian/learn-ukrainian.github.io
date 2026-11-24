@@ -7,13 +7,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+import urllib.request
 from pathlib import Path
 
 import pytest
 
-from scripts.atlas.paronyms.build import build_paronym_registry
+from scripts.atlas.paronyms.build import build_paronym_registry, load_a1_lemma_sets
 from scripts.atlas.paronyms.extractor import SourceDocument, extract_from_document
-from scripts.atlas.paronyms.miyklas import load_miyklas_documents, parse_miyklas_html
+from scripts.atlas.paronyms.miyklas import (
+    MiyKlasFetchError,
+    _MiyKlasRedirectHandler,
+    load_miyklas_documents,
+    parse_miyklas_html,
+)
 
 
 def _doc(text: str, *, source_type: str = "textbook", chunk_id: str = "book_s0001") -> SourceDocument:
@@ -27,14 +33,29 @@ def _doc(text: str, *, source_type: str = "textbook", chunk_id: str = "book_s000
     )
 
 
+def _fold(text: str) -> str:
+    return " ".join(text.replace("\u00a0", " ").split())
+
+
 def test_pdf_line_wrap_dehyphenation_and_inline_gloss_extraction() -> None:
-    """Defect class: PDF line-wrap hyphens splitting Ukrainian paronyms across lines."""
+    """Defect class: PDF line-wrap hyphens, note-boundary corruption, page footers, or raw quote drift."""
     doc = _doc(
         "§ 9. Пароніми\n"
         "Пароніми можуть бути: однокореневими словами: організаційний — ор-\n"
         "ганізований; еміграція — іммігра-\n"
         "ція.\n"
         "Наприклад: абонемент (документ на користування) — абонент (власник абонемента).\n"
+        "6. Запам’ятайте значення паронімічних прикметників.\n"
+        "Літний — який стосується польоту, літання. Літній — 1) який стосується\n"
+        "літа; 2) немолодий.\n"
+        "133 133\n"
+        "Розрізняйте пароніми серцевий — сердешний.\n"
+        "Серцевий — пов’язаний із серцем: серцевий м’яз.\n"
+        "Сердешний — бідолашний, нещасний: Сердешна жінка припадала з горя (А. Кащенко).\n"
+        "168\n"
+        "Розрізняйте пароніми гривна — гривня.\n"
+        "Гривна — давня прикраса.\n"
+        "Гривня — назва грошової одиниці. Скорочено позначаємо грн (без крапки в кінці).\n"
     )
     atts = extract_from_document(doc)
     by_pair = {(a.member_a.word, a.member_b.word): a for a in atts}
@@ -42,20 +63,46 @@ def test_pdf_line_wrap_dehyphenation_and_inline_gloss_extraction() -> None:
     assert ("організаційний", "організований") in by_pair
     assert ("еміграція", "імміграція") in by_pair
     assert ("абонемент", "абонент") in by_pair
+    assert ("літний", "літній") in by_pair
+    assert ("сердешний", "серцевий") in by_pair
+    assert ("гривна", "гривня") in by_pair
+
+    # Every quoted_line must stay verbatim inside the raw source text after whitespace folding.
+    folded_raw = _fold(doc.text)
+    for att in atts:
+        assert _fold(att.quoted_line) in folded_raw
+    assert "ор- ганізований" in by_pair[("організаційний", "організований")].quoted_line
+
     ab = by_pair[("абонемент", "абонент")]
     assert ab.member_a.meaning == "документ на користування"
     assert ab.member_b.meaning == "власник абонемента"
     assert ab.chunk_id == "book_s0001"
-    assert "абонемент" in ab.quoted_line
+
+    # Author credit stays attached to the literary example, and trailing page numbers are excluded.
+    ss = by_pair[("сердешний", "серцевий")]
+    assert ss.member_a.meaning == "бідолашний, нещасний"
+    assert ss.member_a.example == "Сердешна жінка припадала з горя (А. Кащенко)"
+    assert "168" not in ss.quoted_line
+
+    # Abbreviation note is NOT misclassified as a usage example.
+    gg = by_pair[("гривна", "гривня")]
+    assert gg.member_b.meaning == "назва грошової одиниці. Скорочено позначаємо грн (без крапки в кінці)"
+    assert gg.member_b.example is None
+
+    # Paronymic-adjective definition box excludes trailing page footer.
+    ll = by_pair[("літний", "літній")]
+    assert ll.member_a.meaning == "який стосується польоту, літання"
+    assert "133" not in ll.quoted_line
 
 
 def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
-    """Defect class: false-positive extraction of antonyms, test distractors, and disclaimers."""
+    """Defect class: false-positive extraction of antonyms, test distractors, disclaimers, or leaked exercise context."""
     doc = _doc(
         "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
         "Пароніми — це слова, близькі за звучанням: ефектний — ефективний.\n"
         "Не є паронімічними слова типу газ — гас, короб — короп.\n"
         "Антонімами називають протилежні за значенням слова: чорний — білий, високий — низький.\n"
+        "2. Доберіть антоніми до поданих слів: вхід — вихід, добрий — недобрий.\n"
         "6. Пароніми вжито в рядку\n"
         "А упертий — покладистий\n"
         "Б чарівний — чепурний\n"
@@ -72,7 +119,7 @@ def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
 
 
 def test_slash_dictionary_extracts_triplets_with_meanings_and_examples() -> None:
-    """Defect class: losing third triplet member or definitions in slash-headed dictionaries."""
+    """Defect class: losing third triplet member, definitions, or raw quote fidelity in slash-headed dictionaries."""
     doc = _doc(
         "Додаток 2\n"
         "СЛОВНИЧОК ПАРОНІМІВ\n"
@@ -94,10 +141,11 @@ def test_slash_dictionary_extracts_triplets_with_meanings_and_examples() -> None
     assert pair.member_a.example == "Сердечна людина"
     assert pair.member_b.meaning == "пов’язаний із серцем"
     assert pair.member_b.example == "Серцевий ритм"
+    assert _fold(pair.quoted_line) in _fold(doc.text)
 
 
 def test_miyklas_html_parser_preserves_inline_morpheme_spans_and_groups(tmp_path: Path) -> None:
-    """Defect class: splitting highlighted morphemes across <span> tags or merging dictionary groups."""
+    """Defect class: split morpheme spans, invalid snapshot provenance, or unvalidated off-domain redirects."""
     dict_html = (
         '<div id="taskhtml">'
         '<div class="gxst-title"><span>А</span></div>'
@@ -132,40 +180,54 @@ def test_miyklas_html_parser_preserves_inline_morpheme_spans_and_groups(tmp_path
         ("постановка", "установка"),
     }
 
-    # Verify load_miyklas_documents fails closed on tampered SHA-256.
-    snap = tmp_path / "bad.json"
-    snap.write_text(
-        json.dumps(
-            {
-                "schema_version": "miyklas-paronyms-raw.v1",
-                "pages": [
-                    {
-                        "page_id": "mk-1",
-                        "grade": "5",
-                        "kind": "theory",
-                        "title": "Пароніми",
-                        "url": "https://example.invalid/paronimy",
-                        "fetched_at_utc": "2026-11-23T00:00:00Z",
-                        "raw_html_sha256": "0" * 64,
-                        "text_sha256": hashlib.sha256(b"different").hexdigest(),
-                        "text": theory_text,
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
+    valid_page = {
+        "page_id": "mk-1",
+        "grade": "5",
+        "kind": "theory",
+        "title": "Пароніми",
+        "url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/paronimy",
+        "http_status": 200,
+        "fetched_at_utc": "2026-11-23T00:00:00Z",
+        "raw_html_sha256": "a" * 64,
+        "text_sha256": hashlib.sha256(theory_text.encode("utf-8")).hexdigest(),
+        "text": theory_text,
+    }
+
+    def _write_snap(name: str, page_override: dict[str, object]) -> Path:
+        p = tmp_path / name
+        p.write_text(
+            json.dumps({"schema_version": "miyklas-paronyms-raw.v1", "pages": [page_override]}),
+            encoding="utf-8",
+        )
+        return p
+
+    # Tampered text digest, missing/string http_status, and invalid raw_html_sha256 all fail closed.
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
-        load_miyklas_documents(snap)
+        load_miyklas_documents(_write_snap("bad-text.json", {**valid_page, "text_sha256": "b" * 64}))
+    no_status = {k: v for k, v in valid_page.items() if k != "http_status"}
+    with pytest.raises(ValueError, match="http_status"):
+        load_miyklas_documents(_write_snap("no-status.json", no_status))
+    with pytest.raises(ValueError, match="http_status"):
+        load_miyklas_documents(_write_snap("str-status.json", {**valid_page, "http_status": "200"}))
+    with pytest.raises(ValueError, match="raw_html_sha256"):
+        load_miyklas_documents(_write_snap("bad-raw.json", {**valid_page, "raw_html_sha256": "not-hex"}))
+
+    # Redirect handler refuses off-domain or non-HTTPS redirects BEFORE following them.
+    handler = _MiyKlasRedirectHandler()
+    req = urllib.request.Request("https://www.miyklas.com.ua/p/test")
+    with pytest.raises(MiyKlasFetchError, match="Refusing non-MiyKlas HTTPS URL"):
+        handler.redirect_request(req, None, 302, "Found", {}, "https://evil.invalid/steal")
+    with pytest.raises(MiyKlasFetchError, match="Refusing non-MiyKlas HTTPS URL"):
+        handler.redirect_request(req, None, 301, "Moved", {}, "http://www.miyklas.com.ua/p/test")
 
 
-def test_vesum_gating_lemmatization_and_a1_coverage_accounting() -> None:
-    """Defect class: unverified/typo/multiword members leaking into verified pairs or miscounted A1 coverage."""
+def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -> None:
+    """Defect class: unverified/canonical-missing/multiword members leaking into pairs or malformed inventory accepted."""
     tb_doc = _doc(
         "§ 7. Пароніми\n"
         "Приклади паронімів: адреса — адрес, мимохіть — михохідь, греби — гриби.\n"
         "1. Перепишіть, вибираючи з дужок потрібне слово.\n"
-        "Суспільство поважає (громадську, громадянську) позицію.\n"
+        "Суспільство поважає (громадську, громадянську) позицію та (тактичну, тактовну) поведінку.\n"
     )
     mk_doc = _doc(
         "Короткий словник паронімів\n\n"
@@ -189,6 +251,11 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting() -> None:
         "громадянську": [{"lemma": "громадянський", "pos": "adj"}],
         "громадський": [{"lemma": "громадський", "pos": "adj"}],
         "громадянський": [{"lemma": "громадянський", "pos": "adj"}],
+        # Pass-1 inflected forms exist, but pass-2 canonical lemmas return empty analyses -> must route to unverified.
+        "тактичну": [{"lemma": "тактичний", "pos": "adj"}],
+        "тактовну": [{"lemma": "тактовний", "pos": "adj"}],
+        "тактичний": [],
+        "тактовний": [],
     }
 
     def fake_vesum(words: list[str]) -> dict[str, list[dict[str, str]]]:
@@ -212,24 +279,55 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting() -> None:
         "греби|гриби",
         "громадський|громадянський",
     }
-    # Cross-POS surface pair stays on exact attested forms; same-POS choice exercise lemmatizes.
+    for pair in registry["pairs"]:
+        assert all(m["vesum_verified"] is True for m in pair["members"])
     assert verified_by_id["греби|гриби"]["surface_form_pair"] is True
     assert verified_by_id["громадський|громадянський"]["surface_form_pair"] is False
     assert verified_by_id["адрес|адреса"]["source_types"] == ["miyklas", "textbook"]
 
-    # Unattested typo and multiword headword go strictly to `unverified` with typed reasons.
-    assert set(unverified_by_id) == {"мимохіть|михохідь", "на протязі|протягом"}
+    # Unattested typo, multiword headword, and pass-2 canonical-missing pair all route to `unverified`.
+    assert set(unverified_by_id) == {
+        "мимохіть|михохідь",
+        "на протязі|протягом",
+        "тактичний|тактовний",
+    }
     assert unverified_by_id["мимохіть|михохідь"]["unverified_members"] == [
         {"word": "михохідь", "reason": "not_attested_in_vesum"}
     ]
     assert unverified_by_id["на протязі|протягом"]["unverified_members"] == [
         {"word": "на протязі", "reason": "multiword_not_in_vesum"}
     ]
+    assert unverified_by_id["тактичний|тактовний"]["unverified_members"] == [
+        {"word": "тактичний", "reason": "not_attested_in_vesum"},
+        {"word": "тактовний", "reason": "not_attested_in_vesum"},
+    ]
 
     assert registry["counts"]["verified_pairs"] == 3
-    assert registry["counts"]["unverified_pairs"] == 2
+    assert registry["counts"]["unverified_pairs"] == 3
     assert registry["counts"]["a1_inventory_lemmas_with_paronym"] == 1
     assert registry["counts"]["a1_slices_2_to_6_lemmas_with_paronym"] == 1
     assert registry["a1_coverage"]["matched_a1_lemmas"] == [
         {"lemma": "адреса", "paronyms": ["адрес"], "pair_ids": ["адрес|адреса"]}
     ]
+
+    # Malformed A1 inventory (missing rows or non-string lemma/key) fails closed with ValueError.
+    missing_rows = tmp_path / "missing-rows.json"
+    missing_rows.write_text(json.dumps({"schema_version": "v1"}), encoding="utf-8")
+    with pytest.raises(ValueError, match="rows"):
+        load_a1_lemma_sets(missing_rows)
+
+    bad_lemma = tmp_path / "bad-lemma.json"
+    bad_lemma.write_text(
+        json.dumps({"rows": [{"key": "адреса", "mapping": {"lemma": 123}}]}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="lemma"):
+        load_a1_lemma_sets(bad_lemma)
+
+    bad_key = tmp_path / "bad-key.json"
+    bad_key.write_text(
+        json.dumps({"rows": [{"key": 42, "mapping": {"lemma": "адреса"}}]}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="key"):
+        load_a1_lemma_sets(bad_key)
