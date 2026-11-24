@@ -92,10 +92,12 @@ open-dataset-publish: open-dataset
 # Local neural pronunciation slice; hard generator cap: 500 eligible lemmas.
 PRONUNCIATION_LIMIT ?= 200
 .PHONY: pronunciation-audio pronunciation-setup
+pronunciation-setup: SHELL := bash
+pronunciation-setup: .SHELLFLAGS := -o pipefail -c
 pronunciation-setup:
-	uv pip sync --python "$(PYTHON)" --no-python-downloads --target batch_state/tts-runtime \
-		--reinstall --require-hashes --only-binary :all: --exclude-newer '7 days' \
-		requirements-tts.txt requirements-tts-stress.txt
+	uv export --locked --no-python-downloads --python "$(PYTHON)" --only-group tts --prune stanza | \
+		uv --no-config pip sync --python "$(PYTHON)" --no-python-downloads --target batch_state/tts-runtime \
+			--reinstall --require-hashes --only-binary :all: --exclude-newer '7 days' -
 
 pronunciation-audio:
 	npm --prefix site run hydrate:practice
