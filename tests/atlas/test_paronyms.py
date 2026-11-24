@@ -713,6 +713,67 @@ def test_sum20_lookup_names_non_text_key_under_text_affinity(tmp_path: Path, sto
     assert f"key={value!r}" in message
 
 
+# A commit between the key probe and the article read. Each statement names the storage class
+# the key changes to; TEXT affinity still stores null and blob as those classes.
+_SNAPSHOT_KEY_CHANGES = (
+    ("null", "UPDATE sum20_mirror_articles SET normalized_lookup_key = NULL", False),
+    ("integer", "UPDATE sum20_mirror_articles SET normalized_lookup_key = 7", False),
+    ("real", "UPDATE sum20_mirror_articles SET normalized_lookup_key = 1.5", False),
+    ("blob", "UPDATE sum20_mirror_articles SET normalized_lookup_key = CAST(normalized_lookup_key AS BLOB)", False),
+    ("null", "UPDATE sum20_mirror_articles SET normalized_lookup_key = NULL", True),
+    ("blob", "UPDATE sum20_mirror_articles SET normalized_lookup_key = CAST(normalized_lookup_key AS BLOB)", True),
+)
+
+
+@pytest.mark.parametrize("storage_class,update_sql,text_affinity", _SNAPSHOT_KEY_CHANGES)
+def test_sum20_lookup_reads_key_and_article_from_one_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, storage_class: str, update_sql: str, text_affinity: bool
+) -> None:
+    """Defect class: the key probe and the article read see different commits.
+
+    A WAL commit that changes the key's storage class between the two statements drops
+    the row, because a non-text key does not match IN. One read transaction keeps the
+    article that was validated with the key.
+    """
+    import sqlite3
+
+    from scripts.atlas.paronyms import build as paronym_build
+
+    db = tmp_path / "sources.db"
+    key_type = "TEXT" if text_affinity else ""
+    with sqlite3.connect(db) as setup:
+        setup.execute("PRAGMA journal_mode=WAL")
+        setup.execute(
+            "CREATE TABLE sum20_mirror_articles ("
+            f"id INTEGER PRIMARY KEY, normalized_lookup_key {key_type}, article_text)"
+        )
+        setup.execute(
+            "INSERT INTO sum20_mirror_articles (normalized_lookup_key, article_text) VALUES ('alpha', 'article')"
+        )
+
+    writer = sqlite3.connect(db)
+    real_open = paronym_build.open_readonly
+
+    def open_and_commit_between_statements(path: Path, *args: object, **kwargs: object) -> sqlite3.Connection:
+        conn = real_open(path, *args, **kwargs)
+
+        def trace(statement: str) -> None:
+            if "article_text" in statement and " IN " in statement:
+                writer.execute(update_sql)
+                writer.commit()
+
+        conn.set_trace_callback(trace)
+        return conn
+
+    monkeypatch.setattr(paronym_build, "open_readonly", open_and_commit_between_statements)
+    try:
+        assert paronym_build._default_sum20_lookup(db)(["alpha"]) == {"alpha": ["article"]}
+        stored = writer.execute("SELECT typeof(normalized_lookup_key) FROM sum20_mirror_articles").fetchone()
+        assert stored == (storage_class,)
+    finally:
+        writer.close()
+
+
 def test_sum20_lookup_text_rows_match_previous_result(tmp_path: Path) -> None:
     """Defect class: the text storage class, including an empty article, is unchanged.
 
