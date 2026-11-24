@@ -250,10 +250,8 @@ def test_missing_server_fails_closed_and_can_be_retried(tmp_path):
 def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monkeypatch, session):
     from lu_machinery.agent_runtime.adapters import codex
 
-    def missing():
-        return sources_tool_sets(tmp_path / "missing.py")
-
-    monkeypatch.setattr(codex, "sources_tool_sets", missing)
+    missing_server = tmp_path / "missing.py"
+    monkeypatch.setattr(codex, "sources_server_path", lambda *, fallback_checkout: missing_server)
     with pytest.raises(FileNotFoundError):
         CodexAdapter().build_invocation(
             prompt="use mcp__sources__verify_words",
