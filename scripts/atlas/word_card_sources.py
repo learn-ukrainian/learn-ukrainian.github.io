@@ -16,7 +16,6 @@ import re
 import sqlite3
 import unicodedata
 from collections import defaultdict
-from collections.abc import Collection
 from pathlib import Path
 
 from lu_machinery.lib.readonly_sqlite import SQLiteConnection
@@ -408,15 +407,6 @@ def vesum_paradigm(rows: list[dict], keep_gender: bool) -> dict[int, dict]:
     return entries
 
 
-def pronoun_slot_number(ulif_slots: Collection[tuple[str, ...]], vesum_slots: Collection[tuple[str, ...]]) -> str | None:
-    """Supply a number only when the ULIF table is case-only and VESUM uses one number."""
-    numbers = {token for slot in vesum_slots for token in slot if token in {"s", "p"}}
-    if (len(numbers) == 1 and ulif_slots and all(len(slot) == 1 and slot[0] in CASES for slot in ulif_slots)
-            and all(any(case in slot for case in CASES) and numbers.intersection(slot) for slot in vesum_slots)):
-        return next(iter(numbers))
-    return None
-
-
 def compare_paradigms(ulif: dict | None, vesum: dict) -> dict:
     """Paradigm signature of identity.md §4 step 2: ULIF's slot form sets against VESUM's for the same slots.
 
@@ -433,7 +423,11 @@ def compare_paradigms(ulif: dict | None, vesum: dict) -> dict:
     v = {slot: set(item["forms"]) for slot, item in vesum["slots"].items()}
     # A case-only ULIF pronoun table has an implicit number only when the
     # corresponding VESUM personal-pronoun entry gives one number throughout.
-    if ulif.get("pronoun") and vesum.get("personal_pronoun") and (number := pronoun_slot_number(u, v)):
+    numbers = {token for slot in v for token in slot if token in {"s", "p"}}
+    if (ulif.get("pronoun") and vesum.get("personal_pronoun") and len(numbers) == 1
+            and u and all(len(slot) == 1 and slot[0] in CASES for slot in u)
+            and all(any(case in slot for case in CASES) and numbers.intersection(slot) for slot in v)):
+        number = next(iter(numbers))
         u = {slot_key([*slot, number]): forms for slot, forms in u.items()}
     detail = {}
     for slot in sorted(set(u) | set(v)):

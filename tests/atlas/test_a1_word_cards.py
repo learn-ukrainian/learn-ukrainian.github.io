@@ -615,7 +615,7 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
         {"id": 6, "entry_id": 30, "lemma": "абе", "word_form": "абе", "tags": "noun:m:v_naz"},
     ]
     snapshots = {"ulif": "fixture-ulif", "vesum": "fixture-vesum"}
-    stress, paradigm = _paradigm(ulif, vesum, snapshots, None, "entry_fingerprint", pronoun=False)
+    stress, paradigm = _paradigm(ulif, vesum, snapshots, None, "entry_fingerprint")
     assert stress[0]["value"] == {"form": f"а{ACUTE}бе{ACUTE}", "readings": [f"а{ACUTE}бе", f"абе{ACUTE}"]}
     assert stress[0]["receipt"]["locator"] == "ulif:ulif_forms:id:2"
     assert [(slot["slot"], slot["comparison"]) for slot in paradigm["slots"]] == [
@@ -627,8 +627,22 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
     assert difference["vesum"][0]["value"] == {"form": "где", "tags": "noun:m:v_rod"}
     assert difference["vesum"][0]["receipt"]["locator"] == "vesum:forms_all:id:5"
     _, unbound = _paradigm(ulif, [], snapshots, "homonym_correspondence_unresolved",
-                           "entry_fingerprint", pronoun=False)
+                           "entry_fingerprint")
     assert {slot["comparison"] for slot in unbound["slots"]} == {"unresolved"}
+
+    for tags, vesum_tags, expected_slot in (
+        ('["v_naz"]', "numr:p:v_naz", "v_naz.p"),
+        ('["v_naz","m"]', "noun:m:v_naz", "v_naz.s.m"),
+    ):
+        _, aligned = _paradigm([dict(ulif[2], grammatical_tags=tags)],
+                               [dict(vesum[1], tags=vesum_tags)], snapshots, None, "entry_fingerprint")
+        assert [(slot["slot"], slot["comparison"]) for slot in aligned["slots"]] == [(expected_slot, "agrees")]
+    _, mixed_number = _paradigm([dict(ulif[2], grammatical_tags='["v_naz"]')],
+                                [vesum[1], dict(vesum[1], id=7, tags="noun:p:v_naz")],
+                                snapshots, None, "entry_fingerprint")
+    assert [(slot["slot"], slot["comparison"], slot["reason"]) for slot in mixed_number["slots"]] == [
+        (slot, "unresolved", "ulif_slot_number_unresolved") for slot in ("v_naz", "v_naz.s", "v_naz.p")
+    ]
 
 
 def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):

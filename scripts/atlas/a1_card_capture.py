@@ -7,7 +7,6 @@ from collections import Counter, defaultdict
 from contextlib import ExitStack
 from pathlib import Path
 
-from lu_machinery.common.repo_root import main_checkout_root
 from lu_machinery.storage.topology import StoreRefusal, resolve_store, store_data_dir
 
 from scripts.atlas import word_card_assembly as assembly
@@ -48,7 +47,7 @@ def capture(tool_dir: Path, inventory: dict, root: Path) -> dict:
             record["source_role"] = role
         records[key] = record
 
-    binding = resolve_store("sources", main_checkout_root(root))
+    binding = resolve_store("sources", root)
     if isinstance(binding, StoreRefusal):
         raise Refusal("sources_store_unavailable:" + binding.reason)
     with ExitStack() as stack:
@@ -155,10 +154,16 @@ def _group_text(value):
     return value
 
 
-def _entry_candidates(entry, vesum_entries):
+def _section_payload(row):
+    payload = json.loads(row["payload_json"])
+    if not isinstance(payload, dict):
+        raise Refusal(f"ulif_section_payload_invalid:row_id:{row['id']}")
+    return payload
+
+
+def _entry_candidates(entry, vesum_entries, head):
     """Match the exact citation spelling and grammar before comparing any forms."""
     label = entry["grammatical_label"]
-    head = source_rules.unstressed(entry["canonical_headword"])
     pos = label_pos(label)
     head_class = label.split(maxsplit=1)[0].rstrip(",") if label else ""
     pos = pos or {"частка": "part", "вигук": "intj", "числівник": "numr"}.get(head_class)
@@ -201,7 +206,7 @@ def _form_lineage(entry, sections, forms):
         return "entry_fingerprint"
     # Relation sections can change independently of the paradigm. Check the
     # exact page digest recorded in the current entry's paradigm section.
-    pages = {json.loads(row["payload_json"])["raw_response_ref"] for row in sections if row["kind"] == "paradigm"}
+    pages = {_section_payload(row).get("raw_response_ref") for row in sections if row["kind"] == "paradigm"}
     if all(foundation.hex_digest(row["source_page_sha256"]) and f"sha256:{row['source_page_sha256']}" in pages
            for row in forms):
         return "paradigm_page"
@@ -218,7 +223,7 @@ def _tag_list(row, column):
     return value
 
 
-def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage, *, pronoun):
+def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage):
     """Use canonical VESUM slots. Retain source flags and unmapped rows as evidence."""
     ulif = defaultdict(list)
     vesum = defaultdict(list)
@@ -253,10 +258,21 @@ def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage, *, pronoun)
         slot = None if unmapped else source_rules.ulif_slot(tags)
         ulif[slot].append(witness)
 
-    if (pronoun and None not in ulif and None not in vesum and vesum_rows
-            and all({"pron", "pers"} <= set(row["tags"].split(":")) for row in vesum_rows)
-            and (number := source_rules.pronoun_slot_number(ulif, vesum))):
-        ulif = {source_rules.slot_key([*slot, number]): values for slot, values in ulif.items()}
+    # ULIF omits number from some case and gender slots. The remaining
+    # features must identify exactly one VESUM slot before we align them.
+    numbered_slots = defaultdict(list)
+    for slot in vesum:
+        if slot and {"s", "p"}.intersection(slot) and set(slot).intersection(source_rules.CASES + source_rules.GENDERS):
+            numbered_slots[tuple(tag for tag in slot if tag not in {"s", "p"})].append(slot)
+    uncertain_number = set()
+    for slot in tuple(ulif):
+        partners = numbered_slots.get(slot, [])
+        if slot in vesum or not partners:
+            continue
+        if len(partners) == 1 and partners[0] not in ulif:
+            ulif[partners[0]] = ulif.pop(slot)
+        else:
+            uncertain_number.update((slot, *partners))
 
     def slot_order(slot):
         if slot in (invariant, None):
@@ -272,6 +288,8 @@ def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage, *, pronoun)
         reason = binding_reason
         if slot is None:
             reason = "unmapped_slot"
+        elif slot in uncertain_number:
+            reason = "ulif_slot_number_unresolved"
         elif slot == invariant and lineage == "entry_headword":
             reason = "ulif_invariable_status_unverified"
         elif set(slot).intersection(source_rules.RELATED_FORMS):
@@ -296,28 +314,49 @@ def _ulif_card(sources, vesum, lemma, target, snapshots):
     entries = [dict(row) for row in sources.execute(
         "SELECT * FROM ulif_dictua_entries WHERE normalized_query=? ORDER BY homonym_index, id",
         (normalize_ulif_spelling(lemma),))]
-    vesum_by_head = {}
-    for head in sorted({source_rules.unstressed(e["canonical_headword"]) for e in entries if e["canonical_headword"]}):
-        vesum_by_head[head] = source_rules.group_by(
-            map(source_rules.row_dict, source_rules.query_vesum_forms(vesum, head)), lambda row: row["entry_id"])
+    vesum_entries = source_rules.group_by(
+        map(source_rules.row_dict, source_rules.query_vesum_forms(vesum, lemma)), lambda row: row["entry_id"])
+    heads = {entry["id"]: source_rules.unstressed(entry["canonical_headword"] or "") for entry in entries}
     candidates = {}
     for entry in entries:
-        head = source_rules.unstressed(entry["canonical_headword"] or "")
-        candidates[entry["id"]] = _entry_candidates(entry, vesum_by_head[head]) if head else None
+        entry_id = entry["id"]
+        if heads[entry_id] == lemma:
+            candidates[entry_id] = _entry_candidates(entry, vesum_entries, lemma)
+
+    # A title-case variant needs affirmative evidence for the inventory entry.
+    # A competing ULIF homonym or an exact VESUM reading of the alternate case
+    # prevents the variant from borrowing the lowercase entry.
+    if len(entries) == 1:
+        entry = entries[0]
+        entry_id = entry["id"]
+        head = heads[entry_id]
+        if (lemma.islower() and head == lemma[:1].upper() + lemma[1:] and not entry["sense_gloss"]
+                and not is_proper_name(entry["grammatical_label"], head, entry["sense_gloss"])
+                and not source_rules.query_vesum_forms(vesum, head).fetchone()):
+            ids = _entry_candidates(entry, vesum_entries, lemma)
+            if ids and len(ids) == 1 and ids[0] in target["vesum_entry_ids"]:
+                candidates[entry_id] = ids
+
     competitors = Counter(entry_id for ids in candidates.values() if ids is not None for entry_id in ids)
-    opaque_heads = {source_rules.unstressed(entry["canonical_headword"] or "")
-                    for entry in entries if candidates[entry["id"]] is None}
+    opaque = None in candidates.values() or "" in heads.values()
     card = {"lemma": lemma, **target, "entries": [], "withheld_entries": []}
     for entry in entries:
         entry_id = entry["id"]
         sections = [dict(row) for row in sources.execute(
             "SELECT * FROM ulif_dictua_sections WHERE entry_id=? ORDER BY kind, source_order, id", (entry_id,))]
-        head = source_rules.unstressed(entry["canonical_headword"] or "")
-        if (not entry["homonym_checked"] or entry["status"] != "ok"
-                or normalize_ulif_spelling(head) != normalize_ulif_spelling(lemma)):
+        forms = [dict(row) for row in sources.execute(
+            "SELECT * FROM ulif_forms WHERE entry_id=? ORDER BY id", (entry_id,))]
+        if entry["homonym_checked"] != 1 or entry["status"] != "ok" or entry_id not in candidates:
             reason = entry["status"] if entry["status"] != "ok" else "unverified_entry_identity"
+            fields = {row["kind"] for row in sections} & set(ULIF_GROUPS)
+            if entry["homonym_checked"] == 1 and entry["status"] == "ok":
+                reason = "ulif_headword_spelling_unbound"
+                if forms:
+                    fields.add("paradigm")
+                if any(row["is_lemma"] and source_rules.ACUTE in row["form_stressed"] for row in forms):
+                    fields.add("stress")
             card["withheld_entries"].append({"entry_id": entry_id, "reason": reason,
-                                              "fields": sorted({row["kind"] for row in sections} & set(ULIF_GROUPS))})
+                                              "fields": sorted(fields)})
             continue
         ids = candidates[entry_id]
         partner = None
@@ -325,22 +364,20 @@ def _ulif_card(sources, vesum, lemma, target, snapshots):
             reason = "ulif_grammar_unmapped"
         elif not ids:
             reason = "vesum_entry_not_found"
-        elif len(ids) != 1 or competitors[ids[0]] != 1 or head in opaque_heads or "" in opaque_heads:
+        elif len(ids) != 1 or competitors[ids[0]] != 1 or opaque:
             reason = "homonym_correspondence_unresolved"
         else:
             partner, reason = ids[0], None
 
-        forms = [dict(row) for row in sources.execute(
-            "SELECT * FROM ulif_forms WHERE entry_id=? ORDER BY id", (entry_id,))]
         lineage = _form_lineage(entry, sections, forms)
-        stress, paradigm = _paradigm(forms, vesum_by_head[head].get(partner, []), snapshots, reason, lineage,
-                                     pronoun=entry["grammatical_label"].startswith("займенник"))
+        stress, paradigm = _paradigm(forms, vesum_entries.get(partner, []), snapshots, reason, lineage)
         groups = {kind: [] for kind in ULIF_GROUPS}
         for row in sections:
             if row["kind"] not in groups:
                 continue
-            payload = json.loads(row["payload_json"])
-            if (payload["source_order"], payload["sense_or_group_id"]) != (row["source_order"], row["sense_or_group_id"]):
+            payload = _section_payload(row)
+            if (payload.get("source_order"), payload.get("sense_or_group_id")) != (row["source_order"],
+                                                                                 row["sense_or_group_id"]):
                 raise Refusal(f"ulif_group_identity_mismatch:row_id:{row['id']}")
             groups[row["kind"]].append(_witness(
                 _group_text(payload), row, "ulif", "ulif_dictua_sections", snapshots["ulif"]))
@@ -348,7 +385,8 @@ def _ulif_card(sources, vesum, lemma, target, snapshots):
                     "homonym_index": entry["homonym_index"]}
         card["entries"].append({
             "entry": _witness(identity, entry, "ulif", "ulif_dictua_entries", snapshots["ulif"]),
-            "vesum_binding": {"entry_id": partner, "candidates": ids or [], "reason": reason},
+            "vesum_binding": {"entry_id": partner, "candidates": ids or [], "reason": reason,
+                              "spelling_relation": "exact" if heads[entry_id] == lemma else "case_variant"},
             "stress": stress, "paradigm": {"lineage": lineage, **paradigm}, **groups,
         })
     return card
@@ -356,9 +394,8 @@ def _ulif_card(sources, vesum, lemma, target, snapshots):
 
 def capture_ulif(inventory, root):
     """Build the full A1 ULIF card data and disagreement report from pinned read transactions."""
-    main = main_checkout_root(root)
-    sources_binding = resolve_store("sources", main)
-    vesum_binding = resolve_store("vesum", main)
+    sources_binding = resolve_store("sources", root)
+    vesum_binding = resolve_store("vesum", root)
     for binding in (sources_binding, vesum_binding):
         if isinstance(binding, StoreRefusal):
             raise Refusal(f"{binding.store}_store_unavailable:{binding.reason}")
