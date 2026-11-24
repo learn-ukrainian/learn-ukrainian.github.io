@@ -2004,24 +2004,16 @@
         {
           "word": "в'язи",
           "vesum_verified": true,
-          "vesum_lemmas": [
-            "в'яз"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
+          "vesum_lemmas": [],
+          "vesum_pos": [],
           "meanings": [],
           "examples": []
         },
         {
           "word": "м'язи",
           "vesum_verified": true,
-          "vesum_lemmas": [
-            "м'яз"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
+          "vesum_lemmas": [],
+          "vesum_pos": [],
           "meanings": [],
           "examples": []
         }
@@ -3651,24 +3643,16 @@
         {
           "word": "греби",
           "vesum_verified": true,
-          "vesum_lemmas": [
-            "гребти"
-          ],
-          "vesum_pos": [
-            "verb"
-          ],
+          "vesum_lemmas": [],
+          "vesum_pos": [],
           "meanings": [],
           "examples": []
         },
         {
           "word": "гриби",
           "vesum_verified": true,
-          "vesum_lemmas": [
-            "гриб"
-          ],
-          "vesum_pos": [
-            "noun"
-          ],
+          "vesum_lemmas": [],
+          "vesum_pos": [],
           "meanings": [],
           "examples": []
         }

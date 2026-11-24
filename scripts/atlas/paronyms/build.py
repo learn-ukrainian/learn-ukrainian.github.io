@@ -122,6 +122,19 @@ def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
 _SUM20_PRIMARY_END_RE = re.compile(r"\s2\.\s|[А-ЯІЇЄҐ'’ʼ\u0301]{2,}[²³⁴⁵]")
 
 
+def _is_sum20_header_token(token: str) -> bool:
+    """True for an article-header token: a headword, a sense number or a grammar/usage label."""
+    bare = token.replace("\u0301", "").strip(",;")
+    if not bare:
+        return True
+    letters = bare.strip(".¹²³⁴⁵0123456789'’ʼ")
+    if not letters:  # "1." and similar sense numbers
+        return True
+    if letters.isupper() or (letters.islower() and len(letters) <= 5):  # headword; "а́", "ч.", "воді"
+        return True
+    return bare.endswith(".")  # labels such as "рідко.", "недок.", "розм."
+
+
 def _sum20_variant_evidence(word: str, other: str, articles: dict[str, list[str]]) -> str | None:
     """The СУМ-20 excerpt whose primary meaning refers ``word`` directly to ``other``, or None.
 
@@ -134,7 +147,14 @@ def _sum20_variant_evidence(word: str, other: str, articles: dict[str, list[str]
         primary = text[: end.start()] if end else text
         for m in _SUM20_VARIANT_REF_RE.finditer(primary):
             before = primary[: m.start()]
-            if before.count("(") > before.count(")"):
+            if before.count("(") > before.count(")") or before.count("[") > before.count("]"):
+                continue
+            # The reference must open the definition: only the headword and its grammar and
+            # usage labels may precede it, never definition or example text.
+            header = before.split()
+            if header and normalize_token(header[0]) == word:
+                header = header[1:]  # the mirror text opens with an echo of the lookup key
+            if not all(_is_sum20_header_token(tok) for tok in header):
                 continue
             target = normalize_token(unicodedata.normalize("NFC", m.group(1)).replace("\u0301", ""))
             if target == other:
@@ -153,11 +173,14 @@ def _unique_sorted(items: list[str]) -> list[str]:
     return sorted({x for x in items if x})
 
 
-_GLOSS_WORD_RE = re.compile(r"(?<![\w'’ʼ-])[а-щьюяєіїґ][а-щьюяєіїґ'’ʼ]*(?:-[а-щьюяєіїґ'’ʼ]+)*")
+_GLOSS_WORD_RE = re.compile(r"(?<![\w'’ʼ-])[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ'’ʼ]*(?:-[а-щьюяєіїґ'’ʼ]+)*")
 
 
 def _gloss_words(text: str) -> list[str]:
-    """Lowercase Ukrainian words of a gloss (capitalised names and Latin text are not checked)."""
+    """Ukrainian words of a gloss, normalised to lower case (Latin text is not checked).
+
+    A sentence-initial capital does not exempt a common word ("Оспівний").
+    """
     return [normalize_token(m.group(0)) for m in _GLOSS_WORD_RE.finditer(text)]
 
 
@@ -497,11 +520,17 @@ def build_paronym_registry(
     def _attested_gloss(note: dict[str, str]) -> bool:
         return all(_attested_word(w) for w in _gloss_words(note["text"]))
 
-    def _finalize_member(word: str, m_bucket: dict[str, Any]) -> dict[str, Any]:
+    def _finalize_member(word: str, m_bucket: dict[str, Any], *, surface_form: bool) -> dict[str, Any]:
         m_bucket = {**m_bucket, "meanings": [n for n in m_bucket["meanings"] if _attested_gloss(n)]}
         analyses = vesum_results.get(word, []) if " " not in word else []
-        lemmas = _unique_sorted([normalize_token(str(r.get("lemma", ""))) for r in analyses])
-        pos_list = _unique_sorted([str(r.get("pos", "")) for r in analyses])
+        lexeme_analyses = analyses
+        if surface_form:
+            # A surface-form pair is about the cited forms. VESUM can tie such a form to an
+            # unrelated homonym ("в'язи" 'nape' only as a form of "в'яз" 'elm'), so the registry
+            # asserts no lexeme for it beyond the form being its own lemma.
+            lexeme_analyses = [r for r in analyses if normalize_token(str(r.get("lemma", ""))) == word]
+        lemmas = _unique_sorted([normalize_token(str(r.get("lemma", ""))) for r in lexeme_analyses])
+        pos_list = _unique_sorted([str(r.get("pos", "")) for r in lexeme_analyses])
         return {
             "word": word,
             "vesum_verified": bool(analyses) and (" " not in word),
@@ -539,8 +568,8 @@ def build_paronym_registry(
         for sf in {s["source_file"] for s in sources_sorted}:
             pairs_by_source_file[sf] += 1
 
-        m_a = _finalize_member(ca, bucket["members_map"][ca])
-        m_b = _finalize_member(cb, bucket["members_map"][cb])
+        m_a = _finalize_member(ca, bucket["members_map"][ca], surface_form=bucket["surface_form_pair"])
+        m_b = _finalize_member(cb, bucket["members_map"][cb], surface_form=bucket["surface_form_pair"])
         if m_a["meanings"] or m_b["meanings"]:
             pairs_with_meaning += 1
 
@@ -573,8 +602,8 @@ def build_paronym_registry(
                 "pair_id": bucket["pair_id"],
                 "unverified_members": unv_members,
                 "members": [
-                    _finalize_member(ca, bucket["members_map"][ca]),
-                    _finalize_member(cb, bucket["members_map"][cb]),
+                    _finalize_member(ca, bucket["members_map"][ca], surface_form=bucket["surface_form_pair"]),
+                    _finalize_member(cb, bucket["members_map"][cb], surface_form=bucket["surface_form_pair"]),
                 ],
                 "sources": sources_sorted,
             }

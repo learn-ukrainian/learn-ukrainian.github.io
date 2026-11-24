@@ -150,6 +150,9 @@ _PASSING_MENTION_RE = re.compile(
     r"омонім\w*[,\s]+(?:синонім\w*[,\s]+|антонім\w*[,\s]+)+[ійта\s]*паронім|"
     r"антонім\w*[,\s]+(?:синонім\w*[,\s]+|омонім\w*[,\s]+)+[ійта\s]*паронім|"
     r"«словник\s+паронімів»|словники\s+синонімів|"
+    # A prose reference to a paronym dictionary ("У додатку є Словничок паронімів") points
+    # elsewhere; only a standalone heading line opens a dictionary.
+    r"(?:словнич(?:ок|ка|ку|ком)|словник(?:а|у|ом)?)\s+паронімів|"
     r"стилістичне\s+використання\s+(?:омонімів|синонімів)[^\n]{0,40}паронімів|"
     r"багатозначні\s+й\s+однозначні[^\n]{0,80}омоніми\.\s*пароніми)",
     re.IGNORECASE,
@@ -192,6 +195,12 @@ _OTHER_LEXICAL_TOPIC_RE = re.compile(
 )
 
 # Explicit non-paronym disclaimers (e.g. narrow-definition exclusions, non-existent words).
+_PARONYM_DICTIONARY_REFERENCE_RE = re.compile(
+    r"(?:скористайтеся|скористайтесь|зверніться\s+до|користуйтеся|перевірте\s+за)\s+"
+    r"(?:словнич(?:ок|ка|ку|ком)|словник(?:а|у|ом)?)\s+паронімів",
+    re.IGNORECASE,
+)
+
 _DISCLAIMER_RE = re.compile(
     r"(?:не\s+є\s+паронім|від\s+паронімів\s+(?:слід|необхідно|а\s+відповідно)|"
     r"таких\s+слів\s*,\s*як\b|в\s+українських\s+словниках\s+немає|"
@@ -774,7 +783,10 @@ def _extract_named_definition_boxes(
             context_above = "\n".join(lines[max(0, idx - 5) : idx])
             # The pair needs a local paronym cue just above it; the two words merely being
             # mentioned there is not evidence that the text is about paronyms.
-            if not re.search(r"паронім|відрізняються\s+слова", context_above, re.IGNORECASE):
+            if _DISCLAIMER_RE.search(context_above) or not (
+                _has_active_paronym_cue(context_above)
+                or re.search(r"відрізняються\s+слова", context_above, re.IGNORECASE)
+            ):
                 continue
             if _NON_PARONYM_SECTION_RE.search(context_above):
                 continue
@@ -1012,6 +1024,15 @@ def _split_paronym_segments(clean_text: str, doc: SourceDocument) -> list[tuple[
             continue
 
         has_local_cue = _has_active_paronym_cue(seg)
+        # A choice exercise whose own prompt sends the learner to a paronym dictionary
+        # ("Спишіть, добираючи з дужок потрібне слово. Скористайтеся словничком паронімів")
+        # asks about paronyms; a bare prose mention of that dictionary does not.
+        if (
+            not has_local_cue
+            and _CHOICE_EXERCISE_PROMPT_RE.search(prompt_head)
+            and _PARONYM_DICTIONARY_REFERENCE_RE.search(prompt_head)
+        ):
+            has_local_cue = True
         # Lead-in exercise immediately before "Пароніми (від гр. ...)" (e.g. 11-klas Glazova 294).
         if (
             not has_local_cue
@@ -1491,7 +1512,10 @@ def extract_from_document(doc: SourceDocument) -> list[RawPairAttestation]:
             (
                 ls
                 for ls, _, ln in _line_spans(clean_text)
-                if ls >= table_end and ln and _is_dedicated_paronym_heading(clean_text[ls:])
+                # The table's own bare "Пароніми" label is not a lesson heading, so only an
+                # explicit section heading (e.g. "§ 9. Пароніми") counts, even when the row
+                # did not parse and table_end is unknown.
+                if ls >= table_end and _EXPLICIT_PARONYM_SECTION_HEADER_RE.match(ln)
             ),
             None,
         )

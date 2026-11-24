@@ -18,8 +18,15 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      dedicated paronym heading (`§ 9. Пароніми`, `Пароніми`, `2.1. Явище паронімії`, …); text
      above that heading in the same chunk is never in lesson mode. Dictionary headings
      (`Словничок паронімів`, `Короткий словник паронімів`) count only as a standalone line, and
-     their scan starts at that line. A МійКлас page is a paronym page as a whole. Outside lesson
-     mode a segment needs its own local paronym cue.
+     their scan starts at that line; a prose reference to such a dictionary ("У додатку є
+     Словничок паронімів") is a passing mention, not a cue. A choice exercise whose own prompt
+     sends the learner to a paronym dictionary ("Скористайтеся словничком паронімів") is a
+     paronym exercise. After a summary table of lexical groups (`ГРУПИ ЛЕКСИКИ`) only its
+     Пароніми row is taken, and later text is read only from an explicit section heading
+     (`§ 9. Пароніми`); the table's own bare `Пароніми` label never opens a lesson. Two-line
+     definition pairs need a paronym cue above them that is neither a passing mention nor a
+     disclaimer (`не є паронімічними`). A МійКлас page is a paronym page as a whole. Outside
+     lesson mode a segment needs its own local paronym cue.
    - Fails closed on mixed-topic switches (`антоніми`, `синоніми`, `омоніми`, numbered
      non-paronym exercises), multiple-choice distractor items (`А/Б/В/Г` or `а)/б)/в)`), mixed
      euphony quizzes, and explicit non-paronym disclaimers (`не є паронімічними`, `від паронімів
@@ -40,7 +47,10 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      VESUM lemmas only when both forms share a POS with unique distinct lemmas; pairs whose
      paronymy holds only on specific inflected forms across different POS (`греби` / `гриби`)
      stay marked `surface_form_pair: true`. Every other pattern keeps the words exactly as the
-     source cites them (`в'язи` / `м'язи`, not the unrelated lemma `в'яз` "elm").
+     source cites them (`в'язи` / `м'язи`). For a surface-form pair VESUM attests the cited forms,
+     but the registry asserts no lexeme for them (`vesum_lemmas` and `vesum_pos` are empty unless
+     the form is its own lemma), because VESUM can tie such a form only to an unrelated homonym
+     (`в'язи` "nape" appears only as a form of `в'яз` "elm").
    - **Antonymic and synonymic paronyms stay.** Ukrainian lexicology classes semantic relations
      between paronyms as antonymic, synonymic, ideographic and morphological-semantic:
      «Семантичні відношення між паронімами охоплюють такі вияви: 1) антонімічні зв’язки:
@@ -49,15 +59,17 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      зв’язки … м’язи − в’язи» (Філон, Хомик 2010, `uni-ukrmova-lexicology-filon-khomik-2010_s0173`,
      p. 160). A source-taught paronym pair is therefore admitted whatever that relation is.
    - **Same-meaning variants are withheld** (`same_meaning_variant`). When the primary meaning
-     (first sense of the first homonym) of one member's СУМ-20 article refers directly to the
-     other member with `див.` or `Те саме, що` (`ПЛАСКИ́Й див. пло́ский`), the two words do not
+     (first sense of the first homonym) of one member's СУМ-20 article opens with a direct
+     reference to the other member, `див.` or `Те саме, що`, preceded only by the headword and its
+     grammar and usage labels (`ПЛАСКИ́Й див. пло́ский`; `КРОПІТКИ́Й, а́, е́, рідко. Те саме, що
+     копітки́й`). A reference inside a definition, an example, `(…)` or `[…]` does not count. The two words do not
      contrast in meaning, so the pair moves to `"unverified"` with that excerpt as `evidence`.
      The lookup reads the local СУМ-20 mirror (`sum20_mirror_articles` in `data/sources.db`,
      read-only). A reference in a later, rare or obsolete sense (`людний` / `людяний`) does not
      withhold a pair.
-   - A meaning gloss is shown only when VESUM attests every lowercase word in it (each part of
-     a hyphenated compound); a gloss with a source typo or a VESUM `bad` form (`оспівний`,
-     `прийомів`) is withheld.
+   - A meaning gloss is shown only when VESUM attests every Ukrainian word in it, a
+     sentence-initial capital included (each part of a hyphenated compound); a gloss with a
+     source typo or a VESUM `bad` form (`оспівний`, `прийомів`) is withheld.
    - Any pair with an unattested or multiword member is routed to `"unverified"` with an
      explicit reason (`not_attested_in_vesum` or `multiword_not_in_vesum`), never into
      `"pairs"`.
