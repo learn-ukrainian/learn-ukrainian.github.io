@@ -104,12 +104,16 @@ The registry records that corpus in `sources_corpus.corpus_fingerprint`:
 Before any extraction, both the build and `--check` compute the live fingerprint and compare it
 with the one recorded in the registry at `--output`; each field is compared as canonical JSON, so
 a missing or extra key (even one set to `null`) and a value of another type (`5.0` for `5`)
-differ. When they differ, when the registry is missing or records no fingerprint, or when the
-corpus or the pin cannot be loaded, encoded or validated (an unreadable `sources.db`, a МійКлас
-page whose text no longer matches its `text_sha256`, text that is not valid Unicode), the
-build refuses with `CorpusFingerprintError`, prints `REFUSED:` with the reason, writes nothing
-and exits 2. A new corpus (a new
-`sources.db` textbook generation that changes these rows, or a re-fetched МійКлас snapshot) is a
+differ. When they differ, or when the registry is missing or records no fingerprint, the build
+refuses with `CorpusFingerprintError`. Every step from reading the first input to the final
+comparison (the pin gate, the rebuild and, under `--check`, the byte comparison) runs inside one
+fail-closed boundary: any failure there, whatever its type, is also a refusal. That covers an
+unreadable or non-UTF-8 file, wrong JSON types, missing keys, nesting deep enough to exhaust the
+stack, an oversize value, a МійКлас page whose text no longer matches its `text_sha256`, text
+that is not valid Unicode, a broken A1 inventory and an unreadable `sources.db`. A refusal prints
+`REFUSED:` with the reason (any failure other than a corpus mismatch names its exception type;
+the text is capped at 2,000 characters),
+writes nothing and exits 2. A new corpus (a new `sources.db` textbook generation that changes these rows, or a re-fetched МійКлас snapshot) is a
 new certification: a reviewed change that judges the extractor's output on that corpus and
 re-pins the fingerprint. VESUM and the СУМ-20 mirror are not part of the pin; a change there that
 alters the output shows as `DRIFT` under `--check` (exit 1).
@@ -121,7 +125,7 @@ alters the output shows as `DRIFT` under `--check` (exit 1).
 ```
 
 Exit 0 means the pinned corpus reproduces the committed registry byte for byte; exit 1 is
-`DRIFT`; exit 2 is a corpus refusal.
+`DRIFT`; exit 2 is a refusal (see above).
 
 ## Counts
 

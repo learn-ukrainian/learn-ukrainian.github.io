@@ -468,11 +468,13 @@ def test_lesson_mode_starts_at_dedicated_heading_not_before() -> None:
     assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(doc)} == {("дружний", "дружній")}
 
 
-def test_build_refuses_unpinned_corpus(tmp_path: Path) -> None:
-    """Defect class: the one-shot extractor running on a corpus other than the reviewed one.
+def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """Defect classes: the one-shot extractor running on a corpus other than the reviewed one,
+    and an input failure escaping the refusal boundary as an untyped traceback.
 
     An unpinned registry, a changed textbook result set or a changed MiyKlas snapshot must
-    refuse under build and ``--check`` before extraction, leaving every file untouched.
+    refuse under build and ``--check`` before extraction, leaving every file untouched. So must
+    every input that cannot be loaded, whatever the failure (deep nesting, a broken A1 inventory).
     """
     import sqlite3
 
@@ -539,16 +541,21 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path) -> None:
     stale_pin = {"textbooks_fts_query": "паронім*", "textbooks_result_rows": 1, "textbooks_result_sha256": "0" * 64}
     _assert_refused(json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False))
 
-    # The reviewed corpus passes the gate and reaches the next stage (the A1 inventory load).
+    # A pin value nested deep enough to load but overflow the stack later is a typed refusal.
+    deep = "[" * 65000 + "0" + "]" * 65000
+    _assert_refused('{"sources_corpus": {"corpus_fingerprint": {"miyklas_pages": ' + deep + "}}}")
+
+    # The reviewed corpus passes the gate and reaches the next stage, the A1 inventory load,
+    # whose failure is refused inside the same boundary.
     from scripts.atlas.paronyms.miyklas import load_miyklas_documents
 
     live = paronym_build.compute_corpus_fingerprint(
         paronym_build.load_textbook_paronym_documents(sources_db), load_miyklas_documents(snapshot_path)[0]
     )
     pinned_registry = json.dumps({"sources_corpus": {"corpus_fingerprint": live}}, ensure_ascii=False)
-    registry_path.write_text(pinned_registry, encoding="utf-8")
-    with pytest.raises(A1InventoryError):
-        paronym_build.main(argv)
+    capsys.readouterr()
+    _assert_refused(pinned_registry)
+    assert f"REFUSED: {A1InventoryError.__name__}: Missing A1 inventory" in capsys.readouterr().err
 
     # A changed MiyKlas snapshot under the same pin refuses.
     snapshot["pages"][0]["grade"] = "6"

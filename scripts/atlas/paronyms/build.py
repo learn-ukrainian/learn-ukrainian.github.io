@@ -7,7 +7,8 @@ coverage, and emits deterministic JSON.
 
 This is a one-shot build tool, not a reusable parser: the extractor is certified only on the
 reviewed corpus. The registry records that corpus's fingerprint, and the build refuses
-(``CorpusFingerprintError``, exit 2) under build and ``--check`` when the live corpus differs.
+(``REFUSED:``, exit 2, nothing written) under build and ``--check`` when the live corpus differs
+(``CorpusFingerprintError``) or when any step before the output fails.
 """
 
 from __future__ import annotations
@@ -17,7 +18,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 import unicodedata
 from collections import defaultdict
@@ -50,6 +50,8 @@ DEFAULT_OUTPUT = Path("registry/atlas/paronyms-v1.json")
 DEFAULT_A1_INVENTORY = Path("registry/atlas/a1-v1-inventory.json")
 DEFAULT_MIYKLAS_RAW = Path("registry/miyklas/paronyms-raw-v1.json")
 TEXTBOOK_FTS_QUERY = "паронім*"
+# A refusal names its cause; an oversize input value must not flood stderr.
+_MAX_REFUSAL_CHARS = 2000
 
 VesumBatchLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
 # word -> СУМ-20 article texts whose headword key is that word.
@@ -802,7 +804,6 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     worktree_root = Path(__file__).resolve(strict=True).parents[3]
-    primary_root = main_checkout_root(worktree_root)
     recipe_note = (
         "MiyKlas raw snapshot stored with canonical URL, UTC fetch timestamp, HTTP status, "
         "and raw HTML + extracted text SHA-256 digests; live data/sources.db is left "
@@ -812,50 +813,48 @@ def main(argv: list[str] | None = None) -> int:
     miyklas_path = args.miyklas_raw if args.miyklas_raw.is_absolute() else worktree_root / args.miyklas_raw
     out_path = args.output if args.output.is_absolute() else worktree_root / args.output
 
-    # One-shot contract: refuse before extraction unless this is the reviewed corpus. Every step up
-    # to the comparison (loading the corpus, fingerprinting it, reading the pin) runs inside this
-    # boundary: a corpus or pin that cannot be loaded, encoded or validated is not the reviewed one.
-    try:
-        try:
-            sources_db = _resolve_sources_db(primary_root, args.sources_db)
-            docs = load_textbook_paronym_documents(sources_db)
-            miyklas_meta, miyklas_docs = load_miyklas_documents(miyklas_path)
-            corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
-            pinned_fingerprint = read_pinned_corpus_fingerprint(out_path)
-        except CorpusFingerprintError:
-            raise
-        except (OSError, RuntimeError, ValueError, sqlite3.Error) as exc:
-            raise CorpusFingerprintError(
-                f"corpus or pinned registry cannot be loaded or fails its integrity checks: {exc!r}"
-            ) from exc
-        require_pinned_corpus(pinned_fingerprint, corpus_fingerprint)
-    except CorpusFingerprintError as exc:
-        print(f"REFUSED: {exc}", file=sys.stderr)
-        return 2
-    docs.extend(miyklas_docs)
-
     a1_path = args.a1_inventory if args.a1_inventory.is_absolute() else worktree_root / args.a1_inventory
-    a1_sets = load_a1_lemma_sets(a1_path)
-    payload = build_paronym_registry(
-        docs,
-        vesum_lookup=_default_vesum_lookup(args.vesum_db),
-        sum20_lookup=_default_sum20_lookup(sources_db),
-        a1_lemma_sets=a1_sets,
-        miyklas_meta=miyklas_meta,
-        corpus_recipe_note=recipe_note,
-        corpus_fingerprint=corpus_fingerprint,
-    )
-    rendered = serialize_registry(payload)
+
+    # One refusal boundary, fail closed: every step from reading the first input to the final
+    # comparison (the pin gate, the rebuild and, under --check, the byte comparison) runs inside it.
+    # Any failure there, whatever its type (an unreadable or non-UTF-8 file, wrong JSON types,
+    # missing keys, nesting deep enough to exhaust the stack, input too large for memory), means
+    # the inputs are not the reviewed ones; nothing has been written yet, so the build refuses.
+    try:
+        sources_db = _resolve_sources_db(main_checkout_root(worktree_root), args.sources_db)
+        docs = load_textbook_paronym_documents(sources_db)
+        miyklas_meta, miyklas_docs = load_miyklas_documents(miyklas_path)
+        corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
+        require_pinned_corpus(read_pinned_corpus_fingerprint(out_path), corpus_fingerprint)
+        payload = build_paronym_registry(
+            [*docs, *miyklas_docs],
+            vesum_lookup=_default_vesum_lookup(args.vesum_db),
+            sum20_lookup=_default_sum20_lookup(sources_db),
+            a1_lemma_sets=load_a1_lemma_sets(a1_path),
+            miyklas_meta=miyklas_meta,
+            corpus_recipe_note=recipe_note,
+            corpus_fingerprint=corpus_fingerprint,
+        )
+        rendered = serialize_registry(payload)
+        drift = None
+        if args.check:
+            existing = out_path.read_text(encoding="utf-8")
+            if existing != rendered:
+                drift = (
+                    f"DRIFT: {out_path} differs from rebuilt output "
+                    f"(existing sha256={hashlib.sha256(existing.encode()).hexdigest()[:12]}, "
+                    f"rebuilt sha256={hashlib.sha256(rendered.encode()).hexdigest()[:12]})"
+                )
+    except Exception as exc:  # the fail-closed boundary above; KeyboardInterrupt still propagates
+        reason = str(exc) if isinstance(exc, CorpusFingerprintError) else f"{type(exc).__name__}: {exc}"
+        if len(reason) > _MAX_REFUSAL_CHARS:
+            reason = reason[:_MAX_REFUSAL_CHARS] + " ... (truncated)"
+        print(f"REFUSED: {reason}", file=sys.stderr)
+        return 2
 
     if args.check:
-        existing = out_path.read_text(encoding="utf-8")
-        if existing != rendered:
-            print(
-                f"DRIFT: {out_path} differs from rebuilt output "
-                f"(existing sha256={hashlib.sha256(existing.encode()).hexdigest()[:12]}, "
-                f"rebuilt sha256={hashlib.sha256(rendered.encode()).hexdigest()[:12]})",
-                file=sys.stderr,
-            )
+        if drift is not None:
+            print(drift, file=sys.stderr)
             return 1
         print(json.dumps(payload["counts"], ensure_ascii=False, indent=2))
         return 0
