@@ -96,10 +96,12 @@ def test_pdf_line_wrap_dehyphenation_and_inline_gloss_extraction() -> None:
 
 
 def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
-    """Defect class: false-positive extraction of antonyms, test distractors, disclaimers, or leaked exercise context."""
+    """Defect class: false-positive extraction of antonyms, distractors, disclaimers, or leaked choice context."""
     doc = _doc(
         "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
         "Пароніми — це слова, близькі за звучанням: ефектний — ефективний.\n"
+        "1. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
         "Не є паронімічними слова типу газ — гас, короб — короп.\n"
         "Антонімами називають протилежні за значенням слова: чорний — білий, високий — низький.\n"
         "2. Доберіть антоніми до поданих слів: вхід — вихід, добрий — недобрий.\n"
@@ -116,6 +118,19 @@ def test_rejects_antonyms_multiple_choice_distractors_and_disclaimers() -> None:
     pairs = {(a.member_a.word, a.member_b.word) for a in atts}
 
     assert pairs == {("ефективний", "ефектний")}
+
+    # Lowercase wrapped conjunction "і " must NOT split a paronym choice exercise, while a second
+    # generic choice exercise must NOT inherit paronym context by chaining.
+    wrapped_doc = _doc(
+        "82. Прочитайте. Визначте пароніми.\n"
+        "83. Перепишіть, вибираючи з дужок потрібне слово.\n"
+        "Ставлення людей до подій\n"
+        "і процесів називають (громадською, громадянською) думкою.\n"
+        "84. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
+    )
+    wrapped_pairs = {(a.member_a.word, a.member_b.word) for a in extract_from_document(wrapped_doc)}
+    assert wrapped_pairs == {("громадською", "громадянською")}
 
 
 def test_slash_dictionary_extracts_triplets_with_meanings_and_examples() -> None:
@@ -310,15 +325,23 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
         {"lemma": "адреса", "paronyms": ["адрес"], "pair_ids": ["адрес|адреса"]}
     ]
 
-    # Malformed A1 inventory (missing rows or non-string lemma/key) fails closed with ValueError.
+    # Malformed A1 inventory (missing rows, missing resolved lemma, non-string lemma/key, or empty companion) fails closed.
     missing_rows = tmp_path / "missing-rows.json"
     missing_rows.write_text(json.dumps({"schema_version": "v1"}), encoding="utf-8")
     with pytest.raises(ValueError, match="rows"):
         load_a1_lemma_sets(missing_rows)
 
+    missing_resolved_lemma = tmp_path / "missing-resolved-lemma.json"
+    missing_resolved_lemma.write_text(
+        json.dumps({"rows": [{"key": "адреса", "mapping": {"resolution": "resolved"}}]}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="lemma"):
+        load_a1_lemma_sets(missing_resolved_lemma)
+
     bad_lemma = tmp_path / "bad-lemma.json"
     bad_lemma.write_text(
-        json.dumps({"rows": [{"key": "адреса", "mapping": {"lemma": 123}}]}),
+        json.dumps({"rows": [{"key": "адреса", "mapping": {"resolution": "resolved", "lemma": 123}}]}),
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="lemma"):
@@ -326,8 +349,28 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
 
     bad_key = tmp_path / "bad-key.json"
     bad_key.write_text(
-        json.dumps({"rows": [{"key": 42, "mapping": {"lemma": "адреса"}}]}),
+        json.dumps({"rows": [{"key": 42, "mapping": {"resolution": "resolved", "lemma": "адреса"}}]}),
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="key"):
         load_a1_lemma_sets(bad_key)
+
+    # Empty object in place of an allocation companion manifest fails closed.
+    slice_dir = tmp_path / "atlas"
+    (slice_dir / "identity").mkdir(parents=True)
+    inv_ok = slice_dir / "a1-v1-inventory.json"
+    inv_ok.write_text(
+        json.dumps(
+            {
+                "rows": [
+                    {"key": "адреса", "mapping": {"resolution": "resolved", "lemma": "адреса"}},
+                    {"key": "або / чи", "mapping": {"resolution": "unresolved", "kind": "slash_alternatives"}},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (slice_dir / "identity" / "registry.json").write_text(json.dumps({"entries": []}), encoding="utf-8")
+    (slice_dir / "identity" / "a1-v1-slice3.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="identity companion"):
+        load_a1_lemma_sets(inv_ok)

@@ -60,7 +60,7 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
 | МійКлас pages acquired and parsed | 5 |
 | **Verified unique paronym pairs (`pairs`)** | **186** |
 | Verified pairs with at least one source-quoted meaning | 74 |
-| Total verified source attestations | 318 |
+| Total verified source attestations | 324 |
 | Distinct VESUM-verified member words | 331 |
 | Unverified pairs routed to `unverified` | 10 |
 
@@ -69,8 +69,8 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
 | Source coverage | Unique verified pairs |
 | --- | ---: |
 | Textbooks only | 120 |
-| МійКлас only | 37 |
-| Both textbooks and МійКлас | 29 |
+| МійКлас only | 36 |
+| Both textbooks and МійКлас | 30 |
 | **Total unique verified pairs** | **186** |
 
 ### Verified pairs per source file
@@ -81,10 +81,10 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
 | `10-klas-ukrajinska-mova-avramenko-2018` | textbook | 42 |
 | `uni-ukrmova-lexicology-filon-khomik-2010` | textbook | 24 |
 | `11-klas-ukrajinska-mova-glazova-2019` | textbook | 22 |
+| `10-klas-ukrmova-glazova-2018` | textbook | 20 |
 | `5-klas-ukrmova-avramenko-2022` | textbook | 19 |
 | `5-klas-ukrmova-golub-2022` | textbook | 19 |
 | `7-klas-ukrmova-avramenko-2024` | textbook | 19 |
-| `10-klas-ukrmova-glazova-2018` | textbook | 17 |
 | `6-klas-ukrmova-avramenko-2023` | textbook | 14 |
 | `5-klas-ukrmova-zabolotnyi-2023` | textbook | 13 |
 | `10-klas-ukrmova-karaman-2018` | textbook | 11 |

@@ -869,7 +869,7 @@ def _split_paronym_segments(
     has_doc_paronym_heading = _has_dedicated_paronym_heading(clean_text, doc)
 
     boundary_re = re.compile(
-        r"(?=\n(?:§\s*\d+|І{1,3}\s+[А-ЯІЇЄҐ]|Вправа\s+\d+|Зауважте!|Зверни\s+увагу!|"
+        r"(?=\n(?:§\s*\d+|(?-i:І{1,3}\s+[А-ЯІЇЄҐ])|Вправа\s+\d+|Зауважте!|Зверни\s+увагу!|"
         r"Культура\s+(?:слова|мовлення)|Рекомендована\s+література|Перевірте\s+себе|"
         r"Домашнє\s+завдання|Практикум\b|ПОРУШЕННЯ\s+ЛЕКСИЧНИХ|У\s+словнику\s+|"
         r"Антонімами\s+називають|Антоніми\s+|Синоніми\s+|Синонімічне\s+значення|"
@@ -975,19 +975,30 @@ def _split_paronym_segments(
             r"^Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари", seg, re.IGNORECASE
         ):
             has_local_cue = True
-        # Continue paronym lesson mode on section headers or immediately into a choice exercise
-        # following a paronym-cue lead-in (e.g. 7-klas Avramenko § 20).
+        # Continue paronym lesson mode on section headers, or activate ONE immediate choice
+        # exercise ONLY when the adjacent segment provides explicit paronym-lesson evidence
+        # (never chaining from one generic choice exercise to the next).
         if has_local_cue and _PARONYM_SECTION_HEADER_RE.match(first_line):
             in_paronym_lesson = True
         active = has_local_cue or in_paronym_lesson
         if (
             not active
-            and idx > 0
-            and tagged[-1][3]
             and _CHOICE_EXERCISE_PROMPT_RE.search(prompt_first_sent)
             and not _OTHER_LEXICAL_TOPIC_RE.search(prompt_first_sent)
         ):
-            active = True
+            prev_seg = raw_segments[idx - 1][2] if idx > 0 else ""
+            prev_explicit_paronym_leadin = bool(
+                idx > 0
+                and tagged[-1][3]
+                and re.search(
+                    r"(?:сплутування\s+паронімів|"
+                    r"(?:визначте|знайдіть|поясніть|розрізняйте|витлумачте)\s+[^\n.]{0,40}паронім)",
+                    prev_seg,
+                    re.IGNORECASE,
+                )
+            )
+            if prev_explicit_paronym_leadin:
+                active = True
         tagged.append((seg_start, seg_end, seg, active))
     return tagged
 

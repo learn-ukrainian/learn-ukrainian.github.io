@@ -53,22 +53,22 @@
         "text_sha256": "990a9938562a109adf620f09d28fa194c1f97a30dba31dd15071959f91947afa"
       }
     ],
-    "corpus_recipe_note": "MiyKlas raw snapshot stored with URL, UTC fetch timestamp, HTTP status, and raw HTML + extracted text SHA-256 digests; live data/sources.db left untouched because bulk_root is unavailable and sources.db is a read-only generation requiring primary-checkout driver publication."
+    "corpus_recipe_note": "MiyKlas raw snapshot stored with canonical URL, UTC fetch timestamp, HTTP status, and raw HTML + extracted text SHA-256 digests; live data/sources.db is left untouched because docs/corpus-inventory.md requires a mounted bulk corpus root and primary-checkout generation publication to add literary sources."
   },
   "counts": {
     "verified_pairs": 186,
     "unverified_pairs": 10,
-    "total_attestations_verified": 318,
+    "total_attestations_verified": 324,
     "total_attestations_unverified": 11,
     "distinct_verified_members": 331,
     "verified_pairs_by_source_type": {
       "textbook": 120,
-      "miyklas": 37,
-      "both": 29
+      "miyklas": 36,
+      "both": 30
     },
     "verified_pairs_by_source_file": {
       "10-klas-ukrajinska-mova-avramenko-2018": 42,
-      "10-klas-ukrmova-glazova-2018": 17,
+      "10-klas-ukrmova-glazova-2018": 20,
       "10-klas-ukrmova-karaman-2018": 11,
       "11-klas-ukrajinska-mova-avramenko-2019": 8,
       "11-klas-ukrajinska-mova-glazova-2019": 22,
@@ -4163,7 +4163,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 4,
+      "source_count": 6,
       "source_types": [
         "miyklas",
         "textbook"
@@ -4206,6 +4206,30 @@
             "громадянський"
           ],
           "quoted_line": "Адресат — адресант, дипломат — дипломант, мимохідь — мимохіть, танк — танкер, уява — уявлення, музичний — музикальний, особистий — особовий, жилий — житловий, громад- ський — громадянський, змерзнути — замерзнути."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "громадською",
+            "громадянською"
+          ],
+          "quoted_line": "Публічно виражене ставлення людей до подій і процесів реально- го суспільного життя називають (громадською, громадянською) думкою."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "громадське",
+            "громадянське"
+          ],
+          "quoted_line": "Українська держава будує (громадянське, громадське) суспільство."
         },
         {
           "source_type": "textbook",
@@ -8653,7 +8677,7 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 5,
+      "source_count": 7,
       "source_types": [
         "miyklas",
         "textbook"
@@ -8696,6 +8720,30 @@
             "особовий"
           ],
           "quoted_line": "Адресат — адресант, дипломат — дипломант, мимохідь — мимохіть, танк — танкер, уява — уявлення, музичний — музикальний, особистий — особовий, жилий — житловий, громад- ський — громадянський, змерзнути — замерзнути."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "особисту",
+            "особову"
+          ],
+          "quoted_line": "Сукупність документів працівника, у яких відображається його трудова діяльність, утворюють (особову, особисту) справу."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "особистими",
+            "особовими"
+          ],
+          "quoted_line": "Установити чітку грань між такими (особовими, особистими) стосунками, як приятелювання, товаришування і дружба, дуже важко."
         },
         {
           "source_type": "textbook",
@@ -10584,9 +10632,10 @@
         }
       ],
       "surface_form_pair": false,
-      "source_count": 1,
+      "source_count": 3,
       "source_types": [
-        "miyklas"
+        "miyklas",
+        "textbook"
       ],
       "sources": [
         {
@@ -10601,6 +10650,30 @@
           ],
           "quoted_line": "Свідоцтво – офіційний документ, який підтверджує якийсь факт. Свідчення – факт, що підтверджує щось, доказ.",
           "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/paronimi-slovnik-paronimiv-40159/re-ff38c509-447b-4058-b9e5-8acc04e6c038"
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "свідоцтвом",
+            "Свідченням"
+          ],
+          "quoted_line": "(Свідченням, свідоцтвом) успіхів є значне зростання демократії."
+        },
+        {
+          "source_type": "textbook",
+          "source_file": "10-klas-ukrmova-glazova-2018",
+          "chunk_id": "10-klas-ukrmova-glazova-2018_s0068",
+          "locator": "Сторінка 50",
+          "pattern": "exercise_choice_pair",
+          "attested_forms": [
+            "свідоцтва",
+            "свідчення"
+          ],
+          "quoted_line": "Цьо- горічні десятикласники ще торік отримали (свідчення, свідоцтва) про здобуту базову освіту."
         }
       ]
     },

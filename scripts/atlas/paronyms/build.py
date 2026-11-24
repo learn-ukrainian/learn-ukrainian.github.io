@@ -182,23 +182,35 @@ def load_a1_lemma_sets(
     rows = inv["rows"]
     inventory_lemmas: set[str] = set()
     single_token_keys: set[str] = set()
+    valid_resolutions = {"resolved", "unresolved", "ambiguous"}
     for row in rows:
         if not isinstance(row, dict):
             raise ValueError(f"Expected dict row in {a1_inventory_path.name}")
         if "mapping" not in row or not isinstance(row["mapping"], dict):
             raise ValueError(f"Missing or non-dict 'mapping' in {a1_inventory_path.name}")
         mapping = row["mapping"]
+        resolution = mapping.get("resolution")
+        if not isinstance(resolution, str) or resolution not in valid_resolutions:
+            raise ValueError(
+                f"Missing or invalid 'mapping.resolution' in {a1_inventory_path.name}: {resolution!r}"
+            )
         lemma = mapping.get("lemma")
-        if lemma is not None and not isinstance(lemma, str):
-            raise ValueError(
-                f"Expected string or null 'mapping.lemma' in {a1_inventory_path.name}, got {type(lemma).__name__}"
-            )
-        if isinstance(lemma, str) and lemma.strip():
+        if resolution == "resolved":
+            if not isinstance(lemma, str) or not lemma.strip():
+                raise ValueError(
+                    f"Resolved row missing non-empty string 'mapping.lemma' in {a1_inventory_path.name}"
+                )
             inventory_lemmas.add(normalize_token(lemma))
+        else:
+            if lemma is not None and not isinstance(lemma, str):
+                raise ValueError(
+                    f"Expected string or null 'mapping.lemma' in {a1_inventory_path.name}, "
+                    f"got {type(lemma).__name__}"
+                )
+            if isinstance(lemma, str) and lemma.strip():
+                inventory_lemmas.add(normalize_token(lemma))
         if "key" not in row or not isinstance(row["key"], str):
-            raise ValueError(
-                f"Missing or non-string 'key' in {a1_inventory_path.name}"
-            )
+            raise ValueError(f"Missing or non-string 'key' in {a1_inventory_path.name}")
         key = row["key"]
         if key.strip() and " " not in key and "/" not in key:
             single_token_keys.add(normalize_token(key))
@@ -227,6 +239,18 @@ def load_a1_lemma_sets(
             comp_path = atlas_dir / "identity" / f"a1-v1-slice{slice_num}.json"
             if comp_path.exists():
                 comp = _load_json_dict(comp_path)
+                schema_ver = comp.get("schema_version")
+                if (
+                    not isinstance(schema_ver, str)
+                    or not schema_ver.strip()
+                    or not isinstance(comp.get("events"), list)
+                ):
+                    raise ValueError(
+                        f"Malformed identity companion {comp_path.name}: "
+                        "requires non-empty string 'schema_version' and list 'events'"
+                    )
+                if slice_num >= 3 and ("entries" not in comp or not isinstance(comp["entries"], list)):
+                    raise ValueError(f"Missing or non-list 'entries' in {comp_path.name}")
                 comp_entries = comp.get("entries", [])
                 if not isinstance(comp_entries, list):
                     raise ValueError(f"Expected 'entries' list in {comp_path.name}")
@@ -253,8 +277,11 @@ def load_a1_lemma_sets(
                 if not isinstance(cids, list) or any(not isinstance(cid, str) for cid in cids):
                     raise ValueError(f"Expected list of string 'card_ids' in {slice_path.name}")
                 for cid in cids:
-                    if cid in card_to_spelling:
-                        slice_lemmas.add(card_to_spelling[cid])
+                    if cid not in card_to_spelling:
+                        raise ValueError(
+                            f"Allocated card_id {cid!r} in {slice_path.name} missing from identity registries"
+                        )
+                    slice_lemmas.add(card_to_spelling[cid])
 
     return {
         "inventory_lemmas": inventory_lemmas,
@@ -624,10 +651,10 @@ def main(argv: list[str] | None = None) -> int:
     docs = load_textbook_paronym_documents(sources_db)
     miyklas_meta: dict[str, Any] | None = None
     recipe_note = (
-        "MiyKlas raw snapshot stored with URL, UTC fetch timestamp, HTTP status, "
-        "and raw HTML + extracted text SHA-256 digests; live data/sources.db left "
-        "untouched because bulk_root is unavailable and sources.db is a read-only "
-        "generation requiring primary-checkout driver publication."
+        "MiyKlas raw snapshot stored with canonical URL, UTC fetch timestamp, HTTP status, "
+        "and raw HTML + extracted text SHA-256 digests; live data/sources.db is left "
+        "untouched because docs/corpus-inventory.md requires a mounted bulk corpus root "
+        "and primary-checkout generation publication to add literary sources."
     )
 
     if not args.textbooks_only:
@@ -650,9 +677,9 @@ def main(argv: list[str] | None = None) -> int:
         docs.extend(miyklas_docs)
     else:
         recipe_note = (
-            "Textbooks-only mode: MiyKlas excluded because docs/corpus-inventory.md "
-            "safe literary-content recipe requires a mounted bulk_root (unavailable) "
-            "and primary-checkout sources.db generation publication."
+            "Textbooks-only mode: MiyKlas omitted; docs/corpus-inventory.md requires a "
+            "mounted bulk corpus root and primary-checkout generation publication to add "
+            "literary sources."
         )
 
     a1_path = (
