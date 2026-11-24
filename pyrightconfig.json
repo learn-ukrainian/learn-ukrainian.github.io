@@ -1,7 +1,7 @@
 {
   "include": ["scripts"],
   "extraPaths": ["scripts"],
-  "pythonVersion": "3.12",
+  "pythonVersion": "3.14",
   "pythonPlatform": "Darwin",
   "venvPath": ".",
   "venv": ".venv",
