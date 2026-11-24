@@ -6,7 +6,7 @@ on:
     paths:
       - '.python-version'
       - 'uv.lock'
-      - '.github/requirements-pyyaml.txt'
+      - 'pyproject.toml'
       - '.github/actions/python-ci-env/**'
       - '.github/workflows/model-catalog-freshness.yml'
       - 'docs/runbooks/fleet-comms-open-gaps.md'
@@ -17,7 +17,7 @@ on:
     paths:
       - '.python-version'
       - 'uv.lock'
-      - '.github/requirements-pyyaml.txt'
+      - 'pyproject.toml'
       - '.github/actions/python-ci-env/**'
       - '.github/workflows/model-catalog-freshness.yml'
       - 'docs/runbooks/fleet-comms-open-gaps.md'
@@ -49,30 +49,26 @@ jobs:
         with:
           python-version-file: '.python-version'
 
-      - name: Create isolated environment
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --disable-pip-version-check --require-hashes --only-binary :all: \
-            --uploaded-prior-to P7D -r .github/requirements-pyyaml.txt
-
       - name: Fetch the locked lu-machinery wheel
         id: machinery-wheel
         uses: ./.github/actions/python-ci-env
         with:
           machinery-wheel-only: 'true'
+          with-uv: 'true'
 
       # The product catalog copy validates roles through the installed release (#13032). The locked
       # lu-machinery wheel alone (no dependencies), as ci.yml installs it: the lock's hash, not the
       # URL, decides which bytes install.
-      - name: Install the locked lu-machinery release
+      - name: Install locked dependencies
         env:
           MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
+          UV_PYTHON_DOWNLOADS: never
         run: |
           set -euo pipefail
-          wheelhouse="${MACHINERY_WHEELHOUSE}"
-          .venv/bin/python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
-            --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
+          uv sync --locked --no-build --python "$(cat .python-version)" --only-group pyyaml
+          uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
+            --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
       - name: Validate catalog structure and freshness
         run: .venv/bin/python -m lu_machinery.lint.lint_model_catalog
