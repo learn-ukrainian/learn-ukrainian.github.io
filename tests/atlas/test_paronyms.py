@@ -12,7 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from scripts.atlas.paronyms.build import A1InventoryError, build_paronym_registry, load_a1_lemma_sets
+from scripts.atlas.paronyms.build import (
+    A1InventoryError,
+    _default_sum20_lookup,
+    build_paronym_registry,
+    load_a1_lemma_sets,
+)
 from scripts.atlas.paronyms.extractor import SourceDocument, extract_from_document
 from scripts.atlas.paronyms.miyklas import (
     MiyKlasFetchError,
@@ -603,3 +608,198 @@ def test_build_refuses_unpinned_corpus(
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
     extra_key = _registry({"corpus_fingerprint": {**live, "unknown_field": None}})
     _assert_refused(extra_key, "unknown_field: pinned None")
+
+
+# SQLite storage classes other than text. Each is inserted as that class (untyped columns,
+# so affinity does not turn numbers into text) and must be refused, not decoded.
+_NON_TEXT_STORAGE = (
+    ("null", None),
+    ("integer", 7),
+    ("real", 1.5),
+    ("blob", b"\xff"),
+)
+
+
+def _sum20_mirror(path: Path, rows: list[tuple[object, object]]) -> None:
+    import sqlite3
+
+    with sqlite3.connect(path) as conn:
+        # No column affinity: an integer, real, blob or null stays that storage class.
+        conn.execute("CREATE TABLE sum20_mirror_articles (id INTEGER PRIMARY KEY, normalized_lookup_key, article_text)")
+        conn.executemany(
+            "INSERT INTO sum20_mirror_articles (normalized_lookup_key, article_text) VALUES (?, ?)",
+            rows,
+        )
+
+
+@pytest.mark.parametrize("column", ["normalized_lookup_key", "article_text"])
+@pytest.mark.parametrize("storage_class,value", _NON_TEXT_STORAGE)
+def test_sum20_lookup_refuses_non_text_storage_class(
+    tmp_path: Path, column: str, storage_class: str, value: object
+) -> None:
+    """Defect class: a СУМ-20 mirror value that is not text is coerced with str().
+
+    Members: NULL, integer, real and blob on normalized_lookup_key and on article_text.
+    Text is the class that still returns. A non-text key is not selected by IN, so the
+    lookup must still see it and stop.
+    """
+    db = tmp_path / "sources.db"
+    if column == "normalized_lookup_key":
+        _sum20_mirror(db, [(value, "article"), ("alpha", "clean")])
+        named_key = value
+    else:
+        _sum20_mirror(db, [("alpha", value)])
+        named_key = "alpha"
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.{column} is {storage_class}, not text" in message
+    assert f"key={named_key!r}" in message
+
+
+def _sum20_mirror_with_undecodable_article(path: Path, key: object, *, text_affinity: bool) -> None:
+    import sqlite3
+
+    key_type = "TEXT" if text_affinity else ""
+    article_type = "TEXT" if text_affinity else ""
+    with sqlite3.connect(path) as conn:
+        conn.execute(
+            "CREATE TABLE sum20_mirror_articles ("
+            "id INTEGER PRIMARY KEY, "
+            f"normalized_lookup_key {key_type}, article_text {article_type})"
+        )
+        conn.execute(
+            "INSERT INTO sum20_mirror_articles (id, normalized_lookup_key, article_text) VALUES (1, 'alpha', '')"
+        )
+        conn.execute(
+            "INSERT INTO sum20_mirror_articles (id, normalized_lookup_key, article_text) "
+            "VALUES (2, ?, CAST(X'FF' AS TEXT))",
+            (key,),
+        )
+
+
+@pytest.mark.parametrize("storage_class,value", _NON_TEXT_STORAGE)
+def test_sum20_lookup_names_non_text_key_when_its_article_will_not_decode(
+    tmp_path: Path, storage_class: str, value: object
+) -> None:
+    """Defect class: reading article_text while classifying a non-text key.
+
+    sqlite3 decodes article_text as the row is built. An undecodable article on a
+    null, integer, real or blob key must not replace the key refusal with
+    OperationalError. The key is not in the requested word list.
+    """
+    db = tmp_path / "sources.db"
+    _sum20_mirror_with_undecodable_article(db, value, text_affinity=False)
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.normalized_lookup_key is {storage_class}, not text" in message
+    assert f"key={value!r}" in message
+    assert "Could not decode" not in message
+
+
+@pytest.mark.parametrize("storage_class,value", (("null", None), ("blob", b"\x80")))
+def test_sum20_lookup_names_non_text_key_under_text_affinity(tmp_path: Path, storage_class: str, value: object) -> None:
+    """Defect class: TEXT affinity still stores a blob or null key, and its article may not decode.
+
+    Integer and real inputs are stored as text under TEXT affinity, so they are not this class.
+    """
+    db = tmp_path / "sources.db"
+    _sum20_mirror_with_undecodable_article(db, value, text_affinity=True)
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.normalized_lookup_key is {storage_class}, not text" in message
+    assert f"key={value!r}" in message
+
+
+# A commit between the key probe and the article read. Each statement names the storage class
+# the key changes to; TEXT affinity still stores null and blob as those classes.
+_SNAPSHOT_KEY_CHANGES = (
+    ("null", "UPDATE sum20_mirror_articles SET normalized_lookup_key = NULL", False),
+    ("integer", "UPDATE sum20_mirror_articles SET normalized_lookup_key = 7", False),
+    ("real", "UPDATE sum20_mirror_articles SET normalized_lookup_key = 1.5", False),
+    ("blob", "UPDATE sum20_mirror_articles SET normalized_lookup_key = CAST(normalized_lookup_key AS BLOB)", False),
+    ("null", "UPDATE sum20_mirror_articles SET normalized_lookup_key = NULL", True),
+    ("blob", "UPDATE sum20_mirror_articles SET normalized_lookup_key = CAST(normalized_lookup_key AS BLOB)", True),
+)
+
+
+@pytest.mark.parametrize("storage_class,update_sql,text_affinity", _SNAPSHOT_KEY_CHANGES)
+def test_sum20_lookup_reads_key_and_article_from_one_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, storage_class: str, update_sql: str, text_affinity: bool
+) -> None:
+    """Defect class: the key probe and the article read see different commits.
+
+    A WAL commit that changes the key's storage class between the two statements drops
+    the row, because a non-text key does not match IN. One read transaction keeps the
+    article that was validated with the key.
+    """
+    import sqlite3
+
+    from scripts.atlas.paronyms import build as paronym_build
+
+    db = tmp_path / "sources.db"
+    key_type = "TEXT" if text_affinity else ""
+    with sqlite3.connect(db) as setup:
+        setup.execute("PRAGMA journal_mode=WAL")
+        setup.execute(
+            "CREATE TABLE sum20_mirror_articles ("
+            f"id INTEGER PRIMARY KEY, normalized_lookup_key {key_type}, article_text)"
+        )
+        setup.execute(
+            "INSERT INTO sum20_mirror_articles (normalized_lookup_key, article_text) VALUES ('alpha', 'article')"
+        )
+
+    writer = sqlite3.connect(db)
+    real_open = paronym_build.open_readonly
+
+    def open_and_commit_between_statements(path: Path, *args: object, **kwargs: object) -> sqlite3.Connection:
+        conn = real_open(path, *args, **kwargs)
+
+        def trace(statement: str) -> None:
+            if "article_text" in statement and " IN " in statement:
+                writer.execute(update_sql)
+                writer.commit()
+
+        conn.set_trace_callback(trace)
+        return conn
+
+    monkeypatch.setattr(paronym_build, "open_readonly", open_and_commit_between_statements)
+    try:
+        assert paronym_build._default_sum20_lookup(db)(["alpha"]) == {"alpha": ["article"]}
+        stored = writer.execute("SELECT typeof(normalized_lookup_key) FROM sum20_mirror_articles").fetchone()
+        assert stored == (storage_class,)
+    finally:
+        writer.close()
+
+
+def test_sum20_lookup_text_rows_match_previous_result(tmp_path: Path) -> None:
+    """Defect class: the text storage class, including an empty article, is unchanged.
+
+    The previous coercion ``str(key)`` / ``str(text or "")`` is the identity on these rows.
+    A word with no article is absent. A null article is not this case: it refuses.
+    """
+    db = tmp_path / "sources.db"
+    # Insert order is not key order. id order within one key must survive.
+    _sum20_mirror(
+        db,
+        [
+            ("beta", "second"),
+            ("alpha", "first"),
+            ("alpha", ""),
+            ("alpha", "third"),
+        ],
+    )
+    ordered = (("alpha", "first"), ("alpha", ""), ("alpha", "third"), ("beta", "second"))
+    previous: dict[str, list[str]] = {}
+    for key, text in ordered:
+        previous.setdefault(str(key), []).append(str(text or ""))
+    assert (
+        _default_sum20_lookup(db)(["alpha", "beta", "missing"])
+        == previous
+        == {
+            "alpha": ["first", "", "third"],
+            "beta": ["second"],
+        }
+    )

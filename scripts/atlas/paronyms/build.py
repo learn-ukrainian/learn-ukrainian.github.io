@@ -178,25 +178,78 @@ def require_pinned_corpus(pinned: dict[str, Any], live: dict[str, Any]) -> None:
         )
 
 
+# SQLite storage classes other than text. A value sqlite3 did not map to one of these
+# still refuses, named by its Python type; nothing here is decoded.
+_SUM20_STORAGE_CLASS: dict[type[object], str] = {
+    type(None): "null",
+    int: "integer",
+    float: "real",
+    bytes: "blob",
+}
+_SUM20_KEY_LABEL_LIMIT = 200
+
+
+def _refuse_sum20_storage(column: str, value: object, key: object) -> None:
+    """Refuse a mirror column that is not Python ``str``. ``value`` is not decoded."""
+    if isinstance(value, str):
+        return
+    storage = _SUM20_STORAGE_CLASS.get(type(value), type(value).__name__)
+    shown = repr(key)
+    if len(shown) > _SUM20_KEY_LABEL_LIMIT:
+        shown = shown[:_SUM20_KEY_LABEL_LIMIT] + "..."
+    raise ValueError(f"sum20_mirror_articles.{column} is {storage}, not text; key={shown}")
+
+
 def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
-    """Read СУМ-20 mirror articles for the given words from the local sources store (read-only)."""
+    """Read СУМ-20 mirror articles for the given words from the local sources store (read-only).
+
+    NULL, integer, real and blob values are not text. ``str()`` would turn a blob into
+    ``b'...'`` and a null article into an empty string, and the build would verify pairs
+    against that. A non-text key does not match ``IN`` against a text word, so it is read
+    by itself first. Selecting its article in that same statement lets an undecodable
+    article raise ``OperationalError`` before the key can be named. Both reads share one
+    snapshot: a commit between them could change the key's storage class and drop the row.
+    """
 
     def lookup(words: list[str]) -> dict[str, list[str]]:
         found: dict[str, list[str]] = defaultdict(list)
         placeholders = ",".join("?" * len(words))
         with open_readonly(sources_db) as conn:
-            if conn.execute("SELECT 1 FROM sum20_mirror_articles LIMIT 1").fetchone() is None:
-                # An empty mirror would silently admit every variant; refuse instead.
-                raise ValueError(
-                    "sum20_mirror_articles is empty in sources.db; same-meaning variants cannot be checked"
-                )
-            rows = conn.execute(
-                "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
-                f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
-                words,
-            ).fetchall()
+            # One read transaction. Each autocommit statement would be free to see a newer
+            # commit, including a key that changed from text to another storage class.
+            conn.execute("BEGIN")
+            try:
+                if conn.execute("SELECT 1 FROM sum20_mirror_articles LIMIT 1").fetchone() is None:
+                    # An empty mirror would silently admit every variant; refuse instead.
+                    raise ValueError(
+                        "sum20_mirror_articles is empty in sources.db; same-meaning variants cannot be checked"
+                    )
+                # Key only: sqlite3 decodes article_text while building a row, so selecting
+                # it here would raise OperationalError before the key can be named.
+                bad_key = conn.execute(
+                    "SELECT normalized_lookup_key, typeof(normalized_lookup_key) "
+                    "FROM sum20_mirror_articles "
+                    "WHERE typeof(normalized_lookup_key) != 'text' ORDER BY id LIMIT 1"
+                ).fetchone()
+                if bad_key is not None:
+                    key, storage = bad_key
+                    if not isinstance(key, str):
+                        _refuse_sum20_storage("normalized_lookup_key", key, key)
+                    shown = repr(key)
+                    if len(shown) > _SUM20_KEY_LABEL_LIMIT:
+                        shown = shown[:_SUM20_KEY_LABEL_LIMIT] + "..."
+                    raise ValueError(f"sum20_mirror_articles.normalized_lookup_key is {storage}, not text; key={shown}")
+                rows = conn.execute(
+                    "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
+                    f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
+                    words,
+                ).fetchall()
+            finally:
+                conn.rollback()
         for key, text in rows:
-            found[str(key)].append(str(text or ""))
+            _refuse_sum20_storage("normalized_lookup_key", key, key)
+            _refuse_sum20_storage("article_text", text, key)
+            found[key].append(text)
         return dict(found)
 
     return lookup
