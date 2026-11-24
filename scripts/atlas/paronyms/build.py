@@ -101,6 +101,11 @@ def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
         found: dict[str, list[str]] = defaultdict(list)
         placeholders = ",".join("?" * len(words))
         with open_readonly(sources_db) as conn:
+            if conn.execute("SELECT 1 FROM sum20_mirror_articles LIMIT 1").fetchone() is None:
+                # An empty mirror would silently admit every variant; refuse instead.
+                raise ValueError(
+                    "sum20_mirror_articles is empty in sources.db; same-meaning variants cannot be checked"
+                )
             rows = conn.execute(
                 "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
                 f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
