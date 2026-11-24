@@ -111,9 +111,14 @@ fail-closed boundary: any failure there, whatever its type, is also a refusal. T
 inputs (the registry at `--output`, the МійКлас snapshot and the A1 inventory) are parsed in full
 as I-JSON (RFC 7493 section 2), so any of these anywhere in the file refuses, even where the
 build would not read the value: a duplicate member name; a `NaN` or `Infinity` constant; a number
-beyond a double's magnitude (`1e400`) or precision (`1e-400`, `3.141592653589793238462643383279`);
-an integer outside ±(2^53 − 1); a surrogate (an escape such as `\ud800`) or a noncharacter (such
-as U+FDD0) in a string or member name. The boundary also covers an unreadable or non-UTF-8 file, wrong
+beyond a double's magnitude (`1e400`); a number with more significant digits than its double holds
+(`3.141592653589793238462643383279`, or `1e-400`, which underflows to zero), while a literal the
+double reproduces at its own number of significant digits (`0.1`, `999999999999999.875`) is valid;
+an integer value outside ±(2^53 − 1) however it is written (`9007199254740992`,
+`9007199254740992.0`, `9.007199254740992e15`): every number these files carry is an integer count,
+and every double of that size is an integer, so no number of magnitude 2^53 or more is accepted; a
+surrogate (an escape such as `\ud800`) or a noncharacter (such as U+FDD0) in a string or member
+name. The boundary also covers an unreadable or non-UTF-8 file, wrong
 JSON types, missing keys, nesting deep enough to exhaust the stack, an oversize value, a МійКлас
 page whose text no longer matches its `text_sha256`, a broken A1 inventory and an unreadable
 `sources.db`. A refusal prints `REFUSED:` and the reason: a
