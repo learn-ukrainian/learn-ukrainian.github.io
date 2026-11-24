@@ -205,8 +205,9 @@ def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
 
     NULL, integer, real and blob values are not text. ``str()`` would turn a blob into
     ``b'...'`` and a null article into an empty string, and the build would verify pairs
-    against that. A non-text key does not match ``IN`` against a text word, so the query
-    also returns keys whose storage class is not text; otherwise those rows would be skipped.
+    against that. A non-text key does not match ``IN`` against a text word, so it is read
+    by itself first. Selecting its article in that same statement lets an undecodable
+    article raise ``OperationalError`` before the key can be named.
     """
 
     def lookup(words: list[str]) -> dict[str, list[str]]:
@@ -218,11 +219,24 @@ def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
                 raise ValueError(
                     "sum20_mirror_articles is empty in sources.db; same-meaning variants cannot be checked"
                 )
+            # Key only: sqlite3 decodes article_text while building a row, so selecting
+            # it here would raise OperationalError before the key can be named.
+            bad_key = conn.execute(
+                "SELECT normalized_lookup_key, typeof(normalized_lookup_key) "
+                "FROM sum20_mirror_articles "
+                "WHERE typeof(normalized_lookup_key) != 'text' ORDER BY id LIMIT 1"
+            ).fetchone()
+            if bad_key is not None:
+                key, storage = bad_key
+                if not isinstance(key, str):
+                    _refuse_sum20_storage("normalized_lookup_key", key, key)
+                shown = repr(key)
+                if len(shown) > _SUM20_KEY_LABEL_LIMIT:
+                    shown = shown[:_SUM20_KEY_LABEL_LIMIT] + "..."
+                raise ValueError(f"sum20_mirror_articles.normalized_lookup_key is {storage}, not text; key={shown}")
             rows = conn.execute(
                 "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
-                f"WHERE normalized_lookup_key IN ({placeholders}) "
-                "OR typeof(normalized_lookup_key) != 'text' "
-                "ORDER BY normalized_lookup_key, id",
+                f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
                 words,
             ).fetchall()
         for key, text in rows:

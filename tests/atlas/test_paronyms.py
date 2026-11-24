@@ -657,6 +657,62 @@ def test_sum20_lookup_refuses_non_text_storage_class(
     assert f"key={named_key!r}" in message
 
 
+def _sum20_mirror_with_undecodable_article(path: Path, key: object, *, text_affinity: bool) -> None:
+    import sqlite3
+
+    key_type = "TEXT" if text_affinity else ""
+    article_type = "TEXT" if text_affinity else ""
+    with sqlite3.connect(path) as conn:
+        conn.execute(
+            "CREATE TABLE sum20_mirror_articles ("
+            "id INTEGER PRIMARY KEY, "
+            f"normalized_lookup_key {key_type}, article_text {article_type})"
+        )
+        conn.execute(
+            "INSERT INTO sum20_mirror_articles (id, normalized_lookup_key, article_text) VALUES (1, 'alpha', '')"
+        )
+        conn.execute(
+            "INSERT INTO sum20_mirror_articles (id, normalized_lookup_key, article_text) "
+            "VALUES (2, ?, CAST(X'FF' AS TEXT))",
+            (key,),
+        )
+
+
+@pytest.mark.parametrize("storage_class,value", _NON_TEXT_STORAGE)
+def test_sum20_lookup_names_non_text_key_when_its_article_will_not_decode(
+    tmp_path: Path, storage_class: str, value: object
+) -> None:
+    """Defect class: reading article_text while classifying a non-text key.
+
+    sqlite3 decodes article_text as the row is built. An undecodable article on a
+    null, integer, real or blob key must not replace the key refusal with
+    OperationalError. The key is not in the requested word list.
+    """
+    db = tmp_path / "sources.db"
+    _sum20_mirror_with_undecodable_article(db, value, text_affinity=False)
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.normalized_lookup_key is {storage_class}, not text" in message
+    assert f"key={value!r}" in message
+    assert "Could not decode" not in message
+
+
+@pytest.mark.parametrize("storage_class,value", (("null", None), ("blob", b"\x80")))
+def test_sum20_lookup_names_non_text_key_under_text_affinity(tmp_path: Path, storage_class: str, value: object) -> None:
+    """Defect class: TEXT affinity still stores a blob or null key, and its article may not decode.
+
+    Integer and real inputs are stored as text under TEXT affinity, so they are not this class.
+    """
+    db = tmp_path / "sources.db"
+    _sum20_mirror_with_undecodable_article(db, value, text_affinity=True)
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.normalized_lookup_key is {storage_class}, not text" in message
+    assert f"key={value!r}" in message
+
+
 def test_sum20_lookup_text_rows_match_previous_result(tmp_path: Path) -> None:
     """Defect class: the text storage class, including an empty article, is unchanged.
 
