@@ -554,3 +554,9 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path) -> None:
     snapshot["pages"][0]["grade"] = "6"
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
     _assert_refused(pinned_registry)
+
+    # Changed page text that no longer matches its own text_sha256 is a typed refusal, not a traceback.
+    snapshot["pages"][0]["grade"] = "5"
+    snapshot["pages"][0]["text"] = page_text + " Пароніми."
+    snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
+    _assert_refused(pinned_registry)

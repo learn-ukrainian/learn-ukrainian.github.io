@@ -17,6 +17,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import sys
 import unicodedata
 from collections import defaultdict
@@ -148,7 +149,12 @@ def read_pinned_corpus_fingerprint(registry_path: Path) -> dict[str, Any]:
 
 def require_pinned_corpus(pinned: dict[str, Any], live: dict[str, Any]) -> None:
     """Refuse unless the live corpus fingerprint equals the pinned one, naming every differing field."""
-    differing = sorted(key for key in set(pinned) | set(live) if pinned.get(key) != live.get(key))
+    # Compare canonical JSON per field so a value of another type (5.0 for 5, true for 1) differs.
+    differing = sorted(
+        key
+        for key in set(pinned) | set(live)
+        if json.dumps(pinned.get(key), ensure_ascii=False) != json.dumps(live.get(key), ensure_ascii=False)
+    )
     if differing:
         detail = "; ".join(f"{key}: pinned {pinned.get(key)!r}, live {live.get(key)!r}" for key in differing)
         raise CorpusFingerprintError(
@@ -584,9 +590,25 @@ def build_paronym_registry(
     def _attested_gloss(note: dict[str, str]) -> bool:
         return all(_attested_word(w) for w in _gloss_words(note["text"]))
 
+    def _infinitive_gloss_for_non_verb(note: dict[str, str], analyses: list[dict[str, Any]]) -> bool:
+        # A gloss headed by a verb infinitive defines an action, so it misdefines a member that
+        # VESUM never analyses as a verb ("мимохідь" adv: "проходити мимо по дорозі").
+        words = _gloss_words(note["text"])
+        if not words or not analyses or any(r.get("pos") == "verb" for r in analyses):
+            return False
+        head = vesum_results.get(words[0], [])
+        return bool(head) and all(":inf" in str(r.get("tags", "")) for r in head)
+
     def _finalize_member(word: str, m_bucket: dict[str, Any], *, surface_form: bool) -> dict[str, Any]:
-        m_bucket = {**m_bucket, "meanings": [n for n in m_bucket["meanings"] if _attested_gloss(n)]}
         analyses = vesum_results.get(word, []) if " " not in word else []
+        m_bucket = {
+            **m_bucket,
+            "meanings": [
+                n
+                for n in m_bucket["meanings"]
+                if _attested_gloss(n) and not _infinitive_gloss_for_non_verb(n, analyses)
+            ],
+        }
         lexeme_analyses = analyses
         if surface_form:
             # A surface-form pair is about the cited forms. VESUM can tie such a form to an
@@ -776,23 +798,25 @@ def main(argv: list[str] | None = None) -> int:
 
     worktree_root = Path(__file__).resolve(strict=True).parents[3]
     primary_root = main_checkout_root(worktree_root)
-    sources_db = _resolve_sources_db(primary_root, args.sources_db)
-
-    docs = load_textbook_paronym_documents(sources_db)
     recipe_note = (
         "MiyKlas raw snapshot stored with canonical URL, UTC fetch timestamp, HTTP status, "
         "and raw HTML + extracted text SHA-256 digests; live data/sources.db is left "
         "untouched because docs/corpus-inventory.md requires a mounted bulk corpus root "
         "and primary-checkout generation publication to add literary sources."
     )
-
     miyklas_path = args.miyklas_raw if args.miyklas_raw.is_absolute() else worktree_root / args.miyklas_raw
-    miyklas_meta, miyklas_docs = load_miyklas_documents(miyklas_path)
     out_path = args.output if args.output.is_absolute() else worktree_root / args.output
 
-    # One-shot contract: refuse before extraction unless this is the reviewed corpus.
-    corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
+    # One-shot contract: refuse before extraction unless this is the reviewed corpus. A corpus
+    # that cannot be loaded or fails its own integrity checks cannot be the reviewed one either.
     try:
+        try:
+            sources_db = _resolve_sources_db(primary_root, args.sources_db)
+            docs = load_textbook_paronym_documents(sources_db)
+            miyklas_meta, miyklas_docs = load_miyklas_documents(miyklas_path)
+        except (OSError, RuntimeError, ValueError, sqlite3.Error) as exc:
+            raise CorpusFingerprintError(f"corpus cannot be loaded or fails its integrity checks: {exc}") from exc
+        corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
         require_pinned_corpus(read_pinned_corpus_fingerprint(out_path), corpus_fingerprint)
     except CorpusFingerprintError as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)

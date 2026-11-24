@@ -69,7 +69,11 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
      withhold a pair.
    - A meaning gloss is shown only when VESUM attests every Ukrainian word in it, a
      sentence-initial capital included (each part of a hyphenated compound); a gloss with a
-     source typo or a VESUM `bad` form (`оспівний`, `прийомів`) is withheld.
+     source typo or a VESUM `bad` form (`оспівний`, `прийомів`) is withheld. A gloss headed by a
+     verb infinitive is withheld for a member that VESUM never analyses as a verb, because it
+     defines an action rather than the member (`мимохідь`, an adverb, glossed by МійКлас as
+     `проходити мимо по дорозі, побіжно`; СУМ-20 defines it as `Проходячи мимо кого-, чого-небудь`).
+     The source's `quoted_line` stays verbatim.
    - Any pair with an unattested or multiword member is routed to `"unverified"` with an
      explicit reason (`not_attested_in_vesum` or `multiword_not_in_vesum`), never into
      `"pairs"`.
@@ -98,9 +102,12 @@ The registry records that corpus in `sources_corpus.corpus_fingerprint`:
 | `miyklas_pages`, `miyklas_snapshot_sha256` | Page count and SHA-256 of the loaded МійКлас snapshot (canonical JSON) |
 
 Before any extraction, both the build and `--check` compute the live fingerprint and compare it
-with the one recorded in the registry at `--output`. When they differ, or when the registry is
-missing or records no fingerprint, the build refuses with `CorpusFingerprintError`, prints
-`REFUSED:` with every differing field, writes nothing and exits 2. A new corpus (a new
+with the one recorded in the registry at `--output`; each field is compared as canonical JSON, so
+a value of another type (`5.0` for `5`) differs. When they differ, when the registry is missing
+or records no fingerprint, or when the corpus cannot be loaded or fails its own integrity checks
+(an unreadable `sources.db`, a МійКлас page whose text no longer matches its `text_sha256`), the
+build refuses with `CorpusFingerprintError`, prints `REFUSED:` with the reason, writes nothing
+and exits 2. A new corpus (a new
 `sources.db` textbook generation that changes these rows, or a re-fetched МійКлас snapshot) is a
 new certification: a reviewed change that judges the extractor's output on that corpus and
 re-pins the fingerprint. VESUM and the СУМ-20 mirror are not part of the pin; a change there that
