@@ -827,9 +827,13 @@ _QUESTION_PAIR_RE = re.compile(
 )
 
 _PARONYM_SECTION_HEADER_RE = re.compile(
-    r"^(?:§\s*\d+\.?\s*пароніми\b|\d+\.\s*пароніми\b|пароніми\s*[(—–−-]|"
-    r"пароніми\s*$|пароніми\.\s*запобігання|3\.5\.\s*явище\s+паронімії|"
-    r"паронімічне\s+значення)",
+    r"^\s*(?:"
+    r"(?:§\s*\d+\.?|\d+\.)\s*пароніми(?:\.\s*запобігання(?:\s+помилкам(?:\s+у\s+вживанні\s+паронімів)?)?)?\.?|"
+    r"пароніми\.?|"
+    r"пароніми\.\s*запобігання(?:\s+помилкам(?:\s+у\s+вживанні\s+паронімів)?)?(?:\s*§\s*\d+\.?)?\.?|"
+    r"\d+(?:\.\d+)+\.?\s*явище\s+паронімії(?:\s+в\s+українській\s+мові)?\.?|"
+    r"(?:словнич[оа]к|короткий\s+словник)\s+паронімів\.?"
+    r")\s*$",
     re.IGNORECASE,
 )
 
@@ -838,17 +842,10 @@ def _has_dedicated_paronym_heading(clean_text: str, doc: SourceDocument) -> bool
     """True only when the document/page itself is dedicated to paronyms (not mixed homonyms/synonyms)."""
     if doc.source_type == "miyklas":
         return True
-    first_lines = "\n".join(clean_text.splitlines()[:4])
-    if _PASSING_MENTION_RE.search(first_lines):
+    first_lines = clean_text.splitlines()[:4]
+    if _PASSING_MENTION_RE.search("\n".join(first_lines)):
         return False
-    return bool(
-        re.search(
-            r"(?:^|\n)\s*(?:§\s*\d+\.?\s*пароніми\b|\d+\.\s*пароніми\b|пароніми\s*$|пароніми\.\s*запобігання|"
-            r"3\.5\.\s*явище\s+паронімії|словничок\s+паронімів|короткий\s+словник\s+паронімів)",
-            first_lines,
-            re.IGNORECASE,
-        )
-    )
+    return any(_PARONYM_SECTION_HEADER_RE.match(line) for line in first_lines)
 
 
 def _has_active_paronym_cue(seg: str) -> bool:

@@ -218,8 +218,20 @@ def load_a1_lemma_sets(
     # Also collect lemmas of cards allocated in A1 slices 2..6 beside this inventory.
     atlas_dir = a1_inventory_path.parent
     slice_lemmas: set[str] = set()
-    reg_path = atlas_dir / "identity" / "registry.json"
-    if reg_path.exists():
+    slice_nums = (2, 3, 4, 5, 6)
+    identity_dir = atlas_dir / "identity"
+    reg_path = identity_dir / "registry.json"
+    has_any_slice_sibling = any(
+        (atlas_dir / f"a1-v1-slice{n}.json").exists()
+        or (identity_dir / f"a1-v1-slice{n}.json").exists()
+        for n in slice_nums
+    )
+    if reg_path.exists() or identity_dir.exists() or has_any_slice_sibling:
+        if not reg_path.exists():
+            raise ValueError(
+                f"Missing required identity registry {identity_dir.name}/{reg_path.name} "
+                f"beside {a1_inventory_path.name}"
+            )
         reg = _load_json_dict(reg_path)
         if "entries" not in reg or not isinstance(reg["entries"], list):
             raise ValueError(f"Missing or non-list 'entries' in {reg_path.name}")
@@ -235,9 +247,15 @@ def load_a1_lemma_sets(
             if not isinstance(spelling, str) or not spelling:
                 raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {reg_path.name}")
             card_to_spelling[cid] = normalize_token(spelling)
-        for slice_num in (2, 3, 4, 5, 6):
-            comp_path = atlas_dir / "identity" / f"a1-v1-slice{slice_num}.json"
-            if comp_path.exists():
+        for slice_num in slice_nums:
+            comp_path = identity_dir / f"a1-v1-slice{slice_num}.json"
+            slice_path = atlas_dir / f"a1-v1-slice{slice_num}.json"
+            comp_exists = comp_path.exists()
+            slice_exists = slice_path.exists()
+            if not comp_exists and not slice_exists:
+                continue
+            comp_entry_ids: set[str] = set()
+            if comp_exists:
                 comp = _load_json_dict(comp_path)
                 schema_ver = comp.get("schema_version")
                 if (
@@ -249,11 +267,15 @@ def load_a1_lemma_sets(
                         f"Malformed identity companion {comp_path.name}: "
                         "requires non-empty string 'schema_version' and list 'events'"
                     )
+                if not comp["events"]:
+                    raise ValueError(f"Empty 'events' list in identity companion {comp_path.name}")
                 if slice_num >= 3 and ("entries" not in comp or not isinstance(comp["entries"], list)):
                     raise ValueError(f"Missing or non-list 'entries' in {comp_path.name}")
                 comp_entries = comp.get("entries", [])
                 if not isinstance(comp_entries, list):
                     raise ValueError(f"Expected 'entries' list in {comp_path.name}")
+                if slice_num >= 3 and not comp_entries:
+                    raise ValueError(f"Empty 'entries' list in {comp_path.name}")
                 for entry in comp_entries:
                     if not isinstance(entry, dict):
                         raise ValueError(f"Expected dict entry in {comp_path.name}")
@@ -265,23 +287,78 @@ def load_a1_lemma_sets(
                     if not isinstance(spelling, str) or not spelling:
                         raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {comp_path.name}")
                     card_to_spelling[cid] = normalize_token(spelling)
-            slice_path = atlas_dir / f"a1-v1-slice{slice_num}.json"
-            if slice_path.exists():
-                sdata = _load_json_dict(slice_path)
-                if "card_ids" in sdata:
-                    cids = sdata["card_ids"]
-                elif isinstance(sdata.get("selection"), dict) and "card_ids" in sdata["selection"]:
-                    cids = sdata["selection"]["card_ids"]
-                else:
-                    raise ValueError(f"Missing 'card_ids' list in {slice_path.name}")
-                if not isinstance(cids, list) or any(not isinstance(cid, str) for cid in cids):
-                    raise ValueError(f"Expected list of string 'card_ids' in {slice_path.name}")
-                for cid in cids:
-                    if cid not in card_to_spelling:
-                        raise ValueError(
-                            f"Allocated card_id {cid!r} in {slice_path.name} missing from identity registries"
-                        )
-                    slice_lemmas.add(card_to_spelling[cid])
+                    comp_entry_ids.add(cid)
+                if not slice_exists:
+                    raise ValueError(
+                        f"Missing slice selection file {slice_path.name} "
+                        f"for identity companion {identity_dir.name}/{comp_path.name}"
+                    )
+            else:
+                raise ValueError(
+                    f"Missing identity companion {identity_dir.name}/{comp_path.name} "
+                    f"for slice selection {slice_path.name}"
+                )
+
+            sdata = _load_json_dict(slice_path)
+            if "card_ids" in sdata:
+                cids = sdata["card_ids"]
+            elif isinstance(sdata.get("selection"), dict) and "card_ids" in sdata["selection"]:
+                cids = sdata["selection"]["card_ids"]
+            else:
+                raise ValueError(f"Missing 'card_ids' list in {slice_path.name}")
+            if not isinstance(cids, list) or any(not isinstance(cid, str) or not cid.strip() for cid in cids):
+                raise ValueError(f"Expected list of non-empty string 'card_ids' in {slice_path.name}")
+            if not cids:
+                raise ValueError(f"Empty 'card_ids' list in {slice_path.name}")
+            if (
+                "card_ids" in sdata
+                and isinstance(sdata.get("selection"), dict)
+                and "card_ids" in sdata["selection"]
+                and sdata["selection"]["card_ids"] != cids
+            ):
+                raise ValueError(f"Inconsistent 'card_ids' vs 'selection.card_ids' in {slice_path.name}")
+            cid_set = set(cids)
+            if "row_card_ids" in sdata:
+                row_card_ids = sdata["row_card_ids"]
+                if (
+                    not isinstance(row_card_ids, dict)
+                    or not row_card_ids
+                    or any(
+                        not isinstance(k, str) or not isinstance(v, str) or not v.strip()
+                        for k, v in row_card_ids.items()
+                    )
+                ):
+                    raise ValueError(f"Malformed 'row_card_ids' mapping in {slice_path.name}")
+                if set(row_card_ids.values()) != cid_set:
+                    raise ValueError(f"Inconsistent 'card_ids' vs 'row_card_ids' in {slice_path.name}")
+            if "denominator" in sdata:
+                denom = sdata["denominator"]
+                if not isinstance(denom, dict):
+                    raise ValueError(f"Expected dict 'denominator' in {slice_path.name}")
+                for denom_key in ("cards", "targets"):
+                    if denom_key in denom:
+                        expected_count = denom[denom_key]
+                        if isinstance(expected_count, bool) or not isinstance(expected_count, int):
+                            raise ValueError(f"Expected int 'denominator.{denom_key}' in {slice_path.name}")
+                        if len(cid_set) != expected_count:
+                            raise ValueError(
+                                f"Inconsistent 'card_ids' count ({len(cid_set)}) vs "
+                                f"'denominator.{denom_key}' ({expected_count}) in {slice_path.name}"
+                            )
+            if not comp_entry_ids.issubset(cid_set):
+                raise ValueError(f"Companion entries missing from 'card_ids' in {slice_path.name}")
+            for cid in cids:
+                if cid not in card_to_spelling:
+                    raise ValueError(
+                        f"Allocated card_id {cid!r} in {slice_path.name} missing from identity registries"
+                    )
+                slice_lemmas.add(card_to_spelling[cid])
+
+        if not has_any_slice_sibling or not reg["entries"]:
+            raise ValueError(
+                f"Incomplete or empty identity registry {identity_dir.name}/{reg_path.name} "
+                f"beside {a1_inventory_path.name}"
+            )
 
     return {
         "inventory_lemmas": inventory_lemmas,

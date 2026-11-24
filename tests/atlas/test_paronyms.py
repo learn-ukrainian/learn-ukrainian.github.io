@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import urllib.request
 from pathlib import Path
 
@@ -374,3 +375,143 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
     (slice_dir / "identity" / "a1-v1-slice3.json").write_text("{}", encoding="utf-8")
     with pytest.raises(ValueError, match="identity companion"):
         load_a1_lemma_sets(inv_ok)
+
+
+def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> None:
+    """Defect class: inline paronym definition sentence opening persistent lesson state without a disclaimer."""
+    # Mixed-topic document: inline definition with NO disclaimer line before a generic choice exercise.
+    dash_def_doc = _doc(
+        "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
+        "Пароніми — це слова, близькі за звучанням: ефектний — ефективний.\n"
+        "1. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(dash_def_doc)} == {
+        ("ефективний", "ефектний")
+    }
+
+    # Parenthesized etymology definition and numbered prose sentence must not open persistent lesson state either.
+    paren_def_doc = _doc(
+        "Стилістична норма\n"
+        "Пароніми (від гр. para — біля) — це слова: адресат — адресант.\n"
+        "2. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(paren_def_doc)} == {
+        ("адресант", "адресат")
+    }
+
+    numbered_def_doc = _doc(
+        "Лексикологія\n"
+        "1. Пароніми — це слова: економний — економічний.\n"
+        "2. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома).\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(numbered_def_doc)} == {
+        ("економний", "економічний")
+    }
+
+    # Genuine dedicated section heading still opens lesson mode for its choice exercise.
+    dedicated_heading_doc = _doc(
+        "§ 7. ПАРОНІМИ\n"
+        "1. Виберіть із дужок потрібне слово.\n"
+        "У нашій школі дуже (дружний, дружній) колектив.\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(dedicated_heading_doc)} == {
+        ("дружний", "дружній")
+    }
+
+
+@pytest.mark.parametrize(
+    ("defect_case", "expected_file"),
+    [
+        ("missing_registry", "registry.json"),
+        ("missing_selection", "a1-v1-slice6.json"),
+        ("emptied_card_ids", "a1-v1-slice6.json"),
+        ("missing_companion", "a1-v1-slice2.json"),
+        ("truncated_card_ids", "a1-v1-slice6.json"),
+    ],
+)
+def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
+    tmp_path: Path,
+    defect_case: str,
+    expected_file: str,
+) -> None:
+    """Defect class: missing or emptied/truncated A1 identity or slice sibling silently dropping coverage."""
+    atlas_dir = tmp_path / "atlas"
+    identity_dir = atlas_dir / "identity"
+    identity_dir.mkdir(parents=True)
+
+    inv_path = atlas_dir / "a1-v1-inventory.json"
+    inv_path.write_text(
+        json.dumps(
+            {
+                "rows": [
+                    {"key": "адреса", "mapping": {"resolution": "resolved", "lemma": "адреса"}},
+                    {"key": "книга", "mapping": {"resolution": "resolved", "lemma": "книга"}},
+                    {"key": "слово", "mapping": {"resolution": "resolved", "lemma": "слово"}},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    reg_path = identity_dir / "registry.json"
+    reg_path.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"card_id": "card-1", "key_at_creation": {"spelling": "адреса"}},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    comp2_path = identity_dir / "a1-v1-slice2.json"
+    comp2_path.write_text(
+        json.dumps({"schema_version": "identity.v1", "events": [{"kind": "bind"}]}),
+        encoding="utf-8",
+    )
+    sel2_path = atlas_dir / "a1-v1-slice2.json"
+    sel2_path.write_text(
+        json.dumps({"card_ids": ["card-1"], "denominator": {"cards": 1}}),
+        encoding="utf-8",
+    )
+    comp6_path = identity_dir / "a1-v1-slice6.json"
+    comp6_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "identity.v1",
+                "events": [{"kind": "alloc"}],
+                "entries": [
+                    {"card_id": "card-2", "key_at_creation": {"spelling": "книга"}},
+                    {"card_id": "card-3", "key_at_creation": {"spelling": "слово"}},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    sel6_path = atlas_dir / "a1-v1-slice6.json"
+    sel6_payload = {
+        "card_ids": ["card-2", "card-3"],
+        "row_card_ids": {"r2": "card-2", "r3": "card-3"},
+        "denominator": {"targets": 2},
+    }
+    sel6_path.write_text(json.dumps(sel6_payload), encoding="utf-8")
+
+    # Baseline intact fixture loads all three slice lemmas.
+    baseline = load_a1_lemma_sets(inv_path)
+    assert baseline["slice_2_to_6_lemmas"] == {"адреса", "книга", "слово"}
+
+    if defect_case == "missing_registry":
+        reg_path.unlink()
+    elif defect_case == "missing_selection":
+        sel6_path.unlink()
+    elif defect_case == "emptied_card_ids":
+        sel6_path.write_text(json.dumps({**sel6_payload, "card_ids": []}), encoding="utf-8")
+    elif defect_case == "missing_companion":
+        comp2_path.unlink()
+    elif defect_case == "truncated_card_ids":
+        sel6_path.write_text(json.dumps({**sel6_payload, "card_ids": ["card-2"]}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=re.escape(expected_file)):
+        load_a1_lemma_sets(inv_path)
