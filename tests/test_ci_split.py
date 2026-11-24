@@ -392,7 +392,9 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
     assert retry["with"] == first["with"]
     assert retry["with"]["overwrite"] is True
     assert retry["with"]["if-no-files-found"] == "error"
-    assert first["timeout-minutes"] <= retry["timeout-minutes"]
+    # Each attempt keeps the old 2-minute bound: shorter could cut off an upload about to
+    # finalize (the retry's overwrite would delete it); longer would spend the shard's budget.
+    assert (first["timeout-minutes"], retry["timeout-minutes"]) == (2, 2)
     # No job may tolerate a whole-job failure.
     assert not any("continue-on-error" in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():
