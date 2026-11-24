@@ -809,6 +809,90 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
             assert record.owner and record.reason and record.expiry
 
 
+def test_adoption_snapshot_refresh_requires_explicit_generation(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Defect class: ordinary tests regenerate a stale snapshot or accept malformed snapshot JSON."""
+    pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    adoption_snapshot = pyproject["tool"]["lu-machinery"]["adoption-snapshot"]
+    assert adoption_snapshot == {
+        "module": "tests.api.opsec_sweep.registry",
+        "output": "tests/api/opsec_sweep/route_snapshot.json",
+    }
+    committed_snapshot = REPO_ROOT / adoption_snapshot["output"]
+    assert committed_snapshot.resolve() == registry.ROUTE_SNAPSHOT_PATH.resolve()
+    assert committed_snapshot.read_text(encoding="utf-8") == registry.render_route_snapshot(api_main.app)
+
+    # Malformed or non-regular snapshot files must fail closed.
+    missing = tmp_path / "missing.json"
+    with pytest.raises(AssertionError, match="not a regular file"):
+        registry.load_route_snapshot(missing)
+    symlink_target = tmp_path / "target.json"
+    symlink_target.write_text(committed_snapshot.read_text(encoding="utf-8"), encoding="utf-8")
+    symlink_snapshot = tmp_path / "link.json"
+    symlink_snapshot.symlink_to(symlink_target)
+    with pytest.raises(AssertionError, match="not a regular file"):
+        registry.load_route_snapshot(symlink_snapshot)
+    for bad_name, bad_text, pattern in (
+        ("bad_json.json", "{not json", "unreadable"),
+        ("deep_json.json", "[" * 20 + "]" * 20, "unreadable"),
+        ("list_top.json", "[]", "must be a JSON object"),
+        ("missing_key.json", json.dumps({"http_count": 1, "websocket_count": 0}), "must be a JSON object"),
+        ("dup_key.json", '{"http_count": 1, "http_count": 2, "websocket_count": 0, "sha256": "' + "0" * 64 + '"}', "unreadable"),
+        ("extra_key.json", json.dumps({"http_count": 1, "websocket_count": 0, "sha256": "0" * 64, "extra": 1}), "must be a JSON object"),
+        ("bool_count.json", json.dumps({"http_count": True, "websocket_count": 0, "sha256": "0" * 64}), "http_count"),
+        ("neg_ws.json", json.dumps({"http_count": 1, "websocket_count": -1, "sha256": "0" * 64}), "websocket_count"),
+        ("bad_sha.json", json.dumps({"http_count": 1, "websocket_count": 0, "sha256": "not-a-sha"}), "sha256"),
+    ):
+        bad_file = tmp_path / bad_name
+        bad_file.write_text(bad_text, encoding="utf-8")
+        with pytest.raises(AssertionError, match=pattern):
+            registry.load_route_snapshot(bad_file)
+
+    fixture_snapshot = tmp_path / "route_snapshot.json"
+    initial_bytes = committed_snapshot.read_bytes()
+    fixture_snapshot.write_bytes(initial_bytes)
+    initial_denominator = registry.load_route_snapshot(fixture_snapshot)
+    monkeypatch.setattr(registry, "ROUTE_SNAPSHOT_PATH", fixture_snapshot)
+
+    original_routes = list(api_main.app.router.routes)
+    original_schema = api_main.app.openapi_schema
+    probe = APIRouter()
+
+    @probe.get("/api/opsec-adoption-snapshot-probe")
+    def opsec_adoption_snapshot_probe() -> dict[str, bool]:
+        return {"ok": True}
+
+    api_main.app.include_router(probe)
+    api_main.app.openapi_schema = None
+    try:
+        with pytest.raises(AssertionError, match="Monitor API route denominator is not a reviewed snapshot"):
+            registry.assert_frozen_denominator(api_main.app)
+        # Ordinary guard failure must never rewrite the snapshot file.
+        assert fixture_snapshot.read_bytes() == initial_bytes
+
+        capsys.readouterr()
+        assert registry.main() == 0
+        generated = capsys.readouterr().out
+        # Explicit generator writes only to stdout and leaves files untouched.
+        assert fixture_snapshot.read_bytes() == initial_bytes
+        parsed = json.loads(generated)
+        assert set(parsed) == {"http_count", "websocket_count", "sha256"}
+        assert parsed["http_count"] == initial_denominator.http_count + 1
+        assert parsed["websocket_count"] == initial_denominator.websocket_count
+        assert parsed["sha256"] != initial_denominator.sha256
+
+        fixture_snapshot.write_text(generated, encoding="utf-8")
+        registry.assert_frozen_denominator(api_main.app)
+    finally:
+        api_main.app.router.routes[:] = original_routes
+        api_main.app.openapi_schema = original_schema
+
+    registry.assert_frozen_denominator(api_main.app, snapshot_path=committed_snapshot)
+
+
 def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
     records = registry.build_registry(api_main.app)
     mutations = {record.key: record for record in records if record.classification == "mutation"}
