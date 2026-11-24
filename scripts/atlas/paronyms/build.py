@@ -165,8 +165,11 @@ def _resolve_canonical_pair(
 
 
 def _load_json_dict(path: Path) -> dict[str, Any]:
-    """Load a JSON file and fail closed with ValueError if top-level value is not an object."""
-    parsed = json.loads(path.read_text(encoding="utf-8"))
+    """Load a JSON file and fail closed with ValueError naming the file on bad JSON or shape."""
+    try:
+        parsed = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Invalid JSON in {path.name}: {exc}") from exc
     if not isinstance(parsed, dict):
         raise ValueError(f"Expected JSON object in {path.name}, got {type(parsed).__name__}")
     return parsed
@@ -196,7 +199,7 @@ def load_a1_lemma_sets(
             )
         lemma = mapping.get("lemma")
         if resolution == "resolved":
-            if not isinstance(lemma, str) or not lemma.strip():
+            if not isinstance(lemma, str) or not lemma.strip() or not normalize_token(lemma):
                 raise ValueError(
                     f"Resolved row missing non-empty string 'mapping.lemma' in {a1_inventory_path.name}"
                 )
@@ -235,71 +238,98 @@ def load_a1_lemma_sets(
         reg = _load_json_dict(reg_path)
         if "entries" not in reg or not isinstance(reg["entries"], list):
             raise ValueError(f"Missing or non-list 'entries' in {reg_path.name}")
+        if "events" in reg:
+            reg_events = reg["events"]
+            if (
+                not isinstance(reg_events, list)
+                or not reg_events
+                or any(not isinstance(ev, dict) or not ev for ev in reg_events)
+            ):
+                raise ValueError(f"Expected non-empty list of event objects in {reg_path.name}")
         card_to_spelling: dict[str, str] = {}
+        seen_reg_cids: set[str] = set()
         for entry in reg["entries"]:
             if not isinstance(entry, dict):
                 raise ValueError(f"Expected dict entry in {reg_path.name}")
             cid = entry.get("card_id")
             key_info = entry.get("key_at_creation")
-            if not isinstance(cid, str) or not cid or not isinstance(key_info, dict):
+            if not isinstance(cid, str) or not cid.strip() or not isinstance(key_info, dict):
                 raise ValueError(f"Malformed identity entry in {reg_path.name}")
+            if cid in seen_reg_cids:
+                raise ValueError(f"Duplicate card_id {cid!r} in {reg_path.name}")
+            seen_reg_cids.add(cid)
             spelling = key_info.get("spelling")
-            if not isinstance(spelling, str) or not spelling:
+            if not isinstance(spelling, str) or not spelling.strip() or not normalize_token(spelling):
                 raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {reg_path.name}")
             card_to_spelling[cid] = normalize_token(spelling)
+
+        # Pass 1: validate any present identity companions before checking missing slices so
+        # malformed companions always report their exact file and defect first.
+        comp_entry_ids_by_slice: dict[int, set[str]] = {}
+        for slice_num in slice_nums:
+            comp_path = identity_dir / f"a1-v1-slice{slice_num}.json"
+            if not comp_path.exists():
+                continue
+            comp = _load_json_dict(comp_path)
+            schema_ver = comp.get("schema_version")
+            events = comp.get("events")
+            if (
+                not isinstance(schema_ver, str)
+                or not schema_ver.strip()
+                or not isinstance(events, list)
+            ):
+                raise ValueError(
+                    f"Malformed identity companion {comp_path.name}: "
+                    "requires non-empty string 'schema_version' and list 'events'"
+                )
+            if not events or any(not isinstance(ev, dict) or not ev for ev in events):
+                raise ValueError(
+                    f"Expected non-empty list of event objects in identity companion {comp_path.name}"
+                )
+            if slice_num >= 3 and ("entries" not in comp or not isinstance(comp["entries"], list)):
+                raise ValueError(f"Missing or non-list 'entries' in {comp_path.name}")
+            comp_entries = comp.get("entries", [])
+            if not isinstance(comp_entries, list):
+                raise ValueError(f"Expected 'entries' list in {comp_path.name}")
+            if slice_num >= 3 and not comp_entries:
+                raise ValueError(f"Empty 'entries' list in {comp_path.name}")
+            comp_cids: set[str] = set()
+            for entry in comp_entries:
+                if not isinstance(entry, dict):
+                    raise ValueError(f"Expected dict entry in {comp_path.name}")
+                cid = entry.get("card_id")
+                key_info = entry.get("key_at_creation")
+                if not isinstance(cid, str) or not cid.strip() or not isinstance(key_info, dict):
+                    raise ValueError(f"Malformed identity entry in {comp_path.name}")
+                if cid in comp_cids:
+                    raise ValueError(f"Duplicate card_id {cid!r} in {comp_path.name}")
+                spelling = key_info.get("spelling")
+                if not isinstance(spelling, str) or not spelling.strip() or not normalize_token(spelling):
+                    raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {comp_path.name}")
+                card_to_spelling[cid] = normalize_token(spelling)
+                comp_cids.add(cid)
+            comp_entry_ids_by_slice[slice_num] = comp_cids
+
+        # Pass 2: once any allocation sibling exists, require the complete slice 2..6 set
+        # and verify internal manifest consistency unconditionally.
         for slice_num in slice_nums:
             comp_path = identity_dir / f"a1-v1-slice{slice_num}.json"
             slice_path = atlas_dir / f"a1-v1-slice{slice_num}.json"
-            comp_exists = comp_path.exists()
-            slice_exists = slice_path.exists()
-            if not comp_exists and not slice_exists:
-                continue
-            comp_entry_ids: set[str] = set()
-            if comp_exists:
-                comp = _load_json_dict(comp_path)
-                schema_ver = comp.get("schema_version")
-                if (
-                    not isinstance(schema_ver, str)
-                    or not schema_ver.strip()
-                    or not isinstance(comp.get("events"), list)
-                ):
-                    raise ValueError(
-                        f"Malformed identity companion {comp_path.name}: "
-                        "requires non-empty string 'schema_version' and list 'events'"
-                    )
-                if not comp["events"]:
-                    raise ValueError(f"Empty 'events' list in identity companion {comp_path.name}")
-                if slice_num >= 3 and ("entries" not in comp or not isinstance(comp["entries"], list)):
-                    raise ValueError(f"Missing or non-list 'entries' in {comp_path.name}")
-                comp_entries = comp.get("entries", [])
-                if not isinstance(comp_entries, list):
-                    raise ValueError(f"Expected 'entries' list in {comp_path.name}")
-                if slice_num >= 3 and not comp_entries:
-                    raise ValueError(f"Empty 'entries' list in {comp_path.name}")
-                for entry in comp_entries:
-                    if not isinstance(entry, dict):
-                        raise ValueError(f"Expected dict entry in {comp_path.name}")
-                    cid = entry.get("card_id")
-                    key_info = entry.get("key_at_creation")
-                    if not isinstance(cid, str) or not cid or not isinstance(key_info, dict):
-                        raise ValueError(f"Malformed identity entry in {comp_path.name}")
-                    spelling = key_info.get("spelling")
-                    if not isinstance(spelling, str) or not spelling:
-                        raise ValueError(f"Missing or non-string 'key_at_creation.spelling' in {comp_path.name}")
-                    card_to_spelling[cid] = normalize_token(spelling)
-                    comp_entry_ids.add(cid)
-                if not slice_exists:
-                    raise ValueError(
-                        f"Missing slice selection file {slice_path.name} "
-                        f"for identity companion {identity_dir.name}/{comp_path.name}"
-                    )
-            else:
+            if not comp_path.exists():
                 raise ValueError(
                     f"Missing identity companion {identity_dir.name}/{comp_path.name} "
-                    f"for slice selection {slice_path.name}"
+                    f"beside {a1_inventory_path.name}"
+                )
+            if not slice_path.exists():
+                raise ValueError(
+                    f"Missing slice selection file {slice_path.name} "
+                    f"for identity companion {identity_dir.name}/{comp_path.name}"
                 )
 
             sdata = _load_json_dict(slice_path)
+            slice_schema = sdata.get("schema_version")
+            if not isinstance(slice_schema, str) or not slice_schema.strip():
+                raise ValueError(f"Missing or non-string 'schema_version' in {slice_path.name}")
             if "card_ids" in sdata:
                 cids = sdata["card_ids"]
             elif isinstance(sdata.get("selection"), dict) and "card_ids" in sdata["selection"]:
@@ -310,6 +340,9 @@ def load_a1_lemma_sets(
                 raise ValueError(f"Expected list of non-empty string 'card_ids' in {slice_path.name}")
             if not cids:
                 raise ValueError(f"Empty 'card_ids' list in {slice_path.name}")
+            cid_set = set(cids)
+            if len(cid_set) != len(cids):
+                raise ValueError(f"Duplicate entries in 'card_ids' in {slice_path.name}")
             if (
                 "card_ids" in sdata
                 and isinstance(sdata.get("selection"), dict)
@@ -317,35 +350,49 @@ def load_a1_lemma_sets(
                 and sdata["selection"]["card_ids"] != cids
             ):
                 raise ValueError(f"Inconsistent 'card_ids' vs 'selection.card_ids' in {slice_path.name}")
-            cid_set = set(cids)
-            if "row_card_ids" in sdata:
-                row_card_ids = sdata["row_card_ids"]
+
+            denom = sdata.get("denominator")
+            if not isinstance(denom, dict):
+                raise ValueError(f"Missing or non-dict 'denominator' in {slice_path.name}")
+            denom_key = "cards" if slice_num <= 3 else "targets"
+            expected_count = denom.get(denom_key)
+            if isinstance(expected_count, bool) or not isinstance(expected_count, int) or expected_count <= 0:
+                raise ValueError(f"Missing or invalid positive int 'denominator.{denom_key}' in {slice_path.name}")
+            if len(cid_set) != expected_count:
+                raise ValueError(
+                    f"Inconsistent 'card_ids' count ({len(cid_set)}) vs "
+                    f"'denominator.{denom_key}' ({expected_count}) in {slice_path.name}"
+                )
+
+            if slice_num >= 3 or "row_card_ids" in sdata:
+                row_card_ids = sdata.get("row_card_ids")
                 if (
                     not isinstance(row_card_ids, dict)
                     or not row_card_ids
                     or any(
-                        not isinstance(k, str) or not isinstance(v, str) or not v.strip()
+                        not isinstance(k, str) or not k.strip() or not isinstance(v, str) or not v.strip()
                         for k, v in row_card_ids.items()
                     )
                 ):
-                    raise ValueError(f"Malformed 'row_card_ids' mapping in {slice_path.name}")
+                    raise ValueError(f"Missing or malformed 'row_card_ids' mapping in {slice_path.name}")
                 if set(row_card_ids.values()) != cid_set:
                     raise ValueError(f"Inconsistent 'card_ids' vs 'row_card_ids' in {slice_path.name}")
-            if "denominator" in sdata:
-                denom = sdata["denominator"]
-                if not isinstance(denom, dict):
-                    raise ValueError(f"Expected dict 'denominator' in {slice_path.name}")
-                for denom_key in ("cards", "targets"):
-                    if denom_key in denom:
-                        expected_count = denom[denom_key]
-                        if isinstance(expected_count, bool) or not isinstance(expected_count, int):
-                            raise ValueError(f"Expected int 'denominator.{denom_key}' in {slice_path.name}")
-                        if len(cid_set) != expected_count:
-                            raise ValueError(
-                                f"Inconsistent 'card_ids' count ({len(cid_set)}) vs "
-                                f"'denominator.{denom_key}' ({expected_count}) in {slice_path.name}"
-                            )
-            if not comp_entry_ids.issubset(cid_set):
+
+            claims = sdata.get("claims")
+            if not isinstance(claims, list) or not claims:
+                raise ValueError(f"Missing or empty 'claims' list in {slice_path.name}")
+            claim_cids: set[str] = set()
+            for claim in claims:
+                if not isinstance(claim, dict):
+                    raise ValueError(f"Expected dict claim entry in {slice_path.name}")
+                ccid = claim.get("card_id")
+                if not isinstance(ccid, str) or not ccid.strip():
+                    raise ValueError(f"Missing or non-string 'card_id' in claims of {slice_path.name}")
+                claim_cids.add(ccid)
+            if claim_cids != cid_set:
+                raise ValueError(f"Inconsistent 'card_ids' vs 'claims' in {slice_path.name}")
+
+            if not comp_entry_ids_by_slice[slice_num].issubset(cid_set):
                 raise ValueError(f"Companion entries missing from 'card_ids' in {slice_path.name}")
             for cid in cids:
                 if cid not in card_to_spelling:
@@ -354,9 +401,9 @@ def load_a1_lemma_sets(
                     )
                 slice_lemmas.add(card_to_spelling[cid])
 
-        if not has_any_slice_sibling or not reg["entries"]:
+        if not reg["entries"]:
             raise ValueError(
-                f"Incomplete or empty identity registry {identity_dir.name}/{reg_path.name} "
+                f"Empty 'entries' list in identity registry {identity_dir.name}/{reg_path.name} "
                 f"beside {a1_inventory_path.name}"
             )
 

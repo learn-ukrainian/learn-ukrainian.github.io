@@ -378,7 +378,7 @@ def test_vesum_gating_lemmatization_and_a1_coverage_accounting(tmp_path: Path) -
 
 
 def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> None:
-    """Defect class: inline paronym definition sentence opening persistent lesson state without a disclaimer."""
+    """Defect class: inline/wrapped paronym definitions or unnumbered prompts leaking lesson state without a disclaimer."""
     # Mixed-topic document: inline definition with NO disclaimer line before a generic choice exercise.
     dash_def_doc = _doc(
         "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
@@ -390,34 +390,51 @@ def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> 
         ("ефективний", "ефектний")
     }
 
-    # Parenthesized etymology definition and numbered prose sentence must not open persistent lesson state either.
-    paren_def_doc = _doc(
-        "Стилістична норма\n"
-        "Пароніми (від гр. para — біля) — це слова: адресат — адресант.\n"
+    # Line-wrapped definition right after "Пароніми" or "1. Пароніми" (next line starts with dash or "(")
+    # must NOT be treated as a dedicated heading.
+    wrapped_dash_doc = _doc(
+        "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
+        "Пароніми\n"
+        "— це слова, близькі за звучанням: ефектний — ефективний.\n"
+        "1. Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома).\n"
+        "2. Перепишіть, вибираючи з дужок потрібне слово.\n"
+        "Він вийшов (вранці, уранці).\n"
+    )
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(wrapped_dash_doc)} == {
+        ("ефективний", "ефектний")
+    }
+
+    wrapped_paren_doc = _doc(
+        "Лексикологія\n"
+        "1. Пароніми\n"
+        "(від гр. para — біля) — це слова: адресат — адресант.\n"
         "2. Виберіть із дужок потрібне слово.\n"
         "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
     )
-    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(paren_def_doc)} == {
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(wrapped_paren_doc)} == {
         ("адресант", "адресат")
     }
 
-    numbered_def_doc = _doc(
-        "Лексикологія\n"
-        "1. Пароніми — це слова: економний — економічний.\n"
-        "2. Виберіть із дужок потрібне слово.\n"
-        "Він залишився (вдома, удома).\n"
+    # Unnumbered generic choice exercise immediately after an inline definition must NOT inherit its local cue.
+    unnumbered_choice_doc = _doc(
+        "§ 45. Стилістичне використання синонімів, антонімів і паронімів\n"
+        "Пароніми — це слова, близькі за звучанням: ефектний — ефективний.\n"
+        "Виберіть із дужок потрібне слово.\n"
+        "Він залишився (вдома, удома) і вийшов (вранці, уранці).\n"
     )
-    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(numbered_def_doc)} == {
-        ("економний", "економічний")
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(unnumbered_choice_doc)} == {
+        ("ефективний", "ефектний")
     }
 
-    # Genuine dedicated section heading still opens lesson mode for its choice exercise.
-    dedicated_heading_doc = _doc(
-        "§ 7. ПАРОНІМИ\n"
+    # Bare dedicated heading later in a mixed-topic chunk STILL opens paronym lesson mode.
+    bare_later_heading_doc = _doc(
+        "Антонімами називають протилежні за значенням слова: чорний — білий.\n"
+        "Пароніми\n"
         "1. Виберіть із дужок потрібне слово.\n"
         "У нашій школі дуже (дружний, дружній) колектив.\n"
     )
-    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(dedicated_heading_doc)} == {
+    assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(bare_later_heading_doc)} == {
         ("дружний", "дружній")
     }
 
@@ -429,7 +446,13 @@ def test_inline_paronym_definition_does_not_open_lesson_without_disclaimer() -> 
         ("missing_selection", "a1-v1-slice6.json"),
         ("emptied_card_ids", "a1-v1-slice6.json"),
         ("missing_companion", "a1-v1-slice2.json"),
+        ("missing_both_slice6", "a1-v1-slice6.json"),
         ("truncated_card_ids", "a1-v1-slice6.json"),
+        ("dropped_crosschecks", "a1-v1-slice6.json"),
+        ("null_event", "a1-v1-slice6.json"),
+        ("duplicate_card_ids", "a1-v1-slice6.json"),
+        ("whitespace_spelling", "a1-v1-slice6.json"),
+        ("invalid_json", "a1-v1-slice6.json"),
     ],
 )
 def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
@@ -437,7 +460,7 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
     defect_case: str,
     expected_file: str,
 ) -> None:
-    """Defect class: missing or emptied/truncated A1 identity or slice sibling silently dropping coverage."""
+    """Defect class: missing, incomplete, malformed, or emptied A1 identity/slice siblings silently dropping coverage."""
     atlas_dir = tmp_path / "atlas"
     identity_dir = atlas_dir / "identity"
     identity_dir.mkdir(parents=True)
@@ -447,9 +470,8 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
         json.dumps(
             {
                 "rows": [
-                    {"key": "адреса", "mapping": {"resolution": "resolved", "lemma": "адреса"}},
-                    {"key": "книга", "mapping": {"resolution": "resolved", "lemma": "книга"}},
-                    {"key": "слово", "mapping": {"resolution": "resolved", "lemma": "слово"}},
+                    {"key": w, "mapping": {"resolution": "resolved", "lemma": w}}
+                    for w in ("адреса", "книга", "слово", "мова", "день", "вода")
                 ]
             }
         ),
@@ -459,59 +481,107 @@ def test_a1_lemma_sets_fail_closed_on_missing_or_empty_sibling(
     reg_path.write_text(
         json.dumps(
             {
-                "entries": [
-                    {"card_id": "card-1", "key_at_creation": {"spelling": "адреса"}},
-                ]
+                "entries": [{"card_id": "card-2", "key_at_creation": {"spelling": "адреса"}}],
+                "events": [{"kind": "seed"}],
             }
         ),
         encoding="utf-8",
     )
+
+    # Complete intact slice 2..6 sibling set.
     comp2_path = identity_dir / "a1-v1-slice2.json"
     comp2_path.write_text(
         json.dumps({"schema_version": "identity.v1", "events": [{"kind": "bind"}]}),
         encoding="utf-8",
     )
-    sel2_path = atlas_dir / "a1-v1-slice2.json"
-    sel2_path.write_text(
-        json.dumps({"card_ids": ["card-1"], "denominator": {"cards": 1}}),
-        encoding="utf-8",
-    )
-    comp6_path = identity_dir / "a1-v1-slice6.json"
-    comp6_path.write_text(
+    (atlas_dir / "a1-v1-slice2.json").write_text(
         json.dumps(
             {
-                "schema_version": "identity.v1",
-                "events": [{"kind": "alloc"}],
-                "entries": [
-                    {"card_id": "card-2", "key_at_creation": {"spelling": "книга"}},
-                    {"card_id": "card-3", "key_at_creation": {"spelling": "слово"}},
-                ],
+                "schema_version": "atlas-a1-v1-slice2.v1",
+                "card_ids": ["card-2"],
+                "denominator": {"cards": 1},
+                "claims": [{"card_id": "card-2"}],
             }
         ),
         encoding="utf-8",
     )
-    sel6_path = atlas_dir / "a1-v1-slice6.json"
-    sel6_payload = {
-        "card_ids": ["card-2", "card-3"],
-        "row_card_ids": {"r2": "card-2", "r3": "card-3"},
-        "denominator": {"targets": 2},
-    }
-    sel6_path.write_text(json.dumps(sel6_payload), encoding="utf-8")
 
-    # Baseline intact fixture loads all three slice lemmas.
+    slice_words = {3: ("мова",), 4: ("день",), 5: ("вода",), 6: ("книга", "слово")}
+    for snum, words in slice_words.items():
+        entries = [
+            {"card_id": f"card-{snum}-{i}", "key_at_creation": {"spelling": w}}
+            for i, w in enumerate(words, start=1)
+        ]
+        cids = [e["card_id"] for e in entries]
+        denom_key = "cards" if snum == 3 else "targets"
+        (identity_dir / f"a1-v1-slice{snum}.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "identity.v1",
+                    "events": [{"kind": "alloc"}],
+                    "entries": entries,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (atlas_dir / f"a1-v1-slice{snum}.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": f"atlas-a1-slice{snum}-manifest.v1",
+                    "card_ids": cids,
+                    "row_card_ids": {f"r-{snum}-{i}": cid for i, cid in enumerate(cids, start=1)},
+                    "denominator": {denom_key: len(cids)},
+                    "claims": [{"card_id": cid} for cid in cids],
+                }
+            ),
+            encoding="utf-8",
+        )
+
     baseline = load_a1_lemma_sets(inv_path)
-    assert baseline["slice_2_to_6_lemmas"] == {"адреса", "книга", "слово"}
+    assert baseline["slice_2_to_6_lemmas"] == {"адреса", "мова", "день", "вода", "книга", "слово"}
+
+    comp6_path = identity_dir / "a1-v1-slice6.json"
+    sel6_path = atlas_dir / "a1-v1-slice6.json"
+    sel6_data = json.loads(sel6_path.read_text(encoding="utf-8"))
+    comp6_data = json.loads(comp6_path.read_text(encoding="utf-8"))
 
     if defect_case == "missing_registry":
         reg_path.unlink()
     elif defect_case == "missing_selection":
         sel6_path.unlink()
     elif defect_case == "emptied_card_ids":
-        sel6_path.write_text(json.dumps({**sel6_payload, "card_ids": []}), encoding="utf-8")
+        sel6_path.write_text(json.dumps({**sel6_data, "card_ids": []}), encoding="utf-8")
     elif defect_case == "missing_companion":
         comp2_path.unlink()
+    elif defect_case == "missing_both_slice6":
+        sel6_path.unlink()
+        comp6_path.unlink()
     elif defect_case == "truncated_card_ids":
-        sel6_path.write_text(json.dumps({**sel6_payload, "card_ids": ["card-2"]}), encoding="utf-8")
+        sel6_path.write_text(json.dumps({**sel6_data, "card_ids": ["card-6-1"]}), encoding="utf-8")
+    elif defect_case == "dropped_crosschecks":
+        comp6_path.write_text(
+            json.dumps({**comp6_data, "entries": comp6_data["entries"][:1]}),
+            encoding="utf-8",
+        )
+        stripped = {k: v for k, v in sel6_data.items() if k not in ("row_card_ids", "denominator")}
+        stripped["card_ids"] = ["card-6-1"]
+        stripped["claims"] = [{"card_id": "card-6-1"}]
+        sel6_path.write_text(json.dumps(stripped), encoding="utf-8")
+    elif defect_case == "null_event":
+        comp6_path.write_text(json.dumps({**comp6_data, "events": [None]}), encoding="utf-8")
+    elif defect_case == "duplicate_card_ids":
+        sel6_path.write_text(
+            json.dumps({**sel6_data, "card_ids": ["card-6-1", "card-6-1", "card-6-2"]}),
+            encoding="utf-8",
+        )
+    elif defect_case == "whitespace_spelling":
+        bad_entries = [
+            {**comp6_data["entries"][0], "key_at_creation": {"spelling": "   "}},
+            comp6_data["entries"][1],
+        ]
+        comp6_path.write_text(json.dumps({**comp6_data, "entries": bad_entries}), encoding="utf-8")
+    elif defect_case == "invalid_json":
+        sel6_path.write_text("{broken json", encoding="utf-8")
 
     with pytest.raises(ValueError, match=re.escape(expected_file)):
         load_a1_lemma_sets(inv_path)

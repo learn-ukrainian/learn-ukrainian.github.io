@@ -837,15 +837,39 @@ _PARONYM_SECTION_HEADER_RE = re.compile(
     re.IGNORECASE,
 )
 
+# A line starting with a dash, opening parenthesis, colon/comma/semicolon, or lowercase
+# Ukrainian word continues a prose/definition sentence rather than following a heading.
+_DEFINITION_CONTINUATION_RE = re.compile(rf"^\s*(?:[{DASH_CHARS}\-:(,;]|[{UK_LOWER}])")
+
+
+def _is_dedicated_paronym_heading(seg: str, next_seg: str = "") -> bool:
+    """True only when ``seg`` starts with a standalone dedicated heading (not a wrapped definition)."""
+    lines = [ln.strip() for ln in seg.splitlines() if ln.strip()]
+    if not lines or not _PARONYM_SECTION_HEADER_RE.match(lines[0]):
+        return False
+    next_line = ""
+    if len(lines) > 1:
+        next_line = lines[1]
+    elif next_seg:
+        next_lines = [ln.strip() for ln in next_seg.splitlines() if ln.strip()]
+        if next_lines:
+            next_line = next_lines[0]
+    return not (next_line and _DEFINITION_CONTINUATION_RE.match(next_line))
+
 
 def _has_dedicated_paronym_heading(clean_text: str, doc: SourceDocument) -> bool:
     """True only when the document/page itself is dedicated to paronyms (not mixed homonyms/synonyms)."""
     if doc.source_type == "miyklas":
         return True
-    first_lines = clean_text.splitlines()[:4]
-    if _PASSING_MENTION_RE.search("\n".join(first_lines)):
+    non_empty = [ln.strip() for ln in clean_text.splitlines() if ln.strip()]
+    if _PASSING_MENTION_RE.search("\n".join(non_empty[:4])):
         return False
-    return any(_PARONYM_SECTION_HEADER_RE.match(line) for line in first_lines)
+    for idx, line in enumerate(non_empty[:4]):
+        if _PARONYM_SECTION_HEADER_RE.match(line):
+            next_line = non_empty[idx + 1] if idx + 1 < len(non_empty) else ""
+            if not (next_line and _DEFINITION_CONTINUATION_RE.match(next_line)):
+                return True
+    return False
 
 
 def _has_active_paronym_cue(seg: str) -> bool:
@@ -871,10 +895,16 @@ def _split_paronym_segments(
         r"Домашнє\s+завдання|Практикум\b|ПОРУШЕННЯ\s+ЛЕКСИЧНИХ|У\s+словнику\s+|"
         r"Антонімами\s+називають|Антоніми\s+|Синоніми\s+|Синонімічне\s+значення|"
         r"Омоніми\s+|Омонімічне\s+значення|ФУНКЦІОНАЛЬНІ\s+АСПЕКТИ|"
+        r"Пароніми\.?\s*(?=\n|$)|Пароніми\.\s*Запобігання|(?:Словнич[оа]к|Короткий\s+словник)\s+паронімів\b|"
         r"Пароніми\s*\(|Пароніми\s*[—–−-]|Паронімічне\s+значення|3\.5\.\s*Явище\s+паронімії|"
         r"До\s+речі…|•\s*паронімів\s*:|"
         r"З['’ʼ]ясуйте\s+за\s+словником\s+значення\s+паронімів|"
         r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари|"
+        r"(?-i:(?:Вправа|Завдання)\b|"
+        r"(?:Перепишіть|Спишіть|Запишіть|Виберіть|Розкрийте|Вибираючи|Добираючи|Вибравши|Розкривши|"
+        r"Прочитайте|Доберіть|Підберіть|Розподіліть|Утворіть|Випишіть|Знайдіть|Виконайте|"
+        r"Відредагуйте|Замініть|Виправте)\b"
+        r"[^\n]{0,120}(?:дуж|потрібне\s+слово|потрібні\s+слова|доцільне|антонім|синонім|омонім))|"
         r"[1-9]\d{0,2}\.\s+(?:Антонім|Синонім|Омонім|Паронім|"
         r"[А-ЯІЇЄҐ][а-яіїєґ']+(?:\s+[а-яіїєґ']+){0,3}\s+(?:антонім|синонім|омонім|паронім)|"
         r"Прочитайте|Перепишіть|Спишіть|Запишіть|Виберіть|"
@@ -887,7 +917,10 @@ def _split_paronym_segments(
         r"Синонімічне\s+значення|Омонімічне\s+значення|Паронімічне\s+значення|"
         r"Іншим\s+різновидом\s+парадигматичних|"
         r"8[1-9]\.\s|23[5-9]\s|29[4-9]\.\s|Чи\s+є\s+слова\b|З['’ʼ]ясуйте\s+рід\s+паронімів\b|"
-        r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари))",
+        r"Складіть\s+висловлення\s*\(усно\),\s+обігравши\s+такі\s+пари))|"
+        rf"(?<=(?-i:[{UK_LOWER})])\.\s)(?=(?-i:(?:Перепишіть|Спишіть|Запишіть|Виберіть|Розкрийте|"
+        r"Вибираючи|Добираючи|Вибравши|Розкривши)\b"
+        r"[^\n.]{0,120}(?:дуж|потрібне\s+слово|потрібні\s+слова|доцільне)))",
         re.IGNORECASE,
     )
 
@@ -975,7 +1008,8 @@ def _split_paronym_segments(
         # Continue paronym lesson mode on section headers, or activate ONE immediate choice
         # exercise ONLY when the adjacent segment provides explicit paronym-lesson evidence
         # (never chaining from one generic choice exercise to the next).
-        if has_local_cue and _PARONYM_SECTION_HEADER_RE.match(first_line):
+        next_seg = raw_segments[idx + 1][2] if idx + 1 < len(raw_segments) else ""
+        if has_local_cue and _is_dedicated_paronym_heading(seg, next_seg):
             in_paronym_lesson = True
         active = has_local_cue or in_paronym_lesson
         if (

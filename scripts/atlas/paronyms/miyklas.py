@@ -398,7 +398,10 @@ def validate_miyklas_page_dict(page: Any, *, verify_text_digest: bool = True) ->
 
 def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[SourceDocument]]:
     """Load a saved MiyKlas snapshot JSON and validate its provenance and SHA-256 integrity."""
-    payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    try:
+        payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Invalid JSON in {snapshot_path.name}: {exc}") from exc
     if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(
             f"Unsupported MiyKlas snapshot schema_version: "
