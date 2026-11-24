@@ -107,11 +107,14 @@ a missing or extra key (even one set to `null`) and a value of another type (`5.
 differ. When they differ, or when the registry is missing or records no fingerprint, the build
 refuses with `CorpusFingerprintError`. Every step from reading the first input to the final
 comparison (the pin gate, the rebuild and, under `--check`, the byte comparison) runs inside one
-fail-closed boundary: any failure there, whatever its type, is also a refusal. That covers an
-unreadable or non-UTF-8 file, wrong JSON types, missing keys, nesting deep enough to exhaust the
-stack, an oversize value, a МійКлас page whose text no longer matches its `text_sha256`, text
-that is not valid Unicode (including a JSON escape such as `\ud800` in any input), a broken A1
-inventory and an unreadable `sources.db`. A refusal prints `REFUSED:` and the reason: a
+fail-closed boundary: any failure there, whatever its type, is also a refusal. The three JSON
+inputs (the registry at `--output`, the МійКлас snapshot and the A1 inventory) are parsed in full
+as I-JSON (RFC 7493), so a duplicate member name, a `NaN` or `Infinity` constant, a number beyond the double range
+(`1e400`), or a string that is not valid Unicode (an escape such as `\ud800`) anywhere in the file refuses, even where the
+build would not read the value. The boundary also covers an unreadable or non-UTF-8 file, wrong
+JSON types, missing keys, nesting deep enough to exhaust the stack, an oversize value, a МійКлас
+page whose text no longer matches its `text_sha256`, a broken A1 inventory and an unreadable
+`sources.db`. A refusal prints `REFUSED:` and the reason: a
 `CorpusFingerprintError` gives its own reason, and any other failure is prefixed with its exception
 type. The whole reason is at most 2,000 characters; a longer one is cut and ends in
 `... (truncated)`. A refusal writes nothing and exits 2. A new corpus (a new `sources.db` textbook

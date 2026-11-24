@@ -41,6 +41,7 @@ from scripts.atlas.paronyms.extractor import (
 )
 from scripts.atlas.paronyms.miyklas import (
     load_miyklas_documents,
+    loads_i_json,
     validate_miyklas_page_dict,
 )
 from scripts.verification import vesum as vesum_mod
@@ -134,12 +135,12 @@ def compute_corpus_fingerprint(textbook_docs: list[SourceDocument], miyklas_snap
 def read_pinned_corpus_fingerprint(registry_path: Path) -> dict[str, Any]:
     """Return the corpus fingerprint recorded in the reviewed registry, or refuse."""
     try:
-        payload = json.loads(registry_path.read_text(encoding="utf-8"))
+        payload = loads_i_json(registry_path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise CorpusFingerprintError(
             f"no reviewed registry at {registry_path}: no corpus is pinned, so the build refuses"
         ) from exc
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError) as exc:
         raise CorpusFingerprintError(f"unreadable registry {registry_path}: {exc}") from exc
     corpus = payload.get("sources_corpus") if isinstance(payload, dict) else None
     pinned = corpus.get("corpus_fingerprint") if isinstance(corpus, dict) else None
@@ -353,14 +354,9 @@ def load_a1_lemma_sets(a1_inventory_path: Path) -> dict[str, set[str]]:
     except (OSError, UnicodeDecodeError) as exc:
         raise A1InventoryError(f"Unreadable A1 inventory {a1_inventory_path}: {exc}") from exc
     try:
-        inv = json.loads(raw)
-    except json.JSONDecodeError as exc:
+        inv = loads_i_json(raw)
+    except ValueError as exc:
         raise A1InventoryError(f"Invalid JSON in {name}: {exc}") from exc
-    try:
-        # A JSON escape such as \ud800 decodes to a lone surrogate, which is not text.
-        json.dumps(inv, ensure_ascii=False).encode("utf-8")
-    except UnicodeEncodeError as exc:
-        raise A1InventoryError(f"{name} contains a string that is not valid Unicode: {exc}") from exc
     if not isinstance(inv, dict):
         raise A1InventoryError(f"Expected JSON object in {name}, got {type(inv).__name__}")
     rows = inv.get("rows")

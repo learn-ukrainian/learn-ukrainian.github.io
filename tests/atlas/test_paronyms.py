@@ -468,13 +468,16 @@ def test_lesson_mode_starts_at_dedicated_heading_not_before() -> None:
     assert {(a.member_a.word, a.member_b.word) for a in extract_from_document(doc)} == {("дружний", "дружній")}
 
 
-def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_build_refuses_unpinned_corpus(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Defect classes: the one-shot extractor running on a corpus other than the reviewed one,
     and an input failure escaping the refusal boundary as an untyped traceback.
 
     An unpinned registry, a changed textbook result set or a changed MiyKlas snapshot must
     refuse under build and ``--check`` before extraction, leaving every file untouched. So must
-    every input that cannot be loaded, whatever the failure (deep nesting, a broken A1 inventory).
+    every input that cannot be loaded, whatever the failure (an error raised in the pin comparison,
+    input that is not I-JSON, a broken A1 inventory).
     """
     import sqlite3
 
@@ -552,9 +555,17 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFix
         "corpus differs from the reviewed corpus",
     )
 
-    # A pin value nested deep enough to load but overflow the stack later is a typed refusal.
-    deep = "[" * 65000 + "0" + "]" * 65000
-    _assert_refused('{"sources_corpus": {"corpus_fingerprint": {"miyklas_pages": ' + deep + "}}}", "RecursionError")
+    # Any exception in the pin comparison is a typed refusal. A pin nested deep enough to overflow
+    # the stack raised RecursionError there (#13389); stack depth varies by host, so raise it directly.
+    def _overflow(pinned: object, live: object) -> None:
+        raise RecursionError("maximum recursion depth exceeded")
+
+    with monkeypatch.context() as patched:
+        patched.setattr(paronym_build, "require_pinned_corpus", _overflow)
+        _assert_refused(
+            json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False),
+            "RecursionError: maximum recursion depth exceeded",
+        )
 
     # The reviewed corpus passes the gate and reaches the next stage, the A1 inventory load,
     # whose failure is refused inside the same boundary.
@@ -566,11 +577,13 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFix
     pinned_registry = json.dumps({"sources_corpus": {"corpus_fingerprint": live}}, ensure_ascii=False)
     _assert_refused(pinned_registry, f"REFUSED: {A1InventoryError.__name__}: Missing A1 inventory")
 
-    # An A1 inventory string that is not valid Unicode (the JSON escape \ud800) refuses too.
+    # Every JSON input is parsed as I-JSON (RFC 7493): a duplicate member name refuses, even when
+    # the parser would keep a valid last value, and so does a string that is not valid Unicode.
+    _assert_refused('{"sources_corpus": "\\ud800", ' + pinned_registry[1:], "duplicate member name 'sources_corpus'")
     bad_a1 = tmp_path / "bad-a1-inventory.json"
     bad_row = {"id": "r1", "key": "адресат", "mapping": {"resolution": "resolved", "lemma": "\ud800"}}
     bad_a1.write_text(json.dumps({"rows": [bad_row]}), encoding="utf-8")
-    _assert_refused(pinned_registry, "is not valid Unicode", [*argv[:-1], str(bad_a1)])
+    _assert_refused(pinned_registry, "surrogates not allowed", [*argv[:-1], str(bad_a1)])
 
     # A changed MiyKlas snapshot under the same pin refuses.
     snapshot["pages"][0]["grade"] = "6"
@@ -587,7 +600,7 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFix
     snapshot["pages"][0]["text"] = page_text
     snapshot["pages"][0]["title"] = "\ud800"
     snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
-    _assert_refused(pinned_registry, "UnicodeEncodeError")
+    _assert_refused(pinned_registry, "surrogates not allowed")
 
     # An extra pinned key, even one set to null, is not the reviewed pin.
     snapshot["pages"][0]["title"] = "Пароніми"

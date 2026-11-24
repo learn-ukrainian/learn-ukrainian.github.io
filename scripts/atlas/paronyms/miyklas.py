@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import urllib.error
 import urllib.parse
@@ -392,6 +393,38 @@ def validate_miyklas_page_dict(page: Any, *, verify_text_digest: bool = True) ->
     return page
 
 
+def loads_i_json(text: str) -> Any:
+    """Parse ``text`` as I-JSON (RFC 7493), or raise ``ValueError``.
+
+    I-JSON is RFC 8259 JSON with unique member names and only valid Unicode strings. A duplicate
+    name (the parser would silently keep the last value), a ``NaN`` or ``Infinity`` constant, a
+    number beyond the double range (``1e400`` would become infinity), and a string that is not
+    Unicode text (an escape such as ``\\ud800`` decodes to a lone surrogate) are all refused,
+    wherever they occur in the document.
+    """
+
+    def _unique_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        obj: dict[str, Any] = {}
+        for name, value in pairs:
+            if name in obj:
+                raise ValueError(f"duplicate member name {name!r}")
+            obj[name] = value
+        return obj
+
+    def _no_constant(name: str) -> Any:
+        raise ValueError(f"{name} is not a JSON value")
+
+    def _finite_float(literal: str) -> float:
+        number = float(literal)
+        if not math.isfinite(number):
+            raise ValueError(f"number {literal[:40]} is beyond the double range")
+        return number
+
+    value = json.loads(text, object_pairs_hook=_unique_members, parse_constant=_no_constant, parse_float=_finite_float)
+    json.dumps(value, ensure_ascii=False).encode("utf-8")  # UnicodeEncodeError on a lone surrogate
+    return value
+
+
 def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[SourceDocument]]:
     """Load a saved MiyKlas snapshot JSON and validate its provenance and SHA-256 integrity."""
     try:
@@ -403,8 +436,8 @@ def load_miyklas_documents(snapshot_path: Path) -> tuple[dict[str, Any], list[So
     except (OSError, UnicodeDecodeError) as exc:
         raise ValueError(f"Unreadable MiyKlas snapshot {snapshot_path}: {exc}") from exc
     try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
+        payload = loads_i_json(raw)
+    except ValueError as exc:
         raise ValueError(f"Invalid JSON in {snapshot_path.name}: {exc}") from exc
     if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(
