@@ -42,7 +42,7 @@ MUTATION_METHODS = frozenset({"DELETE", "PATCH", "POST", "PUT"})
 RouteClass = Literal["read", "read-side-effect", "mutation", "stream"]
 FixtureKind = Literal["isolated", "skip"]
 
-ROUTE_SNAPSHOT_PATH = Path(__file__).with_name("route_snapshot.json")
+ROUTE_SNAPSHOT_PATH = Path(__file__).resolve().parent / "route_snapshot.json"
 _SNAPSHOT_KEYS = frozenset({"http_count", "websocket_count", "sha256"})
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
 
@@ -68,7 +68,11 @@ def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 def load_route_snapshot(path: Path | None = None) -> FrozenDenominator:
     """Load and validate the checked-in route denominator snapshot, failing closed."""
     target = ROUTE_SNAPSHOT_PATH if path is None else path
-    if target.is_symlink() or not target.is_file():
+    try:
+        is_regular = not target.is_symlink() and target.is_file()
+    except OSError as exc:
+        raise AssertionError(f"OPSEC route snapshot is not a regular file: {target.name}") from exc
+    if not is_regular:
         raise AssertionError(f"OPSEC route snapshot is not a regular file: {target.name}")
     try:
         payload = json_depth.loads(

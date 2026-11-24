@@ -816,21 +816,29 @@ def test_adoption_snapshot_refresh_requires_explicit_generation(
 ) -> None:
     """Defect class: ordinary tests regenerate a stale snapshot or accept malformed snapshot JSON."""
     pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    adoption_snapshot = pyproject["tool"]["lu-machinery"]["adoption-snapshot"]
+    assert isinstance(pyproject, dict)
+    tool_cfg = pyproject.get("tool")
+    assert isinstance(tool_cfg, dict)
+    machinery_cfg = tool_cfg.get("lu-machinery")
+    assert isinstance(machinery_cfg, dict)
+    adoption_snapshot = machinery_cfg.get("adoption-snapshot")
+    assert isinstance(adoption_snapshot, dict)
     assert adoption_snapshot == {
         "module": "tests.api.opsec_sweep.registry",
         "output": "tests/api/opsec_sweep/route_snapshot.json",
     }
     committed_snapshot = REPO_ROOT / adoption_snapshot["output"]
-    assert committed_snapshot.resolve() == registry.ROUTE_SNAPSHOT_PATH.resolve()
-    assert committed_snapshot.read_text(encoding="utf-8") == registry.render_route_snapshot(api_main.app)
+    assert committed_snapshot == registry.ROUTE_SNAPSHOT_PATH
+    committed_denominator = registry.load_route_snapshot(committed_snapshot)
+    assert committed_denominator == registry.measure_route_snapshot(api_main.app)
+    rendered = registry.render_route_snapshot(api_main.app)
 
     # Malformed or non-regular snapshot files must fail closed.
     missing = tmp_path / "missing.json"
     with pytest.raises(AssertionError, match="not a regular file"):
         registry.load_route_snapshot(missing)
     symlink_target = tmp_path / "target.json"
-    symlink_target.write_text(committed_snapshot.read_text(encoding="utf-8"), encoding="utf-8")
+    symlink_target.write_text(rendered, encoding="utf-8")
     symlink_snapshot = tmp_path / "link.json"
     symlink_snapshot.symlink_to(symlink_target)
     with pytest.raises(AssertionError, match="not a regular file"):
@@ -852,8 +860,8 @@ def test_adoption_snapshot_refresh_requires_explicit_generation(
             registry.load_route_snapshot(bad_file)
 
     fixture_snapshot = tmp_path / "route_snapshot.json"
-    initial_bytes = committed_snapshot.read_bytes()
-    fixture_snapshot.write_bytes(initial_bytes)
+    fixture_snapshot.write_text(rendered, encoding="utf-8")
+    initial_bytes = fixture_snapshot.read_bytes()
     initial_denominator = registry.load_route_snapshot(fixture_snapshot)
     monkeypatch.setattr(registry, "ROUTE_SNAPSHOT_PATH", fixture_snapshot)
 
@@ -879,6 +887,7 @@ def test_adoption_snapshot_refresh_requires_explicit_generation(
         # Explicit generator writes only to stdout and leaves files untouched.
         assert fixture_snapshot.read_bytes() == initial_bytes
         parsed = json.loads(generated)
+        assert isinstance(parsed, dict)
         assert set(parsed) == {"http_count", "websocket_count", "sha256"}
         assert parsed["http_count"] == initial_denominator.http_count + 1
         assert parsed["websocket_count"] == initial_denominator.websocket_count
