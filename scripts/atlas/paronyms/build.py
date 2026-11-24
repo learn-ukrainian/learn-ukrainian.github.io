@@ -8,7 +8,7 @@ coverage, and emits deterministic JSON.
 This is a one-shot build tool, not a reusable parser: the extractor is certified only on the
 reviewed corpus. The registry records that corpus's fingerprint, and the build refuses
 (``REFUSED:``, exit 2, nothing written) under build and ``--check`` when the live corpus differs
-(``CorpusFingerprintError``) or when any step before the output fails.
+(``CorpusFingerprintError``) or when any step from reading an input to the final comparison fails.
 """
 
 from __future__ import annotations
@@ -52,6 +52,7 @@ DEFAULT_MIYKLAS_RAW = Path("registry/miyklas/paronyms-raw-v1.json")
 TEXTBOOK_FTS_QUERY = "паронім*"
 # A refusal names its cause; an oversize input value must not flood stderr.
 _MAX_REFUSAL_CHARS = 2000
+_TRUNCATED = " ... (truncated)"
 
 VesumBatchLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
 # word -> СУМ-20 article texts whose headword key is that word.
@@ -355,6 +356,11 @@ def load_a1_lemma_sets(a1_inventory_path: Path) -> dict[str, set[str]]:
         inv = json.loads(raw)
     except json.JSONDecodeError as exc:
         raise A1InventoryError(f"Invalid JSON in {name}: {exc}") from exc
+    try:
+        # A JSON escape such as \ud800 decodes to a lone surrogate, which is not text.
+        json.dumps(inv, ensure_ascii=False).encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise A1InventoryError(f"{name} contains a string that is not valid Unicode: {exc}") from exc
     if not isinstance(inv, dict):
         raise A1InventoryError(f"Expected JSON object in {name}, got {type(inv).__name__}")
     rows = inv.get("rows")
@@ -838,17 +844,19 @@ def main(argv: list[str] | None = None) -> int:
         rendered = serialize_registry(payload)
         drift = None
         if args.check:
-            existing = out_path.read_text(encoding="utf-8")
-            if existing != rendered:
+            # Compare bytes: a text read would normalize CRLF and hide a byte difference.
+            existing = out_path.read_bytes()
+            rebuilt = rendered.encode("utf-8")
+            if existing != rebuilt:
                 drift = (
                     f"DRIFT: {out_path} differs from rebuilt output "
-                    f"(existing sha256={hashlib.sha256(existing.encode()).hexdigest()[:12]}, "
-                    f"rebuilt sha256={hashlib.sha256(rendered.encode()).hexdigest()[:12]})"
+                    f"(existing sha256={hashlib.sha256(existing).hexdigest()[:12]}, "
+                    f"rebuilt sha256={hashlib.sha256(rebuilt).hexdigest()[:12]})"
                 )
     except Exception as exc:  # the fail-closed boundary above; KeyboardInterrupt still propagates
         reason = str(exc) if isinstance(exc, CorpusFingerprintError) else f"{type(exc).__name__}: {exc}"
         if len(reason) > _MAX_REFUSAL_CHARS:
-            reason = reason[:_MAX_REFUSAL_CHARS] + " ... (truncated)"
+            reason = reason[: _MAX_REFUSAL_CHARS - len(_TRUNCATED)] + _TRUNCATED
         print(f"REFUSED: {reason}", file=sys.stderr)
         return 2
 

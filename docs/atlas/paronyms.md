@@ -110,12 +110,14 @@ comparison (the pin gate, the rebuild and, under `--check`, the byte comparison)
 fail-closed boundary: any failure there, whatever its type, is also a refusal. That covers an
 unreadable or non-UTF-8 file, wrong JSON types, missing keys, nesting deep enough to exhaust the
 stack, an oversize value, a МійКлас page whose text no longer matches its `text_sha256`, text
-that is not valid Unicode, a broken A1 inventory and an unreadable `sources.db`. A refusal prints
-`REFUSED:` with the reason (any failure other than a corpus mismatch names its exception type;
-the text is capped at 2,000 characters),
-writes nothing and exits 2. A new corpus (a new `sources.db` textbook generation that changes these rows, or a re-fetched МійКлас snapshot) is a
-new certification: a reviewed change that judges the extractor's output on that corpus and
-re-pins the fingerprint. VESUM and the СУМ-20 mirror are not part of the pin; a change there that
+that is not valid Unicode (including a JSON escape such as `\ud800` in any input), a broken A1
+inventory and an unreadable `sources.db`. A refusal prints `REFUSED:` and the reason: a
+`CorpusFingerprintError` gives its own reason, and any other failure is prefixed with its exception
+type. The whole reason is at most 2,000 characters; a longer one is cut and ends in
+`... (truncated)`. A refusal writes nothing and exits 2. A new corpus (a new `sources.db` textbook
+generation that changes these rows, or a re-fetched МійКлас snapshot) is a new certification: a
+reviewed change that judges the extractor's output on that corpus and re-pins the fingerprint.
+VESUM, the СУМ-20 mirror and the A1 inventory are not part of the pin; a valid change there that
 alters the output shows as `DRIFT` under `--check` (exit 1).
 
 ### Deterministic replay
@@ -124,8 +126,9 @@ alters the output shows as `DRIFT` under `--check` (exit 1).
 .venv/bin/python -m scripts.atlas.paronyms.build --check
 ```
 
-Exit 0 means the pinned corpus reproduces the committed registry byte for byte; exit 1 is
-`DRIFT`; exit 2 is a refusal (see above).
+Exit 0 means the pinned corpus reproduces the committed registry byte for byte (the file's raw
+bytes are compared, so a line-ending change is `DRIFT`); exit 1 is `DRIFT`; exit 2 is a refusal
+(see above).
 
 ## Counts
 

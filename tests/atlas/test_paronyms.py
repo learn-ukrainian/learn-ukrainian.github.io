@@ -526,24 +526,35 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFix
         str(missing_a1),
     ]
 
-    def _assert_refused(registry_text: str) -> None:
+    def _assert_refused(registry_text: str, reason: str, run_argv: list[str] = argv) -> None:
+        # Every refusal is exit 2, so each case also asserts its own reason: a later stage that
+        # refuses for another cause must not stand in for the gate under test.
         registry_path.write_text(registry_text, encoding="utf-8")
         snapshot_bytes = snapshot_path.read_bytes()
         for mode in ([], ["--check"]):
-            assert paronym_build.main([*argv, *mode]) == 2
+            capsys.readouterr()
+            assert paronym_build.main([*run_argv, *mode]) == 2
+            err = capsys.readouterr().err
+            assert err.startswith("REFUSED: ") and reason in err, err[:300]
             assert registry_path.read_text(encoding="utf-8") == registry_text
             assert snapshot_path.read_bytes() == snapshot_bytes
 
     # A registry without a recorded corpus fingerprint (the pre-pin shape) pins nothing.
-    _assert_refused(json.dumps({"schema_version": "atlas-paronyms.v1", "sources_corpus": {}}))
+    _assert_refused(
+        json.dumps({"schema_version": "atlas-paronyms.v1", "sources_corpus": {}}),
+        "records no sources_corpus.corpus_fingerprint",
+    )
 
     # A registry pinned to a different textbook result set refuses the live corpus.
     stale_pin = {"textbooks_fts_query": "паронім*", "textbooks_result_rows": 1, "textbooks_result_sha256": "0" * 64}
-    _assert_refused(json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False))
+    _assert_refused(
+        json.dumps({"sources_corpus": {"corpus_fingerprint": stale_pin}}, ensure_ascii=False),
+        "corpus differs from the reviewed corpus",
+    )
 
     # A pin value nested deep enough to load but overflow the stack later is a typed refusal.
     deep = "[" * 65000 + "0" + "]" * 65000
-    _assert_refused('{"sources_corpus": {"corpus_fingerprint": {"miyklas_pages": ' + deep + "}}}")
+    _assert_refused('{"sources_corpus": {"corpus_fingerprint": {"miyklas_pages": ' + deep + "}}}", "RecursionError")
 
     # The reviewed corpus passes the gate and reaches the next stage, the A1 inventory load,
     # whose failure is refused inside the same boundary.
@@ -553,29 +564,33 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path, capsys: pytest.CaptureFix
         paronym_build.load_textbook_paronym_documents(sources_db), load_miyklas_documents(snapshot_path)[0]
     )
     pinned_registry = json.dumps({"sources_corpus": {"corpus_fingerprint": live}}, ensure_ascii=False)
-    capsys.readouterr()
-    _assert_refused(pinned_registry)
-    assert f"REFUSED: {A1InventoryError.__name__}: Missing A1 inventory" in capsys.readouterr().err
+    _assert_refused(pinned_registry, f"REFUSED: {A1InventoryError.__name__}: Missing A1 inventory")
+
+    # An A1 inventory string that is not valid Unicode (the JSON escape \ud800) refuses too.
+    bad_a1 = tmp_path / "bad-a1-inventory.json"
+    bad_row = {"id": "r1", "key": "адресат", "mapping": {"resolution": "resolved", "lemma": "\ud800"}}
+    bad_a1.write_text(json.dumps({"rows": [bad_row]}), encoding="utf-8")
+    _assert_refused(pinned_registry, "is not valid Unicode", [*argv[:-1], str(bad_a1)])
 
     # A changed MiyKlas snapshot under the same pin refuses.
     snapshot["pages"][0]["grade"] = "6"
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
-    _assert_refused(pinned_registry)
+    _assert_refused(pinned_registry, "miyklas_snapshot_sha256: pinned")
 
     # Changed page text that no longer matches its own text_sha256 is a typed refusal, not a traceback.
     snapshot["pages"][0]["grade"] = "5"
     snapshot["pages"][0]["text"] = page_text + " Пароніми."
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
-    _assert_refused(pinned_registry)
+    _assert_refused(pinned_registry, "Text SHA-256 mismatch")
 
     # A field that is not valid Unicode (a lone surrogate) cannot be fingerprinted: typed refusal.
     snapshot["pages"][0]["text"] = page_text
     snapshot["pages"][0]["title"] = "\ud800"
     snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
-    _assert_refused(pinned_registry)
+    _assert_refused(pinned_registry, "UnicodeEncodeError")
 
     # An extra pinned key, even one set to null, is not the reviewed pin.
     snapshot["pages"][0]["title"] = "Пароніми"
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
     extra_key = json.dumps({"sources_corpus": {"corpus_fingerprint": {**live, "unknown_field": None}}})
-    _assert_refused(extra_key)
+    _assert_refused(extra_key, "unknown_field: pinned None")
