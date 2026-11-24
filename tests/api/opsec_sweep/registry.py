@@ -1,10 +1,13 @@
 """Explicit exercise records for the Monitor API OPSEC sweep.
 
-The live FastAPI tree is the denominator. ``ACCEPTED_DENOMINATORS`` holds the
+The live FastAPI tree is the denominator. ``route_snapshot.json`` holds the
 reviewed snapshot of that tree for the installed machinery release.
+Ordinary test execution compares against that checked-in JSON and never
+regenerates it; running this module as ``__main__`` explicitly prints the
+measured JSON snapshot to stdout for release adoption.
 A tree that does not match fails. Adding or removing an HTTP or WebSocket
-route changes the fingerprint and fails the sweep until a record is
-deliberately reviewed.
+route changes the fingerprint and fails the sweep until the snapshot is
+explicitly refreshed.
 A schema-hidden APIRoute is part of that HTTP inventory, so the sweep
 exercises every method it serves, unless ``FRAMEWORK_EXEMPT_OPERATIONS``
 lists that method and path. A mount prefix stays on the path before
@@ -18,13 +21,17 @@ class is part of the walker contract.
 from __future__ import annotations
 
 import hashlib
+import json
 import re
+import sys
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from datetime import date
+from pathlib import Path
 from typing import Any, Literal
 
 from fastapi.routing import APIRoute
+from lu_machinery.common import json_depth
 from starlette.routing import Mount, Route, WebSocketRoute
 
 from . import tracking_issues
@@ -34,6 +41,10 @@ HTTP_METHODS = frozenset({"DELETE", "GET", "PATCH", "POST", "PUT"})
 MUTATION_METHODS = frozenset({"DELETE", "PATCH", "POST", "PUT"})
 RouteClass = Literal["read", "read-side-effect", "mutation", "stream"]
 FixtureKind = Literal["isolated", "skip"]
+
+ROUTE_SNAPSHOT_PATH = Path(__file__).resolve().parent / "route_snapshot.json"
+_SNAPSHOT_KEYS = frozenset({"http_count", "websocket_count", "sha256"})
+_SHA256_RE = re.compile(r"[0-9a-f]{64}")
 
 
 @dataclass(frozen=True)
@@ -45,19 +56,46 @@ class FrozenDenominator:
     sha256: str
 
 
-# Measured from the live app. The count and the digest are one snapshot:
-# A tree matches only when all three fields match. lu-machinery 0.1.69
-# adds the read-only GET /api/journal (machinery PR 1365) and replaces
-# GET /api/runtime/routing-assignments with the read-only
-# GET /api/runtime/routing (machinery PR 1366). Both use the ordinary read
-# exercise without exemptions.
-ACCEPTED_DENOMINATORS = (
-    FrozenDenominator(
-        http_count=172,
-        websocket_count=1,
-        sha256="6dfea6acfbc52ce01ed206e387d379451757cbc7e2c0f1e9fa65855a5ee20103",
-    ),
-)
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    document: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in document:
+            raise ValueError(f"duplicate key {key!r}")
+        document[key] = value
+    return document
+
+
+def load_route_snapshot(path: Path | None = None) -> FrozenDenominator:
+    """Load and validate the checked-in route denominator snapshot, failing closed."""
+    target = ROUTE_SNAPSHOT_PATH if path is None else path
+    try:
+        is_regular = not target.is_symlink() and target.is_file()
+    except OSError as exc:
+        raise AssertionError(f"OPSEC route snapshot is not a regular file: {target.name}") from exc
+    if not is_regular:
+        raise AssertionError(f"OPSEC route snapshot is not a regular file: {target.name}")
+    try:
+        payload = json_depth.loads(
+            target.read_text(encoding="utf-8"),
+            max_depth=8,
+            object_pairs_hook=_unique_json_object,
+        )
+    except (OSError, UnicodeDecodeError, ValueError, RecursionError) as exc:
+        raise AssertionError(f"OPSEC route snapshot {target.name} is unreadable: {exc}") from exc
+    if not isinstance(payload, dict) or set(payload) != _SNAPSHOT_KEYS:
+        raise AssertionError(
+            f"OPSEC route snapshot {target.name} must be a JSON object with keys {sorted(_SNAPSHOT_KEYS)}"
+        )
+    http_count = payload["http_count"]
+    websocket_count = payload["websocket_count"]
+    sha256 = payload["sha256"]
+    if type(http_count) is not int or http_count < 0:
+        raise AssertionError(f"OPSEC route snapshot {target.name} http_count must be a non-negative int")
+    if type(websocket_count) is not int or websocket_count < 0:
+        raise AssertionError(f"OPSEC route snapshot {target.name} websocket_count must be a non-negative int")
+    if type(sha256) is not str or _SHA256_RE.fullmatch(sha256) is None:
+        raise AssertionError(f"OPSEC route snapshot {target.name} sha256 must be a 64-char lowercase hex digest")
+    return FrozenDenominator(http_count=http_count, websocket_count=websocket_count, sha256=sha256)
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -470,24 +508,52 @@ def denominator_diff(app: Any) -> dict[str, list[str]]:
     }
 
 
+def measure_route_snapshot(app: Any) -> FrozenDenominator:
+    """Measure the live Monitor route tree into one denominator snapshot."""
+    http_operations = enumerate_http_operations(app)
+    websocket_routes = enumerate_websocket_routes(app)
+    return FrozenDenominator(
+        http_count=len(http_operations),
+        websocket_count=len(websocket_routes),
+        sha256=denominator_digest(http_operations, websocket_routes),
+    )
+
+
+def render_route_snapshot(app: Any) -> str:
+    """Serialize the measured Monitor route denominator as one JSON object."""
+    snapshot = measure_route_snapshot(app)
+    return (
+        json.dumps(
+            {
+                "http_count": snapshot.http_count,
+                "websocket_count": snapshot.websocket_count,
+                "sha256": snapshot.sha256,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+
+
 def accepted_denominator(
     http_operations: Iterable[Operation],
     websocket_routes: Iterable[Operation],
     *,
     differences: Mapping[str, list[str]] | None = None,
+    snapshot_path: Path | None = None,
 ) -> FrozenDenominator:
     """Return the reviewed snapshot this live tree matches, or fail closed."""
     http = tuple(http_operations)
     websockets = tuple(websocket_routes)
     digest = denominator_digest(http, websockets)
-    for snapshot in ACCEPTED_DENOMINATORS:
-        if (
-            len(http) == snapshot.http_count
-            and len(websockets) == snapshot.websocket_count
-            and digest == snapshot.sha256
-        ):
-            return snapshot
-    accepted = [(item.http_count, item.websocket_count, item.sha256) for item in ACCEPTED_DENOMINATORS]
+    snapshot = load_route_snapshot(snapshot_path)
+    if (
+        len(http) == snapshot.http_count
+        and len(websockets) == snapshot.websocket_count
+        and digest == snapshot.sha256
+    ):
+        return snapshot
+    accepted = [(snapshot.http_count, snapshot.websocket_count, snapshot.sha256)]
     detail = f" diff={differences}" if differences is not None else ""
     raise AssertionError(
         "Monitor API route denominator is not a reviewed snapshot: "
@@ -496,7 +562,7 @@ def accepted_denominator(
     )
 
 
-def assert_frozen_denominator(app: Any) -> None:
+def assert_frozen_denominator(app: Any, *, snapshot_path: Path | None = None) -> None:
     """Fail closed when a new route has not received a reviewed record."""
     http_operations = enumerate_http_operations(app)
     openapi = openapi_operations(app)
@@ -508,7 +574,7 @@ def assert_frozen_denominator(app: Any) -> None:
         + "; accept it in the frozen HTTP inventory so the sweep exercises it, "
         + "or list it in FRAMEWORK_EXEMPT_OPERATIONS with a reason"
     )
-    accepted_denominator(http_operations, websockets, differences=differences)
+    accepted_denominator(http_operations, websockets, differences=differences, snapshot_path=snapshot_path)
     swept_hidden = len(differences["schema_hidden_swept"])
     assert len(openapi) == len(http_operations) - swept_hidden, (
         "OpenAPI operation count does not match the schema-visible route tree: "
@@ -714,3 +780,15 @@ def unrecorded_operations(app: Any, records: Iterable[ExerciseRecord]) -> list[s
     current = {operation.key for operation in enumerate_http_operations(app)}
     current.update(operation.key for operation in enumerate_websocket_routes(app))
     return sorted(current - known)
+
+
+def main() -> int:
+    """Print the composed Monitor app's route snapshot JSON to stdout."""
+    from lu_machinery.api import main as api_main
+
+    sys.stdout.write(render_route_snapshot(api_main.app))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

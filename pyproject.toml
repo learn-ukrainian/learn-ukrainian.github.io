@@ -306,3 +306,7 @@ fail_under = 0  # Start with baseline, increase over time
 
 [tool.uv.exclude-newer-package]
 lu-machinery = false
+
+[tool.lu-machinery.adoption-snapshot]
+module = "tests.api.opsec_sweep.registry"
+output = "tests/api/opsec_sweep/route_snapshot.json"
