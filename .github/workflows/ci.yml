@@ -865,7 +865,10 @@ jobs:
       # timeout would only wait longer. Both attempts keep the old 2-minute bound: a
       # shorter first bound could abandon an upload the service is about to finalize,
       # and the retry's overwrite would then delete that report. The second attempt is
-      # the gate.
+      # the gate. Against the old single attempt this never turns a pass into a fail:
+      #   first attempt answers within 2 min  -> pass, as before; the retry is skipped
+      #   first attempt silent for 2 min      -> before: red; now: retry, green if it
+      #                                          uploads, red (as before) if it fails
       - name: Upload pytest JUnit report
         id: junit-upload
         if: ${{ always() }}
