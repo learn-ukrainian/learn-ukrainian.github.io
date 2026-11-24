@@ -20893,11 +20893,6 @@
       "message": "Returning Any from function declared to return \"ndarray[tuple[Any, ...], dtype[floating[_32Bit]]]\""
     },
     {
-      "path": "scripts/wiki/dense_rerank.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"ndarray[tuple[Any, ...], dtype[floating[_32Bit]]]\""
-    },
-    {
       "path": "scripts/wiki/diagnostics/corpus_gaps/audit.py",
       "code": "arg-type",
       "message": "Argument 1 to \"check_concept_coverage\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
