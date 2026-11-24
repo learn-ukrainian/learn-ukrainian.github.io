@@ -1695,59 +1695,53 @@ refused before prompt delivery. Versions remain per-call telemetry only. The
 ACPX manifest range accepts versions from `0.13.0` onward, while the committed
 lockfile keeps installs reproducible until an intentional lock refresh.
 
-### `GET /api/runtime/routing-assignments?limit=100`
+### `GET /api/runtime/routing`
 
-Read-only, body-free projection of the durable routing-reservation ledger. The
-top-level `plane` object reports the message-plane posture observed by the API;
-`availability` distinguishes available, empty, unavailable, and malformed
-history. `assignments` are newest-first aggregates bounded by `limit` (1–100),
-so the response is a loaded recent window, never an all-time routing total.
+Read-only snapshot of how work was routed in the last 24 hours: one row per
+dispatch and review seat (what was asked, the model and pool chosen, who chose
+each where the task record proves it, the admission outcome and any recorded
+substitution), with per-lane counts and the subscription pools in page order.
+The response has two top-level keys, `pools` and `recent`. It replaced
+`GET /api/runtime/routing-assignments`, which now returns 404.
 
-Each aggregate identifies the initiator and author model/family, automatic
-versus explicit selection, requested role/profile/risk/reviewer, admitted
-route/model/family, quota freshness and capacity evidence, retry/failover/replay
-state, terminal outcome/failure, and chronological body-free event history.
-Same-timestamp lifecycle events use semantic order (`reserved` before
-`started` before terminal settlement), rather than opaque decision-ID order.
+`recent` is one scan of the task records under `batch_state/tasks`, served
+stale-while-revalidate: the last value at once, refreshed after 30 s and stale
+after 90 s. A read waits up to 0.5 s for a first scan, otherwise it answers
+`pending`. A listing fault is typed `unknown` with its `reason`, never zero, and
+unreadable records make the scan partial. Counts describe that loaded window,
+never an all-time routing total.
 
-The endpoint never starts, retries, cancels, reclaims, or reroutes work. It
-does not expose prompts, model responses, credentials, provider output, or raw
-artifact bodies. Stale `reserved`/`running` activity means only that the ledger
-has not changed recently; it is not proof that the provider is alive or dead.
-Corroborate provider headroom with CodexBar and durable authority job state.
-
-The **Routing overview** on the machinery runtime page (served by machinery at `/machinery`) consumes this projection. Its summary
-cards, filters, search, lifecycle groups, decision-path cards, details, and
-load-more control are presentation-only.
+The endpoint never starts, retries, cancels, reclaims, or reroutes work. A
+review row's model is the seat that ran, not proof of who chose it. The
+**Routing** page (`/routing`, served by machinery) consumes this snapshot.
 
 ```json
 {
-  "availability": "available",
-  "plane": {
-    "mode": "authority",
-    "authority": "fleet_comms_authoritative",
-    "cutover": "authority_active"
-  },
-  "assignments": [
-    {
-      "source_authority_id": "routing-reservation_<id>",
-      "initiator": "codex/task-id",
-      "author_model": "gpt-5.6-sol",
-      "author_family": "openai",
-      "automatic": true,
-      "requested_role": "infra:medium",
-      "resolved_route": "grok",
-      "resolved_model": "grok-4.7",
-      "resolved_family": "xai",
-      "current_state": "complete",
-      "failure_classification": null,
-      "event_history": [
-        {"event_type": "reserved", "state": "reserved"},
-        {"event_type": "started", "state": "running"},
-        {"event_type": "settled", "state": "complete"}
-      ]
-    }
-  ]
+  "pools": [{"pool": "claude:a", "label": "Claude a"}],
+  "recent": {
+    "status": "ok",
+    "reason": null,
+    "as_of": "2026-11-24T15:49:33Z",
+    "window_s": 86400.0,
+    "total": 747,
+    "unreadable": 0,
+    "counts": {"brief": {"total": 275}, "resolver": {"total": 472}},
+    "decisions": [
+      {
+        "task_id": "<task-id>",
+        "kind": "write",
+        "role": "implementation",
+        "model": "claude-sonnet-5-5",
+        "pool": "claude:a",
+        "model_by": "brief",
+        "account_by": "helper",
+        "admission": {"state": "admitted", "reason": null},
+        "status": "running",
+        "substitution": null
+      }
+    ],
+    "age_s": 10.2
+  }
 }
 ```
 

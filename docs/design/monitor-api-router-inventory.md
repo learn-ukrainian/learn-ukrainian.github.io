@@ -352,7 +352,7 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 **Internal route groups:** agents/usage (`/agents`, `/usage`, `/recent`);
 ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
-`/routing-assignments`, `/transport-health`, `/auth`).
+`/routing`, `/transport-health`, `/auth`).
 
 ### Step 7 — docs / artifacts / images
 
