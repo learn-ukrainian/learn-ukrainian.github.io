@@ -274,6 +274,17 @@ def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage):
         else:
             uncertain_number.update((slot, *partners))
 
+    # A gendered, numberless ULIF slot can correspond to part of an
+    # ungendered VESUM slot. Keep both groupings without claiming absence.
+    uncertain_granularity = set()
+    for slot in ulif.keys() - vesum.keys() - {None}:
+        if {"s", "p"}.intersection(slot):
+            continue
+        genderless = tuple(tag for tag in slot if tag not in source_rules.GENDERS)
+        partners = set(numbered_slots.get(genderless, ())) - ulif.keys()
+        if genderless != slot and partners:
+            uncertain_granularity.update((slot, *partners))
+
     def slot_order(slot):
         if slot in (invariant, None):
             return (len(source_rules.SLOT_ORDER) + (slot is None),)
@@ -288,6 +299,8 @@ def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage):
         reason = binding_reason
         if slot is None:
             reason = "unmapped_slot"
+        elif slot in uncertain_granularity:
+            reason = "ulif_slot_granularity_unresolved"
         elif slot in uncertain_number:
             reason = "ulif_slot_number_unresolved"
         elif slot == invariant and lineage == "entry_headword":

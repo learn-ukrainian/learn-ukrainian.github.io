@@ -644,6 +644,18 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
         (slot, "unresolved", "ulif_slot_number_unresolved") for slot in ("v_naz", "v_naz.s", "v_naz.p")
     ]
 
+    _, mixed_granularity = _paradigm(
+        [dict(ulif[2], grammatical_tags='["v_naz","m"]'),
+         dict(ulif[0], grammatical_tags='["v_naz","f"]')],
+        [dict(vesum[1], tags="numr:p:v_naz"),
+         dict(vesum[1], id=8, word_form="абв", tags="numr:p:v_naz")],
+        snapshots, None, "entry_fingerprint",
+    )
+    assert {slot["slot"]: (slot["comparison"], slot["reason"]) for slot in mixed_granularity["slots"]} == {
+        slot: ("unresolved", "ulif_slot_granularity_unresolved") for slot in ("v_naz.m", "v_naz.f", "v_naz.p")
+    }
+    assert [w["value"]["form"] for slot in mixed_granularity["slots"] for w in slot["vesum"]] == ["абе", "абв"]
+
 
 def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):
     """Catch suitability bypass, rewritten examples, cross-sense rich fields and reversed bilingual matches."""
