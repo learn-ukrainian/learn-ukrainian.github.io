@@ -376,7 +376,23 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
         for step in job.get("steps", [])
         if "continue-on-error" in step
     ]
-    assert optional == []
+    # The one exception is the shard upload's first attempt: the artifact service sometimes
+    # never answers, and that hang alone must not eject a green shard. It stays safe only
+    # while the very next step repeats the upload without continue-on-error, so a lost
+    # artifact still fails the shard; a retry that drifts or goes missing fails here.
+    assert [(job_id, step.get("id")) for job_id, step in optional] == [("pytest", "junit-upload")]
+    steps = _jobs_of_ci()["pytest"]["steps"]
+    first = optional[0][1]
+    retry = steps[steps.index(first) + 1]
+    assert first["continue-on-error"] is True
+    assert retry["name"] == f"{first['name']} (retry)"
+    assert "continue-on-error" not in retry
+    assert retry["if"] == "${{ always() && steps.junit-upload.outcome == 'failure' }}"
+    assert retry["uses"] == first["uses"]
+    assert retry["with"] == first["with"]
+    assert retry["with"]["overwrite"] is True
+    assert retry["with"]["if-no-files-found"] == "error"
+    assert first["timeout-minutes"] <= retry["timeout-minutes"]
     # No job may tolerate a whole-job failure.
     assert not any("continue-on-error" in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():

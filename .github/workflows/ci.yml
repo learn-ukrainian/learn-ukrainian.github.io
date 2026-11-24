@@ -857,13 +857,38 @@ jobs:
             printf '%s: ' "${breadcrumb##*/}"
             tail -n 1 "$breadcrumb"
           done
+      # This upload feeds `pytest report` and the flake ledger, so a lost shard artifact
+      # must still fail the job. The artifact service sometimes accepts the connection and
+      # never answers (run 45434160955, shard 6, 26 tests green: the step logged
+      # "Root directory input is valid!" and then nothing until the 2-minute timeout).
+      # Of 408 shard uploads in 30 runs, 407 finished in at most 3 s, so a longer
+      # timeout would only wait longer. The first attempt gives up after 1 minute; the
+      # second one is the gate, with the same overwrite and the old 2-minute bound.
       - name: Upload pytest JUnit report
+        id: junit-upload
         if: ${{ always() }}
-        timeout-minutes: 2
+        timeout-minutes: 1
+        # The retry below owns the verdict; this attempt alone never decides it.
+        continue-on-error: true
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
           # A retry replaces the cancelled attempt's incomplete shard artifact.
+          overwrite: true
+          path: |
+            ci-artifacts/pytest-shard-*.xml
+            ci-artifacts/pytest-shard-*-files.txt
+            ci-artifacts/pytest-shard-*-needs-artifact.txt
+            ci-artifacts/pytest-shard-*-weights.json
+            ci-artifacts/pytest-shard-*-breadcrumbs/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload pytest JUnit report (retry)
+        if: ${{ always() && steps.junit-upload.outcome == 'failure' }}
+        timeout-minutes: 2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pytest-junit-shard-${{ matrix.shard }}
           overwrite: true
           path: |
             ci-artifacts/pytest-shard-*.xml
