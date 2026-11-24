@@ -178,8 +178,36 @@ def require_pinned_corpus(pinned: dict[str, Any], live: dict[str, Any]) -> None:
         )
 
 
+# SQLite storage classes other than text. A value sqlite3 did not map to one of these
+# still refuses, named by its Python type; nothing here is decoded.
+_SUM20_STORAGE_CLASS: dict[type[object], str] = {
+    type(None): "null",
+    int: "integer",
+    float: "real",
+    bytes: "blob",
+}
+_SUM20_KEY_LABEL_LIMIT = 200
+
+
+def _refuse_sum20_storage(column: str, value: object, key: object) -> None:
+    """Refuse a mirror column that is not Python ``str``. ``value`` is not decoded."""
+    if isinstance(value, str):
+        return
+    storage = _SUM20_STORAGE_CLASS.get(type(value), type(value).__name__)
+    shown = repr(key)
+    if len(shown) > _SUM20_KEY_LABEL_LIMIT:
+        shown = shown[:_SUM20_KEY_LABEL_LIMIT] + "..."
+    raise ValueError(f"sum20_mirror_articles.{column} is {storage}, not text; key={shown}")
+
+
 def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
-    """Read СУМ-20 mirror articles for the given words from the local sources store (read-only)."""
+    """Read СУМ-20 mirror articles for the given words from the local sources store (read-only).
+
+    NULL, integer, real and blob values are not text. ``str()`` would turn a blob into
+    ``b'...'`` and a null article into an empty string, and the build would verify pairs
+    against that. A non-text key does not match ``IN`` against a text word, so the query
+    also returns keys whose storage class is not text; otherwise those rows would be skipped.
+    """
 
     def lookup(words: list[str]) -> dict[str, list[str]]:
         found: dict[str, list[str]] = defaultdict(list)
@@ -192,11 +220,15 @@ def _default_sum20_lookup(sources_db: Path) -> Sum20ArticleLookup:
                 )
             rows = conn.execute(
                 "SELECT normalized_lookup_key, article_text FROM sum20_mirror_articles "
-                f"WHERE normalized_lookup_key IN ({placeholders}) ORDER BY normalized_lookup_key, id",
+                f"WHERE normalized_lookup_key IN ({placeholders}) "
+                "OR typeof(normalized_lookup_key) != 'text' "
+                "ORDER BY normalized_lookup_key, id",
                 words,
             ).fetchall()
         for key, text in rows:
-            found[str(key)].append(str(text or ""))
+            _refuse_sum20_storage("normalized_lookup_key", key, key)
+            _refuse_sum20_storage("article_text", text, key)
+            found[key].append(text)
         return dict(found)
 
     return lookup

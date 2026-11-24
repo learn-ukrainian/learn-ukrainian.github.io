@@ -12,7 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from scripts.atlas.paronyms.build import A1InventoryError, build_paronym_registry, load_a1_lemma_sets
+from scripts.atlas.paronyms.build import (
+    A1InventoryError,
+    _default_sum20_lookup,
+    build_paronym_registry,
+    load_a1_lemma_sets,
+)
 from scripts.atlas.paronyms.extractor import SourceDocument, extract_from_document
 from scripts.atlas.paronyms.miyklas import (
     MiyKlasFetchError,
@@ -603,3 +608,81 @@ def test_build_refuses_unpinned_corpus(
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
     extra_key = _registry({"corpus_fingerprint": {**live, "unknown_field": None}})
     _assert_refused(extra_key, "unknown_field: pinned None")
+
+
+# SQLite storage classes other than text. Each is inserted as that class (untyped columns,
+# so affinity does not turn numbers into text) and must be refused, not decoded.
+_NON_TEXT_STORAGE = (
+    ("null", None),
+    ("integer", 7),
+    ("real", 1.5),
+    ("blob", b"\xff"),
+)
+
+
+def _sum20_mirror(path: Path, rows: list[tuple[object, object]]) -> None:
+    import sqlite3
+
+    with sqlite3.connect(path) as conn:
+        # No column affinity: an integer, real, blob or null stays that storage class.
+        conn.execute("CREATE TABLE sum20_mirror_articles (id INTEGER PRIMARY KEY, normalized_lookup_key, article_text)")
+        conn.executemany(
+            "INSERT INTO sum20_mirror_articles (normalized_lookup_key, article_text) VALUES (?, ?)",
+            rows,
+        )
+
+
+@pytest.mark.parametrize("column", ["normalized_lookup_key", "article_text"])
+@pytest.mark.parametrize("storage_class,value", _NON_TEXT_STORAGE)
+def test_sum20_lookup_refuses_non_text_storage_class(
+    tmp_path: Path, column: str, storage_class: str, value: object
+) -> None:
+    """Defect class: a СУМ-20 mirror value that is not text is coerced with str().
+
+    Members: NULL, integer, real and blob on normalized_lookup_key and on article_text.
+    Text is the class that still returns. A non-text key is not selected by IN, so the
+    lookup must still see it and stop.
+    """
+    db = tmp_path / "sources.db"
+    if column == "normalized_lookup_key":
+        _sum20_mirror(db, [(value, "article"), ("alpha", "clean")])
+        named_key = value
+    else:
+        _sum20_mirror(db, [("alpha", value)])
+        named_key = "alpha"
+    with pytest.raises(ValueError) as exc:
+        _default_sum20_lookup(db)(["alpha"])
+    message = str(exc.value)
+    assert f"sum20_mirror_articles.{column} is {storage_class}, not text" in message
+    assert f"key={named_key!r}" in message
+
+
+def test_sum20_lookup_text_rows_match_previous_result(tmp_path: Path) -> None:
+    """Defect class: the text storage class, including an empty article, is unchanged.
+
+    The previous coercion ``str(key)`` / ``str(text or "")`` is the identity on these rows.
+    A word with no article is absent. A null article is not this case: it refuses.
+    """
+    db = tmp_path / "sources.db"
+    # Insert order is not key order. id order within one key must survive.
+    _sum20_mirror(
+        db,
+        [
+            ("beta", "second"),
+            ("alpha", "first"),
+            ("alpha", ""),
+            ("alpha", "third"),
+        ],
+    )
+    ordered = (("alpha", "first"), ("alpha", ""), ("alpha", "third"), ("beta", "second"))
+    previous: dict[str, list[str]] = {}
+    for key, text in ordered:
+        previous.setdefault(str(key), []).append(str(text or ""))
+    assert (
+        _default_sum20_lookup(db)(["alpha", "beta", "missing"])
+        == previous
+        == {
+            "alpha": ["first", "", "third"],
+            "beta": ["second"],
+        }
+    )
