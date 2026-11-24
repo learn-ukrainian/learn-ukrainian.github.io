@@ -1706,14 +1706,20 @@ The response has two top-level keys, `pools` and `recent`. It replaced
 
 `recent` is one scan of the task records under `batch_state/tasks`, served
 stale-while-revalidate: the last value at once, refreshed after 30 s and stale
-after 90 s. A read waits up to 0.5 s for a first scan, otherwise it answers
-`pending`. A listing fault is typed `unknown` with its `reason`, never zero, and
-unreadable records make the scan partial. Counts describe that loaded window,
-never an all-time routing total.
+after 90 s. Every request lists the task store first, and the 0.5 s wait covers
+that listing as well as the scan, so `recent.status` can be `pending` even after
+an earlier successful scan. A listing fault is typed `unknown` with its
+`reason`, never zero, and unreadable records make the scan partial. `pending`
+and `unknown` carry no `counts` or `decisions`: check `recent.status` before
+reading them. Counts describe that loaded window, never an all-time routing
+total.
 
-The endpoint never starts, retries, cancels, reclaims, or reroutes work. A
-review row's model is the seat that ran, not proof of who chose it. The
-**Routing** page (`/routing`, served by machinery) consumes this snapshot.
+The endpoint never starts, retries, cancels, reclaims, or reroutes work. A row's
+model and pool are the values recorded for that attempt: a refused or deferred
+attempt can appear in the rows and counts without having started, so read each
+row's `admission` and `status`. A review row's `model_by` is `not_recorded`: the
+record does not prove who chose its model. The **Routing** page (`/routing`,
+served by machinery) consumes this snapshot.
 
 ```json
 {

@@ -174,14 +174,19 @@ request replays the durable verdict without a provider call or reservation.
 
 - Query `/api/runtime/routing` for the read-only snapshot of the last 24 hours
   of dispatch and review-seat routing (top-level keys `pools` and `recent`).
-  Read each decision as what was asked, the model and pool chosen, who chose
-  them where the record proves it, and the admission outcome. Counts describe
-  the loaded window, not all-time fleet totals, routing weights or provider
-  quotas.
+  Check `recent.status` first: `pending` and `unknown` carry no counts or rows.
+  Read each decision as what was asked, the model and pool recorded for the
+  attempt, who chose them where the record proves it, and the admission outcome;
+  a refused or deferred attempt can appear without having started. Counts
+  describe the loaded window, not all-time fleet totals, routing weights or
+  provider quotas.
 - Treat a `live` row as task-record activity only. It is not proof of provider
   liveness and does not authorize early lease reclamation.
-- Compare the decision trace's hard-gate and suitability reasons before blaming
-  load: a deliberately stronger suitable model may receive more work.
+- Compare each row's admission `reason` and `substitution` before blaming load.
+  The snapshot holds no resolver candidate trace; for a review seat, the
+  resolver's own output (`closeout_cli resolve-reviewer`) shows why a candidate
+  was preferred or excluded. A deliberately stronger suitable model may receive
+  more work.
 - Confirm provider headroom with CodexBar and inspect the durable authority
   job/reservation state. A timeout or malformed quota probe retains the last
   known good record and exposes failure metadata separately.

@@ -161,6 +161,7 @@ Query `GET /api/runtime/routing` for the snapshot of how work was routed in the
 last 24 hours (top-level keys `pools` and `recent`): one row per dispatch and
 review seat with what was asked, the model and pool chosen, who chose each where
 the task record proves it, the admission outcome and any recorded substitution.
+Check `recent.status` first: `pending` and `unknown` carry no counts or rows.
 Its counts describe only the task records in that loaded window. They are not
 all-time fleet totals, configured routing weights, provider quotas, or evidence
 of caching.
@@ -168,9 +169,11 @@ of caching.
 Read each row as a chain:
 
 1. **Asked** is the role, profile and risk the brief or resolver requested.
-2. **Chosen** is the model and subscription pool that ran. `model_by` and
-   `account_by` say who chose them where the record proves it; a review row's
-   model is the seat that ran, not proof of the resolver's pick.
+2. **Chosen** is the model and subscription pool recorded for the attempt. A
+   refused or deferred attempt can appear in the rows and counts without having
+   started, so read its `admission` and `status`. `account_by` says who chose the
+   account where the record proves it; a review row's `model_by` is
+   `not_recorded`, so the record does not prove the resolver picked its model.
 3. **Admission** is `admitted`, `forced`, `deferred`, `refused`, `not_checked` or
    `unknown`; a recorded substitution is shown on the row.
 
