@@ -172,15 +172,21 @@ request replays the durable verdict without a provider call or reservation.
 
 ### Diagnose quota concentration
 
-- Query `/api/runtime/routing-assignments?limit=100` for the body-free
-  read-only projection. Read each assignment's decision path as initiator,
-  request, selected route/model and outcome, including its selection trace,
-  authority IDs and ordered lifecycle events. Counts describe the loaded
-  recent window, not all-time fleet totals, routing weights or provider quotas.
-- Treat “No ledger update” as stale activity evidence only. It is not proof of
-  provider liveness and does not authorize early lease reclamation.
-- Compare the decision trace's hard-gate and suitability reasons before blaming
-  load: a deliberately stronger suitable model may receive more work.
+- Query `/api/runtime/routing` for the read-only snapshot of the last 24 hours
+  of dispatch and review-seat routing (top-level keys `pools` and `recent`).
+  Check `recent.status` first: `pending` and `unknown` carry no counts or rows.
+  Read each decision as what was asked, the model and pool recorded for the
+  attempt, who chose them where the record proves it, and the admission outcome;
+  a refused or deferred attempt can appear without having started. Counts
+  describe the loaded window, not all-time fleet totals, routing weights or
+  provider quotas.
+- Treat a `live` row as task-record activity only. It is not proof of provider
+  liveness and does not authorize early lease reclamation.
+- Compare each row's admission `reason` and `substitution` before blaming load.
+  The snapshot holds no resolver candidate trace; for a review seat, the
+  resolver's own output (`closeout_cli resolve-reviewer`) shows why a candidate
+  was preferred or excluded. A deliberately stronger suitable model may receive
+  more work.
 - Confirm provider headroom with CodexBar and inspect the durable authority
   job/reservation state. A timeout or malformed quota probe retains the last
   known good record and exposes failure metadata separately.
@@ -193,7 +199,7 @@ request replays the durable verdict without a provider call or reservation.
 Fleet Comms migration v7 is additive, idempotent, and applied on authority-store
 startup. During rollout, stop old orchestrator processes, restart the Fleet
 Comms/Runtime API processes with the repository's existing service launcher,
-then verify authority mode and the routing-assignment endpoint before resuming
+then verify authority mode and the `/api/runtime/routing` endpoint before resuming
 formal reviews. Do not delete or downgrade the v7 tables.
 
 To roll back, stop formal-review callers, revert the scheduler/bridge application
