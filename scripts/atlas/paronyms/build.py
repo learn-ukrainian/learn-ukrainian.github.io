@@ -46,15 +46,6 @@ from scripts.atlas.paronyms.miyklas import (
 from scripts.verification import vesum as vesum_mod
 
 SCHEMA_VERSION = "atlas-paronyms.v1"
-# Top-level members of the registry this build writes, and their JSON types.
-_REGISTRY_MEMBER_TYPES: dict[str, type] = {
-    "schema_version": str,
-    "sources_corpus": dict,
-    "counts": dict,
-    "a1_coverage": dict,
-    "pairs": list,
-    "unverified": list,
-}
 # The schema the A1 inventory producer (scripts/atlas/a1_vocabulary_inventory.py) declares.
 A1_INVENTORY_SCHEMA_VERSION = "atlas-a1-v1-inventory.v1"
 DEFAULT_OUTPUT = Path("registry/atlas/paronyms-v1.json")
@@ -155,13 +146,10 @@ def read_pinned_corpus_fingerprint(registry_path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
         found = payload.get("schema_version") if isinstance(payload, dict) else type(payload).__name__
         raise CorpusFingerprintError(f"{registry_path} is not an {SCHEMA_VERSION} registry (schema_version {found!r})")
-    # The registry is this build's own output, so it must have exactly the shape the build writes.
-    shape = {name: type(value).__name__ for name, value in payload.items()}
-    expected = {name: kind.__name__ for name, kind in _REGISTRY_MEMBER_TYPES.items()}
-    if shape != expected:
-        raise CorpusFingerprintError(f"{registry_path} has top-level members {shape}, expected {expected}")
-    corpus = payload["sources_corpus"]
-    pinned = corpus.get("corpus_fingerprint")
+    # Only the schema identity and the pin are read; every other member is regenerated from the
+    # pinned corpus and written whole, and --check compares the file byte for byte.
+    corpus = payload.get("sources_corpus")
+    pinned = corpus.get("corpus_fingerprint") if isinstance(corpus, dict) else None
     if not isinstance(pinned, dict) or not pinned:
         raise CorpusFingerprintError(
             f"{registry_path} records no sources_corpus.corpus_fingerprint: no corpus is pinned, so the build refuses"

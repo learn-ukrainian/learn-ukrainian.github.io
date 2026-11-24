@@ -100,9 +100,11 @@ The registry records that corpus in `sources_corpus.corpus_fingerprint`:
 Before any extraction, both the build and `--check` compute the live fingerprint and compare it
 with the one recorded in the registry at `--output`; each field is compared as canonical JSON, so
 a missing or extra key (even one set to `null`) and a value of another type (`5.0` for `5`)
-differ. When they differ, when the registry is missing or records no fingerprint, or when it is not
-an `atlas-paronyms.v1` registry with exactly the top-level members and JSON types the build writes,
-the build refuses with `CorpusFingerprintError`. Each input declares its schema: the registry
+differ. When they differ, when the registry is missing or records no fingerprint, or when it does
+not declare `schema_version` `atlas-paronyms.v1`, the build refuses with `CorpusFingerprintError`.
+The build reads only those two members of the registry: every other member is regenerated from the
+pinned corpus and written whole, and `--check` compares the file byte for byte, so a damaged
+member is `DRIFT`. Each input declares its schema: the registry
 `atlas-paronyms.v1`, the МійКлас snapshot `miyklas-paronyms-raw.v1` and the A1 inventory
 `atlas-a1-v1-inventory.v1`. Every step from reading the first input to the final
 comparison (the pin gate, the rebuild and, under `--check`, the byte comparison) runs inside one
