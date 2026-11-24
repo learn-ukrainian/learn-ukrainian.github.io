@@ -70,7 +70,7 @@ Machine-readable source-attested paronym pairs for the Atlas word-card builder
    - A meaning gloss is shown only when VESUM attests every Ukrainian word in it, a
      sentence-initial capital included (each part of a hyphenated compound); a gloss with a
      source typo or a VESUM `bad` form (`оспівний`, `прийомів`) is withheld. A gloss headed by a
-     verb infinitive is withheld for a member that VESUM never analyses as a verb, because it
+     verb infinitive is withheld for a member that VESUM analyses only as a non-verb, because it
      defines an action rather than the member (`мимохідь`, an adverb, glossed by МійКлас as
      `проходити мимо по дорозі, побіжно`; СУМ-20 defines it as `Проходячи мимо кого-, чого-небудь`).
      The source's `quoted_line` stays verbatim.
@@ -103,9 +103,10 @@ The registry records that corpus in `sources_corpus.corpus_fingerprint`:
 
 Before any extraction, both the build and `--check` compute the live fingerprint and compare it
 with the one recorded in the registry at `--output`; each field is compared as canonical JSON, so
-a value of another type (`5.0` for `5`) differs. When they differ, when the registry is missing
-or records no fingerprint, or when the corpus cannot be loaded or fails its own integrity checks
-(an unreadable `sources.db`, a МійКлас page whose text no longer matches its `text_sha256`), the
+a missing or extra key (even one set to `null`) and a value of another type (`5.0` for `5`)
+differ. When they differ, when the registry is missing or records no fingerprint, or when the
+corpus or the pin cannot be loaded, encoded or validated (an unreadable `sources.db`, a МійКлас
+page whose text no longer matches its `text_sha256`, text that is not valid Unicode), the
 build refuses with `CorpusFingerprintError`, prints `REFUSED:` with the reason, writes nothing
 and exits 2. A new corpus (a new
 `sources.db` textbook generation that changes these rows, or a re-fetched МійКлас snapshot) is a

@@ -560,3 +560,15 @@ def test_build_refuses_unpinned_corpus(tmp_path: Path) -> None:
     snapshot["pages"][0]["text"] = page_text + " Пароніми."
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
     _assert_refused(pinned_registry)
+
+    # A field that is not valid Unicode (a lone surrogate) cannot be fingerprinted: typed refusal.
+    snapshot["pages"][0]["text"] = page_text
+    snapshot["pages"][0]["title"] = "\ud800"
+    snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
+    _assert_refused(pinned_registry)
+
+    # An extra pinned key, even one set to null, is not the reviewed pin.
+    snapshot["pages"][0]["title"] = "Пароніми"
+    snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
+    extra_key = json.dumps({"sources_corpus": {"corpus_fingerprint": {**live, "unknown_field": None}}})
+    _assert_refused(extra_key)

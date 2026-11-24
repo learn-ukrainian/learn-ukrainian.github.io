@@ -149,14 +149,19 @@ def read_pinned_corpus_fingerprint(registry_path: Path) -> dict[str, Any]:
 
 def require_pinned_corpus(pinned: dict[str, Any], live: dict[str, Any]) -> None:
     """Refuse unless the live corpus fingerprint equals the pinned one, naming every differing field."""
-    # Compare canonical JSON per field so a value of another type (5.0 for 5, true for 1) differs.
+    # Compare key presence and canonical JSON per field, so a missing or extra key (even one set to
+    # null) and a value of another type (5.0 for 5, true for 1) all differ.
+    missing = "<absent>"
     differing = sorted(
         key
         for key in set(pinned) | set(live)
-        if json.dumps(pinned.get(key), ensure_ascii=False) != json.dumps(live.get(key), ensure_ascii=False)
+        if (key in pinned) != (key in live)
+        or json.dumps(pinned.get(key), ensure_ascii=False) != json.dumps(live.get(key), ensure_ascii=False)
     )
     if differing:
-        detail = "; ".join(f"{key}: pinned {pinned.get(key)!r}, live {live.get(key)!r}" for key in differing)
+        detail = "; ".join(
+            f"{key}: pinned {pinned.get(key, missing)!r}, live {live.get(key, missing)!r}" for key in differing
+        )
         raise CorpusFingerprintError(
             "corpus differs from the reviewed corpus the extractor is certified on "
             f"(one-shot build tool, see docs/atlas/paronyms.md): {detail}"
@@ -592,7 +597,7 @@ def build_paronym_registry(
 
     def _infinitive_gloss_for_non_verb(note: dict[str, str], analyses: list[dict[str, Any]]) -> bool:
         # A gloss headed by a verb infinitive defines an action, so it misdefines a member that
-        # VESUM never analyses as a verb ("мимохідь" adv: "проходити мимо по дорозі").
+        # VESUM analyses only as a non-verb ("мимохідь" adv: "проходити мимо по дорозі").
         words = _gloss_words(note["text"])
         if not words or not analyses or any(r.get("pos") == "verb" for r in analyses):
             return False
@@ -807,17 +812,23 @@ def main(argv: list[str] | None = None) -> int:
     miyklas_path = args.miyklas_raw if args.miyklas_raw.is_absolute() else worktree_root / args.miyklas_raw
     out_path = args.output if args.output.is_absolute() else worktree_root / args.output
 
-    # One-shot contract: refuse before extraction unless this is the reviewed corpus. A corpus
-    # that cannot be loaded or fails its own integrity checks cannot be the reviewed one either.
+    # One-shot contract: refuse before extraction unless this is the reviewed corpus. Every step up
+    # to the comparison (loading the corpus, fingerprinting it, reading the pin) runs inside this
+    # boundary: a corpus or pin that cannot be loaded, encoded or validated is not the reviewed one.
     try:
         try:
             sources_db = _resolve_sources_db(primary_root, args.sources_db)
             docs = load_textbook_paronym_documents(sources_db)
             miyklas_meta, miyklas_docs = load_miyklas_documents(miyklas_path)
+            corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
+            pinned_fingerprint = read_pinned_corpus_fingerprint(out_path)
+        except CorpusFingerprintError:
+            raise
         except (OSError, RuntimeError, ValueError, sqlite3.Error) as exc:
-            raise CorpusFingerprintError(f"corpus cannot be loaded or fails its integrity checks: {exc}") from exc
-        corpus_fingerprint = compute_corpus_fingerprint(docs, miyklas_meta)
-        require_pinned_corpus(read_pinned_corpus_fingerprint(out_path), corpus_fingerprint)
+            raise CorpusFingerprintError(
+                f"corpus or pinned registry cannot be loaded or fails its integrity checks: {exc!r}"
+            ) from exc
+        require_pinned_corpus(pinned_fingerprint, corpus_fingerprint)
     except CorpusFingerprintError as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)
         return 2
