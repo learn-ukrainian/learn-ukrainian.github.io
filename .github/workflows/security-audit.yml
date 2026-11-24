@@ -2,7 +2,7 @@ name: Security Audit (blocking)
 
 # Scheduled and manually dispatched dependency advisory checks. The required
 # PR and merge-group scans run in ci.yml. This workflow checks Python
-# (pip-audit over the uv.lock export and standalone requirements locks)
+# (pip-audit over every group in uv.lock)
 # and Node.js production dependencies (npm audit with
 # scripts/config/npm-audit-ignore.yaml).
 # The path-filtered PR runs also validate changes to this workflow.
@@ -69,28 +69,10 @@ jobs:
           uv pip install --python .venv/bin/python --no-index --no-deps --require-hashes \
             --find-links "${MACHINERY_WHEELHOUSE}" -r "${MACHINERY_REQUIREMENT}"
 
-      - name: pip-audit (blocking Python locks)
+      - name: pip-audit (blocking Python lock)
         env:
           LU_MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
-        run: |
-          set -euo pipefail
-          status=0
-
-          echo "::group::pip-audit uv.lock"
-          .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node || status=1
-          echo "::endgroup::"
-
-          # The uv.lock suppressions are reviewed against its pins.
-          # Resolver-free mode reads each file's own pins, so audit the
-          # PyYAML lock included by requirements-tts.txt directly too.
-          for lock in requirements-tts.txt requirements-tts-stress.txt .github/requirements-pyyaml.txt; do
-            echo "::group::pip-audit $lock"
-            .venv/bin/python -m pip_audit --strict --disable-pip --require-hashes \
-              --progress-spinner=off --requirement "$lock" || status=1
-            echo "::endgroup::"
-          done
-
-          exit "$status"
+        run: .venv/bin/python -m lu_machinery.ci.audit_dependencies --skip-node
 
   npm-audit:
     name: npm-audit (blocking)
