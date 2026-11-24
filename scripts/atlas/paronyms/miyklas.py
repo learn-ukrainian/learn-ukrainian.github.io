@@ -409,11 +409,12 @@ def loads_i_json(text: str) -> Any:
     * 2.1: UTF-8 (the callers decode strictly), and no surrogate (an escape such as ``\\ud800``)
       or noncharacter (U+FDD0..U+FDEF and the last two code points of every plane) in a member
       name or string;
-    * 2.2: no number beyond a double's magnitude (``1e400``) or precision, meaning more
-      significant digits than its double holds (``3.141592653589793238462643383279``, or
-      ``1e-400``, which underflows to zero); a literal its double reproduces at the literal's own
-      number of significant digits (``0.1``, ``0.10000000000000001``, ``999999999999999.875``)
-      is accepted. No integer value outside ±(2**53 - 1), however it is written
+    * 2.2: no number beyond a double's magnitude (``1e400``) or precision, meaning a value that
+      needs more significant digits than its double holds (``3.141592653589793238462643383279``,
+      or ``1e-400``, which underflows to zero). A value its double reproduces when rounded to the
+      digits the value needs is accepted however it is written (``0.1``, ``0.10000000000000000``,
+      ``0.10000000000000001``, ``999999999999999.875``); trailing zeros add no digits. Both
+      number rules depend only on the value, never on its spelling. No integer value outside ±(2**53 - 1), however it is written
       (``9007199254740992``, ``9007199254740992.0``, ``9.007199254740992e15``): every number
       these files carry is an integer count, and every double of that size is an integer, so no
       number of magnitude 2**53 or more is accepted. The ``NaN`` and ``Infinity`` constants
@@ -441,11 +442,13 @@ def loads_i_json(text: str) -> Any:
             raise ValueError(f"number {literal[:40]} is beyond the double range")
         if number.is_integer() and abs(number) > _I_JSON_MAX_INT:
             raise ValueError(f"integer value {literal[:40]} is outside the exact range ±(2**53 - 1)")
-        digits = re.split(r"[eE]", literal)[0].lstrip("-").replace(".", "").lstrip("0")
+        # The significant digits the value needs: leading and trailing zeros of the significand
+        # only place the decimal point, so every spelling of one value gets the same verdict.
+        digits = re.split(r"[eE]", literal)[0].lstrip("-").replace(".", "").strip("0")
         if digits:  # a zero significand names ±0.0 exactly, whatever its exponent
-            # Round the double's exact value to the literal's own significant digits; a literal
-            # that differs carries precision the double does not hold. The decimal module
-            # refuses an exponent beyond about ±10**18, which no nonzero double reaches.
+            # Round the double's exact value to those digits; a value that differs carries
+            # precision the double does not hold. The decimal module refuses an exponent beyond
+            # about ±10**18, which no nonzero double reaches.
             context = decimal.Context(prec=len(digits), Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
             try:
                 exact = context.plus(decimal.Decimal(number)) == decimal.Decimal(literal)

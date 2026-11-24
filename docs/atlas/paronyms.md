@@ -111,9 +111,10 @@ fail-closed boundary: any failure there, whatever its type, is also a refusal. T
 inputs (the registry at `--output`, the МійКлас snapshot and the A1 inventory) are parsed in full
 as I-JSON (RFC 7493 section 2), so any of these anywhere in the file refuses, even where the
 build would not read the value: a duplicate member name; a `NaN` or `Infinity` constant; a number
-beyond a double's magnitude (`1e400`); a number with more significant digits than its double holds
-(`3.141592653589793238462643383279`, or `1e-400`, which underflows to zero), while a literal the
-double reproduces at its own number of significant digits (`0.1`, `999999999999999.875`) is valid;
+beyond a double's magnitude (`1e400`); a number whose value needs more significant digits than its
+double holds (`3.141592653589793238462643383279`, or `1e-400`, which underflows to zero), while a
+value its double reproduces when rounded to the digits the value needs is valid however it is
+written (`0.1`, `0.10000000000000000`, `999999999999999.875`; trailing zeros add no digits);
 an integer value outside ±(2^53 − 1) however it is written (`9007199254740992`,
 `9007199254740992.0`, `9.007199254740992e15`): every number these files carry is an integer count,
 and every double of that size is an integer, so no number of magnitude 2^53 or more is accepted; a
