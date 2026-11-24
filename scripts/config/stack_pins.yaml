@@ -50,7 +50,7 @@ pins:
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"
-    note: CI reads this via python-version-file. pyproject.toml requires-python is >=3.12.
+    note: CI reads this via python-version-file. Both Python packages require Python >=3.14.
   - name: node
     pinned: "24.22.3"
     source: .nvmrc

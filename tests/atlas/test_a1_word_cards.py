@@ -15,6 +15,7 @@ import yaml
 
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_resolver as resolver
+from scripts.atlas.a1_card_capture import _paradigm
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
 from scripts.projects.open_model_data.word_cards import dataset_projection
 
@@ -599,6 +600,61 @@ def test_stress_fallback_and_forms_require_independent_receipts(batch):
     target(delivered)["build"]["card_version"] = resolver.card_version(target(delivered))
     with pytest.raises(Refusal):
         cards.verify(delivered, batch["sources"], batch["manifest"])
+
+    # Synthetic ULIF and VESUM rows supply independent receipts in canonical slot order.
+    form = {"entry_id": 20, "variant_order": 1, "grammatical_tags": '["v_rod","s"]',
+            "unmapped_labels": "[]", "preposition": "", "marked_asterisk": 0,
+            "is_lemma": 0, "is_invariable": 0, "form_unstressed": "абв", "form_stressed": f"а{ACUTE}бв"}
+    ulif = [
+        dict(form, id=1),
+        dict(form, id=2, is_lemma=1, form_stressed=f"а{ACUTE}бе{ACUTE}", form_unstressed="абе"),
+        dict(form, id=3, grammatical_tags='["v_naz","s"]', form_stressed=f"а{ACUTE}бе", form_unstressed="абе"),
+    ]
+    vesum = [
+        {"id": 5, "entry_id": 30, "lemma": "абе", "word_form": "где", "tags": "noun:m:v_rod"},
+        {"id": 6, "entry_id": 30, "lemma": "абе", "word_form": "абе", "tags": "noun:m:v_naz"},
+    ]
+    snapshots = {"ulif": "fixture-ulif", "vesum": "fixture-vesum"}
+    stress, paradigm = _paradigm(ulif, vesum, snapshots, None, "entry_fingerprint")
+    assert stress[0]["value"] == {"form": f"а{ACUTE}бе{ACUTE}", "readings": [f"а{ACUTE}бе", f"абе{ACUTE}"]}
+    assert stress[0]["receipt"]["locator"] == "ulif:ulif_forms:id:2"
+    assert [(slot["slot"], slot["comparison"]) for slot in paradigm["slots"]] == [
+        ("v_naz.s", "agrees"), ("v_rod.s", "differs"),
+    ]
+    difference = paradigm["slots"][1]
+    assert difference["ulif"][0]["value"]["form"] == f"а{ACUTE}бв"
+    assert difference["ulif"][0]["receipt"]["entry_id"] == 20
+    assert difference["vesum"][0]["value"] == {"form": "где", "tags": "noun:m:v_rod"}
+    assert difference["vesum"][0]["receipt"]["locator"] == "vesum:forms_all:id:5"
+    _, unbound = _paradigm(ulif, [], snapshots, "homonym_correspondence_unresolved",
+                           "entry_fingerprint")
+    assert {slot["comparison"] for slot in unbound["slots"]} == {"unresolved"}
+
+    for tags, vesum_tags, expected_slot in (
+        ('["v_naz"]', "numr:p:v_naz", "v_naz.p"),
+        ('["v_naz","m"]', "noun:m:v_naz", "v_naz.s.m"),
+    ):
+        _, aligned = _paradigm([dict(ulif[2], grammatical_tags=tags)],
+                               [dict(vesum[1], tags=vesum_tags)], snapshots, None, "entry_fingerprint")
+        assert [(slot["slot"], slot["comparison"]) for slot in aligned["slots"]] == [(expected_slot, "agrees")]
+    _, mixed_number = _paradigm([dict(ulif[2], grammatical_tags='["v_naz"]')],
+                                [vesum[1], dict(vesum[1], id=7, tags="noun:p:v_naz")],
+                                snapshots, None, "entry_fingerprint")
+    assert [(slot["slot"], slot["comparison"], slot["reason"]) for slot in mixed_number["slots"]] == [
+        (slot, "unresolved", "ulif_slot_number_unresolved") for slot in ("v_naz", "v_naz.s", "v_naz.p")
+    ]
+
+    _, mixed_granularity = _paradigm(
+        [dict(ulif[2], grammatical_tags='["v_naz","m"]'),
+         dict(ulif[0], grammatical_tags='["v_naz","f"]')],
+        [dict(vesum[1], tags="numr:p:v_naz"),
+         dict(vesum[1], id=8, word_form="абв", tags="numr:p:v_naz")],
+        snapshots, None, "entry_fingerprint",
+    )
+    assert {slot["slot"]: (slot["comparison"], slot["reason"]) for slot in mixed_granularity["slots"]} == {
+        slot: ("unresolved", "ulif_slot_granularity_unresolved") for slot in ("v_naz.m", "v_naz.f", "v_naz.p")
+    }
+    assert [w["value"]["form"] for slot in mixed_granularity["slots"] for w in slot["vesum"]] == ["абе", "абв"]
 
 
 def test_unreviewed_examples_and_unaligned_rich_fields_stay_empty(batch):

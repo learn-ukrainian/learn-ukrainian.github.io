@@ -1,6 +1,6 @@
-"""Assemble an approved fixed A1 receipt batch, with complete row and field accounting.
+"""Assemble A1 word cards and produce source receipts and field accounting.
 
-Use for #11943 slices 2–6, never for certification, publication or expanding their denominators.
+Use for fixed slice replay (#11943) or for the ULIF data of the full A1 inventory (#12288).
 """
 
 import argparse
@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import re
+import sqlite3
 import sys
 import unicodedata
 from collections import Counter, defaultdict
@@ -646,20 +647,34 @@ def main(argv=None):
         epilog="""Examples:
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json --check
-  .venv/bin/python -m scripts.atlas.a1_word_cards --batch slice3 --sources batch_state/a1/slice3-sources.json --output batch_state/a1/slice3-cards.json
-Outputs: host-only card/receipt/accounting bundle; no source-store writes, allocation, certification or deploy.
+  .venv/bin/python -m scripts.atlas.a1_word_cards --batch ulif
+Outputs: host-only card data and receipts. The ULIF batch emits JSON on stdout
+including a per-slot disagreement report. It opens Sources and VESUM read-only.
 Exit codes: 0 verified output; 1 refused input or evidence; 2 usage error.
-Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
+Related: #11943, #12288, docs/atlas/word-cards/a1-v1-inventory.md
 """)
-    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5", "slice6"), default="slice2",
-                        help="Approved fixed batch to assemble or check (default: slice2), e.g. slice6")
-    parser.add_argument("--sources", type=Path, required=True, help="Frozen host-only Sources bundle, e.g. batch_state/a1/sources.json")
-    parser.add_argument("--output", type=Path, required=True, help="Ignored output JSON inside this worktree, e.g. batch_state/a1/cards.json")
+    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5", "slice6", "ulif"), default="slice2",
+                        help="Fixed slice to replay (default: slice2), or ulif for all A1 lemma data")
+    parser.add_argument("--sources", type=Path,
+                        help="Frozen Sources JSON, e.g. batch_state/a1/sources.json (required for slice replay)")
+    parser.add_argument("--output", type=Path,
+                        help="Required host-only JSON path for slice replay, e.g. batch_state/a1/cards.json")
     parser.add_argument("--check", action="store_true", help="Verify an existing output without rewriting it (default: off)")
     parser.add_argument("--require-chain", action="store_true",
                         help="Refuse unless an actual card has meaning, stress, VESUM forms and an approved example (default: off)")
     args = parser.parse_args(argv)
+    if args.batch == "ulif":
+        if args.sources or args.output or args.check or args.require_chain:
+            parser.error("--batch ulif reads the configured stores and writes only to stdout")
+    elif args.sources is None or args.output is None:
+        parser.error("fixed slice batches require --sources and --output")
     try:
+        if args.batch == "ulif":
+            from scripts.atlas.a1_card_capture import capture_ulif
+
+            inventory = load(ROOT / "registry/atlas/a1-v1-inventory.json")
+            sys.stdout.buffer.write(canonical(capture_ulif(inventory, ROOT)) + b"\n")
+            return 0
         batch = None
         if args.batch == "slice6":
             from scripts.atlas.a1_slice6_inputs import load_batch
@@ -724,7 +739,7 @@ Related: #11943, docs/atlas/word-cards/a1-v1-inventory.md
                 path.write_bytes(canonical(value) + b"\n")
         print(json.dumps(counts, sort_keys=True))
         return 0
-    except (OSError, ValueError, KeyError, TypeError, foundation.Refusal) as error:
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error, foundation.Refusal) as error:
         reason = str(error) if isinstance(error, Refusal) else type(error).__name__
         print("A1 cards refused: " + reason, file=sys.stderr)
         return 1
