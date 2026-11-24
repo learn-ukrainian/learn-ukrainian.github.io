@@ -302,6 +302,7 @@ jobs:
       - name: Build Site
         env:
           ATLAS_SEARCH_RUNTIME_TREE: ${{ runner.temp }}/atlas-search-runtime
+          ATLAS_STATIC_ROUTES: 'a1'
           ATLAS_WORD_CARD_PREVIEW: '1'
           ATLAS_WORD_CARD_RELEASE_PATH: ${{ steps.word-card-preview.outputs.release-path }}
           ATLAS_WORD_CARD_RELEASE_PIN: ${{ steps.word-card-preview.outputs.pin }}
