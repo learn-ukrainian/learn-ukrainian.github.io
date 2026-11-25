@@ -15,7 +15,7 @@
 > If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.
 >
 > **Seat onboarding (canonical ownership matrix):**
-> [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) —
+> [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) —
 > `discuss` vs `dispatch.py` vs fleet-comms/file handoffs vs experimental ACPX vs
 > Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 > `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
@@ -45,7 +45,7 @@ printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + find
 Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheBench).
 
 Full onboarding contract, budgets, troubleshooting, and no-auth smoke:
-[`agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
+[`agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 Use ACPX only when direct Codex↔Grok critique is materially useful; otherwise
 use bounded bridge `discuss`. The panel defaults to two rounds (three maximum),
@@ -507,7 +507,7 @@ mcp__message-broker__send_message(
 **It is NOT formal cross-family review.** Discussion output is design input only.
 Independent PR CF is `ask-<lane> --type review` with the verdict posted on the PR
 (shielded `review-pr` / `publish-review-verdict` removed in #8520 — see ownership matrix in
-[`agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)).
+[`agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 

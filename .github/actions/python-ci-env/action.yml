@@ -113,7 +113,7 @@ runs:
         import tomllib
 
         lock_path, wheelhouse, requirement = sys.argv[1:4]
-        RELEASES = "https://github.com/learn-ukrainian/machinery/releases/download"
+        RELEASES = "https://github.com/agentic-machinery/machinery/releases/download"
 
 
         def refuse(reason):
@@ -173,7 +173,7 @@ runs:
       run: |
         set -euo pipefail
         for attempt in 1 2 3; do
-          if gh release download "v${VERSION}" --repo learn-ukrainian/machinery \
+          if gh release download "v${VERSION}" --repo agentic-machinery/machinery \
               --pattern "${WHEEL}" --dir "${WHEELHOUSE}" --clobber; then
             exit 0
           fi

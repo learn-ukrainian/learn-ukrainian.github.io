@@ -30,7 +30,7 @@ changes.
 ```
 
 From a dispatch worktree, use the primary checkout's interpreter (see
-[`worktree-cleanup.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/worktree-cleanup.md) § Shared Python environment).
+[`worktree-cleanup.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/worktree-cleanup.md) § Shared Python environment).
 
 | Mode | Scans | How |
 | --- | --- | --- |

@@ -178,7 +178,7 @@ exclude-newer = "7 days"
 default-groups = ["ml", "dev"]
 
 [tool.uv.sources]
-lu-machinery = { url = "https://github.com/learn-ukrainian/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" }
+lu-machinery = { url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" }
 learn-ukrainian-v4-runtime = { path = "packages/v4-runtime" }
 ipa-uk = { git = "https://github.com/lang-uk/ipa-uk.git", rev = "e7fc944faca090ca985d5ca09a24c59154d9dea1" }
 # The CPU builds the host and nightly CI run: no CUDA dependency closure.
