@@ -349,8 +349,16 @@ run_scenario_8
 #    canonical root, or the claim 127s and the session refuses to start.
 root="$TMP_ROOT/wt-canonical"
 fakewt="$TMP_ROOT/wt-project"
-mkdir -p "$root" "$fakewt"
+wt_main="$TMP_ROOT/wt-main"
+mkdir -p "$root" "$wt_main"
 ln -s "$REPO_ROOT/.venv" "$root/.venv"
+# A directory with no .git at it or any ancestor is a non-Git workspace, and
+# session-setup then ignores CODEX_CANONICAL_REPO_ROOT. A linked worktree has
+# a .git file. This temp repo's worktree is that file, and it still has no
+# .venv, so the scenario still tests the venv-less interpreter default.
+git -C "$wt_main" init -q
+git -C "$wt_main" -c user.email=fixture@example.com -c user.name=fixture commit --allow-empty -q -m fixture
+git -C "$wt_main" worktree add -q "$fakewt" HEAD
 ln -s "$REPO_ROOT/scripts" "$fakewt/scripts"
 ln -s "$REPO_ROOT/agents_extensions" "$fakewt/agents_extensions"
 session_id="fixture-session-worktree"
