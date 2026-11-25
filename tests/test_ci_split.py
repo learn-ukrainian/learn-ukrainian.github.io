@@ -376,7 +376,27 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
         for step in job.get("steps", [])
         if "continue-on-error" in step
     ]
-    assert optional == []
+    # A hung JUnit upload times out after the path check. Only that first attempt
+    # may continue; the retry has no continue-on-error, so a second failure fails the shard.
+    assert [(job_id, step.get("name")) for job_id, step in optional] == [
+        ("pytest", "Upload pytest JUnit report"),
+    ]
+    upload = optional[0][1]
+    assert upload["continue-on-error"] is True
+    assert upload["if"] == "${{ always() }}"
+    assert upload["timeout-minutes"] == 2
+    retry = next(
+        step
+        for step in _jobs_of_ci()["pytest"]["steps"]
+        if step.get("name") == "Retry pytest JUnit report upload"
+    )
+    assert "continue-on-error" not in retry
+    assert retry["timeout-minutes"] == 2
+    assert retry["if"] == "${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() }}"
+    assert retry["with"] == upload["with"]
+    assert retry["uses"] == upload["uses"]
+    pytest_steps = _jobs_of_ci()["pytest"]["steps"]
+    assert pytest_steps.index(upload) < pytest_steps.index(retry)
     # No job may tolerate a whole-job failure.
     assert not any("continue-on-error" in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():

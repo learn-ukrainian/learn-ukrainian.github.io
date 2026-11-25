@@ -858,12 +858,32 @@ jobs:
             tail -n 1 "$breadcrumb"
           done
       - name: Upload pytest JUnit report
+        id: junit-upload
         if: ${{ always() }}
+        # A hung upload burns this cap and stops. continue-on-error lets the one
+        # retry below clear that failure. A second failure still fails the shard.
+        timeout-minutes: 2
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pytest-junit-shard-${{ matrix.shard }}
+          # A re-run replaces the cancelled attempt's incomplete shard artifact.
+          overwrite: true
+          path: |
+            ci-artifacts/pytest-shard-*.xml
+            ci-artifacts/pytest-shard-*-files.txt
+            ci-artifacts/pytest-shard-*-needs-artifact.txt
+            ci-artifacts/pytest-shard-*-weights.json
+            ci-artifacts/pytest-shard-*-breadcrumbs/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Retry pytest JUnit report upload
+        id: junit-upload-retry
+        if: ${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() }}
         timeout-minutes: 2
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
-          # A retry replaces the cancelled attempt's incomplete shard artifact.
           overwrite: true
           path: |
             ci-artifacts/pytest-shard-*.xml
