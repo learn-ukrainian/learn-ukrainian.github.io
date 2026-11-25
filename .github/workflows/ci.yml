@@ -860,10 +860,12 @@ jobs:
       - name: Upload pytest JUnit report
         id: junit-upload
         if: ${{ always() }}
-        # A hung upload burns this cap and stops. continue-on-error lets the one
-        # retry below clear that failure. A second failure still fails the shard.
+        # A hung upload burns this cap and stops. continue-on-error is on only
+        # when hashFiles sees one of the shard paths, so the retry below can
+        # clear that failure. An empty path is setFailed (if-no-files-found:
+        # error) and still fails the job, as the single upload does on main.
         timeout-minutes: 2
-        continue-on-error: true
+        continue-on-error: ${{ hashFiles('ci-artifacts/pytest-shard-*.xml', 'ci-artifacts/pytest-shard-*-files.txt', 'ci-artifacts/pytest-shard-*-needs-artifact.txt', 'ci-artifacts/pytest-shard-*-weights.json', 'ci-artifacts/pytest-shard-*-breadcrumbs/') != '' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
@@ -879,7 +881,9 @@ jobs:
           retention-days: 14
       - name: Retry pytest JUnit report upload
         id: junit-upload-retry
-        if: ${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() }}
+        # Nothing to upload is not an upload failure: hashFiles is '' and this
+        # step is skipped. A cancelled job is not retried.
+        if: ${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() && hashFiles('ci-artifacts/pytest-shard-*.xml', 'ci-artifacts/pytest-shard-*-files.txt', 'ci-artifacts/pytest-shard-*-needs-artifact.txt', 'ci-artifacts/pytest-shard-*-weights.json', 'ci-artifacts/pytest-shard-*-breadcrumbs/') != '' }}
         timeout-minutes: 2
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

@@ -376,13 +376,21 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
         for step in job.get("steps", [])
         if "continue-on-error" in step
     ]
-    # A hung JUnit upload times out after the path check. Only that first attempt
-    # may continue; the retry has no continue-on-error, so a second failure fails the shard.
+    # A hung JUnit upload times out after the path check. continue-on-error is
+    # on only when a shard path matches, so an empty path still fails the job.
+    # The retry has no continue-on-error, so a second failure fails the shard.
     assert [(job_id, step.get("name")) for job_id, step in optional] == [
         ("pytest", "Upload pytest JUnit report"),
     ]
     upload = optional[0][1]
-    assert upload["continue-on-error"] is True
+    present = (
+        "hashFiles('ci-artifacts/pytest-shard-*.xml', "
+        "'ci-artifacts/pytest-shard-*-files.txt', "
+        "'ci-artifacts/pytest-shard-*-needs-artifact.txt', "
+        "'ci-artifacts/pytest-shard-*-weights.json', "
+        "'ci-artifacts/pytest-shard-*-breadcrumbs/') != ''"
+    )
+    assert upload["continue-on-error"] == "${{ " + present + " }}"
     assert upload["if"] == "${{ always() }}"
     assert upload["timeout-minutes"] == 2
     retry = next(
@@ -392,7 +400,18 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
     )
     assert "continue-on-error" not in retry
     assert retry["timeout-minutes"] == 2
-    assert retry["if"] == "${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() }}"
+    assert retry["if"] == (
+        "${{ always() && steps.junit-upload.outcome == 'failure' && !cancelled() && "
+        + present
+        + " }}"
+    )
+    assert [line.strip() for line in upload["with"]["path"].splitlines() if line.strip()] == [
+        "ci-artifacts/pytest-shard-*.xml",
+        "ci-artifacts/pytest-shard-*-files.txt",
+        "ci-artifacts/pytest-shard-*-needs-artifact.txt",
+        "ci-artifacts/pytest-shard-*-weights.json",
+        "ci-artifacts/pytest-shard-*-breadcrumbs/",
+    ]
     assert retry["with"] == upload["with"]
     assert retry["uses"] == upload["uses"]
     pytest_steps = _jobs_of_ci()["pytest"]["steps"]
