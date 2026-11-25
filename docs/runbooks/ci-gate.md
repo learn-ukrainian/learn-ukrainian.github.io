@@ -226,7 +226,7 @@ one paginated merge-queue entry with the same `(#N)`. Acceptance (AC1 as amended
 squash tree must equal the PR's current head merged onto the queue parent (`git merge-tree`), that head must carry
 the approval, and GitHub must hold a check suite on it created before the entry's `enqueuedAt`. No GitHub field
 names an entry's source head, so this proves tree equivalence, not source-SHA identity, history or attribution
-(residual on learn-ukrainian/machinery#100). API errors and
+(residual on agentic-machinery/machinery#100). API errors and
 membership disagreements get three fresh reads, then fail closed. This guards against accidental landings without
 review. It is not a trust boundary: a status forged with the shared credential, or a candidate that edits this
 workflow, is outside it.

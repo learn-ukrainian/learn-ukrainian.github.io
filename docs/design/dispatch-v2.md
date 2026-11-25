@@ -15,7 +15,7 @@ copies untracked files into the task's preserved archive first. The record
 gets `worktree_disposition` (`removed`, `retained` or `error`) with a
 `worktree_disposition_reason` and, when there is one, a
 `worktree_disposition_detail`. The reasons are listed in
-[Worktree cleanup](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/worktree-cleanup.md).
+[Worktree cleanup](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/worktree-cleanup.md).
 
 Each worker settles only its own task. The hourly hygiene run calls
 `worker.settle_left_worktrees(salvage=True)` to recover crashed supervisors

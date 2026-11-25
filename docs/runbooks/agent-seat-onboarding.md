@@ -551,7 +551,7 @@ retained lock-authenticated archive, and the runtime probe rejects incompatible
 CLI changes before prompt delivery.
 
 Provisioning and sealing the prefix for a new `lu-machinery` release follow
-`docs/release.md` in `learn-ukrainian/machinery` (`prepare_node_dependencies`,
+`docs/release.md` in `agentic-machinery/machinery` (`prepare_node_dependencies`,
 `npm ci --ignore-scripts` with the contract's pinned Node/npm, and
 `seal_node_dependencies`). Avoid `npm install`, which may rewrite the lock, and
 dynamic package execution such as `npx`. To verify read-only that the installed
@@ -713,7 +713,7 @@ counts and outcomes.
 | `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
 | `AUTH_REQUIRED` on the Grok shadow seat | Establish the native Grok CLI's cached login outside this adapter; the Grok adapter automatically sets the non-secret per-process selector `ACPX_AUTH_CACHED_TOKEN=1` and scrubs ambient XAI API-key auth selectors so cached native login is the only accepted path |
 | Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
-| `acp_adapter_missing` / `acp_adapter_incompatible` | Provision and seal the installed `lu-machinery` wheel's Node prefix (see `docs/release.md` in `learn-ukrainian/machinery`) and run the read-only adapter verification in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification). |
+| `acp_adapter_missing` / `acp_adapter_incompatible` | Provision and seal the installed `lu-machinery` wheel's Node prefix (see `docs/release.md` in `agentic-machinery/machinery`) and run the read-only adapter verification in [Shared ACPX install](#shared-acpx-install-and-e2ereplay-verification). |
 | `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
 | `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
 | `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Prompt retries stay at zero; tree review uses the direct toolful route |

@@ -56,7 +56,7 @@ Agents learn the Ops API from **live HTTP surfaces**, not from the HTML pages
 | 5 | This file (`docs/MONITOR-API.md`) | Human narrative reference |
 
 Python helper: `lu_machinery/ai_agent_bridge/monitor_client.py` (`MonitorClient().bootstrap()`).
-Seat/process onboarding (harness, ownership): [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
+Seat/process onboarding (harness, ownership): [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 After any API behavior change that agents must observe (caching, timeouts,
 schema, retirement), update **all three**: OpenAPI description / `route_contracts.py`
@@ -222,7 +222,7 @@ real dashboards publish it verbatim. The fixture proves those seams are wired
 before scanning. Socket and subprocess seams are denied, so a new route
 cannot quietly make a live network, SSH, Git, or child-process call.
 
-[`lu_machinery/api/opsec_scan.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/opsec_scan.py) is the shared
+[`lu_machinery/api/opsec_scan.py`](https://github.com/agentic-machinery/machinery/blob/main/lu_machinery/api/opsec_scan.py) is the shared
 scanner. It reports operation and field-path provenance while scanning JSON or
 text bodies, every response-header value, and `_telemetry` independently. It
 recognizes IPv4/IPv6 (including ports), bounded absolute filesystem roots,
@@ -231,7 +231,7 @@ canaries. It exempts SHA values, RFC3339 timestamps, `epic:<N>` identifiers,
 `/api/...` route strings, and ISO durations. The committed positive/negative
 corpus protects those boundaries.
 
-[`lu_machinery/api/opsec_sanitize.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/opsec_sanitize.py) is the
+[`lu_machinery/api/opsec_sanitize.py`](https://github.com/agentic-machinery/machinery/blob/main/lu_machinery/api/opsec_sanitize.py) is the
 route-wide rewriter. `create_app` wraps JSON responses so any remaining
 absolute filesystem-root token is replaced with the opaque placeholder
 `[redacted-path]` before the body leaves the process. The sanitizer reuses the
@@ -3190,7 +3190,7 @@ In the follow-up PR-B release, this guarantee is reinforced by serving the API f
 ## Host test slots — `/api/ops/v1/test-slots`
 
 `GET /api/ops/v1/test-slots` is the read-only view of the host test-slot pool that worker pytest runs and
-the launcher share (#10662; runbook: [`docs/runbooks/test-slots.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/test-slots.md)). It
+the launcher share (#10662; runbook: [`docs/runbooks/test-slots.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/test-slots.md)). It
 returns the same object as `.venv/bin/python -m lu_machinery.common.test_slots status --json`
 (schema `test-slots.status.v1`):
 
@@ -3227,7 +3227,7 @@ at most once per 60 seconds, and retains 500 lines in ignored runtime state. Pro
 a shared 0.1-second observation interval. It never collects arguments, paths, environments or PIDs.
 Malformed command names become `unknown`. Reads never trigger collection or create files.
 Missing state returns an empty list; unreadable state returns `error: "load_samples_unavailable"`.
-See [High-load attribution](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/test-slots.md#high-load-attribution) for configuration and limits.
+See [High-load attribution](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/test-slots.md#high-load-attribution) for configuration and limits.
 
 ---
 
