@@ -103,10 +103,16 @@ __scenario_release_hook_tombstones_without_generation_env() {
 
 __scenario_worktree_layout_claims_lease() {
   local root="$1" fakewt="$2" session_id="$3"
+  # CI exports the checkout as both product root and primary. Leave those
+  # pointing at the checkout and the hook resolves that checkout's Python,
+  # never the venv-less worktree. The child gets the worktree as its product
+  # and the canonical fixture (the only .venv) as its primary.
   printf '%s' "{\"session_id\":\"$session_id\"}" | \
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
         -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON -u CLAUDE_PROFILE_RESOLVER_PYTHON \
+        -u LEARN_UKRAINIAN_PYTHON -u LEARN_UKRAINIAN_STATE_ROOT \
+    LU_PRODUCT_ROOT="$fakewt" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$root" \
     CLAUDE_PROJECT_DIR="$fakewt" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
     bash "$RELEASE_HOOKS/session-setup.sh" >/dev/null
   :
@@ -349,16 +355,22 @@ run_scenario_8
 #    canonical root, or the claim 127s and the session refuses to start.
 root="$TMP_ROOT/wt-canonical"
 fakewt="$TMP_ROOT/wt-project"
-wt_main="$TMP_ROOT/wt-main"
-mkdir -p "$root" "$wt_main"
+empty_hooks="$TMP_ROOT/empty-hooks"
+mkdir -p "$root" "$empty_hooks"
 ln -s "$REPO_ROOT/.venv" "$root/.venv"
+ln -s "$REPO_ROOT/.python-version" "$root/.python-version"
 # A directory with no .git at it or any ancestor is a non-Git workspace, and
-# session-setup then ignores CODEX_CANONICAL_REPO_ROOT. A linked worktree has
-# a .git file. This temp repo's worktree is that file, and it still has no
-# .venv, so the scenario still tests the venv-less interpreter default.
-git -C "$wt_main" init -q
-git -C "$wt_main" -c user.email=fixture@example.com -c user.name=fixture commit --allow-empty -q -m fixture
-git -C "$wt_main" worktree add -q "$fakewt" HEAD
+# session-setup then ignores CODEX_CANONICAL_REPO_ROOT. The canonical fixture
+# is the primary (real .git directory plus the only .venv). Its linked
+# worktree has a .git file and no .venv.
+# Signing and checkout hooks are disabled for these commands: a machine with
+# commit.gpgsign or a failing post-checkout hook would abort the scenario
+# before session-setup runs.
+git -C "$root" -c core.hooksPath="$empty_hooks" init -q
+git -C "$root" -c user.email=fixture@example.com -c user.name=fixture \
+  -c commit.gpgsign=false -c core.hooksPath="$empty_hooks" \
+  commit --allow-empty -q -m fixture
+git -C "$root" -c core.hooksPath="$empty_hooks" worktree add -q "$fakewt" HEAD
 ln -s "$REPO_ROOT/scripts" "$fakewt/scripts"
 ln -s "$REPO_ROOT/agents_extensions" "$fakewt/agents_extensions"
 session_id="fixture-session-worktree"
