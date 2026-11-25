@@ -19,12 +19,35 @@
 # `required_workflow` (optional) is the workflow file, or a non-empty list of distinct workflow files,
 # whose failed PR or merge-queue run is the CI evidence for a repair-verification review round
 # (lu_machinery/review/repair_round.py); a failure of any one listed workflow is evidence. Default
-# `.github/workflows/ci.yml`.
+# `.github/workflows/ci.yml`. Name the workflows that gate a merge: the ones behind the branch's
+# GitHub-required checks, or, where GitHub requires none, every workflow that runs on pull requests
+# (the publisher refuses a head with any failing check). A repository with a merge queue names one
+# workflow: merge closeout binds the single merge-group run of it. tests/review/fixtures/
+# fleet_repo_workflows.yaml records each repository's gates as read from GitHub, and
+# tests/test_record_cf_verdict.py refuses a row (the ci.yml default included) that names others.
 #
 # `security_alerts` (optional, boolean, default true) controls whether
 # `lu_machinery.security scan` watches GitHub code-scanning, Dependabot and
 # secret-scanning alerts for this repository. Set `security_alerts: false` to
 # opt a repository out of scanning and metrics.
+#
+# `release_milestone` (optional, non-blank single-line string) names the open
+# milestone title (or milestone number) attached by `lu_machinery.release_cut`
+# to release PRs opened in this repository (adopt PR in the product repository,
+# post-release PR in machinery). Omitting the key leaves release PRs without a
+# milestone; an invalid, closed, or ambiguous value refuses before publication.
+#
+# `sources_server` and `admission_policy` (optional) declare the product's Sources MCP
+# server and dispatch admission policy at the only locations machinery reads:
+# `.mcp/servers/sources/server.py` and `scripts/curriculum/admission_policy.v1.json`
+# (any other value refuses where the file is read). A row carrying the
+# Learn Ukrainian slug must declare both. A primary product checkout (never a linked
+# worktree) is matched to its row by its Git `origin`
+# (`fleet_repos.fleet_repo_for_checkout`); a row that omits
+# `sources_server` runs read-only Claude with no MCP server at all, and one that
+# omits `admission_policy` gets the machinery default policy (no Ukrainian seats or
+# learner payloads). A checkout that cannot be matched, or that carries the
+# curriculum marker, keeps both Learn Ukrainian files and refuses without them.
 #
 # Dual-slug transfer bridge (PLAN NEW-ORG-1122 A01):
 # - `alternate_github` (optional, owner/name) names the one exact alternate slug
@@ -46,11 +69,15 @@
 # - Rollout precondition: provision the host selector file, export
 #   `LU_FLEET_REPO_SELECTOR_FILE` to every dispatcher, keeper, API, and service
 #   unit, and verify `python -m lu_machinery.orchestration.fleet_repos selector-check`
-#   exits 0 BEFORE installing a release containing dual-slug rows; unmodified
-#   consumers of `canonical_origins` and `verification_credentials` (`dispatcher/cli.py`,
+#   exits 0 BEFORE installing a release containing dual-slug rows; consumers of
+#   `canonical_origins` and `verification_credentials` (`dispatcher/cli.py`,
 #   `dispatcher/git.py`, `dispatcher/store.py`, `orchestration/dispatch_settle.py`,
-#   `dispatcher/write_boundary.py`, `hygiene/branch_sweep.py`) fail closed without
-#   it (A01b owns consumer adoption and `branch_sweep` refusal handling).
+#   `dispatcher/write_boundary.py`, `hygiene/branch_sweep.py`,
+#   `orchestration/execution_safe_git.py`, `orchestration/scheduled_worktree_cleanup.py`)
+#   fail closed without it. The selector proof holds only in the host user namespace
+#   (an `--unshare-user` sandbox maps root to uid 65534): read it host-side.
+# - Payload consumers bind either baked slug of a row through
+#   `fleet_repos.repository_slugs` (docs/runbooks/sibling-git.md).
 # - Cache/restart requirement: `lu_machinery.common.git_credentials.repository_registry`
 #   and `lu_machinery.orchestration.fleet_repos._repository_catalog` are `@cache`d
 #   in-process; restart long-running services and workers after flipping a selector
@@ -66,6 +93,8 @@ repos:
     role: public-monorepo
     verdict_recorder: true
     default: true
+    sources_server: .mcp/servers/sources/server.py
+    admission_policy: scripts/curriculum/admission_policy.v1.json
   infra-private:
     github: learn-ukrainian/learn-ukrainian-infra-private
     alternate_github: agentic-machinery/machinery-infra
@@ -75,12 +104,23 @@ repos:
     transport: https
     role: private-infra
     verdict_recorder: true
+    # No GitHub-required check and no ci.yml: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/private-boundary.yml
+      - .github/workflows/security-scan.yml
+      - .github/workflows/fleet-security-caller.yml
+      - .github/workflows/hramatka-cd.yml
   hramatka:
     github: learn-ukrainian/hramatka
     local_name: hramatka
     transport: ssh
     role: private-product
     verdict_recorder: false
+    # No GitHub-required check: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/ci.yml
+      - .github/workflows/security.yml
+      - .github/workflows/codeql.yml
   # kube-dojo (#12499, plan approved under #12239). Both are public repositories, so their roles
   # deliberately avoid "public-monorepo" (learn-ukrainian-only audits, Kimi and DeepSeek admission)
   # and any "private" spelling (private-input and OPSEC private-repo handling).
@@ -105,6 +145,10 @@ repos:
     transport: https
     role: public-labs
     verdict_recorder: true
+    # No GitHub-required check and no ci.yml: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/test-scenarios.yml
+      - .github/workflows/codeql.yml
   # machinery: the public machinery repository. Role avoids "public-monorepo" (learn-ukrainian-only
   # audits, Kimi and DeepSeek admission) and keeps the "public-" prefix for publisher privacy handling.
   machinery:
@@ -117,6 +161,7 @@ repos:
     role: public-machinery
     verdict_recorder: true
     required_workflow: .github/workflows/ci-gate.yml
+    release_milestone: "v0.12.0 Finish the move"
   # ukrainian-llm-eval: the public model-evaluation repository (EVAL-PROJECT-1103). Reuses the
   # public-labs role: consumers only read the "public-" / "private" prefix, and it runs studies.
   ukrainian-llm-eval:
