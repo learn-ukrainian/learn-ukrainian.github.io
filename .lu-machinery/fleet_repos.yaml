@@ -1,0 +1,182 @@
+# Temporary consumer override until a machinery release ships the swapped machinery row.
+# Remove this file and its profile entry when adopting that release.
+# Fleet repository allowlist — multi-repo dispatch (#672 P2.1)
+#
+# Keys are the only valid `--repo` values for `scripts/dispatch.py`.
+# `local_name` is the sibling checkout beside the public primary, named by
+# `local_name` (layout A).
+#
+# Control plane (batch_state, Monitor, fleet-comms) remains on the public
+# primary that owns `scripts/dispatch.py`. `--repo` retargets git worktree
+# creation and `gh` remotes only.
+#
+# `worktree_registry` (optional) names the repository's own worktree registry; see kube-dojo.
+#
+# `verdict_recorder` (required, boolean) says whether the repository's PRs carry
+# review verdicts from scripts/review/record_cf_verdict.py. When true,
+# `python -m scripts.publish pr-merge` refuses a head without a recorded
+# exact-head cross-family APPROVE; when false, a head with no recorded verdict
+# keeps the publisher's older behaviour.
+#
+# `required_workflow` (optional) is the workflow file, or a non-empty list of distinct workflow files,
+# whose failed PR or merge-queue run is the CI evidence for a repair-verification review round
+# (lu_machinery/review/repair_round.py); a failure of any one listed workflow is evidence. Default
+# `.github/workflows/ci.yml`. Name the workflows that gate a merge: the ones behind the branch's
+# GitHub-required checks, or, where GitHub requires none, every workflow that runs on pull requests
+# (the publisher refuses a head with any failing check). A repository with a merge queue names one
+# workflow: merge closeout binds the single merge-group run of it. tests/review/fixtures/
+# fleet_repo_workflows.yaml records each repository's gates as read from GitHub, and
+# tests/test_record_cf_verdict.py refuses a row (the ci.yml default included) that names others.
+#
+# `security_alerts` (optional, boolean, default true) controls whether
+# `lu_machinery.security scan` watches GitHub code-scanning, Dependabot and
+# secret-scanning alerts for this repository. Set `security_alerts: false` to
+# opt a repository out of scanning and metrics.
+#
+# `release_milestone` (optional, non-blank single-line string) names the open
+# milestone title (or milestone number) attached by `lu_machinery.release_cut`
+# to release PRs opened in this repository (adopt PR in the product repository,
+# post-release PR in machinery). Omitting the key leaves release PRs without a
+# milestone; an invalid, closed, or ambiguous value refuses before publication.
+#
+# `sources_server` and `admission_policy` (optional) declare the product's Sources MCP
+# server and dispatch admission policy at the only locations machinery reads:
+# `.mcp/servers/sources/server.py` and `scripts/curriculum/admission_policy.v1.json`
+# (any other value refuses where the file is read). A row carrying the
+# Learn Ukrainian slug must declare both. A primary product checkout (never a linked
+# worktree) is matched to its row by its Git `origin`
+# (`fleet_repos.fleet_repo_for_checkout`); a row that omits
+# `sources_server` runs read-only Claude with no MCP server at all, and one that
+# omits `admission_policy` gets the machinery default policy (no Ukrainian seats or
+# learner payloads). A checkout that cannot be matched, or that carries the
+# curriculum marker, keeps both Learn Ukrainian files and refuses without them.
+#
+# Dual-slug transfer bridge (PLAN NEW-ORG-1122 A01):
+# - `alternate_github` (optional, owner/name) names the one exact alternate slug
+#   for a repository being transferred. Both `github` and `alternate_github`
+#   resolve to the same registry row.
+# - `repository_id` (optional positive integer; required with `alternate_github`)
+#   records the immutable GitHub repository ID from an authenticated API readback,
+#   never filled by hand.
+# - `visibility` (optional `"public"` or `"private"`; required with
+#   `alternate_github`) records explicit repository visibility matching `role`.
+# - Active slug selection for dual-slug rows is controlled by the host-owned
+#   read-only selector file named by `LU_FLEET_REPO_SELECTOR_FILE` (outside any
+#   git checkout or writable worktree, `version: 1`, `active_slugs: {<key>: <slug>}`).
+#   The file, parent, and ancestor chain must be host-owned (root / distinct from
+#   the worker uid and non-writable), or mounted read-only (`ST_RDONLY`, e.g.
+#   sandbox `--ro-bind`). Resolution fails closed on a missing, unreadable,
+#   unknown, or worker-writable selector and never defaults to the old slug.
+#   Only the active slug receives credentials.
+# - Rollout precondition: provision the host selector file, export
+#   `LU_FLEET_REPO_SELECTOR_FILE` to every dispatcher, keeper, API, and service
+#   unit, and verify `python -m lu_machinery.orchestration.fleet_repos selector-check`
+#   exits 0 BEFORE installing a release containing dual-slug rows; consumers of
+#   `canonical_origins` and `verification_credentials` (`dispatcher/cli.py`,
+#   `dispatcher/git.py`, `dispatcher/store.py`, `orchestration/dispatch_settle.py`,
+#   `dispatcher/write_boundary.py`, `hygiene/branch_sweep.py`,
+#   `orchestration/execution_safe_git.py`, `orchestration/scheduled_worktree_cleanup.py`)
+#   fail closed without it. The selector proof holds only in the host user namespace
+#   (an `--unshare-user` sandbox maps root to uid 65534): read it host-side.
+# - Payload consumers bind either baked slug of a row through
+#   `fleet_repos.repository_slugs` (docs/runbooks/sibling-git.md).
+# - Cache/restart requirement: `lu_machinery.common.git_credentials.repository_registry`
+#   and `lu_machinery.orchestration.fleet_repos._repository_catalog` are `@cache`d
+#   in-process; restart long-running services and workers after flipping a selector
+#   or updating this registry.
+
+version: 1
+
+repos:
+  public:
+    github: learn-ukrainian/learn-ukrainian.github.io
+    local_name: learn-ukrainian
+    transport: ssh
+    role: public-monorepo
+    verdict_recorder: true
+    default: true
+    sources_server: .mcp/servers/sources/server.py
+    admission_policy: scripts/curriculum/admission_policy.v1.json
+  infra-private:
+    github: learn-ukrainian/learn-ukrainian-infra-private
+    alternate_github: agentic-machinery/machinery-infra
+    repository_id: 1282510453
+    visibility: private
+    local_name: learn-ukrainian-infra-private
+    transport: https
+    role: private-infra
+    verdict_recorder: true
+    # No GitHub-required check and no ci.yml: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/private-boundary.yml
+      - .github/workflows/security-scan.yml
+      - .github/workflows/fleet-security-caller.yml
+      - .github/workflows/hramatka-cd.yml
+  hramatka:
+    github: learn-ukrainian/hramatka
+    local_name: hramatka
+    transport: ssh
+    role: private-product
+    verdict_recorder: false
+    # No GitHub-required check: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/ci.yml
+      - .github/workflows/security.yml
+      - .github/workflows/codeql.yml
+  # kube-dojo (#12499, plan approved under #12239). Both are public repositories, so their roles
+  # deliberately avoid "public-monorepo" (learn-ukrainian-only audits, Kimi and DeepSeek admission)
+  # and any "private" spelling (private-input and OPSEC private-repo handling).
+  kube-dojo:
+    github: kube-dojo/kube-dojo.github.io
+    local_name: kube-dojo
+    transport: https
+    role: public-content
+    verdict_recorder: true
+    # The four workflows kube-dojo's main branch requires; a failure of any one is repair evidence.
+    required_workflow:
+      - .github/workflows/incident-dedup.yml
+      - .github/workflows/link-check.yml
+      - .github/workflows/build-check.yml
+      - .github/workflows/vitest-check.yml
+    # Ignored registry in the repository's primary checkout, written by the dispatcher for every worktree
+    # it creates or removes (kube-dojo docs/ops/workspace-hygiene.md); a path relative to that checkout.
+    worktree_registry: .agent/workspace-hygiene.json
+  kubedojo-labs:
+    github: kube-dojo/kubedojo-labs
+    local_name: kubedojo-labs
+    transport: https
+    role: public-labs
+    verdict_recorder: true
+    # No GitHub-required check and no ci.yml: every workflow that runs on its pull requests gates.
+    required_workflow:
+      - .github/workflows/test-scenarios.yml
+      - .github/workflows/codeql.yml
+  # machinery: the public machinery repository. Role avoids "public-monorepo" (learn-ukrainian-only
+  # audits, Kimi and DeepSeek admission) and keeps the "public-" prefix for publisher privacy handling.
+  machinery:
+    github: agentic-machinery/machinery
+    alternate_github: learn-ukrainian/machinery
+    repository_id: 1445647449
+    visibility: public
+    local_name: machinery
+    transport: https
+    role: public-machinery
+    verdict_recorder: true
+    required_workflow: .github/workflows/ci-gate.yml
+    release_milestone: "v0.12.0 Finish the move"
+  # ukrainian-llm-eval: the public model-evaluation repository (EVAL-PROJECT-1103). Reuses the
+  # public-labs role: consumers only read the "public-" / "private" prefix, and it runs studies.
+  ukrainian-llm-eval:
+    github: learn-ukrainian/ukrainian-llm-eval
+    local_name: ukrainian-llm-eval
+    transport: https
+    role: public-labs
+    verdict_recorder: true
+  # Private sibling. The private- role prefix is what OPSEC and the publisher
+  # read as visibility. The row otherwise matches kubedojo-labs.
+  mnq-orb:
+    github: krisztiankoos/mnq-orb
+    local_name: mnq-orb
+    transport: https
+    role: private-labs
+    verdict_recorder: true
