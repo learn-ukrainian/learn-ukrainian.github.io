@@ -726,7 +726,7 @@ jobs:
     name: pytest (${{ matrix.shard }})
     needs: [pr-scope, refresh-pytest-durations, hydrate-release-assets]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
     # token scope, so the job holds only contents:read.
@@ -1089,7 +1089,7 @@ jobs:
 
   fleet-security:
     name: Fleet security
-    uses: learn-ukrainian/machinery/.github/workflows/fleet-security.yml@12f0ce5664024b1680ec9ffbfa1a2c6a4b078705
+    uses: learn-ukrainian/machinery/.github/workflows/fleet-security.yml@4b459895fdbae175bf46b5fdd571c8927af003b7
     permissions:
       contents: read
     with:

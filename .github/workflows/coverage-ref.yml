@@ -94,6 +94,7 @@ jobs:
         machinery-wheel-only: 'true'
         save-cache: false
     - name: Install the locked lu-machinery release
+      id: install-machinery
       env:
         MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
         MACHINERY_REQUIREMENT: ${{ steps.machinery-wheel.outputs.machinery-requirement }}
@@ -102,6 +103,14 @@ jobs:
         wheelhouse="${MACHINERY_WHEELHOUSE}"
         python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
           --find-links "$wheelhouse" -r "${MACHINERY_REQUIREMENT}"
+        # The measured revision's release determines which PostgreSQL image it needs.
+        python3 - <<'PY' >> "$GITHUB_OUTPUT"
+        from importlib.metadata import version
+
+        release = tuple(map(int, version("lu-machinery").split(".")))
+        runner = "ubuntu-26.04" if release >= (0, 1, 74) else "ubuntu-24.04"
+        print(f"pytest_runner={runner}")
+        PY
     - name: Refresh pytest duration snapshot
       env:
         GH_TOKEN: ${{ github.token }}
@@ -129,11 +138,12 @@ jobs:
         retention-days: 1
     outputs:
       validated_revision: ${{ steps.validate.outputs.validated_revision }}
+      pytest_runner: ${{ steps.install-machinery.outputs.pytest_runner }}
   pytest:
     name: Branch coverage (${{ matrix.shard }})
     needs:
     - prepare
-    runs-on: ubuntu-24.04
+    runs-on: ${{ needs.prepare.outputs.pytest_runner }}
     # Two workers need twice the previous job budget; the per-test budget is unchanged.
     # Residual: native code that never returns to Python can defer a signal
     # timeout until the 90-minute job limit, losing the whole shard's data.
