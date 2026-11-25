@@ -3,15 +3,5 @@
   "version": 1,
   "profile_id": "learn-ukrainian",
   "github_slug": "learn-ukrainian/learn-ukrainian.github.io",
-  "config": {
-    "area_assignments": ".lu-machinery/area_assignments.yaml",
-    "code_owners": ".lu-machinery/code_owners.yaml",
-    "credit_lanes": ".lu-machinery/credit_lanes.yaml",
-    "driver_lanes": ".lu-machinery/driver_lanes.json",
-    "fleet_repos": ".lu-machinery/fleet_repos.yaml",
-    "fleet_taxonomy": ".lu-machinery/fleet_taxonomy.yaml",
-    "issue_streams": ".lu-machinery/issue_streams.yaml",
-    "launcher_stream_aliases": ".lu-machinery/launcher_stream_aliases.tsv",
-    "terminal_abandon_succession": ".lu-machinery/terminal_abandon_succession.yaml"
-  }
+  "config": {}
 }
