@@ -1546,7 +1546,7 @@ requires-dist = [
     { name = "jinja2", specifier = ">=3.1" },
     { name = "jsonschema", specifier = ">=4.20" },
     { name = "learn-ukrainian-v4-runtime", directory = "packages/v4-runtime" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" },
     { name = "lxml", specifier = ">=6.1" },
     { name = "markdown-it-py", specifier = ">=4.2.0" },
     { name = "mcp", specifier = ">=2.2,<3" },
@@ -1582,14 +1582,14 @@ requires-dist = [
 [package.metadata.requires-dev]
 atlas = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
     { name = "requests", extras = ["use-chardet-on-py3"], specifier = ">=2.34.2" },
     { name = "ukrainian-word-stress", specifier = ">=2,<3" },
 ]
 audit = [
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" },
     { name = "pip-audit", specifier = "==2.10.1" },
 ]
 dev = [
@@ -1607,7 +1607,7 @@ dev = [
     { name = "wheel", specifier = ">=0.48.0" },
     { name = "yamllint", specifier = ">=1.38.0" },
 ]
-machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" }]
+machinery = [{ name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" }]
 ml = [
     { name = "av", specifier = ">=18.1.0" },
     { name = "datasets", specifier = ">=5.0.1" },
@@ -1624,7 +1624,7 @@ ml = [
 ]
 pages = [
     { name = "jsonschema", specifier = ">=4.20" },
-    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" },
+    { name = "lu-machinery", extras = ["api", "postgres", "pytest"], url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "regex", specifier = ">=2026.5.9" },
 ]
@@ -1745,8 +1745,8 @@ wheels = [
 
 [[package]]
 name = "lu-machinery"
-version = "0.1.75"
-source = { url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl" }
+version = "0.1.76"
+source = { url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl" }
 dependencies = [
     { name = "fastapi" },
     { name = "filelock" },
@@ -1765,7 +1765,7 @@ dependencies = [
     { name = "starlette" },
 ]
 wheels = [
-    { url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.75/lu_machinery-0.1.75-py3-none-any.whl", hash = "sha256:8024585b423c4a40a7de06ba29abc633ec6bb271b4d1b1e843ad219788cd2e46" },
+    { url = "https://github.com/agentic-machinery/machinery/releases/download/v0.1.76/lu_machinery-0.1.76-py3-none-any.whl", hash = "sha256:0f12a59a765b6a270163eac0e34ebca5a31b0d6202f4665d7d6c671e70020a09" },
 ]
 
 [package.optional-dependencies]
