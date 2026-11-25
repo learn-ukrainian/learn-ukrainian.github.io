@@ -124,35 +124,29 @@ def test_version_parsers_keep_stable_tags_only() -> None:
     assert report.version_from_npm({"version": "1.2.3-rc.1"}) == "unknown"
 
 
-def test_weekly_report_hands_data_to_an_install_free_issue_job() -> None:
+def test_security_audit_keeps_only_blocking_dependency_jobs() -> None:
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
     assert workflow["permissions"] == {"contents": "read"}
     triggers = workflow.get("on", workflow.get(True))
-    crons = [entry["cron"] for entry in triggers["schedule"]]
-    assert "0 9 * * 1" in crons
-    assert "23 4 * * *" in crons
+    assert triggers == {
+        "schedule": [{"cron": "0 9 * * 1"}],
+        "workflow_dispatch": {},
+        "pull_request": {
+            "paths": ["scripts/config/npm-audit-ignore.yaml", ".github/workflows/security-audit.yml"],
+        },
+    }
 
-    collector = workflow["jobs"]["stack-currency"]
-    assert collector.get("permissions", workflow["permissions"]) == {"contents": "read"}
-    condition = collector["if"]
-    assert "github.event_name == 'schedule'" in condition
-    assert "0 9 * * 1" in condition
-    assert "23 4 * * *" not in condition
-    assert "pull_request" not in condition
-    assert "workflow_dispatch" not in condition
-
-    publisher = workflow["jobs"]["stack-currency-issue"]
-    assert publisher["needs"] == "stack-currency"
-    assert publisher["permissions"] == {"issues": "write"}
-    assert publisher["steps"][0]["with"]["name"] == collector["steps"][-1]["with"]["name"]
-    script = "\n".join(step.get("run", "") for step in publisher["steps"])
-    assert "install" not in script
-    assert "dependency-advisory" in script
-    assert "gh issue comment" in script
-    assert "gh issue create" not in script
-    assert "gh pr" not in script
-    for banned in ("automerge", "merge queue", "--auto", "gh pr merge"):
-        assert banned not in script
+    jobs = workflow["jobs"]
+    assert set(jobs) == {"pip-audit", "npm-audit"}
+    for job_id, option in (("pip-audit", "--skip-node"), ("npm-audit", "--skip-python")):
+        job = jobs[job_id]
+        assert "if" not in job
+        assert not job.get("continue-on-error")
+        assert job.get("permissions", workflow["permissions"]) == {"contents": "read"}
+        audit_step = job["steps"][-1]
+        assert not audit_step.get("continue-on-error")
+        assert f".venv/bin/python -m lu_machinery.ci.audit_dependencies {option}" in audit_step["run"].splitlines()
+        assert all("npm audit --prefix site" not in step.get("run", "") for step in job["steps"])
 
 
 def test_collector_writes_a_local_report_and_does_not_publish(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
