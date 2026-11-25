@@ -273,7 +273,17 @@ class _recovery_Transport:
 
 @pytest.fixture(autouse=True)
 def catalog(monkeypatch):
-    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    """One synthetic catalog for both readers.
+
+    lu-machinery 0.1.73 classifies privacy from ``_packaged_catalog`` only.
+    ``catalog`` stays patched for callers that still read the profile catalog.
+    """
+
+    def synthetic():
+        return CATALOG
+
+    monkeypatch.setattr(gate, "catalog", synthetic)
+    monkeypatch.setattr(gate, "_packaged_catalog", synthetic)
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 

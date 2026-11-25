@@ -13,8 +13,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from lu_machinery.fleet_comms import review_publication, review_publisher
-from lu_machinery.fleet_comms.review_publication import DEFAULT_GATE_KIND
 from lu_machinery.orchestration import integration_sweep as sweep
 from lu_machinery.orchestration import merge_queue_keeper as keeper
 from lu_machinery.review.record_cf_verdict import build_comment
@@ -209,37 +207,6 @@ class _keeper_FakeGitHub:
 
 def _keeper_mutations(fake: _keeper_FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind not in {"squash-read", "cleanup"}]
-
-
-def _publication_approved_evidence() -> dict[str, object]:
-    return {
-        "schema_version": "code-review-findings.v1",
-        "overall": {
-            "correctness": "correct",
-            "explanation": "The review found no defects that block approval.",
-            "confidence": 0.95,
-        },
-        "findings": [],
-    }
-
-
-_publication_SHA_A = "a" * 40
-
-
-def _publication_sealed(**overrides: object) -> dict[str, object]:
-    base: dict[str, object] = {
-        "review_id": "review_deadbeef",
-        "repository": "learn-ukrainian/learn-ukrainian.github.io",
-        "pr_number": 5512,
-        "head_sha": _publication_SHA_A,
-        "gate_kind": DEFAULT_GATE_KIND,
-        "verdict": "APPROVED",
-        "model": "claude-opus-5",
-        "family": "anthropic",
-        "harness": "claude",
-    }
-    base.update(overrides)
-    return base
 
 
 _recovery_HEAD = "a" * 40
@@ -497,6 +464,8 @@ class _recovery_Transport:
 
 # Publication and telemetry readers are included so a new reference cannot
 # silently enter the approval path. These are handling labels, not endorsements.
+# fleet_comms/cli.py left this set in 0.1.73: formal-job accept was removed and the
+# module no longer names the review contract.
 
 HANDLING = {
     "lu_machinery/api/git_hygiene_router.py": "display-label",
@@ -504,14 +473,15 @@ HANDLING = {
     "lu_machinery/orchestration/integration_sweep.py": "accept-as-approval",
     "lu_machinery/orchestration/stalled_work.py": "ignore",
     "lu_machinery/publish/github.py": "accept-as-approval",
-    "lu_machinery/fleet_comms/review_publisher.py": "accept-as-approval",
+    # 0.1.73 (C-7371) retired the sealed acceptor. This module posts a caller-supplied
+    # status and reads historical receipts; it does not treat a verdict as approval.
+    "lu_machinery/fleet_comms/review_publisher.py": "ignore",
     "lu_machinery/fleet_comms/review_publication.py": "ignore",
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "lu_machinery/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
     "lu_machinery/review/record_cf_verdict.py": "accept-as-approval",
     # The lineage rule reads A's APPROVE as each seat's current verdict before an extension or carry-over.
     "lu_machinery/review/review_lineage.py": "accept-as-approval",
-    "lu_machinery/fleet_comms/cli.py": "ignore",
     "lu_machinery/fleet_comms/efficiency_metrics.py": "ignore",
     # The merge-queue gate lands nothing unless the recorder's status is success on each member's head.
     "lu_machinery/ci/queue_review_gate.py": "accept-as-approval",
@@ -549,7 +519,8 @@ def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
         for path in installed.rglob("*.py")
         if _mentions_review_contract(ast.parse(path.read_text(encoding="utf-8")))
     } | {
-        path.relative_to(root).as_posix() for path in product
+        path.relative_to(root).as_posix()
+        for path in product
         if _mentions_review_contract(ast.parse(path.read_text(encoding="utf-8")))
     }
     assert consumers == {path.split("#", 1)[0] for path in HANDLING}
@@ -564,6 +535,7 @@ def _comment(mode="red_team", *, login="fleet"):
 
 def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
     from tests.orchestration.test_integration_sweep import SHA, pr
+
     FakeGitHub = _keeper_FakeGitHub
     mutations = _keeper_mutations
     recorded = _keeper_recorded
@@ -587,32 +559,6 @@ def test_ci_blocker_exclusion_ignores_review_status():
     pull["statusCheckRollup"].append({"context": "fleet/cross-family-review", "state": "FAILURE"})
     assert sweep._check_blockers(pull) == []
     assert HANDLING["lu_machinery/orchestration/integration_sweep.py#CI-blocker-exclusion"] == "ignore"
-
-
-def test_publication_ignores_marker_and_publisher_accepts_sealed_approval(monkeypatch):
-    _approved_evidence = _publication_approved_evidence
-    _sealed = _publication_sealed
-
-    sealed = review_publication.parse_sealed_verdict_payload(
-        _sealed(
-            review_evidence=_approved_evidence(),
-            review_mode="red_team",
-            marker="invalid marker",
-        )
-    )
-    plan = review_publication.plan_publication(sealed, current_head_sha=sealed.head_sha, mutate=True)
-    assert plan.status_state == "success"
-    assert "review_mode=red_team" not in plan.comment_body
-    assert review_publication.DEFAULT_STATUS_CONTEXT == "fleet/cross-family-review"
-    statuses = []
-    monkeypatch.setattr(review_publisher, "post_pr_comment", lambda **_kwargs: "https://example.com/comment")
-    monkeypatch.setattr(review_publisher, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
-    assert review_publisher.execute_publication(plan).status_posted is True
-    assert statuses[0]["context"] == "fleet/cross-family-review"
-    assert statuses[0]["state"] == "success"
-    assert "review_mode" not in statuses[0]["description"]
-    assert HANDLING["lu_machinery/fleet_comms/review_publication.py"] == "ignore"
-    assert HANDLING["lu_machinery/fleet_comms/review_publisher.py"] == "accept-as-approval"
 
 
 def test_lexicon_dispositions_refuse_red_team(tmp_path):
@@ -653,11 +599,14 @@ def test_lexicon_dispositions_refuse_red_team(tmp_path):
 
 def test_recovery_accepts_red_team_approval(tmp_path, monkeypatch):
     from lu_machinery.publish import github
+
     Transport = _recovery_Transport
 
     monkeypatch.setattr(github.recovery, "ledger_path", lambda _cwd: tmp_path / "recovery.sqlite3")
     monkeypatch.setattr(
-        __import__(__name__, fromlist=["_recovery_build_comment"]), "_recovery_build_comment", lambda **kwargs: build_comment(**kwargs, review_mode="red_team")
+        __import__(__name__, fromlist=["_recovery_build_comment"]),
+        "_recovery_build_comment",
+        lambda **kwargs: build_comment(**kwargs, review_mode="red_team"),
     )
     transport = Transport()
     # Exercise recovery admission only, through an entirely local transport.
