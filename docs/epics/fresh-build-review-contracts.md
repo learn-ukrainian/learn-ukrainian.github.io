@@ -83,7 +83,7 @@ commit `X-Agent` trailers alone do not prove it. Plan-author independence remain
 a residual owned by the plan driver, as does the post-landing real-seat proof
 (AC-04). Full access permits ledger reachability and relies on evidence duty and
 native seat controls; it is not the isolated filesystem trust boundary. See
-[the runtime contract and residuals](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/formal-review-attempt-isolation.md).
+[the runtime contract and residuals](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/formal-review-attempt-isolation.md).
 Explicit `isolated` remains available for non-curriculum uses; its behavior is
 unchanged.
 

@@ -80,7 +80,7 @@ landed the same day, so the two effects are not separable. **What now dominates*
   the Frontend job unless site paths changed.
 - **D2 — Flake control (#9067).** A quarantine registry (node id, fix issue, owner, expiry ≤ 30 days, one renewal).
   *Admission:* an open fix issue, two distinct reproduced failures on unmodified main, equivalent behavior coverage
-  and designated admission approval. The [admission checker](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/flake-quarantine.md) verifies changed
+  and designated admission approval. The [admission checker](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/flake-quarantine.md) verifies changed
   registry entries against GitHub metadata and exact-node JUnit evidence; pytest lint stays offline.
   *Behaviour:* `pytest-rerunfailures` reruns **only** listed tests and **never** on the nightly
   `schedule` run, so a still-flaky test shows up red on the nightly; every rerun (first-attempt failure, rerun green)

@@ -7,8 +7,8 @@
 > ```
 
 > **Fleet roles:** operator doctrine and living scorecard live in
-> [`fleet-shared-doctrine.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/best-practices/fleet-shared-doctrine.md) and
-> [`fleet-role-scorecard.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/best-practices/fleet-role-scorecard.md). Machine routing remains
+> [`fleet-shared-doctrine.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/best-practices/fleet-shared-doctrine.md) and
+> [`fleet-role-scorecard.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/best-practices/fleet-role-scorecard.md). Machine routing remains
 > `agents_extensions/shared/rules/model-assignment.md` (takes precedence on conflict).
 
 The agent bridge is how Claude, AGY, and Codex (and you, the

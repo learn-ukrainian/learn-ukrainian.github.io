@@ -13,7 +13,7 @@ Current operational reference for repo-local scripts and agent workflows.
 - Typed sub-issue removal: `.venv/bin/python -m lu_machinery.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
 - This document intentionally omits retired pipelines and legacy script paths
 - **Seat onboarding (ownership matrix, ACPX boundary, Kimi routes retired, Buzz deferral):**
-  [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)
+  [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)
 
 Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
@@ -1667,7 +1667,7 @@ The learn-ukrainian pages (home, Curriculum Dashboard, Artifacts) are live pages
 Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right one for the job.
 
 > **Authoritative sources:**
-> - [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) — **canonical ownership matrix** (`discuss` / `delegate` / fleet-comms / ACPX / Buzz deferred), formal CF separation, Kimi routes
+> - [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) — **canonical ownership matrix** (`discuss` / `delegate` / fleet-comms / ACPX / Buzz deferred), formal CF separation, Kimi routes
 > - [`docs/best-practices/agent-bridge.md`](best-practices/agent-bridge.md) — channel bridge mechanics, pinned context, include chains, bridge `discuss`
 > - [`docs/best-practices/agent-cooperation.md`](best-practices/agent-cooperation.md) — agent roles, Green Team protocol, review discipline
 >
@@ -1704,7 +1704,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   authority.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
 - A local service that must intentionally outlive its launching task needs the
-  [detached-session contract](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/background-session-tasks.md); do not
+  [detached-session contract](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/background-session-tasks.md); do not
   weaken process-group cleanup or keep its state in task `$TMPDIR`.
 
 ### Channel bridge — preferred for multi-turn

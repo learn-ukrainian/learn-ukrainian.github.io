@@ -63,7 +63,7 @@ Do not dispatch `--agent kimi`. Catalog retirement runs after admission and
 before a launch plan.
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
-[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
+[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 Claude through AGY supports the existing `claude-sonnet-5-5-high` and
 `claude-opus-5-5-high` pins for implementation in verified dispatch worktrees.
 Sonnet remains excluded from security work. The dispatch keeps the requested
@@ -72,7 +72,7 @@ same-run provenance through failure and cancellation. Missing or invalid
 identity cannot establish successful Claude dispatch. Review permissions and
 formal-review eligibility remain separate. Per-variant stop conditions and
 post-merge driver qualification:
-[`docs/runbooks/agy-claude-routes.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agy-claude-routes.md).
+[`docs/runbooks/agy-claude-routes.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agy-claude-routes.md).
 
 ## ACPX structured transport (runtime boundary)
 
@@ -258,7 +258,7 @@ produce review authority or replace formal cross-family review (sealed `review-p
 Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in
 callers — the adapter's argv is fully confined and callers only ever set
 `tool_config` keys the adapter allowlists. Full operator contract:
-[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
+[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/agentic-machinery/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 ## Add a new agent in 20 lines
 
