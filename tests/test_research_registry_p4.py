@@ -127,6 +127,27 @@ def _stub(root: Path, rel: str) -> None:
     p.write_text("# stub\n", "utf-8")
 
 
+def _production_membership_binding() -> dict[str, Any]:
+    """Repository slug and stream map a production audit writes on the cache.
+
+    The monitor keeps a cache only when both match the active profile. The
+    same calls the monitor makes supply the values, so a synthetic cache is
+    the shape ``run_audit`` publishes.
+    """
+    from lu_machinery.common import profile
+    from lu_machinery.common.repo_root import github_slug, machinery_path
+
+    streams_path = profile.config_path(
+        "issue_streams",
+        default=machinery_path("config/issue_streams.yaml"),
+    )
+    registry = isa.load_registry(streams_path, audit_only=True)
+    return {
+        "repository": github_slug(),
+        "streams": {key: sorted(epics) for key, epics in registry.items()},
+    }
+
+
 def _write_cache(
     root_or_path: Path,
     membership: dict[str, dict] | None,
@@ -144,6 +165,7 @@ def _write_cache(
         "membership_complete": True,
         "incomplete_nodes": [],
     }
+    report.update(_production_membership_binding())
     if membership is not None:
         report["effective_membership"] = membership
     if open_numbers is not None:
