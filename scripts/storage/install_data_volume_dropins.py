@@ -75,7 +75,7 @@ def main() -> int:
         parser.error("--apply must run from the primary checkout, not a dispatch worktree")
 
     root = str(REPO_ROOT)
-    private_root = str(REPO_ROOT.parent / "learn-ukrainian-infra-private")
+    private_root = str(REPO_ROOT.parent / "machinery-infra")
     if any(char.isspace() or char == "%" for char in root + private_root):
         parser.error("repository paths cannot contain whitespace or systemd percent specifiers")
 
