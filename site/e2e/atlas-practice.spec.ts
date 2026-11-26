@@ -645,6 +645,45 @@ test('A5b: declining the switch offer reverts the selection and leaves the sessi
   await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
 });
 
+test('layout shift when the daily deck replaces its placeholder stays under 4px', async ({ page, context }) => {
+  // Defect class: layout shift when the daily deck replaces its placeholder.
+  // The placeholder holds the loaded deck's chrome, so the session card below it
+  // does not jump when the picks arrive. Fresh learner, both widths the outcome names.
+  // 2026-12-09 is the A1 day whose first pool pick is тема, a row with no example.
+  // A loaded lexeme that adds ipa or an example then omits the report row. The
+  // page reserves that height in CSS. The clock makes that case the one this
+  // assertion measures, on every run.
+  await context.clearCookies();
+  await page.clock.install({ time: new Date('2026-12-09T12:00:00Z') });
+
+  for (const viewport of [
+    { width: 390, height: 844, name: '390x844' },
+    { width: 1366, height: 768, name: '1366x768' },
+  ]) {
+    let releasePool: () => void = () => {};
+    const poolGate = new Promise<void>((resolve) => {
+      releasePool = resolve;
+    });
+    await page.route('**/lexicon/daily-pool.json', async (route) => {
+      await poolGate;
+      await route.continue();
+    });
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto('/practice/');
+    await expect(page.getByTestId('practice-daily-deck-loading')).toBeVisible();
+    await expect(page.getByTestId('practice-dashboard-session')).toBeVisible();
+    const before = await page.getByTestId('practice-dashboard-session').boundingBox();
+    releasePool();
+    await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
+    const after = await page.getByTestId('practice-dashboard-session').boundingBox();
+    await page.unroute('**/lexicon/daily-pool.json');
+    expect(before, `${viewport.name} session card before the deck loads`).not.toBeNull();
+    expect(after, `${viewport.name} session card after the deck loads`).not.toBeNull();
+    const moved = after!.y - before!.y;
+    expect(Math.abs(moved), `${viewport.name} session card moved ${moved}px`).toBeLessThan(4);
+  }
+});
+
 test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844', async ({ page, context }) => {
   await context.clearCookies();
 
@@ -652,10 +691,8 @@ test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844
     await page.setViewportSize(viewport);
     await page.goto('/practice/');
 
-    // The dashboard shifts as it loads: the Words-of-the-Day placeholder above the session card
-    // is swapped for the real deck, which moves the card down. Wait for that real condition
-    // (deck loaded, estimate rendered), then read every rect in ONE frame. Separate boundingBox()
-    // calls can straddle the shift and compare a stale card box with an already-moved estimate.
+    // Wait until the daily deck has replaced its placeholder, then read every rect in
+    // one frame. Separate boundingBox() calls can straddle that swap.
     await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
     await expect(page.getByTestId('practice-dashboard-session')).toBeVisible();
     await expect(page.getByTestId('practice-session-scope')).toBeVisible();
