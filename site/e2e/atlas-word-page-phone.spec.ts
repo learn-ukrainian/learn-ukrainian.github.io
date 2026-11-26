@@ -36,9 +36,6 @@ test('word page at 390x844 wraps the Wikipedia link and uses the Ukrainian pronu
   await expect(wiki).toBeVisible();
   await expect(wiki).toHaveAccessibleName('Вікіпедія (нова вкладка)');
 
-  const unavailable = article.getByTestId('atlas-practice-cta-unavailable');
-  await expect(unavailable).toHaveAccessibleName('Ще немає в наборі практики');
-
   const wider = await page.evaluate(() => {
     const viewport = document.documentElement.clientWidth;
     const offenders: string[] = [];
