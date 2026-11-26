@@ -81,7 +81,10 @@ def ulif_candidates(sources, lemma, vesum_rows):
         raw, forms, reason = {}, None, "unverified_entry_identity"
         if row["status"] == "ok" and row["homonym_checked"] == 1:
             try:
-                raw = json.loads(sources._raw(row["raw_response_ref"].removeprefix("sha256:"), "ulif:entry"))
+                raw_ref = row["raw_response_ref"]
+                if not isinstance(raw_ref, str):
+                    raise ValueError("invalid_ulif_raw_reference")
+                raw = json.loads(sources._raw(raw_ref.removeprefix("sha256:"), "ulif:entry"))
                 if not isinstance(raw, dict) or not isinstance(raw.get("paradigm"), str):
                     raise ValueError("invalid_ulif_raw_manifest")
                 html = sources._raw(raw["paradigm"].removeprefix("sha256:"), "ulif:paradigm")
@@ -239,12 +242,16 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
 
 def soviet_context(row):
     """Project the historical article with an unconditional context marker."""
+    keywords = row["sovietization_keywords"]
+    risk = row["sovietization_risk"]
+    if not isinstance(keywords, str) or type(risk) is not int:
+        raise Refusal("malformed_soviet_context")
     return {
         "text": row["definition"], "red_flag": True,
-        "sovietization_risk": row["sovietization_risk"],
-        "sovietization_keywords": row["sovietization_keywords"],
+        "sovietization_risk": risk,
+        "sovietization_keywords": keywords,
         "ideological_markers": row.get("ideological_markers") or [
-            marker.strip() for marker in row["sovietization_keywords"].split(",") if marker.strip()
+            marker.strip() for marker in keywords.split(",") if marker.strip()
         ],
     }
 
@@ -567,7 +574,10 @@ def population(root, inventory):
         by_id.update((item["card_id"], item) for item in companion.get("entries", []))
         for card_id in manifest["card_ids"]:
             slices[card_id].add(number)
-        for row_id, card_id in manifest.get("row_card_ids", {}).items():
+        bindings = manifest.get("row_card_ids", {})
+        if not isinstance(bindings, dict):
+            raise Refusal("malformed_frozen_registry")
+        for row_id, card_id in bindings.items():
             row_cards[row_id].add(card_id)
     # Read the approved pilot pairing whether or not the release files are checked out.
     path = "data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json"
@@ -583,18 +593,28 @@ def population(root, inventory):
                   if record["table"] == "ulif_dictua_entries"}
     by_slug = {}
     for row in pairing["entries"]:
+        if not isinstance(row, dict):
+            raise Refusal("malformed_frozen_pairing")
         card_id = row["card_id"]
         slices[card_id].add(1)
         if row["status"] == "paired":
-            by_slug[card_id] = row["atlas0_slug"].removeprefix("atlas0:slug:")
+            locator = row.get("atlas0_slug")
+            if not isinstance(locator, str) or not locator.startswith("atlas0:slug:"):
+                raise Refusal("malformed_frozen_pairing")
+            by_slug[card_id] = locator.removeprefix("atlas0:slug:")
     cards = {}
     for card_id, numbers in sorted(slices.items()):
         if re.fullmatch(r"wc_[a-z0-9]{12}", card_id) is None:
             raise Refusal("invalid_frozen_card_id")
         key = by_id[card_id]["key_at_creation"]
-        entry_ids = [item["key"].removeprefix("vesum:entry:") for item in key["source_keys"]
+        source_keys = key["source_keys"]
+        if not isinstance(key["spelling"], str) or not isinstance(source_keys, list) or any(
+            not isinstance(item, dict) or not isinstance(item.get("key"), str) for item in source_keys
+        ):
+            raise Refusal("malformed_frozen_registry")
+        entry_ids = [item["key"].removeprefix("vesum:entry:") for item in source_keys
                      if item["source_id"] == "vesum" and item["key"].startswith("vesum:entry:")]
-        anchors = [pilot_rows[item["key"]] for item in key["source_keys"] if item["key"] in pilot_rows]
+        anchors = [pilot_rows[item["key"]] for item in source_keys if item["key"] in pilot_rows]
         cards[card_id] = {"lemma": key["spelling"], "entry_ids": {int(item) for item in entry_ids},
                           "ulif_anchor": anchors[0] if len(anchors) == 1 else None,
                           "slices": sorted(numbers), "rows": [],
@@ -609,6 +629,8 @@ def population(root, inventory):
             raise Refusal("malformed_inventory_row")
         mapping = row["mapping"]
         lemma = mapping.get("lemma") or row["key"]
+        if not isinstance(lemma, str) or not isinstance(row["key"], str):
+            raise Refusal("malformed_inventory_row")
         entry = mapping.get("entry_id")
         ids = row_cards[row["id"]].copy()
         pilot_mapping = mapping.get("pilot", {})
@@ -650,7 +672,9 @@ def build(root, inventory, register):
         inputs = src.PilotSources(sources, vesum, raw, store_data_dir(store_paths["sources"]).parent)
         actual = dict(vesum.execute("SELECT key,value FROM vesum_build_metadata"))
         expected = inventory["sources"]["vesum_pipeline_identity"]
-        if not expected or any(actual.get(key) != value for key, value in expected.items()):
+        if not isinstance(expected, dict) or not expected or any(
+            actual.get(key) != value for key, value in expected.items()
+        ):
             raise Refusal("vesum_import_drift")
         return assemble_population(targets, gaps, inputs, atlas, register, digest(inventory))
 
