@@ -1,13 +1,27 @@
 import type { EntryRecord } from './atlas-data-source';
 import type { PreviewCard } from './word-card-preview';
-import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleasePin } from './word-card-release';
-import { groupReleasePages, type ReleasePage } from './word-card-readable';
+import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleasePin } from './word-card-release.ts';
+import { groupReleasePages, type ReleasePage } from './word-card-readable.ts';
 
 export const publicReleasePin = {
   release_version: 'v0.1.0-pilot', provenance: 'producer-declared',
   dataset_sha256: '45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6',
   manifest_sha256: 'ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75',
 } satisfies ReleasePin;
+
+export type WordCardReleaseInput = {
+  enabled: boolean; controlled: boolean; artifactPath?: string; pin?: string;
+};
+
+export function loadPinnedWordCardRelease(config: WordCardReleaseInput, trustedPin: ReleasePin = publicReleasePin) {
+  const pin = config.controlled ? config.pin : config.pin || JSON.stringify(trustedPin);
+  const release = loadWordCardRelease({ ...config, pin, public: !config.controlled });
+  if (release.kind === 'release' && !config.controlled &&
+      (Object.keys(trustedPin) as (keyof ReleasePin)[]).some(key => release.pin[key] !== trustedPin[key])) {
+    return { kind: 'unavailable', reason: 'Public release pin mismatch' } as const;
+  }
+  return release;
+}
 
 export type PreviewInput = {
   name: string; card: PreviewCard | ReleaseCard | ReleasePage | ReleaseIndex | LoadedRelease; current: EntryRecord | null;
@@ -34,17 +48,12 @@ export function previewIndexPaths(samples: PreviewInput[]) {
 }
 
 /** Build-time selection only. Public input never consults controlled records or a current pointer. */
-export function releasePreviewInputs(config: {
-  enabled: boolean; controlled: boolean; artifactPath?: string; pin?: string;
-}): PreviewInput[] {
+export function releasePreviewInputs(config: WordCardReleaseInput): PreviewInput[] {
   if (!config.enabled) return [];
-  const pin = config.controlled ? config.pin : config.pin || JSON.stringify(publicReleasePin);
-  const release = loadWordCardRelease({ ...config, pin, public: !config.controlled });
-  const publicPinMatches = release.kind !== 'release' || config.controlled ||
-    Object.entries(publicReleasePin).every(([key, value]) => release.pin[key as keyof ReleasePin] === value);
-  if (release.kind !== 'release' || !publicPinMatches) return [{
+  const release = loadPinnedWordCardRelease(config);
+  if (release.kind !== 'release') return [{
     name: 'release', card: { kind: 'unavailable', keys: null, claimantId: null,
-      reason: !publicPinMatches ? 'Public release pin mismatch' : release.kind === 'unavailable' ? release.reason : 'Release disabled' },
+      reason: release.kind === 'unavailable' ? release.reason : 'Release disabled' },
     current: null, fingerprint: '', source: 'Configured release refused', generatedAt: '', manifestVersion: '',
   }];
   const common = { current: null, fingerprint: release.pin.dataset_sha256,

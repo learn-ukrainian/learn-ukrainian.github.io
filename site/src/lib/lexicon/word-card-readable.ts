@@ -1,5 +1,5 @@
-import { isValidAtlasSlug } from './atlas-data-source';
-import { attributionGap, attributionLinks, type LoadedRelease, type ReleaseRow } from './word-card-release';
+import { isValidAtlasSlug } from './atlas-data-source.ts';
+import { attributionGap, attributionLinks, type LoadedRelease, type ReleaseRow } from './word-card-release.ts';
 
 type Assertion = ReleaseRow['fields'][number];
 export type Credit = { sourceId: string; href: string | null; attribution: string; gap: string | null };

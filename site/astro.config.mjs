@@ -156,5 +156,16 @@ export default defineConfig({
     sitemap({
       filter: (page) => !new URL(page).pathname.startsWith('/lexicon-v2/') && !isRedirectSource(page),
     }),
+    {
+      name: 'atlas-word-card-publication-config',
+      hooks: {
+        // The standalone MDX compiler imports this config directly in Node.
+        // The publication integration only needs to load when Astro runs its hooks.
+        'astro:config:setup': async ({ updateConfig }) => {
+          const { wordCardPublication } = await import('./src/lib/lexicon/word-card-build-proof.ts');
+          updateConfig({ integrations: [wordCardPublication()] });
+        },
+      },
+    },
   ],
 });
