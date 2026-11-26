@@ -130,8 +130,8 @@ export function wordCardPublication(): AstroIntegration {
   return {
     name: 'atlas-word-card-publication',
     hooks: {
-      'astro:config:setup': ({ injectRoute }) => {
-        injectRoute({ pattern: `${wordCardRoute}[id]`, entrypoint: new URL('./WordCardCanonical.astro', import.meta.url) });
+      'astro:config:setup': ({ config, injectRoute }) => {
+        injectRoute({ pattern: `${wordCardRoute}[id]`, entrypoint: new URL('lib/lexicon/WordCardCanonical.astro', config.srcDir) });
       },
       'astro:config:done': ({ config }) => { site = config.site; },
       'astro:build:done': async ({ dir, logger }) => {
