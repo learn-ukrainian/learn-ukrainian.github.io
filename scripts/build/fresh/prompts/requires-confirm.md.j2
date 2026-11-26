@@ -2,6 +2,17 @@
 
 Lesson: {{ batch.lesson.level }}/{{ batch.lesson.slug }}/{{ batch.lesson.n }}.
 
+Load the `verify-ukrainian` skill before making any Ukrainian language verdict.
+The expected SHA-256 of its `SKILL.md` is
+`5f0d7741a274849177f5cd69fe67d6011092fff0127f6d14654b758d81279b2e`.
+Check the bytes of your deployed copy against this pin. If the copy is missing or
+stale, call `mcp__sources__get_verify_ukrainian_skill` and compare its `sha256`
+with the pin before following the returned `markdown`.
+If no copy matches, return `deny` for each item with a reason starting `unresolved`,
+`requires_forced: false`, and `judgement: depends_on_context` with `evidence: []`
+for every option. If a required check has no evidence, use an unresolved denial
+and leave the unsupported option's evidence empty. Keep the answer schema below.
+
 For **each** item, judge **each option in this sentence**, not in isolation. Use source evidence with IDs
 `<source>:<id>` where source is `vesum`, `pravopys`, `textbook`, `grinchenko`, `sum20`, `vts`, or `ulif`.
 Never use SUM-11 or a tool name as a source. Record at least one evidence ID for every judgement.
