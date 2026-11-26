@@ -45,13 +45,20 @@ Compare the built content against the plan YAML:
 - [ ] **Section structure matches** -- Content sections align with plan's `content_outline` sections. Flag missing/extra sections as **MEDIUM**.
 - [ ] **Cultural hooks present** -- Any cultural hooks mentioned in the plan appear in the content. Flag missing hooks as **LOW**.
 
-### 2. LINGUISTIC ACCURACY (use RAG tools)
+### 2. Linguistic accuracy
 
-- [ ] **Russianisms scan** -- Read through all Ukrainian text in the module. Flag any Russian-specific vocabulary or grammar. Use `mcp__sources__verify_word` for suspicious words and `mcp__sources__query_r2u` for words that might have Ukrainian alternatives.
-- [ ] **Grammar correctness** -- Check case endings, verb conjugations, gender agreement in Ukrainian examples. Use `mcp__sources__query_ulif` for morphological verification when in doubt.
-- [ ] **Ghost word check** -- Verify any Ukrainian word you haven't seen before with `mcp__sources__verify_word`. Focus on words in example sentences, vocabulary tables, and activities.
-- [ ] **Stress marks** -- If the module uses stress marks, verify them with `mcp__sources__verify_stress` / `mcp__sources__verify_stresses` (ULIF-first oracle) and `mcp__sources__query_sum20` for accented headwords. Pass lemma/POS/tags to resolve homonyms; keep unmatched or ambiguous readings unresolved. GRAC supplies usage and frequency evidence only, never stress verification.
-- [ ] **False friend claims** -- If the module claims a word is a "false friend" or Russicism, verify the claim. False Russicism claims are **HIGH** severity.
+Load the `verify-ukrainian` skill before making any Ukrainian language verdict.
+The expected SHA-256 of its `SKILL.md` is
+`5f0d7741a274849177f5cd69fe67d6011092fff0127f6d14654b758d81279b2e`.
+Check the bytes of your deployed copy against this pin. If the copy is missing or
+stale, call `mcp__sources__get_verify_ukrainian_skill` and compare its `sha256`
+with the pin before following the returned `markdown`.
+If no copy matches, mark the language review INCONCLUSIVE.
+
+Apply the skill to the module's Ukrainian prose, examples, vocabulary and
+activities, including marked answers. Keep its evidence rows in Linguistic
+Accuracy. Check contextual case, conjugation and agreement. Verify the module's
+own false-friend and Russianism claims to the same standard.
 
 ### 3. PEDAGOGICAL QUALITY
 
@@ -69,7 +76,7 @@ Read the activities YAML and check:
 
 - [ ] **Schema compliance** -- Each activity matches its type's schema. Check required fields (type, title, items/pairs, correct answers). Read `docs/ACTIVITY-YAML-REFERENCE.md` for schema details if needed.
 - [ ] **Language testing, not content testing** -- Can the learner answer without reading the Ukrainian text? If YES, the activity tests content recall, not language. Flag as **HIGH** (Rule 9a). Exempt: ZNO-format activities.
-- [ ] **Correct answers are correct** -- Verify that marked correct answers are actually correct Ukrainian. Use `mcp__sources__verify_word` for any suspicious answer.
+- [ ] **Correct answers are correct** -- Apply the linguistic accuracy checks above to the marked answers.
 - [ ] **Distractors are plausible** -- Wrong answers should be plausible but clearly wrong. Not absurd, not trick questions.
 - [ ] **Variety** -- Check activity type distribution. Flag if >50% are the same type as **LOW**.
 - [ ] **Decodability** (Cyrillic modules only) -- Activity items use only letters from the cumulative charset.

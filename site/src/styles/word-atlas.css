@@ -1374,6 +1374,14 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   margin-top: 8px;
   color: var(--gray-600);
   font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+/* A percent-encoded source URL is one unbreakable word. Break it inside the
+   card so a 390px screen never grows an element wider than the viewport. */
+.wiki-card .wiki-source a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .provenance-footer {
@@ -1457,9 +1465,20 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
     padding-right: 16px;
   }
 
-  .paradigm-table {
-    display: block;
-    overflow-x: auto;
+  .paradigm-table,
+  .lu-content .word-atlas .paradigm-table {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  .paradigm-table th,
+  .paradigm-table td,
+  .lu-content .word-atlas .paradigm-table th,
+  .lu-content .word-atlas .paradigm-table td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 

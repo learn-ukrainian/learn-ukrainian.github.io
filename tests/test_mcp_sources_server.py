@@ -21,6 +21,7 @@ import os
 import sqlite3
 import sys
 import threading
+from importlib.metadata import distribution
 from pathlib import Path
 from typing import ClassVar
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -225,6 +226,7 @@ class TestListTools:
             "get_full_text",
             "get_chunk_context",
             "collection_stats",
+            "get_verify_ukrainian_skill",
             "mcp_server_identity",
             "verify_word",
             "verify_source_attribution",
@@ -300,6 +302,37 @@ class TestListTools:
             "phraseology",
         ]
         assert "When supplied" in sections["description"]
+
+
+def test_verify_ukrainian_skill_preserves_installed_bytes_and_digest(server_module, tmp_path, monkeypatch):
+    """The wire call detects a copied, truncated, or re-encoded skill."""
+    from starlette.testclient import TestClient
+
+    path = "agents_extensions/shared/skills/verify-ukrainian/SKILL.md"
+    installed = next(entry for entry in distribution("lu-machinery").files if entry.as_posix() == path)
+    expected = installed.locate().read_bytes()
+    tool = next(tool for tool in _run(server_module.list_tools()) if tool.name == "get_verify_ukrainian_skill")
+    assert tool.annotations.read_only_hint is True
+
+    monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path))
+    with TestClient(
+        server_module.create_http_app(), base_url="http://127.0.0.1:8766", client=("127.0.0.1", 50000)
+    ) as client:
+        response = client.post(
+            "/mcp",
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": tool.name, "arguments": {}},
+            },
+        )
+    assert response.status_code == 200
+    result = response.json()["result"]
+    assert not result["isError"]
+    payload = json.loads(result["content"][0]["text"])
+    assert payload["markdown"].encode("utf-8") == expected
+    assert payload["sha256"] == hashlib.sha256(expected).hexdigest()
 
 
 ULIF_FINGERPRINT = "f" * 64

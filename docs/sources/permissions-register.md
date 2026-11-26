@@ -4,8 +4,8 @@ For every source that feeds word cards, the Word Atlas, practice and the open da
 the rights, what we use, where it comes from, the terms as found (quoted, with URL and read date),
 the citation we show, and how a rights holder asks for removal.
 
-**This register is a citation record, not a publication gate.** No build reads it to withhold
-content. IP is the operator's responsibility (decisions below).
+**The register records citations, source roles, and publisher outreach.** Permission status
+is descriptive. Word cards use the recorded source roles to check evidence eligibility.
 
 - **Machine-readable register (authoritative):** [`permissions-register.yaml`](permissions-register.yaml)
   — schema [`schemas/permissions-register.schema.json`](../../schemas/permissions-register.schema.json),
@@ -13,7 +13,7 @@ content. IP is the operator's responsibility (decisions below).
   the YAML; if they differ, the YAML wins.
 - **Spec:** #8979. This is the project's own record, not legal advice.
 
-**Register date:** 2026-10-06. Schema version: 2.
+**Register date** 2026-11-26. Schema version 2.
 
 ## Operator decisions (binding)
 
@@ -27,6 +27,7 @@ Recorded on [#8979](https://github.com/learn-ukrainian/learn-ukrainian.github.io
 5. Plan v3.5.0 O1: verbatim use of in-copyright sources: YES, as the operator's IP responsibility. (2026-10-03; `o1_verbatim_use`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
 6. Plan v3.5.0 O3: school and university textbooks are used as record sources (component C9). (2026-10-03; `o3_textbooks_used`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
 7. Permissions for ULIF and СУМ-20 are being sought with help from Ukrainian experts. ULIF gave verbal permission in 2026-10, per the operator; written confirmation pending. This updates the practice described in d4_no_outreach only for these permissions. (2026-10-06; `d5_permissions_sought`; [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321))
+8. The free, non-commercial educational project uses official СУМ-20, its identified slovnyk.me fallback, and attributed Ukrlib quotations. The operator will show the results when seeking publisher permission. Only identified modern authorities supply meaning, stress or language norms. Soviet dictionary entries supply occupation context. (2026-11-26, `d6_a1_dictionary_and_literary_citations`, [A1 word cards](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/12288))
 
 ## Removal on request
 
@@ -43,7 +44,7 @@ the site, the same fields in the dataset export, and the stored copies listed un
 | Fields | What we use from it. |
 | Appears in | `internal` (private stores and tooling), `site` (learner pages and their public data files), `dataset` (the open dataset export). |
 | Where from | Origin URL(s) and the retrieval date of our copy; when no date was recorded, the entry says so and gives the nearest evidence. |
-| Permission status | Recorded permission status; scope and pending confirmation appear in the permission note. Not a publication gate. |
+| Permission status | The permission note records the scope of any permission and the state of publisher outreach. |
 | Terms as found | Licence name, quoted terms with URL and read date; for openly licensed sources the licence text is quoted verbatim. |
 | Citation | The citation form we use and the label learner pages show. |
 
@@ -89,12 +90,13 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `pohribnyi_1992` | Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record) | internal | No licence text recorded | — |
 | `textbooks_university` | Authors and publishers named on each held university textbook imprint page. | internal, site | No common licence recorded; see per-book origin records | — |
 | `vts_busel_slovnyk_me` | Not established from electronic mirror colophon (candidate attribution: ВТФ «Перун» / ред. В. Т. Бусел unverified); digital copy hosted by slovnyk.me | internal, site | All rights reserved (rights holder unverified / candidate ВТФ «Перун» / В. Т. Бусел); definitions quoted referencing Art. 22(2)(1) of Law 2811-IX with author/source attribution and marked quotation boundaries | Великий тлумачний словник сучасної української мови |
-| `sum20_slovnyk_mirror` | Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні НАН України (the `sum20` work); digital copy hosted by slovnyk.me | internal | All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator | Словник української мови у 20 томах — копія slovnyk.me |
+| `sum20_slovnyk_mirror` | Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні НАН України (the `sum20` work); digital copy hosted by slovnyk.me | internal, site | All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator | Словник української мови у 20 томах — копія slovnyk.me (newsum); не звірено з офіційним виданням |
+| `literary_corpus` | Євген Васильєв (УкрЛіб). Rights in each work belong to its respective rights holders. | internal, site | No common licence for the collected works recorded | Author · work · УкрЛіб |
 
 ## Open questions
 
 1. The open dataset's own licence. VESUM data is CC BY-NC-SA 4.0 and CC allows adaptations of it only under BY-NC-SA 4.0 or later; CC BY-SA inputs (Вікісловник, Kaikki, dmklinger, Ukrajinet, Вікіпедія) must stay BY-SA. Recommendation on #8979: CC BY-NC-SA 4.0 for the core, BY-SA-derived fields in separate CC BY-SA 4.0 files. Not decided. O1/O3 (2026-10-03, plan v3.5.0 on #6321) decided use, not the dataset's licence; plan step E6 (dataset licence choice) remains an operator decision.
-2. Sources shown in the Atlas with no entry here yet (labels from scripts/lexicon/source_attribution.py, counted in atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted 2026-09-28): Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33), Культура слова (3), and the literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). (Note: Великий тлумачний словник сучасної української мови / ВТС was admitted and registered under #8977 / #6321 as `vts_busel_slovnyk_me`). Each remaining unregistered source needs its own entry.
+2. Sources shown in the Atlas with no entry here yet (labels from scripts/lexicon/source_attribution.py, counted in atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted 2026-09-28): Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33), Культура слова (3), and literary corpora outside the Ukrlib collection (e.g. izbornyk.org.ua). (Note: Великий тлумачний словник сучасної української мови / ВТС was admitted and registered under #8977 / #6321 as `vts_busel_slovnyk_me`). Each remaining unregistered source needs its own entry.
 
 Per-source open questions are listed in each entry below.
 
@@ -131,7 +133,7 @@ Correcting those texts is #9000.
 
 ### «Словник української мови у 20 томах» (СУМ-20), official electronic edition — `sum20`
 
-- **Permission status:** `pending-expert-contact` — Permission is being sought; the operator is collecting it personally with help from Ukrainian experts.
+- **Permission status** `pending-expert-contact`. The operator will show the A1 results when seeking publisher permission. The official edition is an approved project source.
 - **Organisation:** Український мовно-інформаційний фонд НАН України (publisher, © of sum20ua.com) with the Інститут мовознавства ім. О. О. Потебні НАН України (co-compiler). Not the Інститут української мови, as the #8979 brief assumed — see the quotes.
 - **Role:** Modern Ukrainian definitions, sense structure, stressed headwords and citations for cards.
 - **Fields:** definition_text, sense_structure, stressed_headword, literary_citations
@@ -745,18 +747,28 @@ Open questions:
 
 ### «Словник української мови у 20 томах» (СУМ-20) via slovnyk.me (newsum) — `sum20_slovnyk_mirror`
 
-- **Permission status:** `pending-expert-contact`. It is the same work and rights holder as `sum20`; slovnyk.me is only the retrieval route (see `slovnyk_me`). Use follows the operator's source decision of 2026-09-27 (#8977). This entry is a provenance and takedown record.
+- **Permission status** `pending-expert-contact`. The operator will show the A1 results when seeking permission from the same publisher as the official edition. The project uses the labelled copy as a fallback.
 - **Organisation:** Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні НАН України (the `sum20` work); digital copy hosted by slovnyk.me
-- **Role:** Modern Ukrainian definitions beside the official offline collection. `query_sum20` and the Sources MCP serve each mirror row under rule `sum20-mirror-rule-v1`, and internal word cards use it as a separate meaning source. It is never official verification.
-- **Fields:** headword, definition_text
-- **Appears in:** internal. Every `query_sum20` and Sources MCP record carries `source_role` mirror with its mirror URL and fetch time. Word cards carry it as source `sum20_slovnyk_mirror` (lineage G-ULIF, tier 2), so it never counts as independent corroboration of `sum20`.
+- **Role.** The mirror supplies modern Ukrainian definitions and explicitly stressed headwords when the exact headword has no captured official СУМ-20 article. Both values require entry binding.
+- **Fields.** Headword, stressed headword, definition text.
+- **Appears in** internal tools and A1 card previews. The Sources MCP labels mirror records with their retrieval URL and time. The card source ID is `sum20_slovnyk_mirror` (lineage G-ULIF, tier 2), the same lineage as the official edition.
 - **Stored in:** data/sum20_slovnyk_staging.db sum20_slovnyk_articles (164,838 articles, complete checkpoint); data/sources.db sum20_mirror_articles (scripts/ingest/sum20_mirror_import.py)
 - **Where from:** https://slovnyk.me/dict/newsum/
 - **Retrieval evidence:** sum20_slovnyk_articles.fetched_at spans 2026-08-06 to 2026-10-12; 164,838 rows, every one with outcome ok; staging file SHA-256 `32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194` (docs/sources/admissions/2026-10-28-vts-acquisition.md).
 - **Terms:** All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator. Search record: https://slovnyk.me/terms (recorded as `slovnyk_terms_2024` in the `slovnyk_me` entry).
 - **Statute referred to:** `law_art22_quotation`
-- **Citation:** Словник української мови у 20 томах (електронна копія на Slovnyk.me, https://slovnyk.me/dict/newsum/). Label shown: Словник української мови у 20 томах — копія slovnyk.me.
+- **Citation.** Словник української мови у 20 томах (електронна копія на Slovnyk.me). The A1 card label reads «Словник української мови у 20 томах — копія slovnyk.me (newsum); не звірено з офіційним виданням». [Mirror provenance](https://slovnyk.me/dict/newsum/)
 - **Removal:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues — mirror records served by `query_sum20` and the Sources MCP, word-card meanings with source `sum20_slovnyk_mirror`, and the stored copies in data/sum20_slovnyk_staging.db and data/sources.db.
 
 Open questions:
 - The copy covers the 164,838 articles of its own crawl list, not the whole dictionary; common lemmas such as день, дім and знати have no article in it.
+
+### Бібліотека української літератури УкрЛіб (`literary_corpus`)
+
+- **Permission status** `pending-expert-contact`. The operator will show the A1 results when seeking publisher permission. The project uses short attributed quotations as educational examples.
+- **Organisation.** Євген Васильєв runs УкрЛіб. Rights in each work belong to its respective rights holders.
+- **Role.** Short quotations from Ukrainian literary prose and fables. Each A1 example needs a bound dictionary sense and passes the same suitability checks as a textbook example.
+- **Provenance.** `data/sources.db` holds `literary_texts` rows labelled `ukrlib-*`. Legacy prose and fable rows carry author, work and chunk metadata. Their retrieval dates and specific work URLs were not recorded. See `scripts/rag/scrape_ukrlib.py`.
+- **Terms.** The collection has no recorded common licence. The library asks readers to link to it when using its materials (read 2026-11-26). [УкрЛіб](https://www.ukrlib.com.ua/)
+- **Citation.** The A1 card marks the quotation and labels it with its author and recorded work title. The label links to [УкрЛіб](https://www.ukrlib.com.ua/).
+- **Removal.** Identify the A1 example and its corpus record in a [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues).

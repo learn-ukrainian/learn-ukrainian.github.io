@@ -31,7 +31,7 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
 )
 from scripts.rag.word_identity import normalize_evidence_form
 from scripts.wiki.sources_db import _fold_dict_key
-from scripts.wiki.sum20_mirror import MIRROR_ATTRIBUTION_LABEL
+from scripts.wiki.sum20_mirror import MIRROR_ATTRIBUTION_LABEL, MIRROR_ONLY, MIRROR_SOURCE_ID
 from scripts.wiki.sum20_official import Sum20ParseError, parse_sum20_article
 
 OWNER = "codex-atlas"
@@ -41,12 +41,12 @@ VTS = "vts_busel_slovnyk_me"
 VTS_NOT_CAPTURED = "ВТС not captured"
 REGISTER_LABEL = object()
 GAP_SOURCES = {
-    "stress": ("ulif", "vesum", "sum20"),
+    "stress": ("ulif", "vesum", "sum20", MIRROR_SOURCE_ID),
     "pos": ("vesum",),
     "gender": ("vesum",),
     "aspect": ("vesum",),
     "paradigm": ("vesum", "ulif"),
-    "definition_uk": ("sum20", VTS),
+    "definition_uk": ("sum20", MIRROR_SOURCE_ID, VTS),
     "gloss_en": ("dmklinger", "slovnyk_me"),
     "cefr": ("puls",),
     "examples": examples.SOURCES,
@@ -232,6 +232,46 @@ def group_structure(value):
     return "".join(value.split()) if isinstance(value, str) else value
 
 
+def mirror_definitions(part):
+    """Locate staged definitions verbatim inside the bound mirror partition."""
+    row = part["row"]
+    try:
+        parsed = json.loads(row["senses_json"])
+    except (TypeError, ValueError):
+        return []
+    # The staged parse has one article-level sense list, even for pages
+    # containing several numbered homonyms. Only a lone partition owns it.
+    if part["partition"] != "article" or not isinstance(parsed, dict):
+        return []
+    head = parsed.get("headword", "")
+    if not isinstance(head, str) or (head and src.nfc(head.lower()) != part["head"]):
+        return []
+    senses = parsed.get("senses")
+    if not isinstance(senses, list):
+        return []
+    definitions = []
+    cursor = 0
+    for order, sense in enumerate(senses, 1):
+        if not isinstance(sense, dict) or type(sense.get("sense_num")) is not int or sense["sense_num"] != order:
+            return []
+        raw = sense.get("raw_text")
+        definition = sense.get("definition")
+        if not isinstance(raw, str) or not isinstance(definition, str) or not definition.strip():
+            return []
+        # The staged parse sometimes carries the sense number's full stop
+        # into the definition. Advance the quotation past that delimiter.
+        if definition.startswith(". ") and raw.startswith(f"{order}{definition}"):
+            definition = definition.removeprefix(". ")
+        start = part["text"].find(raw, cursor)
+        within = raw.find(definition)
+        if start < 0 or within < 0:
+            return []
+        cursor = start + len(raw)
+        first = part["span"][0] + start + within
+        definitions.append((order, definition, first, first + len(definition)))
+    return definitions
+
+
 def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report, *,
                     common=False, vts_anchor=None, target_rows=()):
     """Bind dictionary partitions to the established ULIF entry.
@@ -240,14 +280,22 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
     ``vts_anchor`` is the card's replay-verified frozen ULIF entry. It can bind
     a single ВТС partition whose explicit stress and grammar agree with it.
     """
-    for source, parts in meanings.candidates(sources, lemma, a1_rules=True).items():
-        if not parts:
-            if source != "sum20_slovnyk_mirror":
-                report("definition_uk", source, VTS_NOT_CAPTURED if source == VTS else "capture_absent")
-            else:
-                report("mirror_witness", source, "capture_absent")
+    candidates = meanings.candidates(sources, lemma, a1_rules=True)
+    for source, parts in candidates.items():
+        field = "definition_uk"
+        if source == MIRROR_SOURCE_ID and candidates["sum20"]:
+            for facet in (field, "stress"):
+                report(facet, source, "preferred_official_article_present")
             continue
-        field = "mirror_witness" if source == "sum20_slovnyk_mirror" else "definition_uk"
+        if not parts:
+            report(field, source, VTS_NOT_CAPTURED if source == VTS else "capture_absent")
+            if source == MIRROR_SOURCE_ID:
+                report("stress", source, "capture_absent")
+            continue
+        if source == MIRROR_SOURCE_ID and len({part["row"]["id"] for part in parts}) != 1:
+            for facet in (field, "stress"):
+                report(facet, source, "mirror_article_not_unique", len(parts))
+            continue
         # Unknown competitors prevent a unique partition match.
         competing = {key: value for key, value in homonyms.items() if value["head"]}
         headless = len(competing) != len(homonyms)
@@ -286,6 +334,8 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                 reason = "unbound_partition"
             if reason:
                 report(field, source, reason, 1, locator)
+                if source == MIRROR_SOURCE_ID:
+                    report("stress", source, reason, 1, locator)
                 continue
             row = part["row"]
             if source == "sum20":
@@ -329,12 +379,30 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                         continue
                     add("examples", source, f"{locator}/citation/{citation.citation_order}", citation.citation_text,
                         scope="source_sense", source_key=f"{row['wordid']}:{citation.sense_ref}")
-            elif field == "mirror_witness":
-                if hashlib.sha256(row["article_text"].encode()).hexdigest() != row["content_sha256"]:
-                    report(field, source, "mirror_body_digest_mismatch", 1, locator)
+            elif source == MIRROR_SOURCE_ID:
+                if part["relation"] != MIRROR_ONLY:
+                    for facet in (field, "stress"):
+                        report(facet, source, "mirror_article_not_fallback", 1, locator)
                     continue
-                add(field, source, locator, part["text"], label=MIRROR_ATTRIBUTION_LABEL,
-                    source_key=part["relation"])
+                if hashlib.sha256(row["article_text"].encode()).hexdigest() != row["content_sha256"]:
+                    for facet in (field, "stress"):
+                        report(facet, source, "mirror_body_digest_mismatch", 1, locator)
+                    continue
+                if src.ACUTE in part["head"]:
+                    start = part["span"][0]
+                    # The comma also follows any source-local homonym number.
+                    end = start + len(part["text"].partition(",")[0].rstrip(meanings.SUPERSCRIPTS))
+                    add("stress", source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
+                        part["head"], label=MIRROR_ATTRIBUTION_LABEL)
+                else:
+                    report("stress", source, "bound_headword_has_no_explicit_stress", 1, locator)
+                definitions = mirror_definitions(part)
+                if not definitions:
+                    report(field, source, "mirror_definition_unresolved", 1, locator)
+                for order, definition, start, end in definitions:
+                    add(field, source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
+                        definition, label=MIRROR_ATTRIBUTION_LABEL, scope="source_sense",
+                        source_key=f"{row['id']}:{order}")
             else:
                 add(field, source, locator, part["text"], label=row["dictionary_label"],
                     source_key=part["partition"])
@@ -680,7 +748,7 @@ LEGACY_FIELDS = {
     "heritage_status": "heritage",
 }
 SECTION_ORDER = (
-    ("definition_uk", "Meaning"), ("mirror_witness", "СУМ-20 mirror witness"),
+    ("definition_uk", "Meaning"),
     ("examples", "Examples and citations"), ("pos", "Part of speech"), ("gender", "Gender"),
     ("aspect", "Aspect"), ("paradigm", "Forms"), ("synonyms", "Synonyms"),
     ("antonyms", "Antonyms"), ("phraseology", "Idioms"), ("proverbs", "Proverbs"),
@@ -912,8 +980,8 @@ def field_ledger(values, observations, holds):
         reasons = [reason for reason in holds if reason in field_holds]
         if field == "examples" and reasons:
             observed = {item["reason"] for item in observations if item["field"] == field}
-            reasons.extend(reason for reason in (examples.SENSE_UNDECIDABLE, examples.LITERARY_UNREGISTERED)
-                           if reason in observed)
+            if examples.SENSE_UNDECIDABLE in observed:
+                reasons.append(examples.SENSE_UNDECIDABLE)
         if not admitted and not reasons:
             continue
         rows[field] = {
@@ -1046,8 +1114,8 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
             "code_fields_complete": datasets["code_fields_complete"],
             "example_fill": {
                 "eligible": len(example_gaps), "filled": sum(bool(gap.values) for gap in example_gaps.values()),
-                "literary_only": sum((examples.LITERARY, examples.LITERARY_UNREGISTERED) in gap.attempts
-                                     for gap in example_gaps.values()),
+                "literary_cards_filled": sum(any(row["source_id"] == examples.LITERARY for row in gap.values)
+                                             for gap in example_gaps.values()),
             },
             "holds": dict(Counter(row["reason"] for card in cards for row in card["holds"])),
             "source_observations": dict(Counter(row["reason"] for card in cards for row in card["observations"])),
@@ -1099,6 +1167,9 @@ def render_card(card):
         if item["field"] == "wiki_reference":
             body = f'<a href="{body}" rel="noreferrer">{escape(item["source_label"])}</a>'
         label = escape(item["source_label"])
+        if item.get("source_id") == examples.LITERARY:
+            body = f"<q>{body}</q>"
+            label += f' · <a href="{examples.UKRLIB_URL}" rel="noreferrer">УкрЛіб</a>'
         if item["scope"] == "slot":
             label += f" · {escape(item['source_key'])}"
         return (f'<li data-value="{digest(item)}" data-scope="{item["scope"]}">'
