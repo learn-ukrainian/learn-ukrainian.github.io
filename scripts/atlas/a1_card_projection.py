@@ -13,6 +13,7 @@ from urllib.parse import quote
 
 from lu_machinery.storage.topology import store_data_dir
 
+from scripts.atlas import a1_card_examples as examples
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_assertion_check as checker
 from scripts.atlas import word_card_foundation as foundation
@@ -28,6 +29,7 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_ulif_entry,
     parse_ulif_relation_groups,
 )
+from scripts.rag.word_identity import normalize_evidence_form
 from scripts.wiki.sources_db import _fold_dict_key
 from scripts.wiki.sum20_mirror import MIRROR_ATTRIBUTION_LABEL
 from scripts.wiki.sum20_official import Sum20ParseError, parse_sum20_article
@@ -47,6 +49,7 @@ GAP_SOURCES = {
     "definition_uk": ("sum20", VTS),
     "gloss_en": ("dmklinger", "slovnyk_me"),
     "cefr": ("puls",),
+    "examples": examples.SOURCES,
 }
 # These VESUM tags name displayed forms outside the core inflection
 # signature. Do not use them to match a VESUM entry to a ULIF homonym.
@@ -248,9 +251,11 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                         add("register", source, f"{locator}/sense/{sense.sense_order}/register/{index}", label,
                             scope="source_sense", source_key=f"{row['wordid']}:{sense.sense_order}")
                 for citation in parsed.citations:
+                    if not any(sense.sense_order == citation.sense_ref for sense in definitions):
+                        report("examples", source, "illustration_without_bound_sense", 1, locator)
+                        continue
                     add("examples", source, f"{locator}/citation/{citation.citation_order}", citation.citation_text,
-                        scope="source_sense" if citation.sense_ref else "entry",
-                        source_key=f"{row['wordid']}:{citation.sense_ref}" if citation.sense_ref else None)
+                        scope="source_sense", source_key=f"{row['wordid']}:{citation.sense_ref}")
             elif field == "mirror_witness":
                 if hashlib.sha256(row["article_text"].encode()).hexdigest() != row["content_sha256"]:
                     report(field, source, "mirror_body_digest_mismatch", 1, locator)
@@ -786,7 +791,8 @@ def build(root, inventory, register):
             actual.get(key) != value for key, value in expected.items()
         ):
             raise Refusal("vesum_import_drift")
-        return assemble_population(targets, gaps, inputs, atlas, register, digest(inventory))
+        books = foundation.load_register(root / "docs/l2-uk-direct/textbook-selection.yaml")["sources"]
+        return assemble_population(targets, gaps, inputs, atlas, register, digest(inventory), books)
 
 
 def field_ledger(values, observations, holds):
@@ -800,6 +806,10 @@ def field_ledger(values, observations, holds):
         if field == "paradigm":
             field_holds.add("required_paradigm_unmapped_slots")
         reasons = [reason for reason in holds if reason in field_holds]
+        if field == "examples" and reasons:
+            observed = {item["reason"] for item in observations if item["field"] == field}
+            reasons.extend(reason for reason in (examples.SENSE_UNDECIDABLE, examples.LITERARY_UNREGISTERED)
+                           if reason in observed)
         if not admitted and not reasons:
             continue
         rows[field] = {
@@ -817,15 +827,25 @@ def field_ledger(values, observations, holds):
     return rows
 
 
-def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256):
+def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256, books):
     cards = []
     datasets = Counter()
     # PULS is small. Index every exact folded hit once so a result limit
     # cannot conceal a conflicting row for the same spelling.
     puls_by_word = defaultdict(list)
+    example_puls_by_word = defaultdict(list)
     for row in map(dict, inputs.sources.execute("SELECT * FROM puls_cefr ORDER BY id")):
-        puls_by_word[_fold_dict_key(row["word"])].append(row)
+        word = _fold_dict_key(row["word"])
+        puls_by_word[word].append(row)
+        variants = word.split(",") if row["pos"] in examples.FUNCTION_LABELS else (word,)
+        keys = {normalize_evidence_form(variant.strip()) for variant in variants}
+        if all(examples.UK_TOKEN_RE.fullmatch(key) for key in keys):
+            for key in sorted(keys):
+                example_puls_by_word[key].append(row)
+    inputs._use("projection:examples:puls", example_puls_by_word)
     by_spelling = Counter(_fold_dict_key(card["lemma"]) for card in targets.values())
+    projection_rows = []
+    example_gaps = {}
     for card_id, card in targets.items():
         lemma = card["lemma"]
         spelling = _fold_dict_key(lemma)
@@ -839,6 +859,35 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
             entries.append(target)
         if target is None:
             holds.append("inventory_entry_unbound")
+        if holds == ["required_examples"]:
+            target_rows = [row for row in inputs.vesum_forms(lemma) if row["entry_id"] == target]
+            example_gaps[card_id] = examples.ExampleGap(
+                lemma, target, target_rows[0]["pos"],
+                frozenset(normalize_evidence_form(row["word_form"]) for row in target_rows),
+                examples.bound_senses(values, VTS, inputs),
+            )
+        projection_rows.append((card_id, card, lemma, target, entries, values, observations, holds))
+
+    examples.search_corpora(list(example_gaps.values()), inputs, register, books, example_puls_by_word)
+    for card_id, card, lemma, target, entries, values, observations, holds in projection_rows:
+        if "required_examples" in holds:
+            official = [item for item in observations if item["field"] == "definition_uk" and item["source"] == "sum20"]
+            refusals = [("sum20", item["reason"], item["count"], item["locator"]) for item in official]
+            if not refusals:
+                refusals = [("sum20", "no bound sense illustration", 0, None)]
+            gap = example_gaps.get(card_id)
+            if gap is None:
+                refusals.extend((source, "other required sections are held", 0, None)
+                                for source in (examples.TEXTBOOKS, examples.LITERARY))
+            else:
+                refusals.extend((source, reason, count, locator)
+                                for (source, reason), (count, locator) in gap.attempts.items())
+                if gap.values:
+                    values.extend(gap.values)
+                    holds.remove("required_examples")
+            observations.extend({"field": "examples", "source": source, "status": "withheld" if locator else "missing",
+                                 "reason": reason, "count": count, "locator": locator, "owner": OWNER}
+                                for source, reason, count, locator in refusals)
         frozen_slug = card["frozen_slug"]
         payloads = list(legacy_payloads(atlas, lemma, [frozen_slug] if frozen_slug else []))
         slug = None
@@ -864,7 +913,8 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
         status = "held" if holds else "complete"
         datasets[status] += 1
         fields = field_ledger(values, observations, holds)
-        datasets["code_fields_complete"] += not any(row["outcome"] == "held" for row in fields.values())
+        datasets["code_fields_complete"] += not any(row["outcome"] == "held" for name, row in fields.items()
+                                                     if name != "examples")
         cards.append({"card_id": card_id, "lemma": lemma, "entry_ids": entries, "atlas_slug": slug,
                       "slices": card["slices"], "inventory_rows": card["rows"], "status": status,
                       "version": digest({"lemma": lemma, "entry_ids": entries, "values": values}),
@@ -886,6 +936,11 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
             + sum(map(len, gaps.values())), "inventory_gap_keys": len(gaps), "inventory_gap_rows": sum(map(len, gaps.values())),
             "complete": datasets["complete"], "held": datasets["held"],
             "code_fields_complete": datasets["code_fields_complete"],
+            "example_fill": {
+                "eligible": len(example_gaps), "filled": sum(bool(gap.values) for gap in example_gaps.values()),
+                "literary_only": sum((examples.LITERARY, examples.LITERARY_UNREGISTERED) in gap.attempts
+                                     for gap in example_gaps.values()),
+            },
             "holds": dict(Counter(row["reason"] for card in cards for row in card["holds"])),
             "source_observations": dict(Counter(row["reason"] for card in cards for row in card["observations"])),
             "assertions": dict(Counter("context_only" if row["scope"] == "context" else "supported"

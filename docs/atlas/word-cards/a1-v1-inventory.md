@@ -481,3 +481,42 @@ Hold reasons overlap.
 The remaining definition gaps include 81 cards with `ВТС not captured`.
 Atlas owns the entry correspondence and source gaps. The operator owns the
 remaining ВТС capture. Example review is tracked separately under #12288.
+
+### AC-06 examples for cards with one remaining hold
+
+The full-data preview tries the example fill when `required_examples` is
+the card's sole hold. The `examples` row in `cards[].gap_ledger` records the
+source decisions for each card. `cards[].observations` gives the rejection
+count and first source locator for each reason. `counts.example_fill`
+reports the eligible cards, filled cards, and cards with an otherwise
+eligible literary candidate that the source register refuses.
+
+The builder checks the official СУМ-20 entry before the school textbook
+corpus. An existing dictionary illustration carries its source-local
+sense. A corpus example needs one bound sense. A numbered or subordinate
+ВТС meaning marks a sense boundary. A matching corpus sentence for a
+multi-sense entry stays in the ledger with the reason
+`example sense not decidable by code`.
+
+The limit is seven words. The length census counted 1,147 punctuated
+sentences of at least two words in 223 chunks from the two held grade-one
+Ukrainian primers. The 95th percentile was seven words by nearest rank.
+The preview checks the other content readings, prepositions, conjunctions,
+and particles against PULS A1–A2. It uses VESUM for form, entry, part of
+speech, and register. The sentence must be complete and understandable
+on its own. The locator points into
+the source chunk before whitespace and stress-mark normalization. Each
+selected example records which of those changes the preview applied.
+
+The literary corpus is unregistered. An otherwise eligible candidate from
+that corpus records `literary corpus not registered` with its locator.
+The assertion checker admits the examples that the preview displays.
+
+| Example holds | Before | After |
+| --- | ---: | ---: |
+| All 845 cards | 839 | 833 |
+| Cards whose sole hold was examples | 185 | 179 |
+
+The replay adds nine textbook examples to six cards. Six held cards have
+an otherwise eligible literary candidate. Atlas owns the remaining example
+gaps.

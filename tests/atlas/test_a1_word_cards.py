@@ -6,6 +6,7 @@ Synthetic source text exercises receipt mechanics, not Ukrainian correctness.
 import copy
 import hashlib
 import json
+import sqlite3
 import unicodedata
 from collections import Counter
 from pathlib import Path
@@ -14,10 +15,12 @@ from types import SimpleNamespace
 import pytest
 import yaml
 
+from scripts.atlas import a1_card_examples as examples
 from scripts.atlas import a1_card_projection as projection
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_assertion_check as assertion_check
 from scripts.atlas import word_card_resolver as resolver
+from scripts.atlas import word_card_sources
 from scripts.atlas.a1_card_capture import _paradigm
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
 from scripts.projects.open_model_data.word_cards import dataset_projection
@@ -179,6 +182,96 @@ def test_full_data_every_filled_value_carries_its_source_label(gap_fill_card):
     assert [item["reason"] for item in observations if item["source"] == "puls"] == [
         "source_label_missing",
     ]
+
+
+@pytest.fixture
+def example_search():
+    # Literal primer sentence from Захарійчук, grade one, part 1, chunk s0054.
+    # The stores, identities and source levels below are owned by this test.
+    sentence = "Ми будемо сумувати!"
+    with sqlite3.connect(":memory:") as conn:
+        conn.executescript("""
+            CREATE TABLE textbooks (id, chunk_id, source_file, title, text, grade);
+            CREATE TABLE literary_texts (id, chunk_id, source_file, text, author, work, work_id,
+                                         source_url, language_period, genre);
+            CREATE TABLE forms_all (id, entry_id, word_form, lemma, pos, tags, word_form_folded);
+            CREATE TABLE form_markers (form_id, marker);
+        """)
+        conn.execute("INSERT INTO textbooks VALUES (1,'fixture-chunk','fixture','Page 3',?,'1')", (sentence,))
+        conn.executemany("INSERT INTO forms_all VALUES (?,?,?,?,?,?,?)", [
+            (1, 10, "ми", "ми", "noun", "noun:pron", "ми"),
+            (2, 20, "будемо", "бути", "verb", "verb:imperf:futr", "будемо"),
+            (3, 30, "сумувати", "сумувати", "verb", "verb:imperf:inf", "сумувати"),
+            (4, 40, "жив", "жити", "verb", "verb:imperf:past:m", "жив"),
+            (5, 50, "він", "він", "noun", "noun:pron:pers:3:v_naz", "він"),
+            (6, 60, "щодня", "щодня", "adv", "adv", "щодня"),
+            (7, 70, "грає", "грати", "verb", "verb:imperf:pres:s:3", "грає"),
+            (8, 80, "у", "у", "prep", "prep", "у"),
+            (9, 90, "футбол", "футбол", "noun", "noun:inanim:m:v_zna", "футбол"),
+        ])
+        inputs = word_card_sources.PilotSources(conn, conn, conn)
+        register = {"sources": [{"id": "textbooks", "name": "Textbooks", "fields_used": ["example_sentence"]}]}
+        books = {"fixture": {"kind": "textbook", "grade": 1, "year": 2025, "author": "Author", "title": "Book"}}
+        sense = {"field": "definition_uk", "source_id": VTS, "source_key": "article", "value": "One sense.",
+                 "locator": "fixture-definition"}
+
+        def run(entry=30, pos="verb", definition="One sense.", level="A1", text=sentence,
+                lemma="сумувати", form="сумувати", function_word=False):
+            conn.execute("UPDATE textbooks SET text=?", (text,))
+            levels = {
+                "бути": [{"word": "бути", "pos": "дієслово (недок.)", "guideword": "", "level": level}],
+                "грати": [{"word": "грати", "pos": "дієслово (недок.)", "guideword": "", "level": "A1"}],
+                "футбол": [{"word": "футбол", "pos": "іменник", "guideword": "", "level": "A1"}],
+            }
+            if function_word:
+                levels["у"] = [{"word": "у, в", "pos": "прийменник", "guideword": "", "level": "A1"}]
+            senses = examples.bound_senses([{**sense, "value": definition}], VTS, inputs)
+            gap = examples.ExampleGap(lemma, entry, pos, frozenset({form}), senses)
+            examples.search_corpora([gap], inputs, register, books, levels)
+            return gap
+
+        yield run
+
+
+def test_example_refuses_a_different_vesum_entry_or_part_of_speech(example_search):
+    confirmed = example_search().values
+    assert len(confirmed) == 1
+    assert confirmed[0]["source_label"] == "Author · Book (2025) · Page 3"
+    assert confirmed[0]["value"] == "Ми будемо сумувати!"
+    assert confirmed[0]["evidence"]["normalization"] == {"whitespace": False, "stress_marks": False}
+    assert confirmed[0]["locator"] == "textbooks:fixture:fixture-chunk:1 [text:0:19]"
+    for entry, pos in ((31, "verb"), (30, "noun")):
+        gap = example_search(entry=entry, pos=pos)
+        assert gap.values == []
+        assert ("textbooks", "example target entry or part of speech unresolved") in gap.attempts
+
+
+def test_example_corpus_candidate_for_a_multisense_entry_stays_held(example_search):
+    for definition in ("1》 First. 2》 Second.", "First. || Second."):
+        gap = example_search(definition=definition)
+        assert gap.values == []
+        assert gap.attempts["textbooks", "example sense not decidable by code"] == (
+            1, "textbooks:fixture:fixture-chunk:1 [text:0:19]",
+        )
+
+
+def test_example_rejects_length_and_out_of_level_words_with_reason(example_search):
+    # Verbatim sentence from the same two-part primer, part 2 chunk s0076.
+    long_sentence = "У хаті на високій горі жив дядько Йой."
+    gap = example_search(entry=40, text=long_sentence, lemma="жити", form="жив")
+    assert gap.values == []
+    assert ("textbooks", "example exceeds word limit") in gap.attempts
+    gap = example_search(level="B1")
+    assert gap.values == []
+    reason = ("textbooks", "example word outside verified A1–A2")
+    assert reason in gap.attempts
+    # Literal Большакова grade-two sentence from part 2, chunk s0056.
+    sentence = "Він щодня грає у футбол."
+    args = {"entry": 60, "pos": "adv", "lemma": "щодня", "form": "щодня", "text": sentence}
+    gap = example_search(**args)
+    assert gap.values == []
+    assert reason in gap.attempts
+    assert [value["value"] for value in example_search(**args, function_word=True).values] == [sentence]
 
 
 def encoded(value):

@@ -38,7 +38,7 @@ FEATURE_TOKENS = {
 ENTRY_PROJECTION_CAPABILITIES = {
     "definition_uk": {"sum20": "definition_text", "vts_busel_slovnyk_me": "meaning"},
     "mirror_witness": {"sum20_slovnyk_mirror": "definition_text"},
-    "examples": {"sum20": "literary_citations"},
+    "examples": {"sum20": "literary_citations", "textbooks": "example_sentence", "literary_corpus": "example_sentence"},
     "register": {"sum20": "definition_text"},
     "pos": {"vesum": "pos", "ulif": "grammatical_label"},
     "gender": {"vesum": "morph_tags"},
@@ -93,10 +93,8 @@ def check_entry_projection(field, source, scope, register, *, source_label):
         scopes = {"slot"}
     elif source == "ulif" and field in {"synonyms", "antonyms", "phraseology"}:
         scopes = {"source_group"}
-    elif source == "sum20" and field in {"definition_uk", "register"}:
+    elif field == "examples" or (source == "sum20" and field in {"definition_uk", "register"}):
         scopes = {"source_sense"}
-    elif source == "sum20" and field == "examples":
-        scopes = {"entry", "source_sense"}
     else:
         scopes = {"entry"}
     if scope not in scopes:
