@@ -4958,7 +4958,7 @@ function LexiconPracticeIsland({
 
             <div className="k3-words" data-testid="practice-dashboard-words">
               {dailySnapshotLoading || !dailySnapshot ? (
-                <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
+                <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading" aria-busy="true">
                   <div className="daily-deck-header">
                     <h2>
                       {activeDeckTitles ? (
@@ -4970,6 +4970,15 @@ function LexiconPracticeIsland({
                         <ChromeText k="practice.wordsTitle" />
                       )}
                     </h2>
+                    <span className="daily-deck-position daily-deck-reserve" aria-hidden="true">
+                      <ChromeDual
+                        uk={`1 з ${DAILY_PRACTICE_DECK_SIZE}`}
+                        en={`1 / ${DAILY_PRACTICE_DECK_SIZE}`}
+                      />
+                    </span>
+                    <button type="button" className="daily-deck-reroll daily-deck-reserve" tabIndex={-1} aria-hidden="true">
+                      <span aria-hidden="true">🔀</span> <ChromeText k="practice.reRoll" />
+                    </button>
                   </div>
                   <div className="daily-deck-preview-shell">
                     <div className="flashcard daily-preview-card">
@@ -4980,8 +4989,36 @@ function LexiconPracticeIsland({
                       </div>
                     </div>
                   </div>
+                  <div className="daily-deck-preview-actions daily-deck-reserve" aria-hidden="true">
+                    <span className="daily-deck-atlas-link">
+                      <ChromeText k="practice.openInAtlas" /> →
+                    </span>
+                    <div className="daily-deck-voice-slot">
+                      <span aria-hidden="true">🎙</span>
+                      <ChromeText k="practice.voiceSlot" />
+                    </div>
+                  </div>
+                  <div className="practice-report daily-deck-reserve" aria-hidden="true">
+                    <button type="button" className="btn" tabIndex={-1} style={{ minHeight: 44 }}>
+                      {'\u00a0'}
+                    </button>
+                  </div>
                   <details className="daily-deck-details">
-                    <summary><ChromeText k="practice.showWords" /></summary>
+                    <summary>
+                      <ChromeText k="practice.showWords" />
+                      <span className="daily-deck-counters daily-deck-reserve" aria-hidden="true">
+                        <span className="counter due">
+                          <span aria-hidden="true">✦</span> 0 <ChromeText k="practice.statusDue" />
+                        </span>
+                        <span className="counter new">
+                          <span aria-hidden="true">↻</span> {DAILY_PRACTICE_DECK_SIZE}{' '}
+                          <ChromeText k="practice.statusNew" />
+                        </span>
+                        <span className="counter done">
+                          <span aria-hidden="true">✓</span> 0 <ChromeText k="practice.statusDone" />
+                        </span>
+                      </span>
+                    </summary>
                   </details>
                 </div>
               ) : (

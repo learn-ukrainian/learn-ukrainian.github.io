@@ -1764,6 +1764,10 @@ const frontmatter = {
     background: var(--lu-surface-raised);
     box-shadow: var(--lu-shadow);
   }
+  /* Same chrome as the loaded deck, invisible, so the session card does not jump. */
+  :global(.daily-deck-reserve) {
+    visibility: hidden;
+  }
   :global(.daily-deck-header) {
     display: flex;
     align-items: center;
