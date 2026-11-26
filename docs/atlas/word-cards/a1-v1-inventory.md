@@ -574,8 +574,9 @@ sentence`. Exercise layout means one of the following:
 - a punctuation mark detached by a space, which leaves an answer slot;
 - a blank: underscores, an ellipsis or empty brackets;
 - a preceding segment that is only a label: an item number (`5.`, `107.1.`,
-  `63°.`, `487*.`), a Roman numeral, one letter, a capitalized label word with
-  a number (`Крок 2.`, `Мал. 4.`), or `§` or `№` with a number;
+  `63°.`, `487*.`), a Roman numeral, one letter, a sequence of them (`25 І.`),
+  a capitalized label word with a number (`Крок 2.`, `Мал. 4.`), or `§` or `№`
+  with a number;
 - a preceding segment that is only marks, which is the previous item's
   answer slot;
 - an opening capital letter that is not a one-letter Ukrainian word, such as
@@ -583,6 +584,9 @@ sentence`. Exercise layout means one of the following:
 - a one-letter word followed by a capitalized word that VESUM does not attest
   with a capital, such as the answer option `В Нам …`. A name such as
   `У Макса` stays allowed;
+- an answer option opened by `А` or `В` in an option list, that is a chunk
+  with two or more options `А`–`Д`, one of them `Б`, `Г` or `Д`. This holds
+  `В Стіну розбито молотком.` although `Стіну` also reads as a place name;
 - directly after the sentence, underscores, empty brackets, two or more marks
   (a dot leader or blank answer lines, even when text follows), or one mark
   with no word after it. These are empty answer slots or the dot leaders of a

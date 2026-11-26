@@ -486,11 +486,13 @@ def test_example_rejects_length_and_out_of_level_words_with_reason(example_searc
     "107.1. Ми будемо сумувати!",
     "63°. Ми будемо сумувати!",
     "ІІ. Ми будемо сумувати!",
+    "25 І. Ми будемо сумувати!",
     "Крок 2. Ми будемо сумувати!",
     "§ 2. Ми будемо сумувати!",
     "Я ?\n.\nМи будемо сумувати!",
     "Б Ми будемо сумувати!",
     "В Ми будемо сумувати!",
+    "Б Ми будемо раді.\nВ Ми будемо сумувати!\nГ Ми будемо співати.",
 ])
 def test_exercise_fragment_is_not_admitted_as_an_example(example_search, chunk):
     """Defect class: exercise fragment admitted as an example.

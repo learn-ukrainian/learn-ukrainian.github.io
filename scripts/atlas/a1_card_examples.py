@@ -35,21 +35,28 @@ POSSIBLE_HEADING = re.compile(r"[\r\n]\s*[А-ЩЬЮЯЄІЇҐ]")
 # Exercise layout around or inside a span marks a task item, not a model
 # sentence. A mark detached by whitespace leaves an answer slot. A preceding
 # segment that is only a label (an item number such as 5., 107.1., 63°. or
-# 487*.; a Roman numeral; one letter; a capitalized label word with a number
-# such as Крок 2. or Мал. 4.; § or № with a number) or only marks (the
+# 487*.; a Roman numeral; one letter; a sequence of them such as 25 І.; a
+# capitalized label word with a number such as Крок 2. or Мал. 4.; § or №
+# with a number) or only marks (the
 # previous item's answer slot) makes the span an exercise item. After the
 # span, underscores, empty brackets, two or more marks (a dot leader or blank
 # answer lines), or one mark that no word follows is an empty slot or a
 # table-of-contents line. One mark or one ellipsis followed by a word is a
 # textbook icon or the opening of the next sentence, so the span stays.
 DETACHED_MARK = re.compile(r"\s[,.!?]")
+LABEL_TOKEN = r"(?:\d+(?:\.\d+)*[°*]*|[IVXLCІХ]+)"
 ITEM_LABEL = re.compile(
-    r"(?:\A|\n)[ \t]*(?:"
-    r"(?:[§№][ \t]*|[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ'’ʼ-]*\.?[ \t]+)?(?:\d+(?:\.\d+)*[°*]*|[IVXLCІХ]+)\."
-    r"|[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\."
-    r"|[.…?!](?:\s*[.…?!])*"
-    r")\Z"
+    rf"(?:\A|\n)[ \t]*(?:"
+    rf"(?:[§№][ \t]*|[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ'’ʼ-]*\.?[ \t]+)?(?:{LABEL_TOKEN}[ \t]+)*{LABEL_TOKEN}\."
+    rf"|(?:{LABEL_TOKEN}[ \t]+)*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\."
+    rf"|[.…?!](?:\s*[.…?!])*"
+    rf")\Z"
 )
+# Answer options А–Д open a line or follow a sentence end. A chunk with two
+# or more option letters, one of them Б, Г or Д, is an option list; there an
+# option opened by А or В is a label, even before a capitalized name.
+OPTION_START = re.compile(r"(?m)(?:^[ \t]*|(?<=[.!?…] ))([АБВГД])[ \t]+(?=[А-ЩЬЮЯЄІЇҐ])")
+OPTION_SPAN = re.compile(r"[АБВГД][ \t]+[А-ЩЬЮЯЄІЇҐ]")
 MARK = r"(?>\.{3}|[.…?!])"
 SLOT_AFTER = re.compile(rf"\s*(?:_|\(\s*\)|\[\s*\]|{MARK}(?:\s*{MARK})+|{MARK}(?!\s*[^\W\d_]))")
 # One-letter Ukrainian words; any other capital letter opening a span is an
@@ -240,6 +247,8 @@ def sentence_spans(chunk):
     start = 0
     inside_quote = False
     previous = ""
+    options = set(OPTION_START.findall(chunk))
+    option_list = len(options) > 1 and bool(options & {"Б", "Г", "Д"})
     for boundary in [*SENTENCE_BREAK.finditer(chunk), None]:
         end = boundary.start() if boundary else len(chunk)
         segment = chunk[start:end]
@@ -249,7 +258,8 @@ def sentence_spans(chunk):
         if raw:
             begin = start + len(segment) - len(segment.lstrip())
             quotes = QUOTE_MARKS.findall(raw)
-            exercise = ITEM_LABEL.search(previous) or SLOT_AFTER.match(chunk, begin + len(raw))
+            exercise = (ITEM_LABEL.search(previous) or SLOT_AFTER.match(chunk, begin + len(raw))
+                        or (option_list and OPTION_SPAN.match(raw)))
             yield begin, begin + len(raw), bool(inside_quote or quotes or POSSIBLE_HEADING.search(raw) or exercise)
             previous = raw
             if len(quotes) % 2:
