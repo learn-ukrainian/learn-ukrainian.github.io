@@ -17,6 +17,7 @@ from lu_machinery.storage.topology import store_locality
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.wiki import sum20_mirror
+from scripts.wiki.sum20_official import normalize_sum20_lookup
 
 SOURCES = ("sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")
 VERSION = "pilot-meanings-v3"
@@ -68,6 +69,8 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
     else:
         # Inline references also contain Roman numerals. Without markup these
         # cannot safely be distinguished from implicit homonym headers.
+        if text[start:markers[0].start()].strip():
+            return []
         spans = [(m.start(), markers[i + 1].start() if i + 1 < len(markers) else end)
                  for i, m in enumerate(markers)]
         if any(not re.match(r"[IVX]+\s+\S+", text[a:b]) for a, b in spans):
@@ -133,7 +136,7 @@ def mirror_partitions(row: dict, spelling: str) -> list[dict]:
     return out
 
 
-def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
+def full_slovnyk(row: dict, root: Path | None) -> tuple[str | None, str | None]:
     """Authenticate the admitted full witness; never fetch or follow a reference."""
     text = row["text"]
     digest = row["content_sha256"]
@@ -147,10 +150,10 @@ def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
             or store_locality(path) != "local":
         return None, "full_source_unavailable"
     try:
-        lookup = json.loads(path.read_text())["lookups"]["vts"]
+        lookup = json.loads(path.read_text())["lookups"][row["dictionary_slug"]]
         text = lookup["text"]
         if (lookup["dictionary_slug"], lookup["source_url"], key(lookup["word"])) != (
-                "vts", row["source_url"], row["normalized_word"]):
+                row["dictionary_slug"], row["source_url"], row["normalized_word"]):
             return None, "source_snapshot_mismatch"
         if hashlib.sha256(text.encode()).hexdigest() != digest:
             return None, "source_snapshot_mismatch"
@@ -159,12 +162,18 @@ def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
     return text, None
 
 
+def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
+    if row["dictionary_slug"] != "vts":
+        return None, "source_snapshot_mismatch"
+    return full_slovnyk(row, root)
+
+
 def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]]:
     """Exact local lookups, including negative results in the consumed ledger."""
     out = {source: [] for source in SOURCES}
     articles = [src.row_dict(r) for r in sources.sources.execute(
-        "SELECT * FROM sum20_articles WHERE lower(headword)=? OR normalized_lookup_key=? ORDER BY id",
-        (spelling, spelling))]
+        "SELECT * FROM sum20_articles WHERE normalized_lookup_key=? ORDER BY id",
+        (normalize_sum20_lookup(spelling),))]
     sources._use(f"meaning:sum20:{spelling}", articles)
     for row in articles:
         senses = [src.row_dict(r) for r in sources.sources.execute(
@@ -215,6 +224,7 @@ def correspondence(candidate: dict, homonyms: dict, entry_id: int) -> bool:
     if candidate["reason"] or not candidate["text"] or not candidate["pos"]:
         return False
     head = candidate["head"].casefold()
+    head_readings = {s.casefold() for s in src.stress_forms(head)}
     compatible = []
     for eid, h in homonyms.items():
         row = h["row"]
@@ -226,7 +236,9 @@ def correspondence(candidate: dict, homonyms: dict, entry_id: int) -> bool:
         readings = {s.casefold() for s in src.stress_forms(h["head"])}
         if key(head) != key(h["head"]):
             continue
-        if src.ACUTE in head and not readings.intersection(s.casefold() for s in src.stress_forms(head)):
+        # An unknown stress cannot authenticate the target or eliminate a competitor.
+        if (src.ACUTE in head and not readings.intersection(head_readings)
+                and (eid == entry_id or src.ACUTE in h["head"])):
             continue
         compatible.append(eid)
     return compatible == [entry_id]

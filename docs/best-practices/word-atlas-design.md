@@ -53,25 +53,32 @@ Same nav-level visibility as `Seminars`. Distinct visual identity (proposed: tea
 
 ## 4. Page contract
 
-Sections, in flow (top-to-bottom). Each section is OMITTED if it has no data — never shown empty. Every section carries a provenance footer (source dictionary + URL where available).
+A card groups verbatim values by section and names the source beside each value.
+The source's sense order and group boundaries survive projection. An entry-level
+witness stays outside the sense list unless the source supplies a verified
+sense link. The page omits empty optional sections. It shows an English gloss
+as a separate entry-level witness.
 
-| # | Section | Source(s) | Visual primitive (reused from PoC) |
-| --- | --- | --- | --- |
-| 1 | **Шапка** | header derived from VESUM + stress dict + PULS CEFR + heritage status | hero gradient (atlas-specific colors) |
-| 2 | **Значення** | СУМ-20 (slovnyk.me) → Грінченко 1907 → СУМ-11 (sovietization-flagged per entry) | definition cards; sovietized entries get red badge |
-| 3 | **Етимологія** | ESUM vol 1-6 jsonl | reused from PoC #27 EtymologyTrace pattern (`.ety-stage` / `.ety-arrow`) |
-| 4 | **Морфологія** | VESUM | paradigm table (case×number for nouns; person×number×tense for verbs; etc.) |
-| 5 | **Походження + статус** | `mcp__sources__search_heritage` merger | classification badge: authentic / Russianism / surzhyk / dialect / borrowing / archaism / historism |
-| 6 | **Стилістичні нотатки** | Антоненко-Давидович (structured + prose) + UA-GEC error pairs | yellow `.rule-box` for calque warnings; example error→correction pairs |
-| 7 | **Синоніми + антоніми** | `mcp__sources__search_synonyms` (WordNet) | chip layout (reused from `.groupsort-chip`); "auto-translated, audit pending #1657" caveat badge |
-| 8 | **Фразеологізми** | `mcp__sources__search_idioms` (Фразеологічний 25K) | idiom cards |
-| 9 | **Літературні засвідчення** | `mcp__sources__search_literary` (125K chunks — chronicles, poetry, legal), exact-form-gated; backed by **uk.wikisource (Вікіджерела)** outbound links where available | purple `.source-box` pattern (reused from PoC seminar) |
-| 10 | **Курсові посилання** | scan of `curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml` | "Used in: A1 M08 (Things Have Gender), HIST M23 (Danylo)" — cross-link back to lessons |
-| 11 | **Переклад** | Балла EN→UK + dmklinger UK→EN | translation pairs |
-| 12 | **Вікі-довідка (Wikimedia-family)** | **uk.wikipedia** (`query_wikipedia`) for concepts/proper nouns + **uk.wiktionary (Вікісловник)** — the §2 meaning source, surfaced as a clickable outbound link + **uk.wikisource** link (see §9) | summary card + outbound wiki links; OMIT-EMPTY (most basic A1 words have no Wikipedia article) |
-| 13 | **Метадані** | aggregation of all above | provenance footer: source URLs, freshness timestamp, "report data error" link |
+| Order | Section | Authority and scope |
+| --- | --- | --- |
+| 1 | Headword and stress | Verified ULIF stress first, then official СУМ-20, then ВТС after explicit higher-priority misses and authenticated entry correspondence. |
+| 2 | Meaning and examples | Ukrainian definitions from independently bound ВТС and official СУМ-20 partitions. The labelled СУМ-20 mirror keeps its registered witness role. Examples retain their exact quotations and source-local attribution. A selected teaching example requires exact-sense and A1 suitability review. |
+| 3 | Grammar and forms | ULIF and VESUM. Compare full variant sets in the same mapped slot after stripping stress for the comparison. Show conflicting values only when both sources bind independently to the entry and slot. |
+| 4 | Synonyms and antonyms | ULIF sense groups first, with authenticated slovnyk.me witnesses second. Check provenance per group. Paronyms use their own source-attested registry. |
+| 5 | Idioms and proverbs | Bound source groups retain their original text and labels. |
+| 6 | Etymology and heritage | ЕСУМ supplies etymology. Грінченко supplies pre-Soviet attestation. Heritage and Russianism badges require positive evidence. A Russian morphological shadow prompts investigation. |
+| 7 | English gloss, CEFR and references | Keep unpaired translations entry-scoped and label estimated CEFR. Вікісловник is an outbound witness. Literary and textbook quotes require source and entry checks. |
+| 8 | Soviet occupation context | Every card with a СУМ-11 article has a collapsed section labelled as Soviet-era dictionary context. Show a risk badge and explanation only when `sovietization_risk > 0`. |
 
-> **Design change 2026-06-12 (user decision).** Former sections **10 Підручники** (textbook FTS) and **11 Зовнішні матеріали** (curated blogs/video) are **REMOVED**. Rationale: raw corpus retrieval is too noisy for per-lemma display without an expensive relevance layer, and the per-lemma value is low for basic vocabulary. The external-knowledge layer is now **Wikimedia-family only** — Wikipedia (concepts/proper nouns) + Wiktionary (the meaning source, as an outbound link) + Wikisource (literary attestation). Wikimedia Commons (a word image for concrete nouns) is a possible future add, not core. All Wikimedia sections are OMIT-EMPTY, so they cost nothing on words that have no entry.
+Binding starts with authenticated ULIF and VESUM paradigm, aspect and stress
+correspondence, including competing entries. A checked POS match alone leaves
+the entry unresolved. Bind each ВТС and СУМ-20 partition independently
+before projecting it. ULIF glosses can disambiguate entries.
+
+The builder accounts for every Atlas and legacy value as admitted, withheld
+or missing. Missing required fields hold the card. Source replay checks group,
+variant and partition conservation. The [entry model runbook](../runbooks/word-atlas-entry-model.md#word-card-v2-admission-and-release)
+defines the evidence, release holds and independent gates.
 
 ## 5. Decolonization editorial layer (the moat)
 
@@ -79,10 +86,10 @@ Each editorial signal maps to an existing PoC visual primitive — no new compon
 
 | Editorial signal | Visual treatment | PoC pattern reused | Trigger |
 | --- | --- | --- | --- |
-| **Sovietization warning** | red `.myth-box` at top of any СУМ-11 entry with `risk≥1` | myth-box | `sovietization_risk` field from `search_definitions` |
+| **Sovietization warning** | risk badge and explanation inside the collapsed СУМ-11 context section | myth-box | `sovietization_risk` field from `search_definitions` |
 | **Heritage-defense success** | green inverted myth-box at top of «Походження» | myth-box (green variant) | `search_heritage` returns `is_russianism=false` + pre-Soviet attestation |
 | **Calque warning** | yellow `.rule-box` with header «Можлива калька» | rule-box | Антоненко-Давидович structured OR prose entry hits this lemma |
-| **Russian morphological shadow** | red inline pill on header | (new minimal addition) | `check_russian_shadow` returns true |
+| **Russian morphological shadow** | internal investigation signal | none | `check_russian_shadow` returns true |
 | **Recent borrowing** | blue inline pill on header | (new minimal addition) | ESUM marks ≥19th-century borrowing |
 | **Dialect / regional** | teal inline pill on header | (new minimal addition) | `search_heritage` attaches `classification=dialect` |
 
@@ -125,15 +132,13 @@ sections:
   definitions:
     - source: sum20
       text: "..."
-      url: "https://slovnyk.me/dict/newsum/князь"
-      sovietization_risk: 0
-    - source: grinchenko_1907
-      text: "..."
-      url: null
+  soviet_colonization_context:
     - source: sum11
       text: "..."
+      red_flag: true
       sovietization_risk: 0
       sovietization_keywords: []
+      ideological_markers: []
   etymology:
     - period: "Прагерманська"
       form: "*kuningaz"
@@ -216,7 +221,7 @@ No new transforms required for v0. Atlas links are plain Markdown links; Starlig
 | `lemma_in_vesum` | Every atlas page MUST exist as a lemma in VESUM | 404 if not (no orphan pages) |
 | `provenance_per_section` | Every section MUST cite a source + URL where the dictionary has one | missing provenance fails the build |
 | `section_omitted_not_empty` | Sections with no data are OMITTED, not rendered empty | empty section in HTML fails the gate |
-| `sovietization_must_be_flagged` | If `sovietization_risk≥1` for ANY rendered definition, the red editorial badge MUST appear above it | unflagged sovietized content fails the gate |
+| `sovietization_must_be_flagged` | Every СУМ-11 article is collapsed occupation context with `red_flag: true`. A positive risk adds a badge and explanation. | Missing context, misuse as evidence, or an incorrect risk badge fails the gate. |
 | `heritage_evidence_required` | "Authentic Ukrainian" badge requires pre-Soviet attestation (Грінченко OR ESUM) cited inline | unsupported badge fails the gate |
 | `cross_link_integrity` | "Used in" modules listed in section 12 must exist in `curriculum/l2-uk-en/curriculum.yaml` | broken cross-link fails the gate |
 | `wiki_summary_attributed` | Wikipedia summaries cite the article URL + a freshness date | missing attribution fails the gate |

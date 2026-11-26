@@ -1599,6 +1599,8 @@ def main(argv=None) -> int:
                                  if store == "sources" else f"{store} database (default: the primary store)")
     args = parser.parse_args(argv)
     try:
+        if args.operation != "verify":
+            require_host_only([args.output])
         suppressions = load_suppressions(args.suppressions)
         with ExitStack() as stack:
             scratch = Path(stack.enter_context(

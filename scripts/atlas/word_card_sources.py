@@ -393,7 +393,7 @@ def vesum_paradigm(rows: list[dict], keep_gender: bool) -> dict[int, dict]:
         slot = vesum_slot(tokens, keep_gender)
         if slot is not None:
             item = entry["slots"].setdefault(slot, {"forms": set(), "tags": set()})
-            item["forms"].add(nfc(row["word_form"]))
+            item["forms"].add(unstressed(row["word_form"]))
             item["tags"].add(row["tags"])
         comment = row["source_comment"] or ""
         for token in re.split(r"[\s;,()]+", comment):

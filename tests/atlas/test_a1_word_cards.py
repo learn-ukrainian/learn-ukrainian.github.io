@@ -13,7 +13,9 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.atlas import a1_card_projection as projection
 from scripts.atlas import a1_word_cards as cards
+from scripts.atlas import word_card_assertion_check as assertion_check
 from scripts.atlas import word_card_resolver as resolver
 from scripts.atlas.a1_card_capture import _paradigm
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
@@ -46,6 +48,53 @@ SELECTED = [
     ("where-is-it", 4, "wc_qpcdgkctp7ne", 425814),
     ("where-to", 16, "wc_qpcdgkctp7ne", 425814),
 ]
+
+
+def test_full_data_refuses_pos_matching_paradigm_mismatched_entry():
+    slot = ("v_rod", "s")
+    homonym = {"head": "test-head", "aspect": None, "candidates": [41],
+               "paradigm": {"slots": {slot: {"forms": ["source-form"]}}}}
+    target = {"pos": "noun", "aspect": None, "stress": set(),
+              "slots": {slot: {"forms": ["other-form"]}}}
+    assert projection.bound_ulif({9: homonym}, {41: target}, 41) is None
+    target["slots"][slot]["forms"] = ["source-form"]
+    assert projection.bound_ulif({9: homonym}, {41: target}, 41) == 9
+
+
+def test_full_data_parity_does_not_silently_drop_a_section_or_legacy_value():
+    payloads = [
+        ("fixture", "enrichment", "meaning", "VTS label", {"definitions": ["literal", "unknown"]}),
+        ("fixture", "enrichment", "proverbs", "Proverb source", {"items": ["saying", ""]}),
+        ("competing", "enrichment", "meaning", "VTS label", {"definitions": ["literal"]}),
+    ]
+    values = [{"field": "definition_uk", "source_label": "VTS label", "value": "literal"}]
+    ledger = projection.parity(payloads, values, "fixture")
+    assert [(row["slug"], row["section"], row["counts"]) for row in ledger] == [
+        ("fixture", "meaning", {"admitted": 1, "withheld": 1}),
+        ("fixture", "proverbs", {"withheld": 1, "missing": 1}),
+        ("competing", "meaning", {"withheld": 1}),
+    ]
+    assert [item["pointer"] for item in ledger[0]["values"]] == ["/definitions/0", "/definitions/1"]
+    assert ledger[2]["values"][0]["reason"] == "atlas_slug_unbound"
+
+
+def test_full_data_sum11_is_labelled_context_and_never_counts_as_evidence():
+    register = {"sources": [{"id": "sum11", "fields_used": ["russification_quote"]}]}
+    field = "soviet_colonization_context"
+    assert assertion_check.check_entry_projection(field, "sum11", "context", register) == "context_only"
+    assert assertion_check.check_entry_projection("definition_uk", "sum11", "entry", register) != "supported"
+    row = {"definition": "Historical quotation.", "sovietization_risk": 0, "sovietization_keywords": ""}
+    context = projection.soviet_context(row)
+    assert context["red_flag"] is True
+    value = {"field": field, "value": context, "source_label": "СУМ-11", "scope": "context"}
+    card = {"lemma": "fixture", "values": [value]}
+    html = projection.render_card(card)
+    assert '<details class="occupation-context">' in html
+    assert "Soviet-era dictionary, occupation context" in html
+    assert "Historical quotation." in html
+    assert "<strong>Risk" not in html
+    context["sovietization_risk"] = 1
+    assert "<strong>Risk 1</strong>" in projection.render_card(card)
 
 
 def encoded(value):

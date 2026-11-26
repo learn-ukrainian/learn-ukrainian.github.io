@@ -295,7 +295,7 @@ def _paradigm(forms, vesum_rows, snapshots, binding_reason, lineage):
         u_values, v_values = ulif.get(slot, []), vesum.get(slot, [])
         u_forms = {item["value"]["unstressed"] for item in u_values
                    if not (item["value"]["marked_asterisk"] or item["value"]["preposition"])}
-        v_forms = {source_rules.nfc(item["value"]["form"]) for item in v_values}
+        v_forms = {source_rules.unstressed(item["value"]["form"]) for item in v_values}
         reason = binding_reason
         if slot is None:
             reason = "unmapped_slot"

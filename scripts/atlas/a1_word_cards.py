@@ -648,27 +648,43 @@ def main(argv=None):
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json
   .venv/bin/python -m scripts.atlas.a1_word_cards --sources batch_state/a1/sources.json --output batch_state/a1/cards.json --check
   .venv/bin/python -m scripts.atlas.a1_word_cards --batch ulif
+  .venv/bin/python -m scripts.atlas.a1_word_cards --batch full-data --capture-sources \
+    --sources batch_state/a1/source-pin.json --output batch_state/a1/parity.json --site-output batch_state/a1/preview
 Outputs: host-only card data and receipts. The ULIF batch emits JSON on stdout
-including a per-slot disagreement report. It opens Sources and VESUM read-only.
+including a per-slot disagreement report. The full-data batch writes the A1
+parity ledger and a local HTML preview. All stores open read-only.
 Exit codes: 0 verified output; 1 refused input or evidence; 2 usage error.
 Related: #11943, #12288, docs/atlas/word-cards/a1-v1-inventory.md
 """)
-    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5", "slice6", "ulif"), default="slice2",
-                        help="Fixed slice to replay (default: slice2), or ulif for all A1 lemma data")
+    parser.add_argument("--batch", choices=("slice2", "slice3", "slice4", "slice5", "slice6", "ulif", "full-data"), default="slice2",
+                        help="Fixed slice to replay (default: slice2), ulif for source diagnostics, or full-data for A1 v2")
     parser.add_argument("--sources", type=Path,
-                        help="Frozen Sources JSON, e.g. batch_state/a1/sources.json (required for slice replay)")
+                        help="Frozen Sources JSON for slice replay or a frozen source pin for full-data")
     parser.add_argument("--output", type=Path,
                         help="Required host-only JSON path for slice replay, e.g. batch_state/a1/cards.json")
+    parser.add_argument("--site-output", type=Path, help="Host-only HTML directory for full-data")
+    parser.add_argument("--capture-sources", action="store_true",
+                        help="Write the full-data source pin from the current read-only stores")
     parser.add_argument("--check", action="store_true", help="Verify an existing output without rewriting it (default: off)")
     parser.add_argument("--require-chain", action="store_true",
                         help="Refuse unless an actual card has meaning, stress, VESUM forms and an approved example (default: off)")
     args = parser.parse_args(argv)
+    if args.batch == "full-data":
+        if args.site_output is None or args.require_chain or (args.capture_sources and args.check):
+            parser.error("full-data needs --site-output and accepts --capture-sources or --check")
+    elif args.site_output or args.capture_sources:
+        parser.error("--site-output and --capture-sources require --batch full-data")
     if args.batch == "ulif":
         if args.sources or args.output or args.check or args.require_chain:
             parser.error("--batch ulif reads the configured stores and writes only to stdout")
     elif args.sources is None or args.output is None:
-        parser.error("fixed slice batches require --sources and --output")
+        parser.error("fixed slice and full-data batches require --sources and --output")
     try:
+        if args.batch == "full-data":
+            from scripts.atlas.a1_card_projection import run
+
+            print(json.dumps(run(ROOT, args), sort_keys=True))
+            return 0
         if args.batch == "ulif":
             from scripts.atlas.a1_card_capture import capture_ulif
 
