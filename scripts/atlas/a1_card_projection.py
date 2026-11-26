@@ -20,7 +20,7 @@ from scripts.atlas import word_card_meanings as meanings
 from scripts.atlas import word_card_sources as src
 from scripts.atlas.a1_card_capture import _entry_candidates, _group_text, _paradigm, _tag_list
 from scripts.atlas.a1_card_receipts import Refusal, canonical, digest
-from scripts.atlas.allocate_pilot_identities import label_pos
+from scripts.atlas.allocate_pilot_identities import is_proper_name, label_pos
 from scripts.atlas.atlas_db import ENRICHMENT_SECTIONS
 from scripts.lexicon.enrich_manifest import _slovnyk_ukreng_glosses
 from scripts.lexicon.runner.ulif_dictua_parse import (
@@ -28,12 +28,29 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_ulif_entry,
     parse_ulif_relation_groups,
 )
+from scripts.wiki.sources_db import _fold_dict_key
 from scripts.wiki.sum20_mirror import MIRROR_ATTRIBUTION_LABEL
 from scripts.wiki.sum20_official import Sum20ParseError, parse_sum20_article
 
 OWNER = "codex-atlas"
 GROUPS = ("synonyms", "antonyms", "phraseology")
 REQUIRED = ("stress", "pos", "paradigm", "definition_uk", "gloss_en", "cefr", "examples")
+VTS = "vts_busel_slovnyk_me"
+VTS_NOT_CAPTURED = "ВТС not captured"
+REGISTER_LABEL = object()
+GAP_SOURCES = {
+    "stress": ("ulif", "vesum", "sum20"),
+    "pos": ("vesum",),
+    "gender": ("vesum",),
+    "aspect": ("vesum",),
+    "paradigm": ("vesum", "ulif"),
+    "definition_uk": ("sum20", VTS),
+    "gloss_en": ("dmklinger", "slovnyk_me"),
+    "cefr": ("puls",),
+}
+# These VESUM tags name displayed forms outside the core inflection
+# signature. Do not use them to match a VESUM entry to a ULIF homonym.
+VESUM_EXTRA_SLOTS = {"verb": {"impers"}, "adv": {"compc", "comps"}}
 
 
 @dataclass(frozen=True)
@@ -165,7 +182,10 @@ def group_structure(value):
 def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report):
     for source, parts in meanings.candidates(sources, lemma).items():
         if not parts:
-            report("definition_uk", source, "capture_absent")
+            if source != "sum20_slovnyk_mirror":
+                report("definition_uk", source, VTS_NOT_CAPTURED if source == VTS else "capture_absent")
+            else:
+                report("mirror_witness", source, "capture_absent")
             continue
         field = "mirror_witness" if source == "sum20_slovnyk_mirror" else "definition_uk"
         # Unknown competitors prevent a unique partition match.
@@ -177,6 +197,8 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                 raise Refusal("duplicate_dictionary_partition")
             seen.add(locator)
             reason = part["reason"]
+            if source == VTS and reason == "full_source_unavailable":
+                reason = VTS_NOT_CAPTURED
             identities = competing
             # The VESUM comment is correspondence evidence only. Its stress
             # spelling cannot itself become a learner-facing stress value.
@@ -256,11 +278,10 @@ def soviet_context(row):
     }
 
 
-def entry_witnesses(sources, lemma, unambiguous, pos, add, report):
+def entry_witnesses(sources, lemma, unambiguous, gloss_bound, pos, add, report):
     specs = (
         ("esum_etymology", "lemma", "etymology_text", "etymology", "esum"),
         ("grinchenko", "word", "word", "heritage", "grinchenko"),
-        ("puls_cefr", "word", "level", "cefr", "puls"),
         ("dmklinger_uk_en", "word", "translations", "gloss_en", "dmklinger"),
         ("sum11", "word", "definition", "soviet_colonization_context", "sum11"),
     )
@@ -279,7 +300,8 @@ def entry_witnesses(sources, lemma, unambiguous, pos, add, report):
             elif field == "soviet_colonization_context":
                 # Context describes the spelling, including historical dictionary divisions.
                 add(field, source, locator, soviet_context(row), scope="context", label=row["source"])
-            elif not unambiguous or (row.get("pos") and pos not in {label_pos(row["pos"]), row["pos"]}):
+            elif (not (gloss_bound if field == "gloss_en" else unambiguous)
+                  or (row.get("pos") and pos not in {label_pos(row["pos"]), row["pos"]})):
                 report(field, source, "entry_witness_unbound", 1, locator)
             else:
                 value = row[column]
@@ -304,7 +326,7 @@ def entry_witnesses(sources, lemma, unambiguous, pos, add, report):
                len(wiktionary))
 
 
-def secondary_witnesses(sources, lemma, bound, add, report):
+def secondary_witnesses(sources, lemma, bound, gloss_bound, add, report):
     facets = {
         "synonyms": ("synonyms", "synonyms_dictionary"),
         "phraseology": ("phraseology", "frazeolohichnyi"),
@@ -323,7 +345,7 @@ def secondary_witnesses(sources, lemma, bound, add, report):
             report(field, source, "capture_absent")
         for row in rows[slug]:
             locator = f"slovnyk_me_entries:{row['id']}"
-            if not bound or row["use_role"] != "reference":
+            if not (gloss_bound if slug == "ukreng" else bound) or row["use_role"] != "reference":
                 report(field, source, "entry_witness_unbound", 1, locator)
                 continue
             text, reason = meanings.full_slovnyk(row, sources.meaning_cache_root)
@@ -331,33 +353,84 @@ def secondary_witnesses(sources, lemma, bound, add, report):
             if reason:
                 report(field, source, reason, 1, locator)
             elif slug == "ukreng":
-                glosses = _slovnyk_ukreng_glosses({**row, "text": text}, lemma, limit=len(text))
-                found = [
-                    gloss for gloss in glosses
-                    if re.search(rf"(?<![\w'’]){re.escape(gloss)}(?![\w'’])", text)
-                ]
+                found, reason = literal_ukreng_glosses(row, text, lemma)
                 if not found:
-                    report(field, source, "no_literal_bilingual_gloss", 1, locator)
+                    report(field, source, reason, 1, locator)
                 for index, gloss in enumerate(found):
                     add(field, source, f"{locator}/gloss/{index}", gloss, label=row["dictionary_label"])
             else:
                 add(field, source, locator, text, label=row["dictionary_label"])
 
 
-def card_values(sources, lemma, target, register, ulif_anchor=None):
+def literal_ukreng_glosses(row, text, lemma):
+    """Read literal glosses only inside the exact captured, unsplit article."""
+    article = meanings.SOURCE_TAIL.sub("", text)
+    head, _, body = article.partition(" ")
+    if (head != lemma or row["word"] != lemma
+            or row["source_url"] != "https://slovnyk.me/dict/ukreng/" + quote(lemma, safe="")):
+        return [], "bilingual_ukreng_article_mismatch"
+    if re.match(r"\s*[IVX]+(?=[.\s])", body):
+        return [], "bilingual_homonym_partition_unresolved"
+    glosses = _slovnyk_ukreng_glosses({**row, "text": article}, lemma, limit=len(article))
+    return [
+        gloss for gloss in glosses
+        if re.search(rf"(?<![\w'’‐‑-]){re.escape(gloss)}(?![\w'’‐‑-])", body)
+    ], "no_literal_bilingual_gloss"
+
+
+def puls_witnesses(rows, lemma, bound, citation, add, report):
+    """Use the exact headword fold of query_cefr_level and keep the bound class."""
+    if not rows:
+        report("cefr", "puls", "checked_none")
+        return
+    tags = {token for row in citation for token in row["tags"].split(":")}
+    pos = "pron" if "pron" in tags else citation[0]["pos"] if citation else None
+    proper = "prop" in tags
+    aspect = assembly.vesum_aspect(citation)
+    eligible = []
+    for row in rows:
+        label = row["pos"] or ""
+        source_pos = label_pos(label) or {
+            "займенник": "pron", "вигук": "intj", "частка": "part", "числівник": "numr",
+        }.get(label)
+        if source_pos == "numr" and row["guideword"] == "порядковий числівник" and "numr" in tags:
+            source_pos = "adj"
+        source_aspect = "imperf" if "(недок.)" in label else "perf" if "(док.)" in label else None
+        locator = f"puls_cefr:{row['id']}"
+        if not bound:
+            report("cefr", "puls", "entry_witness_unbound", 1, locator)
+        elif (source_pos != pos or not src.aspect_compatible(source_aspect, aspect)
+              or not assembly.puls_matches_identity(row, lemma, proper)):
+            report("cefr", "puls", "entry_witness_grammar_mismatch", 1, locator)
+        elif row["level"] not in {"A1", "A2", "B1", "B2", "C1"}:
+            report("cefr", "puls", "invalid_cefr_level", 1, locator)
+        else:
+            eligible.append((locator, row))
+    conflicting = len({row["level"] for _, row in eligible}) > 1
+    for locator, row in eligible:
+        if conflicting:
+            report("cefr", "puls", "conflicting_cefr_levels", 1, locator)
+        else:
+            add("cefr", "puls", locator, row["level"], label=row["source"])
+
+
+def card_values(sources, lemma, target, register, puls_rows, unique_card, ulif_anchor=None):
     values, decisions = [], []
 
     def report(field, source, reason, count=0, locator=None):
         decisions.append({"field": field, "source": source, "status": "withheld" if count else "missing",
                           "reason": reason, "count": count, "locator": locator, "owner": OWNER})
 
-    def add(field, source, locator, value, *, label=None, scope="entry", source_key=None):
-        decision = checker.check_entry_projection(field, source, scope, register)
+    def add(field, source, locator, value, *, label=REGISTER_LABEL, scope="entry", source_key=None):
+        source_label = label
+        if label is REGISTER_LABEL:
+            spec = checker.canonical_source(source, register)
+            source_label = spec.get("name") if spec else None
+        decision = checker.check_entry_projection(field, source, scope, register, source_label=source_label)
         if decision not in {"supported", "context_only"}:
             report(field, source, decision, 1, locator)
         elif value:
-            spec = checker.canonical_source(source, register)
-            values.append(asdict(EntryValue(field, source, label or spec["name"], locator, value, scope, source_key)))
+            values.append(asdict(EntryValue(field, source, source_label, locator, value, scope, source_key)))
         else:
             report(field, source, "empty_source_value", 1, locator)
 
@@ -377,8 +450,9 @@ def card_values(sources, lemma, target, register, ulif_anchor=None):
                 target = matches[0]
     entry_id = None
     target_rows = vesum_rows.get(target, [])
+    citation = [row for row in target_rows if row["word_form"] == lemma]
     vesum_stress = set()
-    if target_rows:
+    if citation:
         pos = target_rows[0]["pos"]
         candidates = {key: row for key, row in homonyms.items()
                       if row["candidates"] is None or target in row["candidates"]
@@ -391,7 +465,6 @@ def card_values(sources, lemma, target, register, ulif_anchor=None):
         entry_id = bound_ulif(candidates, entry_paradigms, target)
         vesum_stress = {reading.casefold() for reading in entry_paradigms[target]["stress"]}
         add("pos", "vesum", f"forms_all:entry:{target}/pos", pos)
-        citation = [row for row in target_rows if row["word_form"] == lemma]
         for gender in assembly.vesum_gender(citation):
             add("gender", "vesum", f"forms_all:entry:{target}/gender/{gender}", gender)
         aspect = assembly.vesum_aspect(target_rows)
@@ -402,24 +475,38 @@ def card_values(sources, lemma, target, register, ulif_anchor=None):
         for slot in paradigm["slots"]:
             for source in ("vesum", "ulif"):
                 for item in slot[source]:
+                    slot_name = slot["slot"]
+                    if slot_name is None and source == "vesum":
+                        tags = set(item["value"]["tags"].split(":"))
+                        explicit = tags & VESUM_EXTRA_SLOTS.get(pos, set())
+                        if len(explicit) == 1:
+                            slot_name, = explicit
                     ulif_hold = source == "ulif" and (
                         slot["reason"] or item["value"]["marked_asterisk"] or item["value"]["preposition"]
                     )
-                    if slot["slot"] is None or ulif_hold:
+                    if slot_name is None or ulif_hold:
                         report("paradigm", source, slot["reason"] or "qualified_form", 1, item["receipt"]["locator"])
                     else:
                         add("paradigm", source, item["receipt"]["locator"], item["value"]["form"],
-                            scope="slot", source_key=slot["slot"])
+                            scope="slot", source_key=slot_name)
         if entry_id is not None:
             identity = homonyms[entry_id]
+            locator = f"ulif_dictua_entries:{entry_id}/canonical_headword"
             if src.ACUTE in identity["head"]:
-                add("stress", "ulif", f"ulif_dictua_entries:{entry_id}/canonical_headword", identity["head"])
+                add("stress", "ulif", locator, identity["head"])
+            else:
+                report("stress", "ulif", "bound_headword_has_no_explicit_stress", 1, locator)
             ulif_groups(sources, entry_id, identity, add, report)
         else:
             report("identity", "ulif", "ulif_vesum_correspondence_unresolved")
+            report("stress", "ulif", "ulif_vesum_correspondence_unresolved" if homonyms else "capture_absent")
     else:
         pos = None
+        target = None
         report("identity", "vesum", "inventory_entry_unavailable")
+        for field in ("pos", "gender", "aspect", "paradigm", "stress"):
+            report(field, "vesum", "inventory_entry_unavailable")
+        report("stress", "ulif", "no_bound_vesum_entry" if homonyms else "capture_absent")
     for other_id, entry in homonyms.items():
         if other_id != entry_id:
             reason = entry["reason"] or "entry_not_bound"
@@ -432,15 +519,38 @@ def card_values(sources, lemma, target, register, ulif_anchor=None):
                 report("paradigm", "ulif", reason, 1, f"ulif_forms:{row['id']}")
 
     modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report)
+    if not any(value["field"] == "stress" and value["source_id"] == "sum20" for value in values):
+        report("stress", "sum20", "no_bound_stressed_headword")
     unambiguous = len(vesum_rows) == len(homonyms) == 1 and entry_id is not None
-    entry_witnesses(sources, lemma, unambiguous, pos, add, report)
-    secondary_witnesses(sources, lemma, unambiguous, add, report)
+    # Spelling-keyed evidence can describe a singleton VESUM lexeme. ULIF
+    # provides a competing-entry check here. Its own values still need the
+    # independent paradigm, aspect and stress match above.
+    competing = []
+    for homonym in homonyms.values():
+        head, row = homonym["head"], homonym["row"]
+        separate_name = (lemma.islower() and homonym["candidates"] == [] and not homonym["reason"]
+                         and src.unstressed(head) != lemma and is_proper_name(
+                             row["grammatical_label"], head, row["sense_gloss"],
+                         ))
+        if not separate_name:
+            competing.append(homonym)
+    singleton = competing[0] if len(competing) == 1 else None
+    spelling_bound = bool(unique_card and len(vesum_rows) == 1 and citation and singleton
+                          and singleton["forms"] and not singleton["reason"]
+                          and singleton["candidates"] == [target]
+                          and (not vesum_stress or any(
+                              reading.casefold() in vesum_stress for reading in src.stress_forms(singleton["head"])
+                          ))
+                          and (ulif_anchor is None or singleton["row"]["id"] == ulif_anchor["id"]))
+    common = not any("prop" in row["tags"].split(":") for row in citation)
+    sources._use(f"projection:puls:{lemma}", puls_rows)
+    puls_witnesses(puls_rows, lemma, spelling_bound, citation, add, report)
+    entry_witnesses(sources, lemma, unambiguous, spelling_bound if common else unambiguous, pos, add, report)
+    secondary_witnesses(sources, lemma, unambiguous, spelling_bound and common, add, report)
     keys = [(value["field"], value["source_id"], value["locator"], value["source_key"]) for value in values]
     if len(keys) != len(set(keys)):
         raise Refusal("duplicate_projection_receipt")
     available = {value["field"] for value in values if value["scope"] != "context"}
-    if "stress" not in available:
-        report("stress", "vts_busel_slovnyk_me", "explicit_higher_priority_stress_miss_unavailable")
     required = list(REQUIRED)
     if pos == "noun" and any({"m", "f", "n"}.intersection(row["tags"].split(":")) for row in target_rows):
         required.append("gender")
@@ -679,14 +789,52 @@ def build(root, inventory, register):
         return assemble_population(targets, gaps, inputs, atlas, register, digest(inventory))
 
 
+def field_ledger(values, observations, holds):
+    """Account for each checked field, including incomplete sets of values."""
+    rows = {}
+    for field, sources in GAP_SOURCES.items():
+        admitted = [value for value in values if value["field"] == field]
+        field_holds = {f"required_{field}"}
+        if field == "definition_uk":
+            field_holds.add("required_definition_per_sense")
+        if field == "paradigm":
+            field_holds.add("required_paradigm_unmapped_slots")
+        reasons = [reason for reason in holds if reason in field_holds]
+        if not admitted and not reasons:
+            continue
+        rows[field] = {
+            "outcome": "held" if reasons else "filled",
+            "reasons": reasons,
+            "sources_searched": {
+                source: {
+                    "admitted": sum(value["source_id"] == source for value in admitted),
+                    "reasons": dict(Counter(item["reason"] for item in observations
+                                            if item["field"] == field and item["source"] == source)),
+                }
+                for source in sources
+            },
+        }
+    return rows
+
+
 def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256):
     cards = []
     datasets = Counter()
+    # PULS is small. Index every exact folded hit once so a result limit
+    # cannot conceal a conflicting row for the same spelling.
+    puls_by_word = defaultdict(list)
+    for row in map(dict, inputs.sources.execute("SELECT * FROM puls_cefr ORDER BY id")):
+        puls_by_word[_fold_dict_key(row["word"])].append(row)
+    by_spelling = Counter(_fold_dict_key(card["lemma"]) for card in targets.values())
     for card_id, card in targets.items():
         lemma = card["lemma"]
+        spelling = _fold_dict_key(lemma)
         entries = sorted(card["entry_ids"])
         target = entries[0] if len(entries) == 1 else None
-        target, values, observations, holds = card_values(inputs, lemma, target, register, card["ulif_anchor"])
+        target, values, observations, holds = card_values(
+            inputs, lemma, target, register, puls_by_word.get(spelling, []), by_spelling[spelling] == 1,
+            card["ulif_anchor"],
+        )
         if target is not None and target not in entries:
             entries.append(target)
         if target is None:
@@ -715,10 +863,12 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
         )
         status = "held" if holds else "complete"
         datasets[status] += 1
+        fields = field_ledger(values, observations, holds)
+        datasets["code_fields_complete"] += not any(row["outcome"] == "held" for row in fields.values())
         cards.append({"card_id": card_id, "lemma": lemma, "entry_ids": entries, "atlas_slug": slug,
                       "slices": card["slices"], "inventory_rows": card["rows"], "status": status,
                       "version": digest({"lemma": lemma, "entry_ids": entries, "values": values}),
-                      "values": values, "legacy": ledger, "observations": observations,
+                      "values": values, "legacy": ledger, "observations": observations, "gap_ledger": fields,
                       "holds": [{"reason": reason, "owner": OWNER} for reason in holds]})
     inventory_gaps = [
         {"key": key, "rows": rows, "owner": OWNER, "legacy": parity(legacy_payloads(atlas, key, []), [], None)}
@@ -735,6 +885,7 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
             "cards": len(cards), "inventory_rows": sum(len(card["inventory_rows"]) for card in cards)
             + sum(map(len, gaps.values())), "inventory_gap_keys": len(gaps), "inventory_gap_rows": sum(map(len, gaps.values())),
             "complete": datasets["complete"], "held": datasets["held"],
+            "code_fields_complete": datasets["code_fields_complete"],
             "holds": dict(Counter(row["reason"] for card in cards for row in card["holds"])),
             "source_observations": dict(Counter(row["reason"] for card in cards for row in card["observations"])),
             "assertions": dict(Counter("context_only" if row["scope"] == "context" else "supported"
@@ -803,6 +954,10 @@ def render_card(card):
     notice = ""
     if card.get("status") == "held":
         reasons = "".join(f"<li>{escape(hold['reason'].replace('_', ' '))}</li>" for hold in card["holds"])
+        definition = card.get("gap_ledger", {}).get("definition_uk", {})
+        if (definition.get("outcome") == "held"
+                and VTS_NOT_CAPTURED in definition["sources_searched"][VTS]["reasons"]):
+            reasons += f"<li>{VTS_NOT_CAPTURED}</li>"
         notice = f'<aside aria-label="Card status"><strong>Held · incomplete card</strong><ul>{reasons}</ul></aside>'
     return render_page(head, '<p><a href="./index.html">A1 word cards</a></p>' + notice + "".join(sections))
 

@@ -429,3 +429,55 @@ now targets `main`. It remains held pending the review infrastructure gate,
 explicit release, current-head CI, and independent review of all 60 entries.
 #11943 and all nine parent criteria remain open. This slice supplies no
 publication, browser acceptance, or independent held-out proof.
+
+## Full-data preview gap ledger
+
+The full-data preview regenerates the cards for slices 1 to 6 and the
+remaining A1 inventory. Each `cards[].gap_ledger` entry in `parity.json`
+lists the field outcome, the sources checked, and their refusal or absence
+reasons. The surrounding card records the lemma and the admitted values with
+their source labels and locators. A held definition displays
+`ВТС not captured` when the full ВТС capture is absent.
+
+The VESUM entry supplies morphology. ULIF stress still requires the
+existing ULIF–VESUM correspondence. The current meanings come from bound
+official СУМ-20 and captured ВТС partitions. A spelling-keyed PULS or English
+gloss witness needs a single eligible entry. Ambiguous spellings and
+bilingual homonym partitions remain held. The `code_fields_complete` count
+measures cards with every required field in this pass. A complete card
+also requires example evidence.
+
+Use a fresh host-only output directory for the preview.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch full-data --capture-sources \
+  --sources "$work/source-pin.json" --output "$work/parity.json" --site-output "$work/preview"
+```
+
+Open `preview/index.html` to see the regenerated cards. Replace
+`--capture-sources` with `--check` to verify the source pin, ledger, and HTML
+against a read-only replay.
+
+### AC-06 coverage on the A1 snapshot
+
+The replay covers 845 cards and accounts for all 2,144 inventory rows.
+Hold reasons overlap.
+
+| Card outcome or hold reason | Before | After |
+| --- | ---: | ---: |
+| Complete cards | 4 | 4 |
+| Held cards | 841 | 841 |
+| Cards with all required fields in this pass | 185 | 189 |
+| Required examples | 839 | 839 |
+| Required CEFR | 632 | 319 |
+| Required English gloss | 618 | 308 |
+| Required Ukrainian definition | 602 | 602 |
+| Required stress | 538 | 538 |
+| Required paradigm | 75 | 71 |
+| Required part of speech | 71 | 71 |
+| Unbound inventory entry | 71 | 71 |
+| Unmapped VESUM paradigm slots | 46 | 0 |
+
+The remaining definition gaps include 81 cards with `ВТС not captured`.
+Atlas owns the entry correspondence and source gaps. The operator owns the
+remaining ВТС capture. Example review is tracked separately under #12288.

@@ -77,12 +77,14 @@ def canonical_source(source, register):
 
 
 
-def check_entry_projection(field, source, scope, register):
+def check_entry_projection(field, source, scope, register, *, source_label):
     """Check a replayed entry value's positive authority and evidence role."""
     record = canonical_source(source, register)
     capability = ENTRY_PROJECTION_CAPABILITIES.get(field, {}).get(source)
     if not record or not capability or capability not in record.get("fields_used", []):
         return "source_facet_not_permitted"
+    if not isinstance(source_label, str) or not source_label.strip():
+        return "source_label_missing"
     if scope == "context" or source == "sum11":
         if (field, source, scope) == ("soviet_colonization_context", "sum11", "context"):
             return "context_only"
