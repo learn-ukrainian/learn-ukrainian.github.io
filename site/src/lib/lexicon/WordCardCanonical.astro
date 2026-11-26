@@ -1,0 +1,57 @@
+---
+import CourseLayout from '../../layouts/CourseLayout.astro';
+import { canonicalWordCardBuildInput, canonicalWordCards, type CanonicalWordCard } from './word-card-publication';
+import { attributionGap } from './word-card-release';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return canonicalWordCards(canonicalWordCardBuildInput()).map(card => ({
+    params: { id: card.row.card_id },
+    props: { card },
+  }));
+}
+
+interface Props { card: CanonicalWordCard }
+const { card } = Astro.props;
+const { row, path } = card;
+const siteFields = row.fields.filter(field => field.citation.licence_ref.appears_in?.includes('site'));
+const fields = siteFields.filter(({ citation }) => attributionGap(citation) === null);
+const spelling = row.card_kind === 'mwe' ? 'mwe_form' : 'spelling';
+const headwords = [...new Set(fields.flatMap(field =>
+  field.subject.kind === 'card' && field.field === spelling && typeof field.value === 'string' ? [field.value] : [],
+))];
+const heading = headwords.length === 1 && headwords[0]?.trim() ? headwords[0] : row.card_id;
+const canonical = new URL(path, Astro.site);
+---
+<CourseLayout title={heading} currentPath={path} wide showHero={false}>
+  <link slot="head" rel="canonical" href={canonical.href} />
+  <article class="word-card" data-word-card={row.card_id} data-card-version={row.card_version}>
+    <h1>{heading}</h1>
+    <dl>
+      {fields.map(field => (
+        <div data-assertion={field.assertion_id} data-subject-kind={field.subject.kind} data-subject-id={field.subject.id}>
+          <dt>{field.field.replaceAll('_', ' ')}</dt>
+          <dd>
+            <div class="value">{typeof field.value === 'string' ? field.value : JSON.stringify(field.value, null, 2)}</div>
+            <div class="credit">
+              <span>{field.citation.source_id}</span>
+              <span>{field.citation.attribution}</span>
+              <span>{field.citation.licence.name}</span>
+            </div>
+          </dd>
+        </div>
+      ))}
+    </dl>
+    {row.fields.length > siteFields.length && <p data-excluded="site">Release assertions without site scope ({row.fields.length - siteFields.length})</p>}
+    {siteFields.length > fields.length && <p data-excluded="attribution">Release assertions with incomplete attribution ({siteFields.length - fields.length})</p>}
+    {row.known_gaps.length > 0 && <p data-excluded="gap">Declared release gaps ({row.known_gaps.length})</p>}
+  </article>
+</CourseLayout>
+<style>
+  .word-card { padding: 1.5rem; }
+  dd { margin: 0 0 1rem; }
+  .value, .credit { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .credit { font-size: .85em; }
+  .credit span { display: block; }
+</style>
