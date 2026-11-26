@@ -1,7 +1,7 @@
 import type { EntryRecord } from './atlas-data-source';
 import type { PreviewCard } from './word-card-preview';
-import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleasePin } from './word-card-release';
-import { groupReleasePages, type ReleasePage } from './word-card-readable';
+import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleaseIndex, type ReleasePin } from './word-card-release.ts';
+import { groupReleasePages, type ReleasePage } from './word-card-readable.ts';
 
 export const publicReleasePin = {
   release_version: 'v0.1.0-pilot', provenance: 'producer-declared',

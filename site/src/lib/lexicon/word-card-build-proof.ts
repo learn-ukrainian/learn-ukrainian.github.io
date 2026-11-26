@@ -4,7 +4,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
 import { Window, type Document, type Element } from 'happy-dom';
-import { canonicalWordCardBuildInput, canonicalWordCards, wordCardRoute, type CanonicalWordCard } from './word-card-publication';
+import { canonicalWordCardBuildInput, canonicalWordCards, wordCardRoute, type CanonicalWordCard } from './word-card-publication.ts';
+import { attributionGap } from './word-card-release.ts';
 
 function children(element: Element, tags: string[]) {
   const elements = Array.from(element.children);
@@ -31,10 +32,17 @@ function verifyCard(document: Document, card: CanonicalWordCard, url: string) {
   deepStrictEqual(article.getAttribute('data-word-card'), row.card_id);
   deepStrictEqual(article.getAttribute('data-card-version'), row.card_version);
 
-  const publicAssertions = row.fields.filter(({ citation }) => citation.licence_ref.appears_in?.includes('site'));
-  const excluded = row.fields.length - publicAssertions.length;
+  const siteAssertions = row.fields.filter(({ citation }) => citation.licence_ref.appears_in?.includes('site'));
+  const publicAssertions = siteAssertions.filter(({ citation }) => attributionGap(citation) === null);
+  const noSiteScope = row.fields.length - siteAssertions.length;
+  const incompleteAttribution = siteAssertions.length - publicAssertions.length;
   const gaps = row.known_gaps.length;
-  const parts = children(article, ['h1', 'dl', ...Array.from({ length: Number(excluded > 0) + Number(gaps > 0) }, () => 'p')]);
+  const expectedNotices = [
+    ...(noSiteScope ? [['site', `Release assertions without site scope (${noSiteScope})`]] : []),
+    ...(incompleteAttribution ? [['attribution', `Release assertions with incomplete attribution (${incompleteAttribution})`]] : []),
+    ...(gaps ? [['gap', `Declared release gaps (${gaps})`]] : []),
+  ];
+  const parts = children(article, ['h1', 'dl', ...expectedNotices.map(() => 'p')]);
   const [heading, list, ...notices] = parts;
   if (!heading || !list) throw Error('Missing card heading or assertions');
   const headwords = new Set(publicAssertions.flatMap(assertion => {
@@ -62,10 +70,8 @@ function verifyCard(document: Document, card: CanonicalWordCard, url: string) {
     typeof assertion.value === 'string' ? assertion.value : JSON.stringify(assertion.value, null, 2),
     [assertion.citation.source_id, assertion.citation.attribution, assertion.citation.licence.name],
   ]), 'Word-card assertions or provenance differ from the release');
-  deepStrictEqual(notices.map(notice => [notice.getAttribute('data-excluded'), text(notice)]), [
-    ...(excluded ? [['site', `${excluded} release assertions excluded from the site.`]] : []),
-    ...(gaps ? [['gap', `${gaps} gaps declared in the release.`]] : []),
-  ], 'Word-card exclusion counts differ from the release');
+  deepStrictEqual(notices.map(notice => [notice.getAttribute('data-excluded'), text(notice)]), expectedNotices,
+    'Word-card exclusion counts differ from the release');
 }
 
 /** Check the complete built route and sitemap populations, then replay each page against its source. */

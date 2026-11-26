@@ -24,10 +24,22 @@ function release() {
   dataset[0].fields[0].citation.licence_ref.appears_in = ['site'];
   dataset[0].fields[1].citation.licence_ref.appears_in = ['site'];
   dataset[0].fields[2].citation.licence_ref.appears_in = ['dataset'];
+  const [sample] = dataset[0].fields;
+  for (const [source, attribution, suffix] of [
+    ['puls', 'PULS citation above.', 'a'],
+    ['vesum', 'VESUM fixture <used version>', 'b'],
+  ] as const) {
+    dataset[0].fields.push({
+      ...sample, assertion_id: `wa_${suffix.padStart(24, '9')}`, field: 'definition_uk', value: `uncited-${source}`,
+      citation: { ...sample.citation, source_id: source, attribution,
+        licence_ref: { ...sample.citation.licence_ref, register_source_id: source } },
+    });
+  }
   dataset[0].known_gaps = [{ internal_receipt: 'private-gap-sentinel' }];
   const bytes = JSON.stringify(dataset);
   const manifest = readFileSync(join(fixtureRoot, 'release-json/manifest.json'), 'utf8');
-  const manifestBytes = JSON.stringify({ ...JSON.parse(manifest), dataset_bytes: Buffer.byteLength(bytes), dataset_sha256: digest(bytes) });
+  const manifestBytes = JSON.stringify({ ...JSON.parse(manifest), dataset_bytes: Buffer.byteLength(bytes), dataset_sha256: digest(bytes),
+    field_citation_count: dataset[0].fields.length + dataset[1].fields.length });
   writeFileSync(join(artifactPath, 'word-cards.json'), bytes);
   writeFileSync(join(artifactPath, 'manifest.json'), manifestBytes);
   const pin = { ...pins.json, dataset_sha256: digest(bytes), manifest_sha256: digest(manifestBytes),
@@ -93,8 +105,9 @@ it('fails the build proof when a rendered value differs from its release source'
   const { cards, file, html } = await builtCard();
   expect(html).toContain('permitted-definition');
   expect(html).toContain('Synthetic ulif edition');
-  expect(html).toContain('1 release assertions excluded from the site.');
-  expect(html).not.toMatch(/parallel-definition|private-gap-sentinel|ulif:row:/);
+  expect(html).toContain('Release assertions without site scope (1)');
+  expect(html).toContain('Release assertions with incomplete attribution (2)');
+  expect(html).not.toMatch(/parallel-definition|private-gap-sentinel|ulif:row:|PULS citation above|used version|uncited-/);
   await expect(verifyWordCardBuild(scratch, site, cards)).resolves.toEqual({ canonical: 1, sitemap: 1 });
   writeFileSync(file, html.replace('permitted-definition', 'altered definition'));
   await expect(verifyWordCardBuild(scratch, site, cards)).rejects.toThrow('Word-card assertions or provenance differ from the release');

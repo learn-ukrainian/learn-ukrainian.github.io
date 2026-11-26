@@ -1,6 +1,7 @@
 ---
 import CourseLayout from '../../layouts/CourseLayout.astro';
 import { canonicalWordCardBuildInput, canonicalWordCards, type CanonicalWordCard } from './word-card-publication';
+import { attributionGap } from './word-card-release';
 
 export const prerender = true;
 
@@ -14,7 +15,8 @@ export function getStaticPaths() {
 interface Props { card: CanonicalWordCard }
 const { card } = Astro.props;
 const { row, path } = card;
-const fields = row.fields.filter(field => field.citation.licence_ref.appears_in?.includes('site'));
+const siteFields = row.fields.filter(field => field.citation.licence_ref.appears_in?.includes('site'));
+const fields = siteFields.filter(({ citation }) => attributionGap(citation) === null);
 const spelling = row.card_kind === 'mwe' ? 'mwe_form' : 'spelling';
 const headwords = [...new Set(fields.flatMap(field =>
   field.subject.kind === 'card' && field.field === spelling && typeof field.value === 'string' ? [field.value] : [],
@@ -41,8 +43,9 @@ const canonical = new URL(path, Astro.site);
         </div>
       ))}
     </dl>
-    {row.fields.length > fields.length && <p data-excluded="site">{row.fields.length - fields.length} release assertions excluded from the site.</p>}
-    {row.known_gaps.length > 0 && <p data-excluded="gap">{row.known_gaps.length} gaps declared in the release.</p>}
+    {row.fields.length > siteFields.length && <p data-excluded="site">Release assertions without site scope ({row.fields.length - siteFields.length})</p>}
+    {siteFields.length > fields.length && <p data-excluded="attribution">Release assertions with incomplete attribution ({siteFields.length - fields.length})</p>}
+    {row.known_gaps.length > 0 && <p data-excluded="gap">Declared release gaps ({row.known_gaps.length})</p>}
   </article>
 </CourseLayout>
 <style>

@@ -1,4 +1,4 @@
-import { loadPinnedWordCardRelease, type WordCardReleaseInput } from './word-card-preview-inputs';
+import { loadPinnedWordCardRelease, type WordCardReleaseInput } from './word-card-preview-inputs.ts';
 import type { ReleasePin } from './word-card-release';
 
 export const wordCardRoute = '/lexicon/card/';

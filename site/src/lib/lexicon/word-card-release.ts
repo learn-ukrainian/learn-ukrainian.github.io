@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'astro/zod';
-import cardSchema from '../../../../schemas/word-card-v1.schema.json';
+import cardSchema from '../../../../schemas/word-card-v1.schema.json' with { type: 'json' };
 
 const json = z.json();
 // Preserve source strings byte for byte; whitespace is only an admission check.
