@@ -136,7 +136,7 @@ def _first_allowed_file(root_path: Path) -> Path:
         path
         for path in root_path.rglob("*")
         if path.is_file()
-        and path.suffix.lower() in docs_router._ALLOWED_EXT
+        and path.suffix.lower() in docs_router._MIME_TYPES
         and not any(part.startswith(".") for part in path.relative_to(root_path).parts)
     ]
     candidates.sort(key=lambda path: (path.suffix.lower() != ".html", path.as_posix()))
