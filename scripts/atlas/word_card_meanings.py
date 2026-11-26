@@ -52,18 +52,86 @@ def grammar_pos(text: str) -> str | None:
     return None
 
 
-def vts_partitions(text: str, spelling: str) -> list[dict]:
+# A1 header forms. Each is the complete grammar prefix that ВТС prints before
+# the definition: an indeclinable noun's label and gender; a verb's
+# semicolon-delimited conjugation with explicit past and imperative labels
+# and one final aspect; a noun's printed genitive and gender.
+INDECLINABLE_HEADER = re.compile(r"\s*невідм\.,\s*(?:ч|ж|с|мн)\.")
+VERB_HEADER = re.compile(
+    r"[^.;》]+(?:;[^.;》]+)*;\s*мин\. ч\. [^.;》]+;\s*наказ\. сп\. [^.;》]+;\s*(?:недок|док)\.\s*")
+GENITIVE_HEADER = re.compile(r"\s*([а-яіїєґ'’-]+),\s*(?:ч|ж|с)\.")
+# A Roman homonym number inside an explicit reference to another headword.
+CROSS_REFERENCE = re.compile(r"(?:(?<!\w)див\.|(?<!\w)[Тт]е саме, що)\s+([А-Яа-яІіЇїЄєҐґ'’`́-]+)\s+$")
+
+
+def _cross_reference(text: str, marker: re.Match, spelling: str) -> bool:
+    before = CROSS_REFERENCE.search(text, max(0, marker.start() - 80), marker.start())
+    return bool(before and key(vts_stress(before[1])) != spelling
+                and re.match(r"[IVX]+\s+\d+\)", text[marker.start():]))
+
+
+def _partition(text: str, start: int, end: int, spelling: str, roman: bool, a1_rules: bool,
+               genitive: bool = False) -> dict | None:
+    while start < end and text[start].isspace():
+        start += 1
+    while start < end and text[end - 1].isspace():
+        end -= 1
+    body = text[start:end]
+    header = re.sub(r"^[IVX]+\s+", "", body)
+    tokens = header.split()
+    head = re.match(r"[А-Яа-яІіЇїЄєҐґ'’`́-]+", tokens[0]) if tokens else None
+    stressed = vts_stress(head[0]) if head else ""
+    # Some headers join the inflection suffix directly to the headword.
+    while key(stressed) != spelling and "-" in stressed:
+        stressed = stressed.rsplit("-", 1)[0]
+    if key(stressed) != spelling:
+        return None
+    grammar = header[header.find(head[0]) + len(stressed):] if head else ""
+    grammar = re.sub(r"^\s*1》\s*", "", grammar)
+    segment = re.split(r"\d+》", grammar, maxsplit=1)[0]
+    printed = None
+    indeclinable = INDECLINABLE_HEADER.match(segment) if a1_rules else None
+    if genitive:
+        match = GENITIVE_HEADER.match(segment)
+        if match is None:
+            return None
+        grammar, printed = match[0], match[1]
+    elif indeclinable:
+        grammar = indeclinable[0]
+    elif a1_rules and VERB_HEADER.fullmatch(segment) and len(re.findall(r"(?<!\w)(?:недок|док)\.", segment)) == 1:
+        grammar = segment
+    else:
+        # Only the grammar prefix before the first full stop belongs to the
+        # header. Include that stop so abbreviated POS labels remain available.
+        grammar = segment.partition(".")[0] + "."
+    part = {"text": body, "head": stressed, "pos": grammar_pos(grammar),
+            "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
+            "partition": body.split()[0] if roman else "article", "span": [start, end]}
+    if printed is not None:
+        part["genitive"] = printed
+    return part
+
+
+def vts_partitions(text: str, spelling: str, *, a1_rules: bool = False) -> list[dict]:
     """Retain source-local Roman partitions only when their headers are explicit.
 
     A bare Roman marker or an implicit head cannot establish a lexeme. Such an
     article is held whole rather than distributing its meanings by ordinal.
     Offsets address the authenticated full cache text, before any normalization.
+
+    ``a1_rules`` admits three explicit A1 header forms (see ``INDECLINABLE_HEADER``
+    and ``VERB_HEADER``), ignores Roman numbers that every occurrence shows to be
+    inside a cross-reference to another headword, and retries a marker-free
+    article with its first literal head intact. That retry needs a printed
+    genitive and gender and returns it as ``genitive`` for the caller to attest.
     """
     lookup = re.match(rf"\s*{re.escape(spelling)}\s+", text, re.IGNORECASE)
     start = lookup.end() if lookup else 0
     footer = SOURCE_TAIL.search(text)
     end = footer.start() if footer else len(text)
     markers = list(re.compile(r"(?<!\S)[IVX]+(?=\s)").finditer(text, start, end))
+    if a1_rules and markers and all(_cross_reference(text, marker, spelling) for marker in markers):
+        markers = []
     if not markers:
         spans = [(start, end)]
     else:
@@ -75,32 +143,14 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
                  for i, m in enumerate(markers)]
         if any(not re.match(r"[IVX]+\s+\S+", text[a:b]) for a, b in spans):
             return []
-    out = []
-    for start, end in spans:
-        while start < end and text[start].isspace():
-            start += 1
-        while start < end and text[end - 1].isspace():
-            end -= 1
-        body = text[start:end]
-        header = re.sub(r"^[IVX]+\s+", "", body)
-        tokens = header.split()
-        head = re.match(r"[А-Яа-яІіЇїЄєҐґ'’`́-]+", tokens[0]) if tokens else None
-        stressed = vts_stress(head[0]) if head else ""
-        # Some headers join the inflection suffix directly to the headword.
-        while key(stressed) != spelling and "-" in stressed:
-            stressed = stressed.rsplit("-", 1)[0]
-        if key(stressed) != spelling:
-            return []
-        grammar = header[header.find(head[0]) + len(stressed):] if head else ""
-        grammar = re.sub(r"^\s*1》\s*", "", grammar)
-        grammar = re.split(r"\d+》", grammar, maxsplit=1)[0]
-        # Only the grammar prefix before the first full stop belongs to the
-        # header. Include that stop so abbreviated POS labels remain available.
-        grammar = grammar.partition(".")[0] + "."
-        out.append({"text": body, "head": stressed, "pos": grammar_pos(grammar),
-                    "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
-                    "partition": body.split()[0] if markers else "article", "span": [start, end]})
-    return out
+    parsed = [_partition(text, a, b, spelling, bool(markers), a1_rules) for a, b in spans]
+    out = [part for part in parsed if part is not None]
+    if len(out) == len(parsed):
+        return out
+    if a1_rules and lookup and not markers:
+        retry = _partition(text, 0, end, spelling, False, a1_rules, genitive=True)
+        return [retry] if retry else []
+    return []
 
 
 def mirror_partitions(row: dict, spelling: str) -> list[dict]:
@@ -168,8 +218,11 @@ def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
     return full_slovnyk(row, root)
 
 
-def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]]:
-    """Exact local lookups, including negative results in the consumed ledger."""
+def candidates(sources: src.PilotSources, spelling: str, *, a1_rules: bool = False) -> dict[str, list[dict]]:
+    """Exact local lookups, including negative results in the consumed ledger.
+
+    ``a1_rules`` selects the A1 ВТС header rules of ``vts_partitions``.
+    """
     out = {source: [] for source in SOURCES}
     articles = [src.row_dict(r) for r in sources.sources.execute(
         "SELECT * FROM sum20_articles WHERE normalized_lookup_key=? ORDER BY id",
@@ -206,7 +259,7 @@ def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]
     for row in rows:
         text, reason = full_vts(row, sources.meaning_cache_root)
         sources._use(f"meaning:vts_full:{row['id']}", {"text": text, "reason": reason})
-        partitions = vts_partitions(text, spelling) if text else []
+        partitions = vts_partitions(text, spelling, a1_rules=a1_rules) if text else []
         if not partitions:
             partitions = [{"text": None, "head": "", "pos": None, "aspect": None,
                            "partition": "unresolved", "span": [0, 0]}]

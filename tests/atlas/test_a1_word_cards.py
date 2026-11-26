@@ -116,7 +116,7 @@ def gap_fill_card(monkeypatch):
     })
     monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
     monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
-    monkeypatch.setattr(projection.meanings, "candidates", lambda *_: {
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
         "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [],
     })
     sources = SimpleNamespace(vesum_forms=lambda _: [row], _use=lambda *_: None,
@@ -179,6 +179,95 @@ def test_full_data_every_filled_value_carries_its_source_label(gap_fill_card):
     assert [item["reason"] for item in observations if item["source"] == "puls"] == [
         "source_label_missing",
     ]
+
+
+FROZEN_HEAD = "fi" + ACUTE + "xture"
+
+
+def frozen_homonym(**changes):
+    row = {"id": 9, "normalized_query": "fixture", "canonical_headword": FROZEN_HEAD,
+           "grammatical_label": "іменник чоловічого роду", "sense_gloss": "", "homonym_index": 1,
+           "homonym_checked": 1, "status": "ok", "content_sha256": "a" * 64,
+           "raw_response_ref": "sha256:" + "b" * 64}
+    replay = {"canonical_headword": FROZEN_HEAD, "content_sha256": "a" * 64,
+              "forms": [{"is_lemma": True, "form_stressed": FROZEN_HEAD}]}
+    homonym = {"row": row, "head": FROZEN_HEAD, "aspect": None, "candidates": [41], "reason": None,
+               "paradigm": None, "forms": None, "replay": replay}
+    for key, value in changes.items():
+        (replay if key.startswith("replay_") else row)[key.removeprefix("replay_")] = value
+    return {9: homonym}, dict(row)
+
+
+def test_frozen_ulif_stress_refuses_replay_that_differs_from_the_frozen_entry():
+    """Defect class: stress copied from a ULIF entry that is not the card's frozen entry."""
+    homonyms, anchor = frozen_homonym()
+    assert projection.anchored_entry(homonyms, anchor, "fixture") == 9
+    assert projection.anchored_entry(homonyms, anchor, "Fixture") is None
+    for change in ({"content_sha256": "c" * 64}, {"raw_response_ref": "sha256:" + "d" * 64},
+                   {"homonym_index": 2}, {"replay_content_sha256": "c" * 64},
+                   {"replay_canonical_headword": "fixtu" + ACUTE + "re"},
+                   {"replay_forms": [{"is_lemma": True, "form_stressed": "fixture"}]}):
+        changed, _ = frozen_homonym(**change)
+        assert projection.anchored_entry(changed, anchor, "fixture") is None, change
+    unstressed, frozen = frozen_homonym(canonical_headword="fixture", replay_canonical_headword="fixture",
+                                        replay_forms=[{"is_lemma": True, "form_stressed": "fixture"}])
+    unstressed[9]["head"] = "fixture"
+    assert projection.anchored_entry(unstressed, frozen, "fixture") is None
+
+
+def test_vts_partition_with_a_competing_homonym_stays_held(monkeypatch):
+    """Defect class: a ВТС definition bound while another same-spelling homonym competes."""
+    part = {"text": "definition", "head": FROZEN_HEAD, "pos": "noun", "aspect": None, "reason": None,
+            "partition": "article", "locator": "vts:fixture", "row": {"dictionary_label": "ВТС"}}
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
+        "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [part]})
+    homonyms, _ = frozen_homonym()
+    rival = {**homonyms[9], "row": {**homonyms[9]["row"], "id": 10}}
+    name = {**rival, "head": "Fi" + ACUTE + "xture", "candidates": [],
+            "row": {**rival["row"], "canonical_headword": "Fi" + ACUTE + "xture",
+                    "grammatical_label": "власна назва"}}
+
+    def outcome(competitor, common):
+        added, reported = [], []
+        projection.modern_meanings(
+            None, "fixture", {**homonyms, 10: competitor}, 9, set(),
+            lambda field, source, locator, *_, **__: added.append((field, locator)),
+            lambda field, source, reason, *_: reported.append((field, source, reason)), common=common)
+        return added, [item for item in reported if item[1] == projection.VTS]
+
+    assert outcome(rival, True) == ([], [("definition_uk", projection.VTS, "unbound_partition")])
+    assert outcome(name, False) == ([], [("definition_uk", projection.VTS, "unbound_partition")])
+    assert outcome(name, True) == ([("definition_uk", "vts:fixture")], [])
+
+
+def test_frozen_entry_fills_carry_their_source_label_and_locator(monkeypatch):
+    """Defect class: a filled stress or definition without its source label and locator."""
+    homonyms, anchor = frozen_homonym()
+    part = {"text": "definition", "head": FROZEN_HEAD, "pos": "noun", "aspect": None, "reason": None,
+            "partition": "article", "locator": "vts:fixture", "row": {"dictionary_label": "ВТС label"}}
+    monkeypatch.setattr(projection, "ulif_candidates", lambda *_: homonyms)
+    monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
+        "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [part]})
+    row = {"id": 2, "entry_id": 41, "word_form": "fixture", "lemma": "fixture",
+           "pos": "noun", "tags": "noun:inanim:m:v_naz", "source_comment": ""}
+    sources = SimpleNamespace(vesum_forms=lambda _: [row], _use=lambda *_: None,
+                              sources=SimpleNamespace(execute=lambda *_: []))
+    register = {"sources": [
+        {"id": "vesum", "name": "VESUM", "fields_used": ["pos", "morph_tags", "word_forms"]},
+        {"id": "ulif", "name": "ULIF", "fields_used": ["stress"]},
+        {"id": VTS, "name": "ВТС", "fields_used": ["meaning"]},
+    ]}
+    _, values, observations, _ = projection.card_values(sources, "fixture", 41, register, [], True, anchor)
+    filled = [(value["field"], value["source_label"], value["locator"], value["value"], value["source_key"])
+              for value in values if value["field"] in {"stress", "definition_uk"}]
+    assert filled == [
+        ("stress", "ULIF", "ulif_dictua_entries:9/canonical_headword", FROZEN_HEAD, None),
+        ("definition_uk", "ВТС label", "vts:fixture", "definition", "article"),
+    ]
+    assert ("identity", "ulif_vesum_correspondence_unresolved") in [
+        (item["field"], item["reason"]) for item in observations]
 
 
 def encoded(value):

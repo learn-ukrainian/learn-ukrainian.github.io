@@ -309,7 +309,7 @@ def slot_name(slot: tuple[str, ...]) -> str:
     return ".".join(slot)
 
 
-def ulif_paradigm(forms: list[dict], *, pronoun: bool = False) -> dict:
+def ulif_paradigm(forms: list[dict], *, pronoun: bool = False, numeral: bool = False) -> dict:
     """Group an entry's ULIF form rows into slots.
 
     Returns {slots: {slot: {forms, stressed, rows, withheld[]}}, uncertain_only: {...}}. A slot is withheld
@@ -347,7 +347,8 @@ def ulif_paradigm(forms: list[dict], *, pronoun: bool = False) -> dict:
         item["forms"].sort()
         item["uncertain"].sort()
     # A slot with no certain form takes no part in comparison or acceptance; its rows stay as withheld evidence.
-    return {"pronoun": pronoun, "slots": {slot: item for slot, item in slots.items() if item["forms"]},
+    return {"pronoun": pronoun, "numeral": numeral,
+            "slots": {slot: item for slot, item in slots.items() if item["forms"]},
             "uncertain_only": {slot: item for slot, item in slots.items() if not item["forms"]}}
 
 
@@ -429,6 +430,11 @@ def compare_paradigms(ulif: dict | None, vesum: dict) -> dict:
             and all(any(case in slot for case in CASES) and numbers.intersection(slot) for slot in v)):
         number = next(iter(numbers))
         u = {slot_key([*slot, number]): forms for slot, forms in u.items()}
+    # A case-only ULIF quantitative numeral table states no number. Align it
+    # only with a VESUM entry whose every slot is one case plus the plural.
+    elif (ulif.get("numeral") and u and v and all(len(slot) == 1 and slot[0] in CASES for slot in u)
+          and all(len(slot) == 2 and slot[0] in CASES and slot[1] == "p" for slot in v)):
+        u = {slot_key([*slot, "p"]): forms for slot, forms in u.items()}
     detail = {}
     for slot in sorted(set(u) | set(v)):
         if slot not in v:

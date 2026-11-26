@@ -439,8 +439,9 @@ reasons. The surrounding card records the lemma and the admitted values with
 their source labels and locators. A held definition displays
 `ВТС not captured` when the full ВТС capture is absent.
 
-The VESUM entry supplies morphology. ULIF stress still requires the
-existing ULIF–VESUM correspondence. The current meanings come from bound
+The VESUM entry supplies morphology. ULIF stress requires the ULIF–VESUM
+correspondence or the card's own frozen ULIF entry (see the binding rules
+below). The current meanings come from bound
 official СУМ-20 and captured ВТС partitions. A spelling-keyed PULS or English
 gloss witness needs a single eligible entry. Ambiguous spellings and
 bilingual homonym partitions remain held. The `code_fields_complete` count
@@ -481,3 +482,53 @@ Hold reasons overlap.
 The remaining definition gaps include 81 cards with `ВТС not captured`.
 Atlas owns the entry correspondence and source gaps. The operator owns the
 remaining ВТС capture. Example review is tracked separately under #12288.
+
+### AC-06 binding rules
+
+These rules apply only to the full-data projection. The pilot assembler,
+verifier and ULIF capture keep their earlier matching rules.
+
+- **Frozen ULIF entry.** A card can show the explicit stress of its own
+  frozen ULIF entry when the cross-source match stays unresolved. Every
+  frozen column must equal the live row, and a replay of the raw article must
+  return the same digest and one lemma row with the exact, case-sensitive
+  stressed head. A VESUM comment stress that contradicts it holds the value.
+- **Class correspondences.** A case-only ULIF quantitative numeral aligns
+  with a VESUM entry whose every slot is one case plus the plural. A ULIF
+  adverb matches a VESUM pronominal adverb only when both entries are
+  invariable and the raw replay marks the ULIF entry invariable. A ULIF
+  participle matches only a VESUM adjective tagged `adjp` on every row. A
+  noun entry is compared without the gender axis when all of its possible
+  ULIF competitors are authenticated and genderless.
+- **Ownership.** A ULIF entry frozen for one card is never bound to another
+  card. Such a match is held as `ulif_entry_owned_by_other_card`.
+- **ВТС.** A separate proper-name homonym with a different case and no
+  VESUM candidate does not compete on a common card. A single ВТС partition
+  with explicit agreeing stress and grammar can bind to the card's verified
+  frozen ULIF entry. The parser also reads the `невідм., с.` header, a verb
+  header with explicit past, imperative and one aspect label, and Roman
+  numbers that sit only inside a reference to another headword. An article
+  read with its first head intact binds only when the bound VESUM and ULIF
+  paradigms both contain its printed genitive.
+
+Same-stress and same-case homonyms such as `собака`, the two-class `після`
+article, and the second `замок` partition stay held.
+
+| Card outcome or hold reason | Before | After |
+| --- | ---: | ---: |
+| Cards with all required fields in this pass | 189 | 226 |
+| Required Ukrainian definition | 602 | 535 |
+| Required stress | 538 | 449 |
+| Required English gloss | 308 | 294 |
+| Required CEFR | 319 | 316 |
+| Required paradigm | 71 | 65 |
+| Required part of speech | 71 | 65 |
+| Unbound inventory entry | 71 | 65 |
+
+The stress fills come from 43 of the 440 cards held as
+`ulif_vesum_correspondence_unresolved` and 46 of the 56 held as
+`no_bound_vesum_entry`. The definition fills come from 64 of the cards held
+as `unbound_partition` and 3 of those held as `source_partition_unresolved`.
+Six frozen numeral cards now bind their own VESUM entry. Their duplicate
+candidate cards are held by the ownership rule. The other rows change because
+the newly bound entries now pass the existing single-entry gates.
