@@ -140,6 +140,7 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
   const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
   const cardAndWordRoutes = routes.filter(name => name !== 'lexicon-v2/index.html');
   expect(routes).toHaveLength(571);
+  expect(files.filter(name => name.startsWith('lexicon/card/') && name.endsWith('.html'))).toEqual([]);
   expect(routes.sort()).toEqual(['lexicon-v2/index.html', 'lexicon-v2/release/index.html', 'lexicon-v2/compare/release/index.html', ...rows.flatMap(row =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}release/${row.card_id}/index.html`)), ...learner.flatMap(([key]) =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}word/${key}/index.html`))].sort());
@@ -155,7 +156,10 @@ write_search_shards(manifest, shards, target / 'search-shards.json', target / 's
   for (const file of scanned) {
     const text = readFileSync(join(output, file), 'utf8');
     for (const marker of sentinels.filter(marker => !overlap.includes(marker))) expect(text, `${file}: ${marker}`).not.toContain(marker);
-    if (file.endsWith('.xml')) expect(text).not.toContain('/lexicon-v2/');
+    if (file.endsWith('.xml')) {
+      expect(text).not.toContain('/lexicon-v2/');
+      expect(text).not.toContain('/lexicon/card/');
+    }
   }
   const outputPrefix = output.endsWith(sep) ? output : output + sep;
   const server = createServer((req, res) => {

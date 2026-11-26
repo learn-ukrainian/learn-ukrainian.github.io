@@ -13,6 +13,7 @@ import {
   atlasArtifactSelectionPlugin,
   installSelectedBrowseShards,
 } from './src/lib/lexicon/atlas-artifact-selection.mjs';
+import { wordCardPublication } from './src/lib/lexicon/word-card-build-proof.ts';
 import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import { rawAtlasShardTransport } from './plugins/raw-atlas-shard-transport.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
@@ -156,5 +157,6 @@ export default defineConfig({
     sitemap({
       filter: (page) => !new URL(page).pathname.startsWith('/lexicon-v2/') && !isRedirectSource(page),
     }),
+    wordCardPublication(),
   ],
 });

@@ -9,6 +9,20 @@ export const publicReleasePin = {
   manifest_sha256: 'ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75',
 } satisfies ReleasePin;
 
+export type WordCardReleaseInput = {
+  enabled: boolean; controlled: boolean; artifactPath?: string; pin?: string;
+};
+
+export function loadPinnedWordCardRelease(config: WordCardReleaseInput, trustedPin: ReleasePin = publicReleasePin) {
+  const pin = config.controlled ? config.pin : config.pin || JSON.stringify(trustedPin);
+  const release = loadWordCardRelease({ ...config, pin, public: !config.controlled });
+  if (release.kind === 'release' && !config.controlled &&
+      (Object.keys(trustedPin) as (keyof ReleasePin)[]).some(key => release.pin[key] !== trustedPin[key])) {
+    return { kind: 'unavailable', reason: 'Public release pin mismatch' } as const;
+  }
+  return release;
+}
+
 export type PreviewInput = {
   name: string; card: PreviewCard | ReleaseCard | ReleasePage | ReleaseIndex | LoadedRelease; current: EntryRecord | null;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
@@ -34,17 +48,12 @@ export function previewIndexPaths(samples: PreviewInput[]) {
 }
 
 /** Build-time selection only. Public input never consults controlled records or a current pointer. */
-export function releasePreviewInputs(config: {
-  enabled: boolean; controlled: boolean; artifactPath?: string; pin?: string;
-}): PreviewInput[] {
+export function releasePreviewInputs(config: WordCardReleaseInput): PreviewInput[] {
   if (!config.enabled) return [];
-  const pin = config.controlled ? config.pin : config.pin || JSON.stringify(publicReleasePin);
-  const release = loadWordCardRelease({ ...config, pin, public: !config.controlled });
-  const publicPinMatches = release.kind !== 'release' || config.controlled ||
-    Object.entries(publicReleasePin).every(([key, value]) => release.pin[key as keyof ReleasePin] === value);
-  if (release.kind !== 'release' || !publicPinMatches) return [{
+  const release = loadPinnedWordCardRelease(config);
+  if (release.kind !== 'release') return [{
     name: 'release', card: { kind: 'unavailable', keys: null, claimantId: null,
-      reason: !publicPinMatches ? 'Public release pin mismatch' : release.kind === 'unavailable' ? release.reason : 'Release disabled' },
+      reason: release.kind === 'unavailable' ? release.reason : 'Release disabled' },
     current: null, fingerprint: '', source: 'Configured release refused', generatedAt: '', manifestVersion: '',
   }];
   const common = { current: null, fingerprint: release.pin.dataset_sha256,
