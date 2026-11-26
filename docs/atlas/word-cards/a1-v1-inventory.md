@@ -538,18 +538,19 @@ correspondence rules.
   `прислівник` (verified from raw replay) matches an invariable VESUM
   pronominal adverb (`adv:pron`). These expanded matches feed only headword
   stress and do not alter full entry correspondence or inflection tables.
-- **Homonyms and authenticity.** Every non-anchored card resolves ULIF headword
-  stress through the same competitor and raw-replay authenticity check,
-  including cards with a full-paradigm `bound_ulif` match. When matching-POS
-  ULIF homonyms agree on the exact stressed headword, that headword stress
-  fills with every agreeing ULIF entry ID in its locator (for example `собака`
-  `5490,220560` and `кава` `91699,91700,91701`). Two or more matching-POS ULIF
-  homonyms with different stresses and no POS or sense to tell them apart stay
-  held as `ulif_homonym_stress_ambiguous` (`картопляний`, `типовий`,
-  `старший`, `речення`, `атлас`, `транспорт`, `правильний`, `західний`).
-  Unauthenticated or `parse_error` ULIF competitors fail closed as
-  `ulif_competitor_unauthenticated`. A frozen ULIF anchor belongs to its own
-  card; duplicate candidate cards stay held as `ulif_entry_owned_by_other_card`.
+- **Homonyms and authenticity.** Every card (full-match, fallback, and
+  frozen-anchor) resolves ULIF headword stress through the same competitor and
+  raw-replay authenticity check. When matching-POS ULIF homonyms agree on the
+  exact stressed headword, that headword stress fills with every agreeing ULIF
+  entry ID in its locator (for example `собака` `5490,220560` and `кава`
+  `91699,91700,91701`). Two or more matching-POS ULIF homonyms with different
+  stresses and no POS or sense to tell them apart stay held as
+  `ulif_homonym_stress_ambiguous` (`картопляний`, `типовий`, `старший`,
+  `речення`, `атлас`, `транспорт`, `правильний`, `західний`). Unauthenticated
+  or `parse_error` ULIF competitors fail closed as
+  `ulif_competitor_unauthenticated` on every branch (including frozen-anchor
+  cards such as `щось`). A frozen ULIF anchor belongs to its own card;
+  duplicate candidate cards stay held as `ulif_entry_owned_by_other_card`.
 - **Doublet display.** A doubly stressed ULIF headword renders each accepted
   reading separated by ` / ` (for example `за́вжди / завжди́`), while the ledger
   keeps the verbatim ULIF spelling.
@@ -567,11 +568,12 @@ correspondence rules.
 ULIF headword stress coverage rises from 307 to 703 of 845 cards (net `-396`
 stress holds: `+399` newly filled headwords and `3` heteronyms now held under
 the unified competitor check), with zero duplicate stress locators and zero
-changes to non-stress fields. The 142 remaining stress holds comprise 86
+changes to non-stress fields. The 142 remaining stress holds comprise 85
 monosyllabic headwords with no explicit acute mark in ULIF
 (`bound_headword_has_no_explicit_stress`), 21 cards absent from ULIF
-(`capture_absent`: 15 pilot MWEs and 6 lemmas), 10 `parse_error` empty ULIF
-captures (`ulif_competitor_unauthenticated`), 9 duplicate candidate cards whose
-frozen ULIF anchor belongs to a slice-1 card (`ulif_entry_owned_by_other_card`),
-8 POS- or case-mismatch/abbreviation cards (`ulif_headword_pos_unresolved`), and
-8 different-stress homonym cards (`ulif_homonym_stress_ambiguous`).
+(`capture_absent`: 15 pilot MWEs and 6 lemmas), 11 cards with a `parse_error`
+empty ULIF capture or competitor (`ulif_competitor_unauthenticated`), 9
+duplicate candidate cards whose frozen ULIF anchor belongs to a slice-1 card
+(`ulif_entry_owned_by_other_card`), 8 POS- or case-mismatch/abbreviation cards
+(`ulif_headword_pos_unresolved`), and 8 different-stress homonym cards
+(`ulif_homonym_stress_ambiguous`).

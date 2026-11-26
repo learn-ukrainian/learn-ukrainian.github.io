@@ -184,7 +184,7 @@ def test_full_data_every_filled_value_carries_its_source_label(gap_fill_card):
     ]
 
 
-def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", register=None):
+def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", target=41, ulif_anchor=None, register=None):
     vesum_rows = [
         {"id": 2, "entry_id": 41, "word_form": lemma, "lemma": lemma,
          "pos": "noun", "tags": "noun:inanim:f:v_naz", "source_comment": ""},
@@ -204,18 +204,20 @@ def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", register
             {"id": "vesum", "name": "VESUM", "fields_used": ["pos", "morph_tags", "word_forms"]},
             {"id": "ulif", "name": "ULIF DictUA", "fields_used": ["stress", "paradigm"]},
         ]}
-    return projection.card_values(sources, lemma, 41, register, [], True)
+    return projection.card_values(sources, lemma, target, register, [], True, ulif_anchor)
 
 
 def _ulif_homonym(entry_id, head, *, candidates=(41,), stress_candidates=None, slot_form="абеку",
                   authenticated=True):
-    replay = ({"canonical_headword": head, "forms": [{"is_lemma": True, "form_stressed": head}]}
+    replay = ({"canonical_headword": head, "content_sha256": "fixture-sha",
+               "forms": [{"is_lemma": True, "form_stressed": head}]}
               if authenticated else None)
     cand_list = list(candidates) if candidates is not None else None
     stress_list = cand_list if stress_candidates is None else (list(stress_candidates) if stress_candidates else [])
     return {
-        "row": {"id": entry_id, "canonical_headword": head, "grammatical_label": "іменник жіночого роду",
-                "sense_gloss": ""},
+        "row": {"id": entry_id, "normalized_query": head.replace(ACUTE, ""), "canonical_headword": head,
+                "grammatical_label": "іменник жіночого роду", "homonym_index": 1,
+                "content_sha256": "fixture-sha", "sense_gloss": ""},
         "head": head, "aspect": None, "candidates": cand_list, "stress_candidates": stress_list,
         "reason": None if authenticated else "ulif_raw_identity_mismatch",
         "raw": {}, "replay": replay,
@@ -271,13 +273,17 @@ def test_headword_stress_homonym_pair_with_different_stresses_stays_held(monkeyp
         ("ulif_homonym_stress_ambiguous", "ulif_dictua_entries:9/canonical_headword"),
         ("ulif_homonym_stress_ambiguous", "ulif_dictua_entries:10/canonical_headword"),
     ]
-    # An unauthenticated competitor also fails closed on the full-match branch rather than guessing.
+    # An unauthenticated competitor also fails closed on the full-match and frozen-anchor branches.
+    anchor = _ulif_homonym(9, f"а{ACUTE}бека", slot_form="абеки")["row"]
     unauth = {9: _ulif_homonym(9, f"а{ACUTE}бека", slot_form="абеки"),
               11: _ulif_homonym(11, "", candidates=(), authenticated=False)}
-    _, u_values, u_obs, u_holds = _headword_stress_card(monkeypatch, unauth)
-    assert "required_stress" in u_holds
-    assert [v for v in u_values if v["field"] == "stress"] == []
-    assert any(o["reason"] == "ulif_competitor_unauthenticated" for o in u_obs if o["field"] == "stress")
+    for card_target, card_anchor in ((41, None), (41, anchor), (None, anchor)):
+        _, u_values, u_obs, u_holds = _headword_stress_card(
+            monkeypatch, unauth, target=card_target, ulif_anchor=card_anchor,
+        )
+        assert "required_stress" in u_holds
+        assert [v for v in u_values if v["field"] == "stress"] == []
+        assert any(o["reason"] == "ulif_competitor_unauthenticated" for o in u_obs if o["field"] == "stress")
 
 
 def test_headword_stress_carries_ulif_source_label_and_locator(monkeypatch):

@@ -178,18 +178,30 @@ def anchored_entry(homonyms, anchor, lemma):
     return anchor["id"]
 
 
-def headword_ulif_stress(homonyms, target, lemma, vesum_stress, foreign_ulif):
-    """Resolve headword stress from matching-lemma, matching-POS ULIF entries.
+def headword_ulif_stress(homonyms, target, lemma, vesum_stress, foreign_ulif, *, anchor_id=None):
+    """Resolve headword stress from the card's frozen ULIF anchor or matching-POS ULIF entries.
 
     Whole-paradigm equality with VESUM is not required for headword stress.
     Paradigm-form stress keeps its existing stricter ``bound_ulif`` rule.
-    Two matching-POS ULIF homonyms with different stresses stay held.
+    Every branch fails closed on any unauthenticated competitor, and two
+    matching-POS ULIF homonyms with different stresses stay held.
     """
     if not homonyms:
         return None, "capture_absent", ()
     unauthenticated = [uid for uid, entry in homonyms.items() if not _replayed_headword_ok(entry)]
     if unauthenticated:
         return None, "ulif_competitor_unauthenticated", tuple(unauthenticated)
+    if anchor_id is not None:
+        head = src.nfc(homonyms[anchor_id]["head"])
+        if vesum_stress and not vesum_stress.intersection(
+            reading.casefold() for reading in src.stress_forms(head)
+        ):
+            return None, "frozen_entry_stress_conflicts_with_vesum", (anchor_id,)
+        if src.ACUTE not in head:
+            return None, "bound_headword_has_no_explicit_stress", (anchor_id,)
+        return (head, f"ulif_dictua_entries:{anchor_id}/canonical_headword"), None, ()
+    if target is None:
+        return None, "no_bound_vesum_entry", ()
     matched, owned_blocked, unknown_pos = [], [], []
     for uid, entry in homonyms.items():
         candidates = entry.get("stress_candidates", entry["candidates"])
@@ -591,42 +603,22 @@ def card_values(sources, lemma, target, register, puls_rows, unique_card, ulif_a
         else:
             identity_reason = "ulif_entry_owned_by_other_card" if owned else "ulif_vesum_correspondence_unresolved"
             report("identity", "ulif", identity_reason)
-        if anchor_id is not None:
-            anchor_head = homonyms[anchor_id]["head"]
-            anchor_locator = f"ulif_dictua_entries:{anchor_id}/canonical_headword"
-            if src.ACUTE not in anchor_head:
-                report("stress", "ulif", "bound_headword_has_no_explicit_stress", 1, anchor_locator)
-            elif vesum_stress and not vesum_stress.intersection(
-                    reading.casefold() for reading in src.stress_forms(anchor_head)):
-                report("stress", "ulif", "frozen_entry_stress_conflicts_with_vesum", 1, anchor_locator)
-            else:
-                add("stress", "ulif", anchor_locator, anchor_head)
-        else:
-            resolved, stress_reason, entry_ids = headword_ulif_stress(
-                homonyms, target, lemma, vesum_stress, foreign_ulif,
-            )
-            if resolved is not None:
-                add("stress", "ulif", resolved[1], resolved[0])
-            elif entry_ids:
-                for uid in entry_ids:
-                    report("stress", "ulif", stress_reason, 1, f"ulif_dictua_entries:{uid}/canonical_headword")
-            else:
-                report("stress", "ulif", stress_reason)
     else:
         pos = None
         target = None
         report("identity", "vesum", "inventory_entry_unavailable")
         for field in ("pos", "gender", "aspect", "paradigm", "stress"):
             report(field, "vesum", "inventory_entry_unavailable")
-        if anchor_id is not None:
-            anchor_head = homonyms[anchor_id]["head"]
-            anchor_locator = f"ulif_dictua_entries:{anchor_id}/canonical_headword"
-            if src.ACUTE in anchor_head:
-                add("stress", "ulif", anchor_locator, anchor_head)
-            else:
-                report("stress", "ulif", "bound_headword_has_no_explicit_stress", 1, anchor_locator)
-        else:
-            report("stress", "ulif", "no_bound_vesum_entry" if homonyms else "capture_absent")
+    resolved, stress_reason, entry_ids = headword_ulif_stress(
+        homonyms, target, lemma, vesum_stress, foreign_ulif, anchor_id=anchor_id,
+    )
+    if resolved is not None:
+        add("stress", "ulif", resolved[1], resolved[0])
+    elif entry_ids:
+        for uid in entry_ids:
+            report("stress", "ulif", stress_reason, 1, f"ulif_dictua_entries:{uid}/canonical_headword")
+    else:
+        report("stress", "ulif", stress_reason)
     for other_id, entry in homonyms.items():
         if other_id != entry_id:
             reason = entry["reason"] or "entry_not_bound"
