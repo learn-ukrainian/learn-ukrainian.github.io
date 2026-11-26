@@ -35,6 +35,29 @@ FEATURE_TOKENS = {
 }
 
 
+ENTRY_PROJECTION_CAPABILITIES = {
+    "definition_uk": {"sum20": "definition_text", "vts_busel_slovnyk_me": "meaning"},
+    "mirror_witness": {"sum20_slovnyk_mirror": "definition_text"},
+    "examples": {"sum20": "literary_citations"},
+    "register": {"sum20": "definition_text"},
+    "pos": {"vesum": "pos", "ulif": "grammatical_label"},
+    "gender": {"vesum": "morph_tags"},
+    "aspect": {"vesum": "morph_tags"},
+    "paradigm": {"vesum": "word_forms", "ulif": "paradigm"},
+    "stress": {"ulif": "stress", "sum20": "stressed_headword", "vts_busel_slovnyk_me": "headword"},
+    "synonyms": {"ulif": "synonym_groups", "synonyms_dictionary": "synonym_groups"},
+    "antonyms": {"ulif": "antonym_pairs"},
+    "phraseology": {"ulif": "phraseology", "frazeolohichnyi": "idiom"},
+    "proverbs": {"slovnyk_me": "definition_text"},
+    "etymology": {"esum": "etymology_text"},
+    "heritage": {"grinchenko": "headword"},
+    "cefr": {"puls": "cefr_level"},
+    "gloss_en": {"dmklinger": "en_gloss", "slovnyk_me": "en_gloss_ukreng"},
+    "wiki_reference": {"wiktionary": "definition_text"},
+    "soviet_colonization_context": {"sum11": "russification_quote"},
+}
+
+
 def requested_slot_matches(tags, request):
     """Match each requested feature to exactly one token in a verified slot."""
     if not isinstance(tags, str) or not request or set(request) - FEATURE_TOKENS.keys():
@@ -52,6 +75,31 @@ def canonical_source(source, register):
                [s["id"], s.get("name"), *s.get("aliases", [])]]
     return matches[0] if len(matches) == 1 else None
 
+
+
+def check_entry_projection(field, source, scope, register):
+    """Check a replayed entry value's positive authority and evidence role."""
+    record = canonical_source(source, register)
+    capability = ENTRY_PROJECTION_CAPABILITIES.get(field, {}).get(source)
+    if not record or not capability or capability not in record.get("fields_used", []):
+        return "source_facet_not_permitted"
+    if scope == "context" or source == "sum11":
+        if (field, source, scope) == ("soviet_colonization_context", "sum11", "context"):
+            return "context_only"
+        return "soviet_normative_as_modern"
+    if field == "paradigm":
+        scopes = {"slot"}
+    elif source == "ulif" and field in {"synonyms", "antonyms", "phraseology"}:
+        scopes = {"source_group"}
+    elif source == "sum20" and field in {"definition_uk", "register"}:
+        scopes = {"source_sense"}
+    elif source == "sum20" and field == "examples":
+        scopes = {"entry", "source_sense"}
+    else:
+        scopes = {"entry"}
+    if scope not in scopes:
+        return "source_scope_not_permitted"
+    return "supported"
 
 def source_permission(assertion, record, register):
     """Check positive facet permission; contrast evidence never supplies a norm."""

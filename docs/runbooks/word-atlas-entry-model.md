@@ -72,6 +72,75 @@ and `curated_textbook_jsonl_repromote.py` fill inventory glosses via the same
 `_sum20_definition_card` / `_vts_definition_card` helpers (`_sum20_vts_gloss`)
 — neither script queries the `sum11` table.
 
+## Word card v2 admission and release
+
+Reconcile all frozen A1 inventory rows and all historical slice identities
+against the held store snapshots. Keep ambiguous spellings, names, phrases,
+slash alternatives and missing slug bindings visible in the parity ledger.
+Retain the frozen card IDs and versions as evidence when regenerating candidates.
+
+- Match each ULIF entry against its VESUM candidates using authenticated
+  paradigms, aspect and stress. Include all competing homonyms before deciding.
+  Compare complete unstressed variant sets within an explicitly mapped slot.
+  Keep source spellings and stress in the displayed values.
+- Bind each authenticated official СУМ-20 or ВТС partition to the established
+  lexeme. Keep groups, variants and partitions in source order, with their
+  literal labels. Record a refusal when capture or correspondence fails.
+  Entry-scoped witnesses do not attach to a different source's senses.
+- Use facet permissions for each source. ULIF glosses disambiguate.
+  The СУМ-20 mirror is a labelled witness. Грінченко attests pre-Soviet use,
+  ЕСУМ supplies etymology, and Вікісловник is an outbound reference.
+  Prefer ULIF sense-grouped relations and retain authenticated secondary
+  slovnyk.me groups. The separate paronym registry supplies paronyms.
+- Preserve СУМ-11 under `soviet_colonization_context` with `red_flag: true`,
+  `sovietization_risk`, `sovietization_keywords` and ideological markers.
+  Use a collapsed Soviet occupation context section for every held article.
+  Exclude these records from evidence. Show the risk badge and its
+  explanation only when the risk is positive.
+
+A complete card requires verified stress, POS and any applicable gender or
+aspect, paradigm, a Ukrainian definition for each source sense, an English
+gloss, CEFR and at least one real example. Selected teaching examples require
+an exact-sense and suitability decision. Label estimated CEFR. Check optional
+synonyms, antonyms, collocations, variants, register, frequency, heritage and
+Russification and record a checked absence where a search actually ran.
+Omit transliteration. A required field without evidence holds the card.
+
+Record source values as admitted, withheld or missing with exact reasons and
+owners. Count stale or missing captures, unmapped slots, unbound partitions,
+provenance refusals, and inventory or slug gaps. Carry judgment reasons into
+the human review packet. Keep the independent complete-data, mechanics,
+removal and original50 gates separate. Original50 retains the frozen source
+evidence. Changed versions remain held until the CTO approves an exact-version
+human route that accounts for them. AC6 requires no model pre-check.
+
+The local A1 build, the pinned preview, and the certified release each have
+their own population. Keep their counts separate and verify slug bindings.
+Before public cutover, gate each canonical and sitemap-listed page on the
+certified card ID, exact version and release bytes. Independently compare
+source values, provenance and exclusions against the learner DOM. Keep internal
+receipts private and retain the comparison gate. The static-route gate is
+tracked separately from the A1 builder.
+
+### Build the local A1 preview
+
+Use the configured read-only store mounts and a fresh host-only directory. Run
+the complete build once to freeze the source observations and output digest.
+
+```sh
+.venv/bin/python -m scripts.atlas.a1_word_cards --batch full-data --capture-sources \
+  --sources "$work/source-pin.json" --output "$work/parity.json" --site-output "$work/preview"
+```
+
+Open `preview/index.html` in the output directory. Complete cards appear first.
+The held-card list links to diagnostic pages marked incomplete. The parity
+report includes the withheld values' locators and hashes. The HTML contains
+the admitted text and its source labels.
+
+Repeat the command with `--check` in place of `--capture-sources` to replay the
+held stores and verify the frozen pin, ledger and all HTML bytes. A changed
+source capture or a stale extra preview page refuses the check.
+
 ## Entry Types
 
 | `entry_type` | Counts as Atlas entry | Definition |
