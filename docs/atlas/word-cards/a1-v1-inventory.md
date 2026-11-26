@@ -446,7 +446,12 @@ partitions. When the exact headword has no captured official article, the
 preview can use the labelled slovnyk.me copy of СУМ-20. Its definitions must
 be recoverable verbatim from an unambiguous lexical partition, with a
 source-local sense key. Its stressed headword must agree with the bound ULIF
-headword or have VESUM corroboration when ULIF omits stress. A spelling-keyed
+headword or have VESUM corroboration when ULIF omits stress. A doubly
+stressed mirror head is shown only when the bound ULIF head or VESUM entry
+attests every reading (`mirror_stress_reading_unattested`). A mirror
+definition that ends in a semicolon stops before a subordinate sense or a
+following phrase and is held as incomplete (`mirror_definition_truncated`).
+A spelling-keyed
 PULS or English gloss witness needs a single eligible entry. Ambiguous
 spellings and bilingual homonym partitions remain held. The
 `code_fields_complete` count measures cards with every required field apart

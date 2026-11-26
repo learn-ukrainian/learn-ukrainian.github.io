@@ -388,21 +388,34 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                     for facet in (field, "stress"):
                         report(facet, source, "mirror_body_digest_mismatch", 1, locator)
                     continue
-                if src.ACUTE in part["head"]:
+                # A doubly stressed head displays each reading (stress_readings),
+                # so every reading needs the bound ULIF head or VESUM entry.
+                attested = set(vesum_stress)
+                if entry_id in homonyms and src.ACUTE in homonyms[entry_id]["head"]:
+                    attested |= {reading.casefold() for reading in src.stress_forms(homonyms[entry_id]["head"])}
+                if src.ACUTE not in part["head"]:
+                    report("stress", source, "bound_headword_has_no_explicit_stress", 1, locator)
+                elif not {reading.casefold() for reading in src.stress_forms(part["head"])} <= attested:
+                    report("stress", source, "mirror_stress_reading_unattested", 1, locator)
+                else:
                     start = part["span"][0]
                     # The comma also follows any source-local homonym number.
                     end = start + len(part["text"].partition(",")[0].rstrip(meanings.SUPERSCRIPTS))
                     add("stress", source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
                         part["head"], label=MIRROR_ATTRIBUTION_LABEL)
-                else:
-                    report("stress", source, "bound_headword_has_no_explicit_stress", 1, locator)
                 definitions = mirror_definitions(part)
                 if not definitions:
                     report(field, source, "mirror_definition_unresolved", 1, locator)
                 for order, definition, start, end in definitions:
-                    add(field, source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
-                        definition, label=MIRROR_ATTRIBUTION_LABEL, scope="source_sense",
-                        source_key=f"{row['id']}:{order}")
+                    sense_locator = f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]"
+                    # The staged parse stops a sense at the semicolon before a
+                    # subordinate sense (//) or a following phrase, so a
+                    # definition ending in a semicolon is incomplete.
+                    if definition.rstrip().endswith(";"):
+                        report(field, source, "mirror_definition_truncated", 1, sense_locator)
+                        continue
+                    add(field, source, sense_locator, definition, label=MIRROR_ATTRIBUTION_LABEL,
+                        scope="source_sense", source_key=f"{row['id']}:{order}")
             else:
                 add(field, source, locator, part["text"], label=row["dictionary_label"],
                     source_key=part["partition"])
