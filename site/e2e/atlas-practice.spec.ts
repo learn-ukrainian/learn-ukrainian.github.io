@@ -651,7 +651,8 @@ test('layout shift when the daily deck replaces its placeholder stays under 4px'
   // does not jump when the picks arrive. Fresh learner, both widths the outcome names.
   // 2026-12-09 is the A1 day whose first pool pick is тема, a row with no example.
   // A loaded lexeme that adds ipa or an example then omits the report row. The
-  // clock makes that case the one this assertion measures, on every run.
+  // page reserves that height in CSS. The clock makes that case the one this
+  // assertion measures, on every run.
   await context.clearCookies();
   await page.clock.install({ time: new Date('2026-12-09T12:00:00Z') });
 

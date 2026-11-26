@@ -1768,6 +1768,16 @@ const frontmatter = {
   :global(.daily-deck-reserve) {
     visibility: hidden;
   }
+  /* The loaded deck drops its report row when the report URL is null. The
+     placeholder always keeps that row: a border-box button, min-height 44px,
+     measured at 44px. This stand-in is the same height. It is the last grid
+     row; the session card only sees the deck's total height. */
+  :global(.practice-daily-deck:not(:has(> .practice-report))::after) {
+    content: '';
+    box-sizing: border-box;
+    min-height: 44px;
+    visibility: hidden;
+  }
   :global(.daily-deck-header) {
     display: flex;
     align-items: center;
