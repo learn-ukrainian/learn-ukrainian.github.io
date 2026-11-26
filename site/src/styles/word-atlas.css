@@ -1465,9 +1465,20 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
     padding-right: 16px;
   }
 
-  .paradigm-table {
-    display: block;
-    overflow-x: auto;
+  .paradigm-table,
+  .lu-content .word-atlas .paradigm-table {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  .paradigm-table th,
+  .paradigm-table td,
+  .lu-content .word-atlas .paradigm-table th,
+  .lu-content .word-atlas .paradigm-table td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 
