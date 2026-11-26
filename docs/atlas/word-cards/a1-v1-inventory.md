@@ -507,17 +507,22 @@ verifier and ULIF capture keep their earlier matching rules.
   with explicit agreeing stress and grammar can bind to the card's verified
   frozen ULIF entry. The parser also reads the `невідм., с.` header, a verb
   header with explicit past, imperative and one aspect label, and Roman
-  numbers that sit only inside a reference to another headword. An article
-  read with its first head intact binds only when the bound VESUM and ULIF
-  paradigms both contain its printed genitive.
+  numbers that sit only inside a reference to another headword. A printed
+  singular genitive, either a full form or a hyphenated ending, must agree with
+  the bound VESUM entry (`vts_header_genitive_conflicts_with_bound_entry`). An
+  article read with its first head intact binds only when the bound VESUM and
+  ULIF paradigms both contain that full genitive.
+- **Display.** A doubly stressed dictionary head shows each reading, for
+  example `за́вжди / завжди́`. The ledger keeps the exact source spelling.
 
-Same-stress and same-case homonyms such as `собака`, the two-class `після`
-article, and the second `замок` partition stay held.
+Same-stress and same-case homonyms such as `собака` and the two-class `після`
+article stay held. Both `замок` partitions stay held: the castle partition
+prints the genitive ending `-мка`, which the bound entry does not have.
 
 | Card outcome or hold reason | Before | After |
 | --- | ---: | ---: |
 | Cards with all required fields in this pass | 189 | 226 |
-| Required Ukrainian definition | 602 | 535 |
+| Required Ukrainian definition | 602 | 536 |
 | Required stress | 538 | 449 |
 | Required English gloss | 308 | 294 |
 | Required CEFR | 319 | 316 |
@@ -527,7 +532,7 @@ article, and the second `замок` partition stay held.
 
 The stress fills come from 43 of the 440 cards held as
 `ulif_vesum_correspondence_unresolved` and 46 of the 56 held as
-`no_bound_vesum_entry`. The definition fills come from 64 of the cards held
+`no_bound_vesum_entry`. The definition fills come from 63 of the cards held
 as `unbound_partition` and 3 of those held as `source_partition_unresolved`.
 Six frozen numeral cards now bind their own VESUM entry. Their duplicate
 candidate cards are held by the ownership rule. The other rows change because

@@ -170,12 +170,19 @@ def separate_proper_name(homonym, lemma):
 
 
 def genitive_attested(part, target_rows, ulif_forms):
-    """An implicit ВТС head needs its printed genitive in both bound paradigms."""
+    """A ВТС header's printed singular genitive must agree with the bound entry.
+
+    A hyphenated ending must end a singular genitive of the bound VESUM entry.
+    A retried implicit head needs its full form in both bound paradigms.
+    """
     genitive = part["genitive"]
-    vesum = {row["word_form"] for row in target_rows if "v_rod" in row["tags"].split(":")}
-    ulif = {form["form_unstressed"] for form in ulif_forms or []
-            if not form["is_lemma"] and "v_rod" in _tag_list(form, "grammatical_tags")}
-    return genitive in vesum and genitive in ulif
+    vesum = {row["word_form"].casefold() for row in target_rows
+             if "v_rod" in (tags := row["tags"].split(":")) and "p" not in tags}
+    if genitive.startswith("-"):
+        return any(form.endswith(genitive[1:]) for form in vesum)
+    ulif = {form["form_unstressed"].casefold() for form in ulif_forms or []
+            if not form["is_lemma"] and "v_rod" in (tags := _tag_list(form, "grammatical_tags")) and "p" not in tags}
+    return genitive in vesum and (not part.get("implicit_head") or genitive in ulif)
 
 
 def ulif_groups(sources, entry_id, identity, add, report):
@@ -264,10 +271,13 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                     and part["head"] in vesum_stress):
                 identities = {**competing, entry_id: {**competing[entry_id], "head": part["head"]}}
             # A retried implicit head stays a parser refusal until both bound
-            # paradigms attest its printed genitive.
+            # paradigms attest its printed genitive. Any other printed
+            # genitive must agree with the bound entry.
             if not reason and "genitive" in part and (bound is None or not genitive_attested(
                     part, target_rows, homonyms[bound]["forms"])):
-                reason = "source_partition_unresolved"
+                reason = ("source_partition_unresolved" if part.get("implicit_head")
+                          else "vts_header_genitive_conflicts_with_bound_entry" if bound is not None
+                          else None)
             if not reason and (bound is None or headless
                                or not meanings.correspondence(part, identities, bound)):
                 reason = "unbound_partition"
@@ -1014,6 +1024,10 @@ def render_value(value):
     return escape(str(value))
 
 
+def stress_readings(value):
+    return " / ".join(src.stress_forms(value))
+
+
 def render_card(card):
     head = card["lemma"]
     values = defaultdict(list)
@@ -1021,10 +1035,12 @@ def render_card(card):
         values[value["field"]].append(value)
     stress = values["stress"]
     if stress:
-        head = stress[0]["value"]
+        head = stress_readings(stress[0]["value"])
 
     def render_item(item):
-        body = render_value(item["value"])
+        # A doubly stressed dictionary head shows each attested reading.
+        # The ledger keeps the exact source spelling.
+        body = escape(stress_readings(item["value"])) if item["field"] == "stress" else render_value(item["value"])
         if item["field"] == "wiki_reference":
             body = f'<a href="{body}" rel="noreferrer">{escape(item["source_label"])}</a>'
         label = escape(item["source_label"])

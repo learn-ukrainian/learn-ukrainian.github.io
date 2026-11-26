@@ -55,11 +55,12 @@ def grammar_pos(text: str) -> str | None:
 # A1 header forms. Each is the complete grammar prefix that ВТС prints before
 # the definition: an indeclinable noun's label and gender; a verb's
 # semicolon-delimited conjugation with explicit past and imperative labels
-# and one final aspect; a noun's printed genitive and gender.
+# and one final aspect; a noun's printed genitive (a full form or a
+# hyphenated ending) and gender.
 INDECLINABLE_HEADER = re.compile(r"\s*невідм\.,\s*(?:ч|ж|с|мн)\.")
 VERB_HEADER = re.compile(
     r"[^.;》]+(?:;[^.;》]+)*;\s*мин\. ч\. [^.;》]+;\s*наказ\. сп\. [^.;》]+;\s*(?:недок|док)\.\s*")
-GENITIVE_HEADER = re.compile(r"\s*([а-яіїєґ'’-]+),\s*(?:ч|ж|с)\.")
+GENITIVE_HEADER = re.compile(r"\s*(-?[а-яіїєґ'’`́]+),\s*(?:ч|ж|с)\.")
 # A Roman homonym number inside an explicit reference to another headword.
 CROSS_REFERENCE = re.compile(r"(?:(?<!\w)див\.|(?<!\w)[Тт]е саме, що)\s+([А-Яа-яІіЇїЄєҐґ'’`́-]+)\s+$")
 
@@ -89,13 +90,14 @@ def _partition(text: str, start: int, end: int, spelling: str, roman: bool, a1_r
     grammar = header[header.find(head[0]) + len(stressed):] if head else ""
     grammar = re.sub(r"^\s*1》\s*", "", grammar)
     segment = re.split(r"\d+》", grammar, maxsplit=1)[0]
-    printed = None
     indeclinable = INDECLINABLE_HEADER.match(segment) if a1_rules else None
+    match = GENITIVE_HEADER.match(segment) if a1_rules else None
+    printed = key(vts_stress(match[1])) if match else None
     if genitive:
-        match = GENITIVE_HEADER.match(segment)
-        if match is None:
+        # A retried implicit head needs a printed full genitive form.
+        if match is None or printed is None or printed.startswith("-"):
             return None
-        grammar, printed = match[0], match[1]
+        grammar = match[0]
     elif indeclinable:
         grammar = indeclinable[0]
     elif a1_rules and VERB_HEADER.fullmatch(segment) and len(re.findall(r"(?<!\w)(?:недок|док)\.", segment)) == 1:
@@ -104,11 +106,13 @@ def _partition(text: str, start: int, end: int, spelling: str, roman: bool, a1_r
         # Only the grammar prefix before the first full stop belongs to the
         # header. Include that stop so abbreviated POS labels remain available.
         grammar = segment.partition(".")[0] + "."
-    part = {"text": body, "head": stressed, "pos": grammar_pos(grammar),
+    part: dict = {"text": body, "head": stressed, "pos": grammar_pos(grammar),
             "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
             "partition": body.split()[0] if roman else "article", "span": [start, end]}
     if printed is not None:
         part["genitive"] = printed
+    if genitive:
+        part["implicit_head"] = True
     return part
 
 
@@ -122,8 +126,9 @@ def vts_partitions(text: str, spelling: str, *, a1_rules: bool = False) -> list[
     ``a1_rules`` admits three explicit A1 header forms (see ``INDECLINABLE_HEADER``
     and ``VERB_HEADER``), ignores Roman numbers that every occurrence shows to be
     inside a cross-reference to another headword, and retries a marker-free
-    article with its first literal head intact. That retry needs a printed
-    genitive and gender and returns it as ``genitive`` for the caller to attest.
+    article with its first literal head intact. A noun header's printed genitive
+    is returned as ``genitive`` for the caller to check against the bound entry.
+    The retry needs a full genitive form and is marked ``implicit_head``.
     """
     lookup = re.match(rf"\s*{re.escape(spelling)}\s+", text, re.IGNORECASE)
     start = lookup.end() if lookup else 0
