@@ -9,6 +9,7 @@ import json
 import unicodedata
 from collections import Counter
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -81,8 +82,12 @@ def test_full_data_parity_does_not_silently_drop_a_section_or_legacy_value():
 def test_full_data_sum11_is_labelled_context_and_never_counts_as_evidence():
     register = {"sources": [{"id": "sum11", "fields_used": ["russification_quote"]}]}
     field = "soviet_colonization_context"
-    assert assertion_check.check_entry_projection(field, "sum11", "context", register) == "context_only"
-    assert assertion_check.check_entry_projection("definition_uk", "sum11", "entry", register) != "supported"
+    assert assertion_check.check_entry_projection(
+        field, "sum11", "context", register, source_label="СУМ-11",
+    ) == "context_only"
+    assert assertion_check.check_entry_projection(
+        "definition_uk", "sum11", "entry", register, source_label="СУМ-11",
+    ) != "supported"
     row = {"definition": "Historical quotation.", "sovietization_risk": 0, "sovietization_keywords": ""}
     context = projection.soviet_context(row)
     assert context["red_flag"] is True
@@ -95,6 +100,85 @@ def test_full_data_sum11_is_labelled_context_and_never_counts_as_evidence():
     assert "<strong>Risk" not in html
     context["sovietization_risk"] = 1
     assert "<strong>Risk 1</strong>" in projection.render_card(card)
+
+
+@pytest.fixture
+def gap_fill_card(monkeypatch):
+    row = {"id": 2, "entry_id": 41, "word_form": "fixture", "lemma": "fixture",
+           "pos": "noun", "tags": "noun:inanim:m:v_naz", "source_comment": ""}
+    monkeypatch.setattr(projection, "ulif_candidates", lambda *_: {
+        9: {"head": "fixture", "row": {"id": 9}, "aspect": None,
+            "candidates": [41], "reason": None, "paradigm": {"slots": {}},
+            "forms": [{"is_lemma": True, "is_invariable": False, "form_stressed": "fixture",
+                       "form_unstressed": "fixture", "id": 99, "entry_id": 9, "variant_order": 0,
+                       "grammatical_tags": "[]", "unmapped_labels": "[]", "marked_asterisk": 0,
+                       "preposition": ""}]},
+    })
+    monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_: {
+        "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [],
+    })
+    sources = SimpleNamespace(vesum_forms=lambda _: [row], _use=lambda *_: None,
+                              sources=SimpleNamespace(execute=lambda *_: []))
+    register = {"sources": [
+        {"id": "vesum", "name": "VESUM", "fields_used": ["pos", "morph_tags", "word_forms"]},
+        {"id": "puls", "name": "PULS register", "fields_used": ["cefr_level"]},
+    ]}
+
+    def build(puls_rows=(), *, unique_card=True):
+        return projection.card_values(sources, "fixture", 41, register, puls_rows, unique_card)
+
+    return build
+
+
+def test_full_data_refuses_fill_from_non_bound_entry(gap_fill_card):
+    row = {"id": 7, "word": "fixture", "level": "A1", "source": "PULS citation",
+           "pos": "дієслово (док.)", "guideword": ""}
+    for candidate, unique_card, reason in (
+        (row, True, "entry_witness_grammar_mismatch"),
+        ({**row, "pos": "іменник"}, False, "entry_witness_unbound"),
+    ):
+        _, values, observations, holds = gap_fill_card([candidate], unique_card=unique_card)
+        assert not any(item["field"] == "cefr" for item in values)
+        assert "required_cefr" in holds
+        assert [item["reason"] for item in observations if item["source"] == "puls"] == [reason]
+    row = {"word": "fixture", "source_url": "https://slovnyk.me/dict/ukreng/fixture"}
+    assert projection.literal_ukreng_glosses(row, "other English", "fixture") == (
+        [], "bilingual_ukreng_article_mismatch",
+    )
+    assert projection.literal_ukreng_glosses(row, "fixture I first II second", "fixture") == (
+        [], "bilingual_homonym_partition_unresolved",
+    )
+
+
+def test_full_data_uncaptured_vts_stays_held_with_reason(gap_fill_card):
+    _, values, observations, holds = gap_fill_card()
+    fields = projection.field_ledger(values, observations, holds)
+    assert fields["definition_uk"] == {
+        "outcome": "held", "reasons": ["required_definition_uk"],
+        "sources_searched": {
+            "sum20": {"admitted": 0, "reasons": {"capture_absent": 1}},
+            VTS: {"admitted": 0, "reasons": {"ВТС not captured": 1}},
+        },
+    }
+    html = projection.render_card({
+        "lemma": "fixture", "status": "held", "values": values,
+        "holds": [{"reason": reason} for reason in holds], "gap_ledger": fields,
+    })
+    assert "<li>ВТС not captured</li>" in html
+
+
+def test_full_data_every_filled_value_carries_its_source_label(gap_fill_card):
+    row = {"id": 7, "word": "fixture", "level": "A1", "pos": "іменник", "guideword": ""}
+    other = {**row, "id": 8, "source": "PULS citation"}
+    _, values, observations, _ = gap_fill_card([{**row, "source": None}, other])
+    assert [(value["field"], value["source_label"]) for value in values] == [
+        ("pos", "VESUM"), ("gender", "VESUM"), ("paradigm", "VESUM"), ("cefr", "PULS citation"),
+    ]
+    assert [item["reason"] for item in observations if item["source"] == "puls"] == [
+        "source_label_missing",
+    ]
 
 
 def encoded(value):
