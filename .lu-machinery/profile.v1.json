@@ -3,5 +3,5 @@
   "version": 1,
   "profile_id": "learn-ukrainian",
   "github_slug": "learn-ukrainian/learn-ukrainian.github.io",
-  "config": {"fleet_repos": ".lu-machinery/fleet_repos.yaml"}
+  "config": {}
 }
