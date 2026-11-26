@@ -31,17 +31,29 @@ CONTEXT_MARKS = re.compile(r"[«»\"“”„‟‹›\[\]():;…—–]|\.{2,}"
 QUOTE_MARKS = re.compile(r'[«»"“”„‟‹›]')
 POSSIBLE_HEADING = re.compile(r"[\r\n]\s*[А-ЩЬЮЯЄІЇҐ]")
 # Exercise layout around or inside a span marks a task item, not a model
-# sentence: a mark detached by whitespace leaves an answer slot, a segment
-# that is only an item number (or a section number) labels an exercise item,
-# and a placeholder after the span (underscores, empty brackets, or a run of
-# marks that no word follows: a dot leader or an answer slot) is an empty slot
-# or a table-of-contents line. A mark followed by a word is a textbook icon
-# or an ellipsis opening the next sentence, so the span before it stays.
+# sentence. A mark detached by whitespace leaves an answer slot. A preceding
+# segment that is only a label (an item number such as 5., 107.1., 63°. or
+# 487*.; a Roman numeral; one letter; a capitalized label word with a number
+# such as Крок 2. or Мал. 4.; § or № with a number) or only marks (the
+# previous item's answer slot) makes the span an exercise item. After the
+# span, underscores, empty brackets, two or more marks (a dot leader or blank
+# answer lines), or one mark that no word follows is an empty slot or a
+# table-of-contents line. One mark or one ellipsis followed by a word is a
+# textbook icon or the opening of the next sentence, so the span stays.
 DETACHED_MARK = re.compile(r"\s[,.!?]")
-ITEM_LABEL = re.compile(r"(?:\A|\n)[ \t]*(?:§[ \t]*)?(?:\d+|[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])\.\Z")
-SLOT_AFTER = re.compile(r"\s*(?:_|\(\s*\)|\[\s*\]|[.…?!](?:\s*[.…?!])*+(?!\s*[^\W\d_]))")
+ITEM_LABEL = re.compile(
+    r"(?:\A|\n)[ \t]*(?:"
+    r"(?:[§№][ \t]*|[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ'’ʼ-]*\.?[ \t]+)?(?:\d+(?:\.\d+)*[°*]*|[IVXLCІХ]+)\."
+    r"|[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\."
+    r"|[.…?!](?:\s*[.…?!])*"
+    r")\Z"
+)
+MARK = r"(?>\.{3}|[.…?!])"
+SLOT_AFTER = re.compile(rf"\s*(?:_|\(\s*\)|\[\s*\]|{MARK}(?:\s*{MARK})+|{MARK}(?!\s*[^\W\d_]))")
 # One-letter Ukrainian words; any other capital letter opening a span is an
-# answer-option label (А–Г lists) or an initial split from its name.
+# answer-option label (А–Г lists) or an initial split from its name. A
+# one-letter word followed by a capitalized word that VESUM does not attest
+# with a capital (not a name) is an option label too, such as В Нам ….
 ONE_LETTER_WORDS = frozenset("аівузйоєя")
 FUNCTION_LABELS = frozenset({"прийменник", "сполучник", "частка"})
 FINITE_VERB_TAGS = frozenset({"pres", "past", "futr", "impr", "impers"})
@@ -168,6 +180,8 @@ def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
             rows = [row for row in rows if row["word_form"].islower() == word.islower()
                     and row["word_form"].isupper() == word.isupper()]
         analyses.append(rows)
+    if len(tokens[0]) == 1 and tokens[1][0].isupper() and not analyses[1]:
+        return "example needs context or is not a complete sentence"
     target = (gap.entry_id, gap.lemma, gap.pos)
     hits = {index for index, rows in enumerate(analyses) if rows and {
         (row["entry_id"], row["lemma"], row["pos"]) for row in rows
