@@ -81,12 +81,14 @@ function applyAtlasWordPageChrome(root: HTMLElement): void {
   const atlas = root.closest<HTMLElement>('[data-word-atlas]');
   if (!atlas) return;
   const locale = (root.dataset.locale || document.documentElement.dataset.chromeLocale) === 'en' ? 'en' : 'uk';
-  const unavailable = atlas.querySelector<HTMLElement>('[data-testid="atlas-practice-cta-unavailable"]');
-  const text = unavailable?.querySelector(`[data-loc="${locale}"]`)?.textContent?.trim();
-  if (unavailable && text) {
+  // A heteronym page renders one status per panel, including the hidden ones.
+  // querySelector would rename only the first and leave the rest bilingual.
+  atlas.querySelectorAll<HTMLElement>('[data-testid="atlas-practice-cta-unavailable"]').forEach((unavailable) => {
+    const text = unavailable.querySelector(`[data-loc="${locale}"]`)?.textContent?.trim();
+    if (!text) return;
     unavailable.removeAttribute('title');
     unavailable.setAttribute('aria-label', text);
-  }
+  });
   const label = CHROME_STRINGS.uk['atlas.layer.wiki'];
   atlas.querySelectorAll<HTMLAnchorElement>('a[href*="wikipedia.org"]').forEach((anchor) => {
     if (anchor.dataset.shortLink === label) return;

@@ -53,3 +53,24 @@ test('word page at 390x844 wraps the Wikipedia link and uses the Ukrainian pronu
   });
   expect(wider).toEqual([]);
 });
+
+test('every heteronym panel names the practice status in Ukrainian', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('lu-chrome-locale', 'uk');
+  });
+  const response = await page.goto('/lexicon/сапати/');
+  expect(response, 'heteronym page response').not.toBeNull();
+  const article = page.locator('[data-word-atlas]');
+  await expect(article).toBeVisible();
+  const ukStatus = 'Ще немає в наборі практики';
+  const statuses = article.locator('[data-testid="atlas-practice-cta-unavailable"]');
+  await expect(statuses).toHaveCount(2);
+  await expect(statuses.nth(0)).toHaveAttribute('aria-label', ukStatus);
+  await expect(statuses.nth(1)).toHaveAttribute('aria-label', ukStatus);
+
+  const tabs = article.locator('[role="tab"][data-heteronym-target]');
+  await tabs.first().focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#heteronym-panel-1')).toBeVisible();
+  await expect(statuses.nth(1)).toHaveAccessibleName(ukStatus);
+});
