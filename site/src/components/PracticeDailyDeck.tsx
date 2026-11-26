@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { practiceReportUrl } from '../lib/lexicon/practice-report';
 import { dailyReportRecords } from '../lib/lexicon/practice-report-daily';
 import ReportProblemAction from './practice/ReportProblemAction';
 import type {
@@ -102,6 +103,10 @@ export default function PracticeDailyDeck({
   const showStressMarks = learnerLevel === 'A1';
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
   const currentExample = currentItem?.example?.trim() || currentLexeme?.example?.trim() || null;
+  const reportRecords = currentItem ? dailyReportRecords(currentItem, currentLexeme) : [];
+  const reportUrl = currentItem
+    ? practiceReportUrl(reportRecords, 'daily-preview', chromeLocale)
+    : null;
   const currentExampleEn = usablePracticeSentenceEnglish(currentItem?.exampleEn || currentLexeme?.exampleEn);
   const currentEtymology = currentItem?.etymology?.trim() || null;
 
@@ -237,7 +242,15 @@ export default function PracticeDailyDeck({
         </div>
       </div>
 
-      {currentItem && <ReportProblemAction records={dailyReportRecords(currentItem, currentLexeme)} type="daily-preview" chromeLocale={chromeLocale} />}
+      {reportUrl ? (
+        <ReportProblemAction records={reportRecords} type="daily-preview" chromeLocale={chromeLocale} />
+      ) : (
+        <div className="practice-report daily-deck-reserve" aria-hidden="true">
+          <button type="button" className="btn" tabIndex={-1} style={{ minHeight: 44 }}>
+            {'\u00a0'}
+          </button>
+        </div>
+      )}
       <details
         className="daily-deck-details"
         data-testid="practice-daily-details"
