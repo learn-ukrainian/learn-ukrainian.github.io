@@ -22,7 +22,7 @@ report, not in a generated checkout artifact.
 2. **Literary / primary RAG** — `mcp__sources__search_literary` and `mcp__sources__search_sources` (unified) for primary-source and encyclopedic corpora (Енциклопедія українознавства, chronicles, folklore studies). Use to confirm named works, quotes, and specialist categories.
 3. **Heritage / dictionaries** — `mcp__sources__search_heritage`, `mcp__sources__search_esum` (etymology), `mcp__sources__search_grinchenko_1907` (pre-Soviet attestation). Use for etymology claims and to distinguish authentic archaisms/dialectisms from russicisms.
 4. **Quote / attribution verification** — `mcp__sources__verify_quote` and `mcp__sources__verify_source_attribution` for any quotation or "as X wrote" attribution.
-5. **VESUM + russicism** — `mcp__sources__verify_words`, `mcp__sources__check_russian_shadow` for the linguistic layer (or cite the deterministic scorer run).
+5. **Ukrainian language** uses the pinned skill in Step 4.
 
 ## Step 1 — Extract the claims
 
@@ -56,9 +56,20 @@ Do not pass a specific claim just because it is plausible. "Plausible + unverifi
 - [ ] **Agency preserved** — Ukrainians as subjects of their own history, not passive recipients. Flag **MEDIUM**.
 - [ ] **No Soviet-era framing / sourcing** — no Soviet ideological gloss; prefer pre-Soviet (Грінченко/ЕСУМ) or modern independent attestation. Flag **HIGH** for Soviet framing presented uncritically.
 
-## Step 4 — Linguistic backbone (cite, don't re-derive)
+## Step 4 — Linguistic accuracy
 
-Cite the deterministic run (`python_qg` or `scripts.audit.probe_uk_writing_score`): VESUM-valid %, russicism tokens (VESUM-gated `check_russian_shadow` minus heritage attestation — spot-check any flag against `search_heritage` before calling it a russicism), immersion/English discipline. Note non-canonical apostrophes (U+2019) as a normalization need. A real russicism in learner-facing content = **HIGH**.
+Load the `verify-ukrainian` skill before making any Ukrainian language verdict.
+The expected SHA-256 of its `SKILL.md` is
+`5f0d7741a274849177f5cd69fe67d6011092fff0127f6d14654b758d81279b2e`.
+Check the bytes of your deployed copy against this pin. If the copy is missing or
+stale, call `mcp__sources__get_verify_ukrainian_skill` and compare its `sha256`
+with the pin before following the returned `markdown`.
+If no copy matches, mark the language review INCONCLUSIVE.
+
+Use the deterministic run (`python_qg` or `scripts.audit.probe_uk_writing_score`)
+as screening evidence. Cite its VESUM-valid percentage and immersion results.
+Use the skill's evidence rows for language verdicts. Note non-canonical
+apostrophes (U+2019) as a normalization need.
 
 ## Output format
 

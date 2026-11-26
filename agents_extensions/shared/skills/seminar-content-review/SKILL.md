@@ -25,6 +25,14 @@ other providers retain their effort rules and explicit overrides.
 
 ## Execute
 
+Load the `verify-ukrainian` skill before making any Ukrainian language verdict.
+The expected SHA-256 of its `SKILL.md` is
+`5f0d7741a274849177f5cd69fe67d6011092fff0127f6d14654b758d81279b2e`.
+Check the bytes of your deployed copy against this pin. If the copy is missing or
+stale, call `mcp__sources__get_verify_ukrainian_skill` and compare its `sha256`
+with the pin before following the returned `markdown`.
+If no copy matches, mark the language review INCONCLUSIVE.
+
 1. **Deterministic backbone FIRST — stdout-only in a read-only review** (cheap, cite it): for a built module run `.venv/bin/python -m scripts.build.verify_shippable <track> <slug>` **without `--astro-build`**; for review coverage run `.venv/bin/python scripts/audit/module_quality_audit.py --level <track> --format json` with no `--output`; for a raw text sample run `.venv/bin/python -m scripts.audit.probe_uk_writing_score <file>`. These commands report to stdout and must not create repository artifacts in this review mode. This is NECESSARY but NOT SUFFICIENT — it cannot check facts.
 2. **Then the factual + decolonization layer** — the reviewer's real job. Read and follow [seminar-content-review-prompt.md](seminar-content-review-prompt.md): claim extraction → per-claim source verification (Wikipedia + Literary RAG + heritage) → ghost-source / fabrication catch → decolonization scan → output format. Its review rules (#10665) apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8: every sourced Ukrainian or factual error blocks (REVISE or REJECT), one entry per error class lists every occurrence, and an unsourced blocker is INCONCLUSIVE, which still blocks.
 

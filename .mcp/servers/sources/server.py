@@ -24,6 +24,7 @@ Tools:
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
     - word_card (current word card, labelled certified or candidate)
+    - get_verify_ukrainian_skill (installed verification instructions and digest)
 """
 
 import asyncio
@@ -39,6 +40,7 @@ import threading
 import time
 import unicodedata
 from difflib import SequenceMatcher
+from importlib.metadata import distribution
 from pathlib import Path
 from typing import Any
 
@@ -381,6 +383,14 @@ async def list_tools() -> list[Tool]:
                 "type": "object",
                 "properties": {},
             },
+        ),
+        _tool(
+            name="get_verify_ukrainian_skill",
+            description=(
+                "Return the installed lu-machinery verify-ukrainian skill as UTF-8 Markdown "
+                "and its SHA-256. Compare the digest with the pin in your instructions before using it."
+            ),
+            inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
         ),
         _tool(
             name="mcp_server_identity",
@@ -2297,6 +2307,7 @@ async def _dispatch_tool_call(
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
+            "get_verify_ukrainian_skill": handle_get_verify_ukrainian_skill,
             "mcp_server_identity": lambda: handle_mcp_server_identity(arguments),
             "check_russian_shadow": lambda: handle_check_russian_shadow(arguments),
             "check_modern_form": lambda: handle_check_modern_form(arguments),
@@ -2868,6 +2879,14 @@ def _sha256_of_file(path: Path) -> str:
         return result
 
 
+async def handle_get_verify_ukrainian_skill() -> list[TextContent]:
+    """Return the installed wheel's skill without changing its UTF-8 bytes."""
+    skill = distribution("lu-machinery").locate_file("agents_extensions/shared/skills/verify-ukrainian/SKILL.md")
+    raw = skill.read_bytes()
+    payload = {"markdown": raw.decode("utf-8"), "sha256": hashlib.sha256(raw).hexdigest()}
+    return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+
 async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     """Endpoint identity attestation (Cycle 007 evidence-foundation fixes v3, item 1).
 
@@ -3270,7 +3289,6 @@ def _lookup_wikipedia_in_db(query: str, *, include_provenance: bool = False) -> 
     the caller can cache a miss.
     """
     import contextlib
-    import sqlite3
 
     from lu_machinery.storage.topology import ActiveDatabaseNetworkError
 
