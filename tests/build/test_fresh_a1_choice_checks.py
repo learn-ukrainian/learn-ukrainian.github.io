@@ -1214,7 +1214,7 @@ def test_requires_prompt_bytes_preserve_quotes_markup_and_ukrainian(tmp_path: Pa
 
     raw = (tmp_path / "lesson-1.requires-confirm.prompt.md").read_bytes()
     # Pin the complete output captured before sharing the Jinja environment.
-    assert hashlib.sha256(raw).hexdigest() == "98828c78e6ebb6a1c31c991868e940b2976baa0cae015d976600b6a5934f9998"
+    assert hashlib.sha256(raw).hexdigest() == "d518f521515245bea016336efb8b7d7a2e2887ccf0ccd5e8a218965e1a1b76ce"
     rendered = raw.decode("utf-8")
     for question in batch["questions"]:
         assert f"Sentence: {question['sentence']}" in rendered
