@@ -835,8 +835,13 @@ def assemble_population(targets, gaps, inputs, atlas, register, inventory_sha256
     puls_by_word = defaultdict(list)
     example_puls_by_word = defaultdict(list)
     for row in map(dict, inputs.sources.execute("SELECT * FROM puls_cefr ORDER BY id")):
-        puls_by_word[_fold_dict_key(row["word"])].append(row)
-        example_puls_by_word[normalize_evidence_form(_fold_dict_key(row["word"]))].append(row)
+        word = _fold_dict_key(row["word"])
+        puls_by_word[word].append(row)
+        variants = word.split(",") if row["pos"] in examples.FUNCTION_LABELS else (word,)
+        keys = {normalize_evidence_form(variant.strip()) for variant in variants}
+        if all(examples.UK_TOKEN_RE.fullmatch(key) for key in keys):
+            for key in sorted(keys):
+                example_puls_by_word[key].append(row)
     inputs._use("projection:examples:puls", example_puls_by_word)
     by_spelling = Counter(_fold_dict_key(card["lemma"]) for card in targets.values())
     projection_rows = []

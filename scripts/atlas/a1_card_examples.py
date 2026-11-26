@@ -30,7 +30,7 @@ SENTENCE_TEXT = re.compile(r"[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щью�
 CONTEXT_MARKS = re.compile(r"[«»\"“”„‟‹›\[\]():;…—–]|\.{2,}")
 QUOTE_MARKS = re.compile(r'[«»"“”„‟‹›]')
 POSSIBLE_HEADING = re.compile(r"[\r\n]\s*[А-ЩЬЮЯЄІЇҐ]")
-FUNCTION_POS = frozenset({"prep", "conj", "part"})
+FUNCTION_LABELS = frozenset({"прийменник", "сполучник", "частка"})
 FINITE_VERB_TAGS = frozenset({"pres", "past", "futr", "impr", "impers"})
 OBLIQUE_CASES = frozenset({"v_rod", "v_dav", "v_zna", "v_oru", "v_mis"})
 DISALLOWED_MARKERS = frozenset({"archaic", "dialect", "arch", *src.HIDDEN_MARKERS})
@@ -99,15 +99,15 @@ def surface_readings(inputs):
     return read
 
 
-def a1_content_reading(row, puls_by_word):
+def a1_reading(row, puls_by_word):
     tags = set(row["tags"].split(":"))
-    if row["pos"] in FUNCTION_POS or "pron" in tags:
+    if "pron" in tags:
         return True
     aspect = src.vesum_aspect_of([row["tags"]])
     levels = set()
     for hit in puls_by_word.get(normalize_evidence_form(row["lemma"]), ()):
         label = hit["pos"] or ""
-        pos = label_pos(label) or {"вигук": "intj", "числівник": "numr"}.get(label)
+        pos = label_pos(label) or {"вигук": "intj", "числівник": "numr", "частка": "part"}.get(label)
         if pos == "numr" and hit["guideword"] == "порядковий числівник" and "numr" in tags:
             pos = "adj"
         source_aspect = "imperf" if "(недок.)" in label else "perf" if "(док.)" in label else None
@@ -134,7 +134,7 @@ def self_contained_question(analyses):
 
 
 def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
-    """Require one exact target reading and elementary support for every other content word."""
+    """Require one exact target reading and elementary support for the surrounding words."""
     if len(tokens) > MAX_WORDS:
         return "example exceeds word limit"
     if REGISTER.search(register):
@@ -172,9 +172,9 @@ def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
         return "example needs context or is not a complete sentence"
     if text.endswith("?") and not self_contained_question(analyses):
         return "example needs context or is not a complete sentence"
-    if any(not rows or any(not a1_content_reading(row, puls_by_word) for row in rows)
+    if any(not rows or any(not a1_reading(row, puls_by_word) for row in rows)
            for index, rows in enumerate(analyses) if index not in hits):
-        return "example content word outside verified A1–A2"
+        return "example word outside verified A1–A2"
     if len(gap.senses) != 1:
         return SENSE_UNDECIDABLE
     return None

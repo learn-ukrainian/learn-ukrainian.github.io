@@ -501,9 +501,10 @@ multi-sense entry stays in the ledger with the reason
 The limit is seven words. The length census counted 1,147 punctuated
 sentences of at least two words in 223 chunks from the two held grade-one
 Ukrainian primers. The 95th percentile was seven words by nearest rank.
-The preview checks each other content reading against PULS A1–A2 and
-uses VESUM for the form, entry, part of speech, and register. The sentence
-must be complete and understandable on its own. The locator points into
+The preview checks the other content readings, prepositions, conjunctions,
+and particles against PULS A1–A2. It uses VESUM for form, entry, part of
+speech, and register. The sentence must be complete and understandable
+on its own. The locator points into
 the source chunk before whitespace and stress-mark normalization. Each
 selected example records which of those changes the preview applied.
 
@@ -513,9 +514,9 @@ The assertion checker admits the examples that the preview displays.
 
 | Example holds | Before | After |
 | --- | ---: | ---: |
-| All 845 cards | 839 | 832 |
-| Cards whose sole hold was examples | 185 | 178 |
+| All 845 cards | 839 | 833 |
+| Cards whose sole hold was examples | 185 | 179 |
 
-The replay adds 11 textbook examples to seven cards. Eight held cards have
+The replay adds nine textbook examples to six cards. Six held cards have
 an otherwise eligible literary candidate. Atlas owns the remaining example
 gaps.

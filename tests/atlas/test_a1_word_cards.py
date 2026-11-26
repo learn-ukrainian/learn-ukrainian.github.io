@@ -203,6 +203,11 @@ def example_search():
             (2, 20, "будемо", "бути", "verb", "verb:imperf:futr", "будемо"),
             (3, 30, "сумувати", "сумувати", "verb", "verb:imperf:inf", "сумувати"),
             (4, 40, "жив", "жити", "verb", "verb:imperf:past:m", "жив"),
+            (5, 50, "він", "він", "noun", "noun:pron:pers:3:v_naz", "він"),
+            (6, 60, "щодня", "щодня", "adv", "adv", "щодня"),
+            (7, 70, "грає", "грати", "verb", "verb:imperf:pres:s:3", "грає"),
+            (8, 80, "у", "у", "prep", "prep", "у"),
+            (9, 90, "футбол", "футбол", "noun", "noun:inanim:m:v_zna", "футбол"),
         ])
         inputs = word_card_sources.PilotSources(conn, conn, conn)
         register = {"sources": [{"id": "textbooks", "name": "Textbooks", "fields_used": ["example_sentence"]}]}
@@ -211,9 +216,15 @@ def example_search():
                  "locator": "fixture-definition"}
 
         def run(entry=30, pos="verb", definition="One sense.", level="A1", text=sentence,
-                lemma="сумувати", form="сумувати"):
+                lemma="сумувати", form="сумувати", function_word=False):
             conn.execute("UPDATE textbooks SET text=?", (text,))
-            levels = {"бути": [{"word": "бути", "pos": "дієслово (недок.)", "guideword": "", "level": level}]}
+            levels = {
+                "бути": [{"word": "бути", "pos": "дієслово (недок.)", "guideword": "", "level": level}],
+                "грати": [{"word": "грати", "pos": "дієслово (недок.)", "guideword": "", "level": "A1"}],
+                "футбол": [{"word": "футбол", "pos": "іменник", "guideword": "", "level": "A1"}],
+            }
+            if function_word:
+                levels["у"] = [{"word": "у, в", "pos": "прийменник", "guideword": "", "level": "A1"}]
             senses = examples.bound_senses([{**sense, "value": definition}], VTS, inputs)
             gap = examples.ExampleGap(lemma, entry, pos, frozenset({form}), senses)
             examples.search_corpora([gap], inputs, register, books, levels)
@@ -244,7 +255,7 @@ def test_example_corpus_candidate_for_a_multisense_entry_stays_held(example_sear
         )
 
 
-def test_example_rejects_length_and_out_of_level_content_with_reason(example_search):
+def test_example_rejects_length_and_out_of_level_words_with_reason(example_search):
     # Verbatim sentence from the same two-part primer, part 2 chunk s0076.
     long_sentence = "У хаті на високій горі жив дядько Йой."
     gap = example_search(entry=40, text=long_sentence, lemma="жити", form="жив")
@@ -252,7 +263,15 @@ def test_example_rejects_length_and_out_of_level_content_with_reason(example_sea
     assert ("textbooks", "example exceeds word limit") in gap.attempts
     gap = example_search(level="B1")
     assert gap.values == []
-    assert ("textbooks", "example content word outside verified A1–A2") in gap.attempts
+    reason = ("textbooks", "example word outside verified A1–A2")
+    assert reason in gap.attempts
+    # Literal Большакова grade-two sentence from part 2, chunk s0056.
+    sentence = "Він щодня грає у футбол."
+    args = {"entry": 60, "pos": "adv", "lemma": "щодня", "form": "щодня", "text": sentence}
+    gap = example_search(**args)
+    assert gap.values == []
+    assert reason in gap.attempts
+    assert [value["value"] for value in example_search(**args, function_word=True).values] == [sentence]
 
 
 def encoded(value):
