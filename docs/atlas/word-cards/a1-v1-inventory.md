@@ -560,7 +560,22 @@ Ukrainian primers. The 95th percentile was seven words by nearest rank.
 The preview checks the other content readings, prepositions, conjunctions,
 and particles against PULS A1–A2. It uses VESUM for form, entry, part of
 speech, and register. The sentence must be complete and understandable
-on its own. The locator points into
+on its own. A sentence in exercise layout is a task item, not a model
+sentence, and is held as `example needs context or is not a complete
+sentence`. Exercise layout means one of the following:
+
+- a punctuation mark detached by a space, which leaves an answer slot;
+- a blank: underscores, an ellipsis or empty brackets;
+- a preceding segment that is only an item number, a section number or one
+  letter;
+- an opening capital letter that is not a one-letter Ukrainian word, such as
+  an answer option `Б` or `Г`;
+- underscores, empty brackets or a run of marks with no word after it
+  directly following the sentence. These are empty answer slots or the dot
+  leaders of a table of contents.
+
+A mark followed by a word stays allowed. In textbooks that is a question icon
+or an ellipsis opening the next sentence. The locator points into
 the source chunk before whitespace and stress-mark normalization. Each
 selected example records which of those changes the preview applied.
 
@@ -570,9 +585,11 @@ The assertion checker admits the examples that the preview displays.
 
 | Example holds | Before | After |
 | --- | ---: | ---: |
-| All 845 cards | 839 | 831 |
-| Cards whose sole hold was examples | 222 | 214 |
+| All 845 cards | 839 | 836 |
+| Cards whose sole hold was examples | 222 | 219 |
 
-With the AC-06 binding rules above, the replay adds 11 textbook examples
-to eight cards. Eight held cards have an otherwise eligible literary
+With the AC-06 binding rules above, the replay adds six textbook examples
+to three cards (`професія`, `щиро`, `щодня`). The exercise-layout rule holds
+five numbered or blanked task items for `вівторок`, `зазвичай`, `канікули`,
+`метро` and `середа`. Ten held cards have an otherwise eligible literary
 candidate. Atlas owns the remaining example gaps.

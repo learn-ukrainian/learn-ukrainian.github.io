@@ -363,6 +363,32 @@ def test_example_rejects_length_and_out_of_level_words_with_reason(example_searc
     assert [value["value"] for value in example_search(**args, function_word=True).values] == [sentence]
 
 
+@pytest.mark.parametrize("chunk", [
+    # Layouts from the census of the full textbook pool (PR #13427 finding F4:
+    # "У середу я планую ? ." in Вашуленко, grade two, row 80494).
+    "Ми будемо сумувати ?",
+    "Ми будемо сумувати ! .",
+    "Ми будемо ___ сумувати!",
+    "Ми будемо ( ) сумувати!",
+    "Ми будемо сумувати!\n_______",
+    "Ми будемо сумувати? . . . . . 12",
+    "Ми будемо сумувати!\n?\n?",
+    "5. Ми будемо сумувати!",
+    "§ 2. Ми будемо сумувати!",
+    "Б Ми будемо сумувати!",
+])
+def test_exercise_fragment_is_not_admitted_as_an_example(example_search, chunk):
+    """Defect class: exercise fragment admitted as an example.
+
+    A detached mark, a blank, an item label, an option letter or an empty
+    answer slot marks a task item. The otherwise eligible fixture sentence
+    must stay held with the complete-sentence reason.
+    """
+    gap = example_search(text=chunk)
+    assert gap.values == []
+    assert ("textbooks", "example needs context or is not a complete sentence") in gap.attempts
+
+
 def encoded(value):
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"),
                       allow_nan=False).encode("utf-8")

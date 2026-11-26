@@ -30,6 +30,19 @@ SENTENCE_TEXT = re.compile(r"[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щью�
 CONTEXT_MARKS = re.compile(r"[«»\"“”„‟‹›\[\]():;…—–]|\.{2,}")
 QUOTE_MARKS = re.compile(r'[«»"“”„‟‹›]')
 POSSIBLE_HEADING = re.compile(r"[\r\n]\s*[А-ЩЬЮЯЄІЇҐ]")
+# Exercise layout around or inside a span marks a task item, not a model
+# sentence: a mark detached by whitespace leaves an answer slot, a segment
+# that is only an item number (or a section number) labels an exercise item,
+# and a placeholder after the span (underscores, empty brackets, or a run of
+# marks that no word follows: a dot leader or an answer slot) is an empty slot
+# or a table-of-contents line. A mark followed by a word is a textbook icon
+# or an ellipsis opening the next sentence, so the span before it stays.
+DETACHED_MARK = re.compile(r"\s[,.!?]")
+ITEM_LABEL = re.compile(r"(?:\A|\n)[ \t]*(?:§[ \t]*)?(?:\d+|[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ])\.\Z")
+SLOT_AFTER = re.compile(r"\s*(?:_|\(\s*\)|\[\s*\]|[.…?!](?:\s*[.…?!])*+(?!\s*[^\W\d_]))")
+# One-letter Ukrainian words; any other capital letter opening a span is an
+# answer-option label (А–Г lists) or an initial split from its name.
+ONE_LETTER_WORDS = frozenset("аівузйоєя")
 FUNCTION_LABELS = frozenset({"прийменник", "сполучник", "частка"})
 FINITE_VERB_TAGS = frozenset({"pres", "past", "futr", "impr", "impers"})
 OBLIQUE_CASES = frozenset({"v_rod", "v_dav", "v_zna", "v_oru", "v_mis"})
@@ -139,9 +152,10 @@ def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
         return "example exceeds word limit"
     if REGISTER.search(register):
         return "example has archaic or dialect register"
-    if CONTEXT_MARKS.search(text) or WORKSHEET_RE.search(text) or not SENTENCE_TEXT.fullmatch(text):
+    if (CONTEXT_MARKS.search(text) or WORKSHEET_RE.search(text) or DETACHED_MARK.search(text)
+            or not SENTENCE_TEXT.fullmatch(text)):
         return "example needs context or is not a complete sentence"
-    if len(tokens) < 2 or text.isupper():
+    if len(tokens) < 2 or text.isupper() or (len(tokens[0]) == 1 and tokens[0].lower() not in ONE_LETTER_WORDS):
         return "example needs context or is not a complete sentence"
 
     analyses = []
@@ -184,6 +198,7 @@ def sentence_spans(chunk):
     """Yield whole punctuated spans, with offsets into the unmodified source row."""
     start = 0
     inside_quote = False
+    previous = ""
     for boundary in [*SENTENCE_BREAK.finditer(chunk), None]:
         end = boundary.start() if boundary else len(chunk)
         segment = chunk[start:end]
@@ -193,7 +208,9 @@ def sentence_spans(chunk):
         if raw:
             begin = start + len(segment) - len(segment.lstrip())
             quotes = QUOTE_MARKS.findall(raw)
-            yield begin, begin + len(raw), bool(inside_quote or quotes or POSSIBLE_HEADING.search(raw))
+            exercise = ITEM_LABEL.search(previous) or SLOT_AFTER.match(chunk, begin + len(raw))
+            yield begin, begin + len(raw), bool(inside_quote or quotes or POSSIBLE_HEADING.search(raw) or exercise)
+            previous = raw
             if len(quotes) % 2:
                 inside_quote = not inside_quote
         if boundary:
