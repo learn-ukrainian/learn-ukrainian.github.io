@@ -36,15 +36,16 @@ FEATURE_TOKENS = {
 
 
 ENTRY_PROJECTION_CAPABILITIES = {
-    "definition_uk": {"sum20": "definition_text", "vts_busel_slovnyk_me": "meaning"},
-    "mirror_witness": {"sum20_slovnyk_mirror": "definition_text"},
+    "definition_uk": {"sum20": "definition_text", "sum20_slovnyk_mirror": "definition_text",
+                      "vts_busel_slovnyk_me": "meaning"},
     "examples": {"sum20": "literary_citations", "textbooks": "example_sentence", "literary_corpus": "example_sentence"},
     "register": {"sum20": "definition_text"},
     "pos": {"vesum": "pos", "ulif": "grammatical_label"},
     "gender": {"vesum": "morph_tags"},
     "aspect": {"vesum": "morph_tags"},
     "paradigm": {"vesum": "word_forms", "ulif": "paradigm"},
-    "stress": {"ulif": "stress", "sum20": "stressed_headword", "vts_busel_slovnyk_me": "headword"},
+    "stress": {"ulif": "stress", "sum20": "stressed_headword", "sum20_slovnyk_mirror": "stressed_headword",
+               "vts_busel_slovnyk_me": "headword"},
     "synonyms": {"ulif": "synonym_groups", "synonyms_dictionary": "synonym_groups"},
     "antonyms": {"ulif": "antonym_pairs"},
     "phraseology": {"ulif": "phraseology", "frazeolohichnyi": "idiom"},
@@ -93,7 +94,8 @@ def check_entry_projection(field, source, scope, register, *, source_label):
         scopes = {"slot"}
     elif source == "ulif" and field in {"synonyms", "antonyms", "phraseology"}:
         scopes = {"source_group"}
-    elif field == "examples" or (source == "sum20" and field in {"definition_uk", "register"}):
+    elif (field == "examples" or (source == "sum20" and field == "register")
+          or (source in {"sum20", "sum20_slovnyk_mirror"} and field == "definition_uk")):
         scopes = {"source_sense"}
     else:
         scopes = {"entry"}

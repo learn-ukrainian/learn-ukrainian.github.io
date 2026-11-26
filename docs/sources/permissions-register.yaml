@@ -7,10 +7,9 @@
 # and the removal route. Not a publication gate — see operator_decisions. Not legal advice.
 
 schema_version: 2
-register_date: '2026-10-06'
-purpose: 'Citation and provenance record: who holds the rights, what we use, where it comes from, the terms as found,
-  the citation we show, and how to ask for removal. It is not a publication gate: no build reads it to withhold
-  content.'
+register_date: '2026-11-26'
+purpose: Records provenance, evidence roles, rights holders, published terms, attribution, publisher outreach and
+  removal requests. Permission status describes outreach. The source roles and fields govern evidence eligibility.
 operator_decisions:
 - id: d1_content_stays
   date: '2026-09-27'
@@ -43,6 +42,14 @@ operator_decisions:
     permission in 2026-10, per the operator; written confirmation pending. This updates the practice described
     in d4_no_outreach only for these permissions.
   url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321
+- id: d6_a1_dictionary_and_literary_citations
+  date: '2026-11-26'
+  decision: The free, non-commercial educational project uses official СУМ-20, its identified
+    slovnyk.me fallback, and attributed Ukrlib quotations. The operator will show the results
+    when seeking publisher permission. Permission status records the outreach. Source roles
+    determine evidence eligibility. Only identified modern authorities supply meaning, stress
+    or language norms; Soviet dictionary entries supply occupation context.
+  url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/12288
 removal_route:
   url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
   how: A rights holder opens a GitHub issue naming the source and the content; the maintainer removes it from the
@@ -98,7 +105,7 @@ open_questions:
   2026-09-28): Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний
   словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія
   (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33),
-  Культура слова (3), and the literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). (Note: Великий
+  Культура слова (3), and literary corpora outside the Ukrlib collection (e.g. izbornyk.org.ua). (Note: Великий
   тлумачний словник сучасної української мови / ВТС was admitted and registered under #8977 / #6321 as vts_busel_slovnyk_me).
   Each remaining unregistered source needs its own entry.'
 sources:
@@ -183,8 +190,8 @@ sources:
   open_questions: []
 - id: sum20
   permission_status: pending-expert-contact
-  permission_note: Permission is being sought; the operator is collecting it personally with help from Ukrainian
-    experts.
+  permission_note: The operator will show the A1 results when seeking publisher permission. The official
+    edition is an approved project source under d6_a1_dictionary_and_literary_citations.
   name: «Словник української мови у 20 томах» (СУМ-20), official electronic edition
   organisation: 'Український мовно-інформаційний фонд НАН України (publisher, © of sum20ua.com) with the Інститут
     мовознавства ім. О. О. Потебні НАН України (co-compiler). Not the Інститут української мови, as the #8979 brief
@@ -2079,23 +2086,22 @@ sources:
   - Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.
 - id: sum20_slovnyk_mirror
   permission_status: pending-expert-contact
-  permission_note: The same work and rights holder as `sum20`; slovnyk.me is only the retrieval route (see the `slovnyk_me`
-    aggregator entry). Use follows the operator's source decision of 2026-09-27 (#8977); this entry is a provenance and
-    takedown record.
+  permission_note: The operator will show the A1 results when seeking permission from the same publisher
+    as the official edition. The labelled copy is an approved fallback under d6_a1_dictionary_and_literary_citations.
   name: «Словник української мови у 20 томах» (СУМ-20) via slovnyk.me (newsum)
   organisation: 'Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні
     НАН України (the `sum20` work); digital copy hosted by slovnyk.me'
-  role: Modern Ukrainian definitions beside the official offline collection. query_sum20 and the Sources MCP serve each
-    mirror row under rule sum20-mirror-rule-v1, and internal word cards use it as a separate meaning source. It is never
-    official verification.
+  role: Modern Ukrainian definitions and explicitly stressed headwords for A1 cards whose exact headword has no
+    captured official СУМ-20 article. Card values require entry binding. The mirror shares the official edition's lineage.
   fields_used:
   - headword
+  - stressed_headword
   - definition_text
   appears_in:
   - internal
+  - site
   appears_note: query_sum20 and the Sources MCP label every record `source_role` mirror with its mirror URL and fetch
-    time; internal word cards carry it as source `sum20_slovnyk_mirror` (lineage G-ULIF, tier 2), so it never counts as
-    independent corroboration of `sum20`.
+    time. The A1 preview identifies the copy by name. The word-card source ID is sum20_slovnyk_mirror (lineage G-ULIF, tier 2).
   stored_in:
   - data/sum20_slovnyk_staging.db sum20_slovnyk_articles (164,838 articles, complete checkpoint)
   - data/sources.db sum20_mirror_articles (scripts/ingest/sum20_mirror_import.py)
@@ -2130,7 +2136,7 @@ sources:
     - law_art22_quotation
   citation:
     form: Словник української мови у 20 томах (електронна копія на Slovnyk.me, https://slovnyk.me/dict/newsum/).
-    shown_label: Словник української мови у 20 томах — копія slovnyk.me
+    shown_label: Словник української мови у 20 томах — копія slovnyk.me (newsum); не звірено з офіційним виданням
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
     scope: Mirror records served by query_sum20 and the Sources MCP, word-card meanings with source sum20_slovnyk_mirror,
@@ -2138,3 +2144,50 @@ sources:
   open_questions:
   - The copy covers the 164,838 articles of its own crawl list, not the whole dictionary; common lemmas such as день, дім
     and знати have no article in it.
+- id: literary_corpus
+  permission_status: pending-expert-contact
+  permission_note: The operator will show the A1 results when seeking publisher permission. The project uses short
+    attributed quotations as educational examples under d6_a1_dictionary_and_literary_citations.
+  name: Бібліотека української літератури УкрЛіб
+  organisation: Євген Васильєв (УкрЛіб). Rights in each work belong to its respective rights holders.
+  role: Source of short quotations from Ukrainian literary prose and fables. Each A1 example requires a bound
+    dictionary sense and the same suitability checks as a textbook example.
+  fields_used:
+  - example_sentence
+  appears_in:
+  - internal
+  - site
+  appears_note: A1 word-card examples cite the author and work and link to УкрЛіб.
+  stored_in:
+  - data/sources.db literary_texts rows with source_file beginning ukrlib-
+  provenance:
+    urls:
+    - https://www.ukrlib.com.ua/
+    retrieved: null
+    retrieved_evidence: The held corpus identifies the Ukrlib collection, author, work and chunk. The legacy
+      prose and fable rows lack a recorded retrieval date and work URL. See scripts/rag/scrape_ukrlib.py.
+  terms:
+    found: true
+    licence:
+      name: No common licence for the collected works recorded
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes:
+    - id: ukrlib_corpus_attribution
+      quote: При використанні матеріалів сайту, посилання на УкрЛіб обов'язкове.
+      url: https://www.ukrlib.com.ua/
+      read_on: '2026-11-26'
+    searched:
+    - https://www.ukrlib.com.ua/
+    legal_refs:
+    - law_art22_quotation
+  citation:
+    form: Author and recorded work title. The card marks the quotation and links to Ukrlib.
+    shown_label: Author · work · УкрЛіб
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: The A1 example and the matching Ukrlib corpus record.
+  open_questions: []

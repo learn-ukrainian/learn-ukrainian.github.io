@@ -439,13 +439,17 @@ reasons. The surrounding card records the lemma and the admitted values with
 their source labels and locators. A held definition displays
 `ВТС not captured` when the full ВТС capture is absent.
 
-The VESUM entry supplies morphology. ULIF stress still requires the
-existing ULIF–VESUM correspondence. The current meanings come from bound
-official СУМ-20 and captured ВТС partitions. A spelling-keyed PULS or English
-gloss witness needs a single eligible entry. Ambiguous spellings and
-bilingual homonym partitions remain held. The `code_fields_complete` count
-measures cards with every required field in this pass. A complete card
-also requires example evidence.
+The VESUM entry supplies morphology. ULIF stress requires the existing
+ULIF–VESUM correspondence. Definitions can come from bound official СУМ-20
+or captured ВТС partitions. When the exact headword has no captured official
+article, the preview can use the labelled slovnyk.me copy of СУМ-20. Its
+definitions must be recoverable verbatim from an unambiguous lexical
+partition, with a source-local sense key. Its stressed headword must agree
+with the bound ULIF headword or have VESUM corroboration when ULIF omits
+stress. A spelling-keyed PULS or English gloss witness needs a single
+eligible entry. Ambiguous spellings and bilingual homonym partitions remain
+held. The `code_fields_complete` count measures cards with every required
+field apart from examples.
 
 Use a fresh host-only output directory for the preview.
 
@@ -488,15 +492,14 @@ The full-data preview tries the example fill when `required_examples` is
 the card's sole hold. The `examples` row in `cards[].gap_ledger` records the
 source decisions for each card. `cards[].observations` gives the rejection
 count and first source locator for each reason. `counts.example_fill`
-reports the eligible cards, filled cards, and cards with an otherwise
-eligible literary candidate that the source register refuses.
+reports eligible cards, filled cards, and cards that gained a literary example.
 
-The builder checks the official СУМ-20 entry before the school textbook
-corpus. An existing dictionary illustration carries its source-local
-sense. A corpus example needs one bound sense. A numbered or subordinate
-ВТС meaning marks a sense boundary. A matching corpus sentence for a
-multi-sense entry stays in the ledger with the reason
-`example sense not decidable by code`.
+The builder uses bound official СУМ-20 illustrations, then searches the
+school textbooks and the Ukrlib corpus for cards whose only hold is examples.
+Both corpora require one bound sense. The builder checks subordinate senses
+in the official article and the mirror's staged sense structure, and checks
+numbered and subordinate senses in ВТС. A matching sentence whose sense
+cannot be determined stays in the ledger as `example sense not decidable by code`.
 
 The limit is seven words. The length census counted 1,147 punctuated
 sentences of at least two words in 223 chunks from the two held grade-one
@@ -508,15 +511,48 @@ on its own. The locator points into
 the source chunk before whitespace and stress-mark normalization. Each
 selected example records which of those changes the preview applied.
 
-The literary corpus is unregistered. An otherwise eligible candidate from
-that corpus records `literary corpus not registered` with its locator.
-The assertion checker admits the examples that the preview displays.
+The assertion checker admits suitable Ukrlib quotations with author and
+work. The preview links the attribution to Ukrlib. Each quote retains its
+source chunk and sentence offsets in the ledger.
 
-| Example holds | Before | After |
+| Example holds | Before #13425 | After #13425 |
 | --- | ---: | ---: |
 | All 845 cards | 839 | 833 |
 | Cards whose sole hold was examples | 185 | 179 |
 
-The replay adds nine textbook examples to six cards. Six held cards have
-an otherwise eligible literary candidate. Atlas owns the remaining example
-gaps.
+That replay added nine textbook examples to six cards and identified six
+held cards with an otherwise eligible literary candidate. Atlas owns the
+remaining example gaps.
+
+### СУМ-20 fallback and Ukrlib replay
+
+The comparison starts at `12f1bea5a55912fc9256a22d5c777b001f5ee3bf`, after
+#13425. The same inventory accounts for 845 cards and 2,144 rows in both
+replays. Slices 1 to 6 account for 150, 11, 45, 60, 60, and 60 card
+memberships, respectively. A card can have more than one hold.
+
+| Card outcome or hold | Before | After |
+| --- | ---: | ---: |
+| Complete cards | 10 | 16 |
+| Held cards | 835 | 829 |
+| Cards with all required fields other than examples | 189 | 191 |
+| Example required | 833 | 827 |
+| Ukrainian definition required | 602 | 594 |
+| Stress required | 538 | 538 |
+| CEFR required | 319 | 319 |
+| English gloss required | 308 | 308 |
+| Paradigm required | 71 | 71 |
+| Part of speech required | 71 | 71 |
+| Inventory entry unbound | 71 | 71 |
+
+Among cards with a definition hold, 588 lacked a captured official СУМ-20
+article before the replay and 580 still lacked one afterward. The mirror
+supplied definitions on 165 cards, including the eight that cleared this
+hold. It added labelled stress evidence on 171 cards that already had
+another stress witness. Ukrlib supplied nine quotations on seven cards.
+Six of those cards cleared their example hold. The literary source
+registration caused six example holds before the replay and zero afterward.
+
+The per-card ledger records remaining source gaps and marks their Atlas
+owner. Mirror partition or entry ambiguity, missing captures and
+indeterminate example senses still leave evidence holds.
