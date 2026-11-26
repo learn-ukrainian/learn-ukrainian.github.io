@@ -529,19 +529,25 @@ Headword stress in the full-data preview needs only the headword's own stress
 from an authenticated ULIF entry matching the card lemma (exact case-sensitive
 spelling without stress marks) and VESUM part of speech, or from the card's own
 raw-replay-verified frozen ULIF anchor. Whole-paradigm equality with VESUM is
-not required for the headword stress field; paradigm-form stress keeps its
-existing stricter `bound_ulif` rule.
+not required for the headword stress field; paradigm-form stress, inflection
+tables, definitions, glosses and CEFR levels keep their existing stricter
+correspondence rules.
 
-- **Class correspondences (A1 projection only).** A ULIF `дієприкметник`
+- **Class correspondences (headword stress only).** A ULIF `дієприкметник`
   matches a VESUM `adj` entry tagged `adjp` on every row. An invariable ULIF
   `прислівник` (verified from raw replay) matches an invariable VESUM
-  pronominal adverb (`adv:pron`).
-- **Homonyms and authenticity.** When matching-POS ULIF homonyms agree on the
-  exact stressed headword, that headword stress fills with every agreeing ULIF
-  entry ID in its locator. Two or more matching-POS ULIF homonyms with
-  different stresses and no POS or sense to tell them apart stay held as
-  `ulif_homonym_stress_ambiguous` (`старший`, `речення`, `атлас`, `транспорт`,
-  `західний`). Unauthenticated or `parse_error` ULIF competitors fail closed as
+  pronominal adverb (`adv:pron`). These expanded matches feed only headword
+  stress and do not alter full entry correspondence or inflection tables.
+- **Homonyms and authenticity.** Every non-anchored card resolves ULIF headword
+  stress through the same competitor and raw-replay authenticity check,
+  including cards with a full-paradigm `bound_ulif` match. When matching-POS
+  ULIF homonyms agree on the exact stressed headword, that headword stress
+  fills with every agreeing ULIF entry ID in its locator (for example `собака`
+  `5490,220560` and `кава` `91699,91700,91701`). Two or more matching-POS ULIF
+  homonyms with different stresses and no POS or sense to tell them apart stay
+  held as `ulif_homonym_stress_ambiguous` (`картопляний`, `типовий`,
+  `старший`, `речення`, `атлас`, `транспорт`, `правильний`, `західний`).
+  Unauthenticated or `parse_error` ULIF competitors fail closed as
   `ulif_competitor_unauthenticated`. A frozen ULIF anchor belongs to its own
   card; duplicate candidate cards stay held as `ulif_entry_owned_by_other_card`.
 - **Doublet display.** A doubly stressed ULIF headword renders each accepted
@@ -550,19 +556,22 @@ existing stricter `bound_ulif` rule.
 
 | Hold reason or outcome (845 cards) | Before | After |
 | --- | ---: | ---: |
-| Required stress | 538 | 139 |
-| Required Ukrainian definition | 602 | 592 |
-| Required English gloss | 308 | 294 |
-| Required CEFR | 319 | 316 |
+| Required stress | 538 | 142 |
+| Required Ukrainian definition | 602 | 602 |
+| Required English gloss | 308 | 308 |
+| Required CEFR | 319 | 319 |
+| Required paradigm | 71 | 71 |
 | Cards with all required fields in this pass | 189 | 189 |
 | Complete cards | 10 | 10 |
 
-The 399 newly filled stress values raise ULIF headword stress coverage to 706
-of 845 cards, with zero duplicate stress locators. The 139 remaining stress
-holds comprise 86 monosyllabic headwords with no explicit acute mark in ULIF
+ULIF headword stress coverage rises from 307 to 703 of 845 cards (net `-396`
+stress holds: `+399` newly filled headwords and `3` heteronyms now held under
+the unified competitor check), with zero duplicate stress locators and zero
+changes to non-stress fields. The 142 remaining stress holds comprise 86
+monosyllabic headwords with no explicit acute mark in ULIF
 (`bound_headword_has_no_explicit_stress`), 21 cards absent from ULIF
 (`capture_absent`: 15 pilot MWEs and 6 lemmas), 10 `parse_error` empty ULIF
 captures (`ulif_competitor_unauthenticated`), 9 duplicate candidate cards whose
 frozen ULIF anchor belongs to a slice-1 card (`ulif_entry_owned_by_other_card`),
 8 POS- or case-mismatch/abbreviation cards (`ulif_headword_pos_unresolved`), and
-5 different-stress homonym cards (`ulif_homonym_stress_ambiguous`).
+8 different-stress homonym cards (`ulif_homonym_stress_ambiguous`).

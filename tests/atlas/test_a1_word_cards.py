@@ -207,15 +207,18 @@ def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", register
     return projection.card_values(sources, lemma, 41, register, [], True)
 
 
-def _ulif_homonym(entry_id, head, *, candidates=(41,), slot_form="абеку", authenticated=True):
+def _ulif_homonym(entry_id, head, *, candidates=(41,), stress_candidates=None, slot_form="абеку",
+                  authenticated=True):
     replay = ({"canonical_headword": head, "forms": [{"is_lemma": True, "form_stressed": head}]}
               if authenticated else None)
+    cand_list = list(candidates) if candidates is not None else None
+    stress_list = cand_list if stress_candidates is None else (list(stress_candidates) if stress_candidates else [])
     return {
         "row": {"id": entry_id, "canonical_headword": head, "grammatical_label": "іменник жіночого роду",
                 "sense_gloss": ""},
-        "head": head, "aspect": None, "candidates": list(candidates) if candidates is not None else None,
+        "head": head, "aspect": None, "candidates": cand_list, "stress_candidates": stress_list,
         "reason": None if authenticated else "ulif_raw_identity_mismatch",
-        "replay": replay,
+        "raw": {}, "replay": replay,
         "paradigm": {"slots": {("v_rod", "s"): {"forms": [slot_form]}}},
         "forms": [
             {"is_lemma": True, "is_invariable": False, "form_stressed": head,
@@ -239,20 +242,26 @@ def test_headword_stress_fills_when_paradigm_slots_differ(monkeypatch):
     # Paradigm-form stress keeps its stricter whole-paradigm correspondence rule.
     assert [v for v in values if v["field"] == "paradigm" and v["source_id"] == "ulif"] == []
     assert any(o["field"] == "identity" and o["reason"] == "ulif_vesum_correspondence_unresolved" for o in observations)
-    # Doublet headword shows both accepted stresses in rendered card while ledger keeps verbatim ULIF form.
+    # Expanded class matches apply only to headword stress (never binding ULIF paradigm forms),
+    # and a doublet headword shows both accepted stresses in rendered HTML while ledger keeps verbatim ULIF form.
     doublet = f"а{ACUTE}бе{ACUTE}ка"
-    _, d_values, _, d_holds = _headword_stress_card(monkeypatch, {10: _ulif_homonym(10, doublet)})
+    expanded = _ulif_homonym(10, doublet, candidates=(), stress_candidates=(41,), slot_form="абеки")
+    _, d_values, _, d_holds = _headword_stress_card(monkeypatch, {10: expanded})
     assert "required_stress" not in d_holds
     assert [v["value"] for v in d_values if v["field"] == "stress"] == [doublet]
+    assert [v for v in d_values if v["field"] == "paradigm" and v["source_id"] == "ulif"] == []
     html = projection.render_card({"lemma": "абека", "status": "held", "values": d_values, "holds": []})
     assert f"а{ACUTE}бека / абе{ACUTE}ка" in html
+    assert doublet not in html
 
 
 def test_headword_stress_homonym_pair_with_different_stresses_stays_held(monkeypatch):
     """Defect class: different-stress same-POS ULIF homonyms guessing a stress."""
+    # Even when one homonym matches the VESUM paradigm ("абеки") and bound_ulif selects it,
+    # a competing same-POS homonym with a different stress still holds headword stress.
     homonyms = {
-        9: _ulif_homonym(9, f"а{ACUTE}бека"),
-        10: _ulif_homonym(10, f"абе{ACUTE}ка"),
+        9: _ulif_homonym(9, f"а{ACUTE}бека", slot_form="абеки"),
+        10: _ulif_homonym(10, f"абе{ACUTE}ка", slot_form="абеку"),
     }
     _, values, observations, holds = _headword_stress_card(monkeypatch, homonyms)
     assert "required_stress" in holds
@@ -262,8 +271,9 @@ def test_headword_stress_homonym_pair_with_different_stresses_stays_held(monkeyp
         ("ulif_homonym_stress_ambiguous", "ulif_dictua_entries:9/canonical_headword"),
         ("ulif_homonym_stress_ambiguous", "ulif_dictua_entries:10/canonical_headword"),
     ]
-    # An unauthenticated competitor also fails closed rather than guessing.
-    unauth = {9: _ulif_homonym(9, f"а{ACUTE}бека"), 11: _ulif_homonym(11, "", candidates=None, authenticated=False)}
+    # An unauthenticated competitor also fails closed on the full-match branch rather than guessing.
+    unauth = {9: _ulif_homonym(9, f"а{ACUTE}бека", slot_form="абеки"),
+              11: _ulif_homonym(11, "", candidates=(), authenticated=False)}
     _, u_values, u_obs, u_holds = _headword_stress_card(monkeypatch, unauth)
     assert "required_stress" in u_holds
     assert [v for v in u_values if v["field"] == "stress"] == []
@@ -279,8 +289,10 @@ def test_headword_stress_carries_ulif_source_label_and_locator(monkeypatch):
     assert (stress[0]["source_id"], stress[0]["source_label"], stress[0]["locator"]) == (
         "ulif", "ULIF DictUA", "ulif_dictua_entries:9/canonical_headword",
     )
-    # Matching-POS homonyms with identical stress record every agreeing ULIF entry in the locator.
-    same_stress = {9: _ulif_homonym(9, stressed), 10: _ulif_homonym(10, stressed)}
+    # Matching-POS homonyms with identical stress record every agreeing ULIF entry in the locator,
+    # including when one homonym matched the full VESUM paradigm.
+    same_stress = {9: _ulif_homonym(9, stressed, slot_form="абеки"),
+                   10: _ulif_homonym(10, stressed, slot_form="абеку")}
     _, same_values, _, same_holds = _headword_stress_card(monkeypatch, same_stress)
     assert "required_stress" not in same_holds
     same = [v for v in same_values if v["field"] == "stress"]
