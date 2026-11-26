@@ -1,6 +1,7 @@
 """Select verbatim A1 examples from read-only, attributable source rows."""
 
 import hashlib
+import json
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -14,14 +15,15 @@ from scripts.atlas.allocate_pilot_identities import label_pos
 from scripts.audit.generate_sentence_inventory import UK_TOKEN_RE, WORKSHEET_RE
 from scripts.rag.word_identity import normalize_evidence_form
 from scripts.wiki.chunking import _UK_ABBREVIATIONS, _last_alpha_token
+from scripts.wiki.sum20_mirror import MIRROR_SOURCE_ID
 
 MAX_WORDS = 7  # P95 of the grade-one primer sentences (see the A1 inventory runbook).
 MAX_EXAMPLES = 2
 TEXTBOOKS = "textbooks"
 LITERARY = "literary_corpus"
+UKRLIB_URL = "https://www.ukrlib.com.ua/"
 SOURCES = ("sum20", TEXTBOOKS, LITERARY)
 SENSE_UNDECIDABLE = "example sense not decidable by code"
-LITERARY_UNREGISTERED = "literary corpus not registered"
 REGISTER = re.compile(r"(?<!\w)(?:діал|діялект|заст|архаїч|старовин)\.", re.IGNORECASE)
 VTS_SENSE_SEPARATOR = re.compile(r"\|\||//|♦|(?<!\d)[0-9]+》")
 VTS_SENSE_RANGE = re.compile(r"\b\d+\s*[-–,]\s*\d+\s*\)")
@@ -67,6 +69,31 @@ def bound_senses(values, vts_source, inputs):
         # subdivisions as separate senses, so their presence rules out a
         # mechanical single-sense fallback for the prose corpora.
         if not article or re.search(r'\bclass=["\'][^"\']*\bSHD\b', article[0]):
+            return ()
+        return (row,)
+    mirror = [row for row in definitions if row["source_id"] == MIRROR_SOURCE_ID]
+    if mirror:
+        if len(mirror) != 1:
+            return ()
+        row, = mirror
+        article_id, _, order = row["source_key"].partition(":")
+        article = inputs.sources.execute(
+            "SELECT senses_json FROM sum20_mirror_articles WHERE id=?", (article_id,),
+        ).fetchone()
+        if not article or order != "1":
+            return ()
+        try:
+            parsed = json.loads(article[0])
+        except (TypeError, ValueError):
+            return ()
+        if not isinstance(parsed, dict) or parsed.get("entry_type") != "monosemous":
+            return ()
+        senses = parsed.get("senses")
+        if not isinstance(senses, list) or len(senses) != 1 or not isinstance(senses[0], dict):
+            return ()
+        sense, = senses
+        labels = (parsed.get("header_grammar", ""), sense.get("labels", ""))
+        if sense.get("sub_senses") or any(not isinstance(label, str) or REGISTER.search(label) for label in labels):
             return ()
         return (row,)
     vts = [row for row in definitions if row["source_id"] == vts_source]
@@ -223,33 +250,30 @@ def source_rows(inputs, source, books):
         return
     for row in inputs.sources.execute(
         "SELECT id,chunk_id,source_file,text,author,work,work_id,source_url FROM literary_texts "
-        "WHERE language_period='modern' AND genre IN ('prose','fable') ORDER BY source_file,id"
+        "WHERE language_period='modern' AND genre IN ('prose','fable') "
+        "AND source_file GLOB 'ukrlib-*' ORDER BY source_file,id"
     ):
-        if all(row[key] for key in ("author", "work", "work_id", "source_file")):
+        if all(row[key] and row[key].strip() for key in ("author", "work", "work_id")):
             yield row, f"{row['author']} · {row['work']}"
 
 
 def search_corpora(gaps, inputs, register, books, puls_by_word):
-    """Scan each permitted corpus once in priority order using exact VESUM form keys."""
+    """Scan each registered corpus once in priority order using exact VESUM form keys."""
     readings = surface_readings(inputs)
     for source in (TEXTBOOKS, LITERARY):
         record = checker.canonical_source(source, register)
-        unregistered_literary = source == LITERARY and record is None
         decision = checker.check_entry_projection(
             "examples", source, "source_sense", register, source_label=record.get("name") if record else None,
         )
-        # An unregistered corpus may supply a locator for a refused candidate.
-        # Search it only for cards that remain held, and never emit its text.
-        limit = 1 if unregistered_literary else MAX_EXAMPLES
         waiting = []
         for gap in gaps:
-            if len(gap.values) < limit:
+            if len(gap.values) < MAX_EXAMPLES:
                 waiting.append(gap)
             elif source != TEXTBOOKS:
                 gap.report(source, "filled from preferred source")
         if not waiting:
             continue
-        if decision != "supported" and not unregistered_literary:
+        if decision != "supported":
             for gap in waiting:
                 gap.report(source, decision)
             continue
@@ -288,9 +312,6 @@ def search_corpora(gaps, inputs, register, books, puls_by_word):
                               refusal(text, tokens, gap, readings, puls_by_word, register=register_text))
                     if reason:
                         gap.report(source, reason, locator)
-                        continue
-                    if unregistered_literary:
-                        gap.report(source, LITERARY_UNREGISTERED, locator)
                         continue
                     decision = checker.check_entry_projection(
                         "examples", source, "source_sense", register, source_label=label,

@@ -407,9 +407,9 @@ def approved_sources_tool_baseline(baseline):
         enabled = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.enabled_tools="))
         approvals = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.tools="))
         names = json.loads(cmd[enabled].split("=", 1)[1])
-        assert not {"query_wikipedia_cached", *ULIF_LOCAL_TOOLS} & set(names)
+        assert not {"get_verify_ukrainian_skill", "query_wikipedia_cached", *ULIF_LOCAL_TOOLS} & set(names)
         assert cmd[approvals] == "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
-        names = sorted([*names, "query_wikipedia_cached", *ULIF_LOCAL_TOOLS])
+        names = sorted([*names, "get_verify_ukrainian_skill", "query_wikipedia_cached", *ULIF_LOCAL_TOOLS])
         cmd[enabled] = "mcp_servers.sources.enabled_tools=" + json.dumps(names)
         cmd[approvals] = "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
     return {**baseline, "adapters": adapters}
@@ -886,7 +886,13 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
         enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
         assert json.loads(enabled) == read_only
         assert json.loads(enabled) == sorted(
-            [*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached", *ULIF_LOCAL_TOOLS]
+            [
+                *json.loads(old_cmd[tokens[0]].split("=", 1)[1]),
+                "word_card",
+                "get_verify_ukrainian_skill",
+                "query_wikipedia_cached",
+                *ULIF_LOCAL_TOOLS,
+            ]
         )
         assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
 

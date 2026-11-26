@@ -24,6 +24,8 @@ from scripts.atlas import word_card_sources
 from scripts.atlas.a1_card_capture import _paradigm
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
 from scripts.projects.open_model_data.word_cards import dataset_projection
+from scripts.wiki.sum20_mirror import SCHEMA_SQL as MIRROR_SCHEMA
+from scripts.wiki.sum20_official import ensure_sum20_official_schema, parse_sum20_article, upsert_sum20_article
 
 ROOT = Path(__file__).resolve().parents[2]
 TARGET = "wc_6bt62wd6zzzf"
@@ -162,6 +164,7 @@ def test_full_data_uncaptured_vts_stays_held_with_reason(gap_fill_card):
         "outcome": "held", "reasons": ["required_definition_uk"],
         "sources_searched": {
             "sum20": {"admitted": 0, "reasons": {"capture_absent": 1}},
+            "sum20_slovnyk_mirror": {"admitted": 0, "reasons": {"capture_absent": 1}},
             VTS: {"admitted": 0, "reasons": {"ВТС not captured": 1}},
         },
     }
@@ -311,6 +314,83 @@ def test_headword_stress_carries_ulif_source_label_and_locator(monkeypatch):
 
 
 @pytest.fixture
+def mirror_card(monkeypatch):
+    mirror_definition = "Пристрій для освітлення."
+    head = "ліхта́р"
+    numbered = f"1. {mirror_definition}"
+    article = f"ліхтар {head.upper()}, я́, ч. {numbered}"
+    staged = {"headword": head.upper(), "entry_type": "monosemous",
+              "senses": [{"sense_num": 1, "raw_text": numbered, "definition": numbered[1:]}]}
+    with sqlite3.connect(":memory:") as conn:
+        conn.row_factory = sqlite3.Row
+        ensure_sum20_official_schema(conn)
+        conn.executescript(MIRROR_SCHEMA)
+        conn.execute("""
+            INSERT INTO sum20_mirror_imports
+            (id, generation, rule_version, staging_sha256, staging_records, checkpoint_count,
+             checkpoint_last_url, checkpoint_updated_at, official_digest, relation_counts, imported_at)
+            VALUES (1, 'fixture', 'sum20-mirror-rule-v1', 'fixture', 1, 1,
+                    'https://slovnyk.me/dict/newsum/ліхтар', '2026-10-12', 'fixture', '{}', '2026-10-12')
+        """)
+        conn.execute("CREATE TABLE slovnyk_me_entries (id, dictionary_slug, normalized_word)")
+        conn.execute("""
+            INSERT INTO sum20_mirror_articles
+            (mirror_url, source_url, mirror, lemma, headword, normalized_lookup_key,
+             title, article_text, senses_json, fetched_at, content_sha256, import_id)
+            VALUES ('https://slovnyk.me/dict/newsum/ліхтар', 'https://slovnyk.me/dict/newsum/ліхтар',
+                    'slovnyk.me', 'ліхтар', 'ліхтар', 'ліхтар', 'ліхтар', ?, ?, '2026-10-12', ?, 1)
+        """, (article, json.dumps(staged, ensure_ascii=False), hashlib.sha256(article.encode()).hexdigest()))
+        sources = word_card_sources.PilotSources(conn, conn, conn)
+        forms = [{"entry_id": 41, "word_form": "ліхтар", "lemma": "ліхтар", "pos": "noun",
+                  "id": 2, "tags": "noun:inanim:m:v_naz", "source_comment": head}]
+        monkeypatch.setattr(sources, "vesum_forms", lambda _: forms)
+        monkeypatch.setattr(projection, "ulif_candidates", lambda *_: {
+            9: {"head": "ліхтар", "row": {"id": 9, "grammatical_label": "іменник"},
+                "candidates": [41], "reason": None, "forms": [], "aspect": None, "paradigm": {"slots": {}}},
+        })
+        monkeypatch.setattr(projection, "bound_ulif", lambda *_: 9)
+        monkeypatch.setattr(projection, "ulif_groups", lambda *_: None)
+        monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
+        monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
+        register = {"sources": [
+            {"id": "sum20", "name": "Official edition", "fields_used": ["stressed_headword", "definition_text"]},
+            {"id": "sum20_slovnyk_mirror", "name": "Mirror", "permission_status": "pending-expert-contact",
+             "fields_used": ["definition_text", "stressed_headword"]},
+        ]}
+
+        def run(*, official=False):
+            if official:
+                html = ('<article><div class="ENTRY"><span class="WORD">ЛІХТА́Р</span>'
+                        '<span class="LPART">я́, ч.</span>'
+                        '<div class="INTF"><span class="FORMULA">Переносний світильник.</span></div>'
+                        '</div></article>')
+                upsert_sum20_article(conn, parse_sum20_article(html, 5), fetched_at="2026-09-22")
+            return projection.card_values(sources, "ліхтар", 41, register, [], True)
+
+        yield run
+
+
+def test_full_data_bound_mirror_fills_definition_and_stress_with_copy_label(mirror_card):
+    _, values, observations, holds = mirror_card()
+    label = "Словник української мови у 20 томах — копія slovnyk.me (newsum); не звірено з офіційним виданням"
+    assert [(row["field"], row["value"], row["source_label"]) for row in values] == [
+        ("stress", "ліхта́р", label),
+        ("definition_uk", "Пристрій для освітлення.", label),
+    ]
+    ledger = projection.field_ledger(values, observations, holds)
+    assert ledger["definition_uk"]["outcome"] == "filled"
+    assert ledger["definition_uk"]["sources_searched"]["sum20_slovnyk_mirror"]["admitted"] == 1
+
+
+def test_full_data_captured_official_article_wins_over_differing_mirror(mirror_card):
+    _, values, _, _ = mirror_card(official=True)
+    assert [(row["field"], row["source_id"], row["value"]) for row in values] == [
+        ("stress", "sum20", "ЛІХТА́Р"),
+        ("definition_uk", "sum20", "Переносний світильник."),
+    ]
+
+
+@pytest.fixture
 def example_search():
     # Literal primer sentence from Захарійчук, grade one, part 1, chunk s0054.
     # The stores, identities and source levels below are owned by this test.
@@ -342,8 +422,19 @@ def example_search():
                  "locator": "fixture-definition"}
 
         def run(entry=30, pos="verb", definition="One sense.", level="A1", text=sentence,
-                lemma="сумувати", form="сумувати", function_word=False):
-            conn.execute("UPDATE textbooks SET text=?", (text,))
+                lemma="сумувати", form="сумувати", function_word=False, *, literary=False):
+            conn.execute("UPDATE textbooks SET text=?", ("" if literary else text,))
+            reading_register = register
+            if literary:
+                conn.execute("DELETE FROM literary_texts")
+                conn.execute("""
+                    INSERT INTO literary_texts VALUES
+                    (1,'chunk-1','ukrlib-fixture',?,'Literary author','Literary work','work-1',NULL,'modern','prose'),
+                    (2,'chunk-2','unregistered-fixture',?,'Other author','Other work','work-2',NULL,'modern','prose')
+                """, (text, text))
+                reading_register = {"sources": [*register["sources"],
+                    {"id": "literary_corpus", "name": "Literary corpus", "fields_used": ["example_sentence"],
+                     "permission_status": "pending-expert-contact"}]}
             levels = {
                 "бути": [{"word": "бути", "pos": "дієслово (недок.)", "guideword": "", "level": level}],
                 "грати": [{"word": "грати", "pos": "дієслово (недок.)", "guideword": "", "level": "A1"}],
@@ -353,10 +444,26 @@ def example_search():
                 levels["у"] = [{"word": "у, в", "pos": "прийменник", "guideword": "", "level": "A1"}]
             senses = examples.bound_senses([{**sense, "value": definition}], VTS, inputs)
             gap = examples.ExampleGap(lemma, entry, pos, frozenset({form}), senses)
-            examples.search_corpora([gap], inputs, register, books, levels)
+            examples.search_corpora([gap], inputs, reading_register, books, levels)
             return gap
 
         yield run
+
+
+def test_literary_example_requires_one_bound_sense_and_cites_author_and_work(example_search):
+    gap = example_search(literary=True)
+    assert [(row["value"], row["source_label"], row["evidence"]["sense_locator"]) for row in gap.values] == [
+        ("Ми будемо сумувати!", "Literary author · Literary work", "fixture-definition"),
+    ]
+    html = projection.render_card({"lemma": gap.lemma, "values": gap.values})
+    assert "<q>Ми будемо сумувати!</q>" in html
+    assert 'Literary author · Literary work · <a href="https://www.ukrlib.com.ua/"' in html
+    assert ("literary_corpus", "duplicate source sentence") not in gap.attempts
+    ambiguous = example_search(literary=True, definition="First. || Second.")
+    assert ambiguous.values == []
+    assert ambiguous.attempts["literary_corpus", "example sense not decidable by code"] == (
+        1, "literary_texts:ukrlib-fixture:chunk-1:1 [text:0:19]",
+    )
 
 
 def test_example_refuses_a_different_vesum_entry_or_part_of_speech(example_search):
