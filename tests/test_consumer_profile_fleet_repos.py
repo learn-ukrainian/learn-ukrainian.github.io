@@ -26,7 +26,8 @@ def test_profile_fleet_repos_loads(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
     profile = load_profile()
     assert profile is not None
     assert "fleet_repos" not in profile.config
-    assert default_config_path() == files("lu_machinery").joinpath("config", "fleet_repos.yaml")
+    packaged_catalog = files("lu_machinery").joinpath("config", "fleet_repos.yaml")
+    assert default_config_path().resolve() == Path(str(packaged_catalog)).resolve()
     repos = load_fleet_repos()
     assert repos["public"].sources_server
     assert repos["machinery"].github == "agentic-machinery/machinery"
