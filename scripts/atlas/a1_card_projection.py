@@ -187,7 +187,7 @@ def mirror_definitions(part):
     row = part["row"]
     try:
         parsed = json.loads(row["senses_json"])
-    except ValueError:
+    except (TypeError, ValueError):
         return []
     # The staged parse has one article-level sense list, even for pages
     # containing several numbered homonyms. Only a lone partition owns it.

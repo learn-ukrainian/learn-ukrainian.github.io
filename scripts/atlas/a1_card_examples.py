@@ -82,10 +82,16 @@ def bound_senses(values, vts_source, inputs):
         ).fetchone()
         if not article or order != "1":
             return ()
-        parsed = json.loads(article[0])
-        if parsed.get("entry_type") != "monosemous" or len(parsed["senses"]) != 1:
+        try:
+            parsed = json.loads(article[0])
+        except (TypeError, ValueError):
             return ()
-        sense, = parsed["senses"]
+        if not isinstance(parsed, dict) or parsed.get("entry_type") != "monosemous":
+            return ()
+        senses = parsed.get("senses")
+        if not isinstance(senses, list) or len(senses) != 1 or not isinstance(senses[0], dict):
+            return ()
+        sense, = senses
         labels = (parsed.get("header_grammar", ""), sense.get("labels", ""))
         if sense.get("sub_senses") or any(not isinstance(label, str) or REGISTER.search(label) for label in labels):
             return ()
