@@ -1,4 +1,6 @@
 /** Shared controller for React practice cards and SSR-only Atlas articles. */
+import { CHROME_STRINGS } from '../i18n/chrome';
+
 function getCdnBase(): string {
   return (import.meta.env.PUBLIC_AUDIO_CDN_URL || '').replace(/\/$/, '');
 }
@@ -68,6 +70,36 @@ export async function lemmaAudioPath(lemma: string, ext = 'opus', shard = true):
   return shard ? `${hex.slice(0, 2)}/${hex}.${ext}` : `${hex}.${ext}`;
 }
 
+/**
+ * Atlas articles are Ukrainian. The practice-unavailable status takes its
+ * accessible name from `title`, which was both locales at once, so a Ukrainian
+ * page still announced the English string. Point the name at the locale string
+ * already in the chrome map. Wikipedia links use that map's short label, the
+ * same pattern as Вікісловник / Вікіджерела, instead of the raw URL.
+ */
+function applyAtlasWordPageChrome(root: HTMLElement): void {
+  const atlas = root.closest<HTMLElement>('[data-word-atlas]');
+  if (!atlas) return;
+  const locale = (root.dataset.locale || document.documentElement.dataset.chromeLocale) === 'en' ? 'en' : 'uk';
+  const unavailable = atlas.querySelector<HTMLElement>('[data-testid="atlas-practice-cta-unavailable"]');
+  const text = unavailable?.querySelector(`[data-loc="${locale}"]`)?.textContent?.trim();
+  if (unavailable && text) {
+    unavailable.removeAttribute('title');
+    unavailable.setAttribute('aria-label', text);
+  }
+  const label = CHROME_STRINGS.uk['atlas.layer.wiki'];
+  atlas.querySelectorAll<HTMLAnchorElement>('a[href*="wikipedia.org"]').forEach((anchor) => {
+    if (anchor.dataset.shortLink === label) return;
+    const indicator = anchor.querySelector('.ext-link-indicator');
+    for (const node of [...anchor.childNodes]) {
+      if (node.nodeType === Node.TEXT_NODE) node.textContent = '';
+    }
+    anchor.insertBefore(document.createTextNode(label), indicator);
+    anchor.setAttribute('aria-label', `${label} (нова вкладка)`);
+    anchor.dataset.shortLink = label;
+  });
+}
+
 export function mountPronunciationPlayer(root: HTMLElement): () => void {
   mounted.get(root)?.();
   const button = root.querySelector('button')!;
@@ -96,6 +128,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     button.textContent = phase === 'idle' ? copy().play : copy().stop;
     button.setAttribute('aria-busy', String(phase === 'pending'));
     status.textContent = failure ? copy()[failure] : '';
+    applyAtlasWordPageChrome(root);
   };
   const stop = () => {
     attempt++;
