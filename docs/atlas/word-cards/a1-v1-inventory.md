@@ -591,15 +591,21 @@ correspondence rules.
   reading separated by ` / ` (for example `за́вжди / завжди́`), while the ledger
   keeps the verbatim ULIF spelling.
 
+The comparison starts at `c0bdb1de25b9a128916f0a065db158c031b27260`, after
+#13431 (before #13431, the same replay had 602 Ukrainian definition holds, 189
+cards with all required fields other than examples, and 10 complete cards).
+
 | Hold reason or outcome (845 cards) | Before | After |
 | --- | ---: | ---: |
 | Required stress | 538 | 142 |
-| Required Ukrainian definition | 602 | 602 |
+| Required Ukrainian definition | 594 | 594 |
 | Required English gloss | 308 | 308 |
 | Required CEFR | 319 | 319 |
 | Required paradigm | 71 | 71 |
-| Cards with all required fields in this pass | 189 | 189 |
-| Complete cards | 10 | 10 |
+| Required examples | 827 | 827 |
+| Cards with all required fields other than examples | 191 | 191 |
+| Complete cards | 16 | 16 |
+| Held cards | 829 | 829 |
 
 ULIF headword stress coverage rises from 307 to 703 of 845 cards (net `-396`
 stress holds: `+399` newly filled headwords and `3` heteronyms now held under
