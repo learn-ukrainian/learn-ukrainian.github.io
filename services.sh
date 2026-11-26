@@ -72,7 +72,7 @@ git_common_dir="$(git -C "$PROJECT_ROOT" rev-parse --path-format=absolute --git-
 if [[ -n "$git_common_dir" && "$(basename "$git_common_dir")" == ".git" ]]; then
     PUBLIC_PRIMARY_ROOT="$(cd "$(dirname "$git_common_dir")" && pwd)"
 fi
-WORK_PRIVATE_ROOT="${LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT:-$(dirname "$PUBLIC_PRIMARY_ROOT")/learn-ukrainian-infra-private}"
+WORK_PRIVATE_ROOT="${LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT:-$(dirname "$PUBLIC_PRIMARY_ROOT")/machinery-infra}"
 
 # Machine role: a notebook never spawns a local API — every action hands off
 # to the private writer launcher, which owns the SSH tunnel and remote ops.
