@@ -8,8 +8,10 @@ The expected SHA-256 of its `SKILL.md` is
 Check the bytes of your deployed copy against this pin. If the copy is missing or
 stale, call `mcp__sources__get_verify_ukrainian_skill` and compare its `sha256`
 with the pin before following the returned `markdown`.
-If no copy matches or a required check has no evidence, deny the affected item
-with a reason starting `unresolved`. Keep the answer schema below.
+If no copy matches, return `deny` for each item with a reason starting `unresolved`,
+`requires_forced: false`, and `judgement: depends_on_context` with `evidence: []`
+for every option. If a required check has no evidence, use an unresolved denial
+and leave the unsupported option's evidence empty. Keep the answer schema below.
 
 For **each** item, judge **each option in this sentence**, not in isolation. Use source evidence with IDs
 `<source>:<id>` where source is `vesum`, `pravopys`, `textbook`, `grinchenko`, `sum20`, `vts`, or `ulif`.

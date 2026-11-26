@@ -40,7 +40,6 @@ import threading
 import time
 import unicodedata
 from difflib import SequenceMatcher
-from importlib.metadata import distribution
 from pathlib import Path
 from typing import Any
 
@@ -61,6 +60,7 @@ if str(SERVER_DIR) not in sys.path:
     sys.path.append(str(SERVER_DIR))
 
 import word_card
+from lu_machinery.common.repo_root import machinery_path
 from lu_machinery.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from lu_machinery.storage.generations import one_generation as one_sources_generation
 
@@ -2881,7 +2881,7 @@ def _sha256_of_file(path: Path) -> str:
 
 async def handle_get_verify_ukrainian_skill() -> list[TextContent]:
     """Return the installed wheel's skill without changing its UTF-8 bytes."""
-    skill = distribution("lu-machinery").locate_file("agents_extensions/shared/skills/verify-ukrainian/SKILL.md")
+    skill = machinery_path("agents_extensions/shared/skills/verify-ukrainian/SKILL.md")
     raw = skill.read_bytes()
     payload = {"markdown": raw.decode("utf-8"), "sha256": hashlib.sha256(raw).hexdigest()}
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
