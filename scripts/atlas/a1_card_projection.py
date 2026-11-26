@@ -18,7 +18,7 @@ from scripts.atlas import word_card_assertion_check as checker
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_meanings as meanings
 from scripts.atlas import word_card_sources as src
-from scripts.atlas.a1_card_capture import _entry_candidates, _group_text, _paradigm
+from scripts.atlas.a1_card_capture import _entry_candidates, _group_text, _paradigm, _tag_list
 from scripts.atlas.a1_card_receipts import Refusal, canonical, digest
 from scripts.atlas.allocate_pilot_identities import label_pos
 from scripts.atlas.atlas_db import ENRICHMENT_SECTIONS
@@ -82,6 +82,8 @@ def ulif_candidates(sources, lemma, vesum_rows):
         if row["status"] == "ok" and row["homonym_checked"] == 1:
             try:
                 raw = json.loads(sources._raw(row["raw_response_ref"].removeprefix("sha256:"), "ulif:entry"))
+                if not isinstance(raw, dict) or not isinstance(raw.get("paradigm"), str):
+                    raise ValueError("invalid_ulif_raw_manifest")
                 html = sources._raw(raw["paradigm"].removeprefix("sha256:"), "ulif:paradigm")
                 parsed = parse_ulif_entry(html.decode(), homonym_index=row["homonym_index"])
                 forms = sources.forms(row["id"])
@@ -123,6 +125,9 @@ def ulif_groups(sources, entry_id, identity, add, report):
         ref = identity["raw"].get(kind)
         if not ref:
             report(kind, "ulif", "missing_capture" if not stored else "group_raw_capture_missing", len(stored))
+            continue
+        if not isinstance(ref, str):
+            report(kind, "ulif", "malformed_group_capture", len(stored))
             continue
         try:
             raw = sources._raw(ref.removeprefix("sha256:"), f"ulif:{kind}")
@@ -274,6 +279,9 @@ def entry_witnesses(sources, lemma, unambiguous, pos, add, report):
                 label = row.get("source")
                 if field == "gloss_en":
                     value = json.loads(value)
+                    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+                        report(field, source, "malformed_gloss_capture", 1, locator)
+                        continue
                 if field == "etymology":
                     label = f"ЕСУМ, т. {row['vol']}, с. {row['page']}"
                 add(field, source, locator, value, label=label)
@@ -369,7 +377,7 @@ def card_values(sources, lemma, target, register, ulif_anchor=None):
                       if row["candidates"] is None or target in row["candidates"]
                       or set(row["candidates"]).intersection(vesum_rows)}
         keep_gender = pos in {"verb", "adj"} or any(
-            any(tag in json.loads(form["grammatical_tags"]) for tag in src.GENDERS)
+            any(tag in _tag_list(form, "grammatical_tags") for tag in src.GENDERS)
             for candidate in candidates.values() for form in candidate["forms"] or [] if not form["is_lemma"]
         )
         entry_paradigms = src.vesum_paradigm([row for rows in vesum_rows.values() for row in rows], keep_gender)
@@ -493,7 +501,10 @@ def legacy_payloads(atlas, lemma, frozen_slugs):
             yield slug, locator, "related_entries", None, dict(row)
         for row in atlas.execute("SELECT payload_json FROM article_payloads WHERE slug=?", (slug,)):
             payload = json.loads(row["payload_json"])
-            for section, value in sorted(payload.get("sections", {}).items()):
+            if not isinstance(payload, dict) or not isinstance(payload.get("sections", {}), dict):
+                raise Refusal("malformed_atlas_payload")
+            sections = payload.get("sections", {})
+            for section, value in sorted(sections.items()):
                 label = value.get("source") if isinstance(value, dict) else None
                 yield slug, "article_payloads/sections", section, label, value
             yield slug, "article_payloads", "header", None, {
@@ -536,7 +547,13 @@ def parity(payloads, values, bound_slug):
 def population(root, inventory):
     """Preserve every frozen ID and inventory row without minting release identities."""
     def read(relative):
-        return foundation.load(root / relative)
+        obj = foundation.load(root / relative)
+        if not isinstance(obj, dict):
+            raise Refusal("malformed_frozen_registry")
+        return obj
+
+    if not isinstance(inventory, dict) or not isinstance(inventory.get("rows"), list):
+        raise Refusal("malformed_inventory")
 
     base = read("registry/atlas/identity/registry.json")
     by_id = {item["card_id"]: item for item in base["entries"]}
@@ -559,6 +576,8 @@ def population(root, inventory):
     except subprocess.SubprocessError as error:
         raise Refusal("frozen_pilot_pairing_unavailable") from error
     pairing = json.loads(pairing_bytes)
+    if not isinstance(pairing, dict) or not isinstance(pairing.get("entries"), list):
+        raise Refusal("malformed_frozen_pairing")
     pilot = read("registry/atlas/pilot/pilot-v1.json")["selection"]
     pilot_rows = {record["locator"]: record["raw_row"] for record in pilot["source_records"]
                   if record["table"] == "ulif_dictua_entries"}
@@ -586,11 +605,16 @@ def population(root, inventory):
             by_entry[card["lemma"], entry].append(card_id)
     gaps = defaultdict(list)
     for row in inventory["rows"]:
+        if not isinstance(row, dict) or not isinstance(row.get("mapping"), dict):
+            raise Refusal("malformed_inventory_row")
         mapping = row["mapping"]
         lemma = mapping.get("lemma") or row["key"]
         entry = mapping.get("entry_id")
         ids = row_cards[row["id"]].copy()
-        pilot_id = mapping.get("pilot", {}).get("card_id")
+        pilot_mapping = mapping.get("pilot", {})
+        if not isinstance(pilot_mapping, dict):
+            raise Refusal("malformed_inventory_row")
+        pilot_id = pilot_mapping.get("card_id")
         if not ids and pilot_id in cards:
             ids.add(pilot_id)
         if not ids and entry is not None:

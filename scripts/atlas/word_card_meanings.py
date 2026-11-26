@@ -224,6 +224,7 @@ def correspondence(candidate: dict, homonyms: dict, entry_id: int) -> bool:
     if candidate["reason"] or not candidate["text"] or not candidate["pos"]:
         return False
     head = candidate["head"].casefold()
+    head_readings = {s.casefold() for s in src.stress_forms(head)}
     compatible = []
     for eid, h in homonyms.items():
         row = h["row"]
@@ -235,7 +236,9 @@ def correspondence(candidate: dict, homonyms: dict, entry_id: int) -> bool:
         readings = {s.casefold() for s in src.stress_forms(h["head"])}
         if key(head) != key(h["head"]):
             continue
-        if src.ACUTE in head and not readings.intersection(s.casefold() for s in src.stress_forms(head)):
+        # An unknown stress cannot authenticate the target or eliminate a competitor.
+        if (src.ACUTE in head and not readings.intersection(head_readings)
+                and (eid == entry_id or src.ACUTE in h["head"])):
             continue
         compatible.append(eid)
     return compatible == [entry_id]
