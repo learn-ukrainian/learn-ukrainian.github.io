@@ -50,7 +50,7 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     assert app.user_middleware[2].kwargs["dispatch"] is resilience_middleware
     assert app.user_middleware[3].kwargs == {
         "allow_origins": ["*"],
-        "allow_credentials": True,
+        "allow_credentials": False,
         "allow_methods": ["*"],
         "allow_headers": ["*"],
     }
