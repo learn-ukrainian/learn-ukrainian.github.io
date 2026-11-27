@@ -4,23 +4,38 @@
 set -euo pipefail
 
 hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-worktree_root="$(git rev-parse --show-toplevel)"
-# Validate Git metadata with the same resolver as native hook commands before
-# accepting a primary root or interpreter. Never trust commondir for execution.
-bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
+# The configured interpreter locates the installed machinery library; Git metadata never selects
+# it. LU_PYTHON is its canonical name (machinery#1531); a host-bound release refuses a legacy
+# LEARN_UKRAINIAN_PYTHON that disagrees with the binding.
+bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LU_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}}"
 case "$bootstrap_python" in
   /*) ;;
-  *) echo "Set LEARN_UKRAINIAN_PYTHON to an absolute trusted interpreter path" >&2; exit 2 ;;
+  *) echo "Set LU_PYTHON to an absolute trusted interpreter path" >&2; exit 2 ;;
 esac
 source "$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/project_interpreter.sh"))')"
-project_hook_context_resolve "$worktree_root" || {
-  echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
-  exit 127
-}
-main_root="$(project_primary_root_resolve "$worktree_root")" || {
-  echo "Git hook error: primary checkout unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown})." >&2
-  exit 127
-}
+worktree_root='' main_root=''
+if declare -F project_host_context >/dev/null; then
+  # A host-bound release validates the binding, then names the interpreter, the invocation
+  # checkout and its primary; it refuses, with its reason on stderr, before any hook runs.
+  project_host_context --require-checkout || exit 127
+  if [[ -z "$worktree_root" || -z "$main_root" ]]; then
+    echo "Git hook error [missing_checkout_binding]: the host binding named no checkout." >&2
+    exit 127
+  fi
+else
+  # An earlier release validates the Git metadata itself; it never trusts commondir for execution.
+  # Its shell resolver reads only the legacy interpreter alias.
+  export LEARN_UKRAINIAN_PYTHON="${LEARN_UKRAINIAN_PYTHON:-${LU_PYTHON:-}}"
+  worktree_root="$(git rev-parse --show-toplevel)"
+  project_hook_context_resolve "$worktree_root" || {
+    echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
+    exit 127
+  }
+  main_root="$(project_primary_root_resolve "$worktree_root")" || {
+    echo "Git hook error: primary checkout unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown})." >&2
+    exit 127
+  }
+fi
 
 source_root="$worktree_root"
 if [[ ! -x "$source_root/scripts/pre_commit/project_python.sh" || ! -f "$source_root/.pre-commit-config.yaml" ]]; then

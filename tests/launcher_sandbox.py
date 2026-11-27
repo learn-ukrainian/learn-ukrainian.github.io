@@ -20,6 +20,7 @@ import functools
 import importlib.util
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -158,6 +159,35 @@ def launcher_environment(
         env.update(values)
     env.update(extra)
     return env
+
+
+def bind_launcher_host_context(library: Path, *, product: Path, python: Path, state: Path) -> None:
+    """Give a launcher fixture its test host binding.
+
+    From machinery#1531 the launcher takes its interpreter, state root and checkouts from
+    ``project_host_context`` in ``lib/project_interpreter.sh``, which validates the host
+    binding and pins the interpreter that runs it. A fixture whose interpreter is a recording
+    stand-in cannot satisfy that binding, so this redefines only that function, after the
+    library's own bytes, to export the fixture's product checkout (also its machinery
+    checkout), state root and interpreter. A release without ``project_host_context`` never
+    calls the appended definition. ``library`` may link into the installed release: the link
+    is replaced by a copy and never written through.
+    """
+    state.mkdir(mode=0o700, parents=True, exist_ok=True)
+    body = library.read_text(encoding="utf-8")
+    library.unlink()
+    library.write_text(
+        body
+        + "\nproject_host_context() {\n"
+        + f"  export LU_STATE_ROOT={shlex.quote(str(state))}\n"
+        + f"  export LU_PRIMARY_REPO_ROOT={shlex.quote(str(product))}\n"
+        + f"  export LU_PRODUCT_ROOT={shlex.quote(str(product))}\n"
+        + f"  export LU_PYTHON={shlex.quote(str(python))}\n"
+        + f"  worktree_root={shlex.quote(str(product))}\n"
+        + f"  main_root={shlex.quote(str(product))}\n"
+        + "}\n",
+        encoding="utf-8",
+    )
 
 
 def copy_launcher_sources(root: Path) -> None:
