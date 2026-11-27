@@ -20,6 +20,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.githooks import BINDING_ASSERTED, bind_hook_host_context, binding_tasks_dir
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -32,16 +33,21 @@ _HIDDEN = {
     "PYTHONSAFEPATH",
     "VIRTUAL_ENV",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
-    "LEARN_UKRAINIAN_PYTHON",
-    "LU_TASKS_DIR",
+    *BINDING_ASSERTED,
 }
 
 
-def _env(python: str) -> dict[str, str]:
+def _plain_env() -> dict[str, str]:
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_") and key not in _HIDDEN}
     # No agent git shim and no checkout on PATH: the delegator and hooks run as in a plain clone.
     env["PATH"] = "/usr/bin:/bin"
-    env["LEARN_UKRAINIAN_PYTHON"] = python
+    return env
+
+
+def _env(tmp_path: Path, python: str) -> dict[str, str]:
+    """A scratch host binding for ``tmp_path/product`` whose product interpreter is ``python``."""
+    env = _plain_env()
+    bind_hook_host_context(tmp_path, env, product=tmp_path / "product", python=project_python(), product_python=python)
     return env
 
 
@@ -65,9 +71,6 @@ def _product_repo(tmp_path: Path, env: dict[str, str]) -> Path:
     launcher = repo / "scripts" / "pre_commit" / "project_python.sh"
     launcher.parent.mkdir(parents=True)
     shutil.copy2(REPO_ROOT / "scripts" / "pre_commit" / "project_python.sh", launcher)
-    resolver = repo / "scripts" / "lib" / "project_interpreter.sh"
-    resolver.parent.mkdir(parents=True)
-    shutil.copy2(Path(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))), resolver)
     (repo / ".pre-commit-config.yaml").write_text("repos: []\n", encoding="utf-8")
     for args in (
         ("init", "-q", "-b", "main"),
@@ -84,8 +87,10 @@ def _product_repo(tmp_path: Path, env: dict[str, str]) -> Path:
 
 
 def _task_env(tmp_path: Path, repo: Path, env: dict[str, str], **fields: object) -> dict[str, str]:
-    tasks = tmp_path / "tasks"
-    tasks.mkdir()
+    # The binding asserts its own task store, so the task record lives there.
+    binding = json.loads(Path(env["LU_HOST_CONTEXT"]).read_text(encoding="utf-8"))
+    tasks = binding_tasks_dir(Path(binding["state_root"]))
+    tasks.mkdir(parents=True)
     record = {
         "task_id": "hook-task",
         "mode": "workspace-write",
@@ -107,12 +112,10 @@ def _stage_outside(repo: Path, env: dict[str, str]) -> None:
 def _venv(tmp_path: Path, ownership_source: str | None) -> str:
     """A fresh interpreter with release resources and an absent or supplied checker."""
     venv = tmp_path / "venv"
-    created = _run([project_python(), "-m", "venv", "--without-pip", str(venv)], tmp_path, _env(project_python()))
+    created = _run([project_python(), "-m", "venv", "--without-pip", str(venv)], tmp_path, _plain_env())
     assert created.returncode == 0, created.stderr
     python = venv / "bin" / "python"
-    site = _run(
-        [str(python), "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], tmp_path, _env(str(python))
-    )
+    site = _run([str(python), "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], tmp_path, _plain_env())
     package = Path(site.stdout.strip()) / "lu_machinery"
     shutil.copytree(Path(str(files("lu_machinery"))), package, ignore=shutil.ignore_patterns("__pycache__"))
     checker = package / "dispatcher/ownership.py"
@@ -123,32 +126,44 @@ def _venv(tmp_path: Path, ownership_source: str | None) -> str:
     return str(python)
 
 
-def test_unset_primary_root_makes_the_hook_refuse_and_name_the_bootstrap_step(tmp_path):
-    """Defect class: an unset primary root made the Git hook exit 127 with no message."""
-    env = _env(project_python())
+def test_a_missing_host_binding_makes_the_hook_refuse_and_name_the_reason(tmp_path):
+    """Defect class: an unbound hook context made the Git hook exit 127 with no message."""
+    env = _env(tmp_path, project_python())
     repo = _product_repo(tmp_path, env)
     (repo / "note.txt").write_text("note\n", encoding="utf-8")
     assert _git(repo, "add", "note.txt", env=env).returncode == 0
-    refused = {key: value for key, value in env.items() if key != "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"}
+    refused = {**env, "LU_HOST_CONTEXT": str(tmp_path / "absent-host.v1.json")}
     base = _head(repo, env)
-    expected = (
-        "Git hook error: hook context unavailable (step=state); configure the primary-state anchor and interpreter."
-    )
+    expected = "HOOK-BOOTSTRAP-FAILED: [missing_context] host context file is missing"
 
     hook = _run(["/usr/bin/bash", str(repo / ".githooks" / "pre-commit")], repo, refused)
-    commit = _git(repo, "commit", "-q", "-m", "unset primary", env=refused)
+    commit = _git(repo, "commit", "-q", "-m", "unbound", env=refused)
 
     assert hook.returncode == 127
     assert hook.stderr.splitlines() == [expected]
-    # Git reports a failed hook as exit 1; the hook process itself exits 127.
+    # The delegator validates first and refuses with the same reason; Git reports exit 1.
     assert commit.returncode != 0
     assert commit.stderr.splitlines() == [expected]
     assert _head(repo, env) == base
 
 
+def test_an_unset_interpreter_makes_the_tracked_hook_refuse_and_name_the_reason(tmp_path):
+    """Same defect class: a tracked hook started without its delegator has no LU_PYTHON."""
+    env = _env(tmp_path, project_python())
+    repo = _product_repo(tmp_path, env)
+    refused = {key: value for key, value in env.items() if key != "LU_PYTHON"}
+
+    hook = _run(["/usr/bin/bash", str(repo / ".githooks" / "pre-commit")], repo, refused)
+
+    assert hook.returncode == 127
+    assert hook.stderr.splitlines() == [
+        "Git hook error [missing_interpreter_binding]: LU_PYTHON must name an absolute executable."
+    ]
+
+
 @pytest.mark.parametrize("damage", ["deleted", "not_executable"])
 def test_installed_delegator_refuses_when_the_tracked_hook_is_gone(tmp_path, damage):
-    env = _env(project_python())
+    env = _env(tmp_path, project_python())
     repo = _product_repo(tmp_path, env)
     (repo / "note.txt").write_text("note\n", encoding="utf-8")
     assert _git(repo, "add", "note.txt", env=env).returncode == 0
@@ -167,7 +182,7 @@ def test_installed_delegator_refuses_when_the_tracked_hook_is_gone(tmp_path, dam
 
 
 def test_outside_a_task_the_owned_path_check_still_skips(tmp_path):
-    env = _env(project_python())
+    env = _env(tmp_path, project_python())
     repo = _product_repo(tmp_path, env)
     _stage_outside(repo, env)
 
@@ -179,7 +194,7 @@ def test_outside_a_task_the_owned_path_check_still_skips(tmp_path):
 
 
 def test_installed_checker_refuses_an_outside_path_inside_a_task(tmp_path):
-    env = _env(project_python())
+    env = _env(tmp_path, project_python())
     repo = _product_repo(tmp_path, env)
     # An in-tree package must not stand in for the installed release: this one would pass everything.
     shadow = repo / "lu_machinery" / "dispatcher"
@@ -201,7 +216,7 @@ def test_installed_checker_refuses_an_outside_path_inside_a_task(tmp_path):
 @pytest.mark.parametrize("shadowed", [False, True])
 def test_unavailable_ownership_module_refuses_inside_a_task(tmp_path, shadowed):
     python = _venv(tmp_path, ownership_source=None)
-    env = _env(python)
+    env = _env(tmp_path, python)
     repo = _product_repo(tmp_path, env)
     if shadowed:
         # A passing in-tree copy does not satisfy the check when the installed release is absent.
@@ -224,7 +239,7 @@ def test_unavailable_ownership_module_refuses_inside_a_task(tmp_path, shadowed):
 
 def test_a_crashing_checker_refuses_inside_a_task(tmp_path):
     python = _venv(tmp_path, ownership_source='raise RuntimeError("checker crashed")\n')
-    env = _env(python)
+    env = _env(tmp_path, python)
     repo = _product_repo(tmp_path, env)
     task_env = _task_env(tmp_path, repo, env)
     _stage_outside(repo, env)
@@ -240,7 +255,7 @@ def test_a_crashing_checker_refuses_inside_a_task(tmp_path):
 @pytest.mark.parametrize("damage", ["malformed_grants", "record_missing"])
 def test_a_handled_checker_exception_refuses_the_commit_and_preserves_head(tmp_path, damage):
     """A missing or damaged task record must not let an out-of-scope commit through."""
-    env = _env(project_python())
+    env = _env(tmp_path, project_python())
     repo = _product_repo(tmp_path, env)
     fields = {"owned_path_grants": "not-a-list"} if damage == "malformed_grants" else {}
     task_env = _task_env(tmp_path, repo, env, **fields)

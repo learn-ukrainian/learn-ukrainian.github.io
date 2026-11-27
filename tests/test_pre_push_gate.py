@@ -110,6 +110,18 @@ def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     return env
 
 
+def _bind_host_context(monkeypatch: pytest.MonkeyPatch, base: Path, product: Path) -> None:
+    """Bind this process, and every hook and deployer it starts, to a scratch host binding for ``product``."""
+    from tests.githooks import BINDING_ASSERTED, bind_hook_host_context
+
+    bound: dict[str, str] = {}
+    bind_hook_host_context(base, bound, product=product, python=str(PYTHON))
+    for name in (*BINDING_ASSERTED, "LEARN_UKRAINIAN_DISPATCH_TASK_ID"):
+        monkeypatch.delenv(name, raising=False)
+    for name, value in bound.items():
+        monkeypatch.setenv(name, value)
+
+
 def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run([GIT, *args], capture_output=True, check=check, cwd=repo, env=_env(), text=True, timeout=60)
 
@@ -133,7 +145,9 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "repo"
     remote = tmp_path / "remote.git"
     root.mkdir()
-    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    # The canonical setting outranks its alias, so an inherited one must not win over the fixture's.
+    monkeypatch.delenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", raising=False)
+    monkeypatch.setenv("LU_PRIMARY_REPO_ROOT", str(root))
     monkeypatch.setenv("LU_PRODUCT_ROOT", str(root))
     subprocess.run([GIT, "init", "--bare", str(remote)], check=True, capture_output=True, timeout=60)
     _git(root, "init", "-b", "main")
@@ -293,7 +307,9 @@ def test_nothing_outgoing_is_accepted_without_running_a_stage(repo: Path) -> Non
     [("push", "-u", "origin", "feature"), ("push", "origin", "HEAD:refs/heads/feature")],
     ids=["auto-finalize-form", "worker-head-form"],
 )
-def test_real_git_push_through_the_tracked_hook(repo: Path, push_args: tuple[str, ...], tmp_path: Path) -> None:
+def test_real_git_push_through_the_tracked_hook(
+    repo: Path, push_args: tuple[str, ...], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
@@ -304,6 +320,7 @@ def test_real_git_push_through_the_tracked_hook(repo: Path, push_args: tuple[str
     lfs.write_text("#!/usr/bin/env bash\ncat >/dev/null\nexit 0\n", encoding="utf-8")
     lfs.chmod(0o755)
     _git(repo, "config", "core.hooksPath", str(repo / ".githooks"))
+    _bind_host_context(monkeypatch, tmp_path, repo)
     env = _env(
         {"PATH": f"{bin_dir}:{os.environ['PATH']}", "PRE_COMMIT_HOME": str(tmp_path / "pc"), "TMPDIR": str(tmp_path)}
     )
@@ -1347,10 +1364,14 @@ def test_a_symlinked_deployed_output_is_refused(repo: Path) -> None:
 DEPLOY_INPUTS = ("agents_extensions", "curriculum/l2-uk-en/curriculum.yaml")
 
 
-def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(tmp_path: Path) -> None:
+def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The product's own descriptor and sources deploy outputs the gate accepts (#12387, #13032)."""
     root = (tmp_path / "deployed").resolve()
     root.mkdir()
+    # The product's native hook declarations render with the bound machinery interpreter.
+    _bind_host_context(monkeypatch, tmp_path, root)
     archive = subprocess.run(
         [GIT, "archive", "--format=tar", "HEAD", "--", *DEPLOY_INPUTS],
         capture_output=True,
@@ -4468,6 +4489,7 @@ def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synth
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
     for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "LU_TEST_SLOTS_HOLDER", "AGENT_NO_MERGE"):
         monkeypatch.delenv(name, raising=False)
+    _bind_host_context(monkeypatch, tmp_path, repo)
     return repo
 
 
@@ -4503,7 +4525,8 @@ def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path,
     root = tmp_path / "repo"
     root.mkdir()
     _git(root, "init")
-    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.delenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", raising=False)
+    monkeypatch.setenv("LU_PRIMARY_REPO_ROOT", str(root))
     shutil.copytree(HOOK_DIR, root / ".githooks")
     install_message_scanner(root)
     message = root / ".git/test-message"
