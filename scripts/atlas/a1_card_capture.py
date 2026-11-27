@@ -161,12 +161,22 @@ def _section_payload(row):
     return payload
 
 
-def _entry_candidates(entry, vesum_entries, head):
-    """Match the exact citation spelling and grammar before comparing any forms."""
+def _entry_candidates(entry, vesum_entries, head, *, a1_classes=False, invariable=False):
+    """Match the exact citation spelling and grammar before comparing any forms.
+
+    ``a1_classes`` adds two explicit class correspondences for the A1 projection.
+    A ULIF ``дієприкметник`` matches only a VESUM adjective entry tagged ``adjp``
+    on every row. A ULIF ``прислівник`` matches a VESUM pronominal adverb only
+    when ``invariable`` (the raw-replayed ULIF entry is lemma-only and marked
+    invariable) and the VESUM entry prints the citation form alone.
+    """
     label = entry["grammatical_label"]
     pos = label_pos(label)
     head_class = label.split(maxsplit=1)[0].rstrip(",") if label else ""
     pos = pos or {"частка": "part", "вигук": "intj", "числівник": "numr"}.get(head_class)
+    participle = a1_classes and pos is None and head_class == "дієприкметник"
+    if participle:
+        pos = "adj"
     pronoun = head_class == "займенник"
     if pos is None and not pronoun:
         return None
@@ -179,8 +189,13 @@ def _entry_candidates(entry, vesum_entries, head):
         citation = [row for row in rows if row["word_form"] == head]
         if not citation:
             continue
+        if participle and not all("adjp" in row["tags"].split(":") for row in rows):
+            continue
+        pronominal_adverb = (a1_classes and invariable and pos == "adv" and not pronoun
+                             and {row["word_form"] for row in rows} == {head})
         cases = [(row["pos"], set(row["tags"].split(":"))) for row in citation]
-        if not any(("prop" in tags) == proper and ("pron" in tags) == pronoun
+        if not any(("prop" in tags) == proper
+                   and (("pron" in tags) == pronoun or (pronominal_adverb and row_pos == "adv"))
                    and (pos is None or row_pos == pos) for row_pos, tags in cases):
             continue
         vesum_genders = set(assembly.vesum_gender(citation)) if genders else set()
