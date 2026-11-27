@@ -4,28 +4,37 @@
 set -euo pipefail
 
 hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-# The configured interpreter locates the installed machinery library; Git metadata never selects
-# it. LU_PYTHON is its canonical name (machinery#1531); a host-bound release refuses a legacy
-# LEARN_UKRAINIAN_PYTHON that disagrees with the binding.
-bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LU_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}}"
+# The deployment, never the interpreter under check, decides whether the host binding governs
+# (machinery#1531): it does when LU_HOST_CONTEXT is present or the protected default binding of
+# lu_machinery.host_context exists. Then only the bound LU_PYTHON locates the machinery library,
+# and a release without the binding check is refused. Otherwise the legacy configuration selects
+# the interpreter, as before. Git metadata never selects either.
+if [[ -n "${LU_HOST_CONTEXT+set}" || -e /etc/machinery/host.v1.json || -L /etc/machinery/host.v1.json ]]; then
+  host_bound=1 interpreter_setting=LU_PYTHON
+  bootstrap_python="${LU_PYTHON:-}"
+else
+  host_bound=0 interpreter_setting=LEARN_UKRAINIAN_PYTHON
+  bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
+fi
 case "$bootstrap_python" in
   /*) ;;
-  *) echo "Set LU_PYTHON to an absolute trusted interpreter path" >&2; exit 2 ;;
+  *) echo "Set $interpreter_setting to an absolute trusted interpreter path" >&2; exit 2 ;;
 esac
 source "$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/project_interpreter.sh"))')"
 worktree_root='' main_root=''
 if declare -F project_host_context >/dev/null; then
-  # A host-bound release validates the binding, then names the interpreter, the invocation
-  # checkout and its primary; it refuses, with its reason on stderr, before any hook runs.
+  # The release validates the binding, then names the interpreter, the invocation checkout and
+  # its primary; without a binding, or with an invalid one, it refuses with its reason on stderr.
   project_host_context --require-checkout || exit 127
   if [[ -z "$worktree_root" || -z "$main_root" ]]; then
     echo "Git hook error [missing_checkout_binding]: the host binding named no checkout." >&2
     exit 127
   fi
+elif (( host_bound )); then
+  echo "Git hook error [host_binding_unsupported]: the LU_PYTHON release predates the host binding this host requires." >&2
+  exit 127
 else
   # An earlier release validates the Git metadata itself; it never trusts commondir for execution.
-  # Its shell resolver reads only the legacy interpreter alias.
-  export LEARN_UKRAINIAN_PYTHON="${LEARN_UKRAINIAN_PYTHON:-${LU_PYTHON:-}}"
   worktree_root="$(git rev-parse --show-toplevel)"
   project_hook_context_resolve "$worktree_root" || {
     echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
