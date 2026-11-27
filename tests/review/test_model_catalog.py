@@ -909,10 +909,14 @@ def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
 
 
 def guard_name(command):
-    """The guard file a hook command runs: a guard path, or a native ``claude-<guard>`` hook mode."""
-    if "lu-machinery-hook-v1" in command:
-        mode = command.rsplit("lu-machinery-hook-v1", 1)[1].split()[0]
-        return "audit-primary-checkout-dirt.py" if mode == "claude-audit-hook" else mode.removeprefix("claude-") + ".py"
+    """The guard file a hook command runs: a guard path, or a native ``claude-<guard>`` hook mode.
+
+    The mode follows a v2 declaration (the tracked source) or a v1 rendered command (baselines).
+    """
+    for marker in ("lu-machinery-hook-v2", "lu-machinery-hook-v1"):
+        if marker in command:
+            mode = command.rsplit(marker, 1)[1].split()[0]
+            return "audit-primary-checkout-dirt.py" if mode == "claude-audit-hook" else mode.removeprefix("claude-") + ".py"
     return Path(command).name
 
 

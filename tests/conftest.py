@@ -10,6 +10,7 @@ tests with credentials. Such sessions emit one warning, without values.
 ``--noconftest`` disables credential stripping, redaction and this warning together.
 """
 
+import json
 import os
 import re
 
@@ -2171,6 +2172,49 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     monkeypatch.setenv("LU_TASKS_DIR", str(isolated))
     _retarget_api_batch_state(monkeypatch, isolated.parent)
     return isolated
+
+
+@pytest.fixture
+def scratch_host_binding(_isolate_dispatch_task_store: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
+    """Opt-in state-role host binding at this test's own state root.
+
+    lu-machinery renders a native hook command (``agy_hook_config.native_hook_command``) with the
+    machinery interpreter its host binding names. This scratch binding names the test's state root
+    and the running interpreter, the release's loader validates it, and its interpreter is the one
+    every render here uses. The host's own binding file is never read (``pytest_configure``).
+    Mirrors machinery's ``bind_registration_runtime``.
+    """
+    from importlib.metadata import version
+
+    from lu_machinery import host_context
+    from lu_machinery.agent_runtime import agy_hook_config
+
+    state = _isolate_dispatch_task_store.parent.parent.resolve()
+    state.chmod(0o700)
+    python = str(Path(sys.executable))
+    binding = state.with_name(f"{state.name}-host.v1.json")
+    binding.write_text(
+        json.dumps(
+            {
+                "schema": host_context.SCHEMA,
+                "state_root": str(state),
+                "runtime": {"python": python, "lu_machinery": version("lu-machinery"), "wheel_sha256": "0" * 64},
+                "repos": {"machinery": str(state / "machinery"), "public": str(state / "learn-ukrainian")},
+                "products": {"public": {"repo": "public", "python": python}},
+                "default_product": "public",
+                "private_tools": {},
+                "cto": {"workspace": str(state / "cto"), "starter": str(state / "cto/start"), "config_dir": str(state)},
+                "selector_file": str(state / "selector.yaml"),
+                "monitor_url": "http://127.0.0.1:9",
+            }
+        ),
+        encoding="utf-8",
+    )
+    binding.chmod(0o600)
+    context = host_context.load_host_context(role="state", env={host_context.CONTEXT_ENV: str(binding)})
+    monkeypatch.setattr(agy_hook_config, "hook_interpreter", lambda: context.runtime.python)
+    monkeypatch.setattr(agy_hook_config, "configure_native_hook_roots", host_context.invocation_checkout)
+    return context
 
 
 @pytest.fixture(autouse=True)

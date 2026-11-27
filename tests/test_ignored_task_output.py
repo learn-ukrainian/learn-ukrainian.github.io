@@ -152,6 +152,13 @@ def _claims_primary(tmp_path: Path) -> Path:
     return primary
 
 
+def _claims_state_at(monkeypatch: pytest.MonkeyPatch, primary: Path) -> None:
+    # lu-machinery 0.1.83 reads task records and preserved artifacts under LU_STATE_ROOT.
+    monkeypatch.setenv("LU_STATE_ROOT", str(primary))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(primary / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(primary / "batch_state" / "tasks"))
+
+
 def _claims_record(primary: Path, task_id: str, **fields: object) -> None:
     tasks = primary / "batch_state" / "tasks"
     tasks.mkdir(parents=True, exist_ok=True)
@@ -179,6 +186,9 @@ def _boundary_boundary_tree(tmp_path, monkeypatch):
     tasks = repo / "batch_state/tasks"
     tasks.mkdir(parents=True)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    # lu-machinery 0.1.83 places durable state (preserved artifacts) under LU_STATE_ROOT.
+    monkeypatch.setenv("LU_STATE_ROOT", str(repo))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(repo / "batch_state"))
     monkeypatch.setattr(worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(worktree_git, "_active_task_ids", lambda: set())
     head = _boundary_git(tree, "rev-parse", "HEAD")
@@ -1070,13 +1080,14 @@ def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, mon
     assert outside_target not in published
 
 
-def test_removal_does_not_follow_symlink(tmp_path):
+def test_removal_does_not_follow_symlink(tmp_path, monkeypatch):
     from lu_machinery.orchestration import worktree_claims as claims
     _linked = _claims_linked
     _primary = _claims_primary
     _record = _claims_record
 
     primary = _primary(tmp_path)
+    _claims_state_at(monkeypatch, primary)
     tree = _linked(primary, "codex/output-task")
     (primary / ".git/info/exclude").write_text("ignored/\n")
     outside = tmp_path / "outside-dir"
@@ -1141,6 +1152,7 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     _record = _claims_record
 
     primary = _primary(tmp_path)
+    _claims_state_at(monkeypatch, primary)
     tree = _linked(primary, "codex/output-task")
     (primary / ".git/info/exclude").write_text("ignored/\n.runtime/\n.pids/\n")
     baseline = output.creation_inventory(tree, primary=primary, task_id="output-task", run_nonce="creator-run")

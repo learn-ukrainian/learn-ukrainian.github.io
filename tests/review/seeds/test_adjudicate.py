@@ -24,7 +24,11 @@ from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_s
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
 
 @pytest.fixture
-def env(tmp_path: Path) -> Env:
+def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
+    # lu-machinery 0.1.83 places durable state under LU_STATE_ROOT, never the root a caller passes.
+    monkeypatch.setenv("LU_STATE_ROOT", str(tmp_path))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(tmp_path / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "batch_state" / "tasks"))
     return Env(tmp_path)
 
 
