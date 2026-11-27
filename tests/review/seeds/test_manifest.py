@@ -524,6 +524,7 @@ def test_a_lock_naming_a_unit_with_no_record_is_invalid(env: Env) -> None:
 def test_eligibility_refuses_a_pin_in_the_measurement_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = tmp_path / "repo"
     _, doc, _ = _setup_lesson_fixture(root, monkeypatch, lesson_n=2)
+    _state_at(monkeypatch, root)
     assert pin_refusals(doc, root) == []
     env = Env(root)
     env.add(mechanical_seed("seed-a"), "first")
