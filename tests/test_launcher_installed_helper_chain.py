@@ -9,8 +9,9 @@ installed release's own files. A dry run stops before scope entry, deployment, l
 provider execution, so no provider is launched.
 
 The project interpreter records each Python child: its argv, and for the release's isolated
-module bootstrap every file the child opened. The test fails if any child imported or read
-machinery code that is not a file the release's RECORD lists, or read this checkout.
+module bootstrap and its host-binding children every file the child opened. The test fails if
+any child imported or read machinery code that is not a file the release's RECORD lists, or
+read this checkout.
 """
 
 from __future__ import annotations
@@ -45,11 +46,14 @@ HELPER_MODULES = {
     "orchestration.driver_agent_type",
 }
 # Runs the bootstrap program it is handed, unchanged, after adding an audit hook that
-# records every file the child opens; any other invocation is recorded and executed as is.
+# records every file the child opens. A release with a host binding also starts the bound
+# interpreter as ``-I -B -m <module>`` or ``-I -B -c <program>``; those run audited in the
+# same way, with sys.executable naming the bound project interpreter, which that release
+# requires. Any other invocation is recorded and executed as is.
 _AUDIT = r"""
-import atexit, json, os, sys
+import atexit, json, os, runpy, sys
 
-log, argv = sys.argv[1], sys.argv[2:]
+log, interpreter, argv = sys.argv[1], sys.argv[2], sys.argv[3:]
 record = {"argv": argv, "opened": []}
 
 
@@ -58,7 +62,8 @@ def write():
         stream.write(json.dumps(record) + "\n")
 
 
-if argv[:2] != ["-I", "-c"]:
+bound = argv[:2] == ["-I", "-B"] and argv[2:3] in (["-m"], ["-c"])
+if argv[:2] != ["-I", "-c"] and not bound:
     write()
     os.execv(sys.executable, [sys.executable, *argv])
 
@@ -68,10 +73,17 @@ def hook(event, args):
         record["opened"].append(os.fsdecode(args[0]))
 
 
-sys.argv = ["-c", *argv[3:]]
+if bound:
+    sys.dont_write_bytecode = True
+    sys.executable = interpreter
+mode, target, *rest = argv[2:] if bound else argv[1:]
+sys.argv = [mode, *rest]
 sys.addaudithook(hook)
 atexit.register(write)
-exec(compile(argv[2], "<string>", "exec"), {"__name__": "__main__"})
+if mode == "-m":
+    runpy.run_module(target, run_name="__main__", alter_sys=True)
+else:
+    exec(compile(target, "<string>", "exec"), {"__name__": "__main__"})
 """
 
 
@@ -103,7 +115,59 @@ def _assert_release_origin(path: Path, root: Path, release: InstalledMachinery) 
     assert source.resolve() == (release.directory / relative).resolve(), path
 
 
+def _bind_host(base: Path, product: Path, interpreter: Path, release: InstalledMachinery, env: dict[str, str]) -> None:
+    """Select a scratch machinery.host.v1 binding for the fixture, with ``interpreter`` bound.
+
+    It has the shape machinery's tests/host_context builds. A release without
+    ``lu_machinery.host_context`` does not read it. A release with it refuses a launch whose
+    environment disagrees with the binding, so the interpreter and state paths agree here.
+    """
+    state = base / "state"
+    state.mkdir()
+    state.chmod(0o700)
+    machinery = base / "checkouts" / "machinery"
+    machinery.mkdir(parents=True)
+    subprocess.run(["git", "init", "-q", str(machinery)], check=True, capture_output=True, timeout=30, env=env)
+    for checkout, slug in (
+        (machinery, "agentic-machinery/machinery"),
+        (product, "learn-ukrainian/learn-ukrainian.github.io"),
+    ):
+        command = ["git", "-C", str(checkout), "remote", "add", "origin", f"https://github.com/{slug}.git"]
+        subprocess.run(command, check=True, capture_output=True, timeout=30, env=env)
+    unused = base / "unused-cto"
+    binding = base / "host.v1.json"
+    binding.write_text(
+        json.dumps(
+            {
+                "schema": "machinery.host.v1",
+                "state_root": str(state),
+                "runtime": {"python": str(interpreter), "lu_machinery": release.version, "wheel_sha256": "a" * 64},
+                "repos": {"machinery": str(machinery), "public": str(product)},
+                "products": {"public": {"repo": "public", "python": str(interpreter)}},
+                "default_product": "public",
+                "private_tools": {},
+                "cto": {"workspace": str(unused), "starter": str(unused / "start"), "config_dir": str(unused)},
+                "selector_file": str(base / "unused-selector.yaml"),
+                "monitor_url": env["LU_MONITOR_LOOPBACK"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    binding.chmod(0o600)
+    batch = state / "batch_state"
+    env.update(
+        LU_HOST_CONTEXT=str(binding),
+        LU_PYTHON=str(interpreter),
+        LEARN_UKRAINIAN_PYTHON=str(interpreter),
+        LU_PRODUCT_ROOT=str(product),
+        LU_TASKS_DIR=str(batch / "tasks"),
+        FLEET_COMMS_ROOT=str(batch / "fleet-comms" / "v1"),
+        LU_GITHUB_CACHE_DIR=str(batch / "github-client"),
+    )
+
+
 def test_installed_release_runs_a_driver_launch_helper_chain_without_a_provider(tmp_path: Path) -> None:
+    tmp_path = tmp_path.resolve()  # The host binding names physical paths.
     release = installed_machinery()
     root = tmp_path / "repo"
     link_installed_machinery(root / release.name)
@@ -117,11 +181,10 @@ def test_installed_release_runs_a_driver_launch_helper_chain_without_a_provider(
     interpreter.parent.mkdir(parents=True)
     interpreter.write_text(
         "#!/usr/bin/env bash\n"
-        f'exec {shlex.quote(sys.executable)} -I {shlex.quote(str(audit))} {shlex.quote(str(children))} "$@"\n'
+        f"exec {shlex.join([sys.executable, '-I', str(audit), str(children), str(interpreter)])} \"$@\"\n"
     )
     interpreter.chmod(0o755)
-    env["LEARN_UKRAINIAN_PYTHON"] = str(interpreter)
-    env["LU_PRODUCT_ROOT"] = str(root)
+    _bind_host(tmp_path, root, interpreter, release, env)
 
     result = subprocess.run(
         ["bash", str(root / WRAPPER), "--epic", "devops", "--model", "claude-sonnet-5-5", "--effort", "high"],
@@ -150,13 +213,19 @@ def test_installed_release_runs_a_driver_launch_helper_chain_without_a_provider(
     modules = set()
     for record in records:
         argv = record["argv"]
-        if argv[:2] == ["-I", "-c"]:
-            # The release's module bootstrap, on this fixture's package directory.
-            assert "module bootstrap:" in argv[2] and argv[3:5] == [str(root), release.name], argv[:6]
-            if argv[5] == "-m":
-                assert argv[6].startswith(f"{release.name}."), argv[5:7]
-                modules.add(argv[6].removeprefix(f"{release.name}."))
-            assert record["opened"], argv[5:7]
+        if argv[:2] in (["-I", "-c"], ["-I", "-B"]):
+            if argv[:2] == ["-I", "-c"]:
+                # The release's module bootstrap, on this fixture's package directory.
+                assert "module bootstrap:" in argv[2] and argv[3:5] == [str(root), release.name], argv[:6]
+                if argv[5] == "-m":
+                    assert argv[6].startswith(f"{release.name}."), argv[5:7]
+                    modules.add(argv[6].removeprefix(f"{release.name}."))
+            elif argv[2] == "-m":
+                # The host-binding children: the release's host_context module and its version probe.
+                assert argv[3] == f"{release.name}.host_context", argv
+            else:
+                assert argv[2] == "-c" and "distribution('lu-machinery')" in argv[3], argv
+            assert record["opened"], argv[:7]
             for opened in record["opened"]:
                 path = Path(opened)
                 if path.is_file():
