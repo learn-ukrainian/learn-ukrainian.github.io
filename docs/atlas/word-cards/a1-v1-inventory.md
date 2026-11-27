@@ -439,14 +439,16 @@ reasons. The surrounding card records the lemma and the admitted values with
 their source labels and locators. A held definition displays
 `ВТС not captured` when the full ВТС capture is absent.
 
-The VESUM entry supplies morphology. ULIF stress requires the ULIF–VESUM
-correspondence or the card's own frozen ULIF entry (see the binding rules
-below). Definitions can come from bound official СУМ-20 or captured ВТС
-partitions. When the exact headword has no captured official article, the
-preview can use the labelled slovnyk.me copy of СУМ-20. Its definitions must
-be recoverable verbatim from an unambiguous lexical partition, with a
-source-local sense key. Its stressed headword must agree with the bound ULIF
-headword or have VESUM corroboration when ULIF omits stress. A doubly
+The VESUM entry supplies morphology. ULIF headword stress comes from an
+authenticated ULIF entry matching the card lemma and VESUM part of speech, or
+the card's own frozen ULIF entry, without requiring whole-paradigm equality
+with VESUM (paradigm-form stress and full entry correspondence keep the
+stricter binding rules below). Definitions can come from bound official СУМ-20
+or captured ВТС partitions. When the exact headword has no captured official
+article, the preview can use the labelled slovnyk.me copy of СУМ-20. Its
+definitions must be recoverable verbatim from an unambiguous lexical partition,
+with a source-local sense key. Its stressed headword must agree with the bound
+ULIF headword or have VESUM corroboration when ULIF omits stress. A doubly
 stressed mirror head is shown only when the bound ULIF head or VESUM entry
 attests every reading (`mirror_stress_reading_unattested`). A mirror
 definition that ends in a semicolon stops before a subordinate sense or a
@@ -680,3 +682,59 @@ holds six task items that the fallback replay admits. Five are textbook
 items for `вівторок`, `зазвичай`, `канікули`, `метро` and `середа`. The sixth
 is a verse line for `відпустка` that a dotted omission line follows.
 `вівторок`, `середа` and `відпустка` keep a Ukrlib example.
+
+### AC-06 ULIF headword stress
+
+Headword stress in the full-data preview needs only the headword's own stress
+from an authenticated ULIF entry matching the card lemma (exact case-sensitive
+spelling without stress marks) and VESUM part of speech (using the AC-06
+binding class correspondences above), or from the card's own
+raw-replay-verified frozen ULIF anchor. Whole-paradigm equality with VESUM is
+not required for the headword stress field; paradigm-form stress, inflection
+tables, definitions, glosses and CEFR levels keep their existing stricter
+correspondence rules.
+
+- **Homonyms and authenticity.** Every card (full-match, fallback, and
+  frozen-anchor) resolves ULIF headword stress through the same competitor and
+  raw-replay authenticity check. When matching-POS ULIF homonyms agree on the
+  exact stressed headword, that headword stress fills with every agreeing ULIF
+  entry ID in its locator (for example `собака` `5490,220560` and `кава`
+  `91699,91700,91701`). Two or more matching-POS ULIF homonyms with different
+  stresses and no POS or sense to tell them apart stay held as
+  `ulif_homonym_stress_ambiguous` (`картопляний`, `типовий`, `старший`,
+  `речення`, `атлас`, `транспорт`, `правильний`, `західний`). Unauthenticated
+  or `parse_error` ULIF competitors fail closed as
+  `ulif_competitor_unauthenticated` on every branch (including frozen-anchor
+  cards such as `щось`). A frozen ULIF anchor belongs to its own card;
+  duplicate candidate cards stay held as `ulif_entry_owned_by_other_card`.
+
+The comparison starts at `2e8d2ff2e6940e0d465b0fe500646b2b6e9e8b36`, after
+#13434.
+
+| Hold reason or outcome (845 cards) | Before | After |
+| --- | ---: | ---: |
+| Required stress | 449 | 142 |
+| Required Ukrainian definition | 527 | 527 |
+| Required English gloss | 294 | 294 |
+| Required CEFR | 316 | 316 |
+| Required paradigm | 65 | 65 |
+| Required part of speech | 65 | 65 |
+| Inventory entry unbound | 65 | 65 |
+| Required examples | 826 | 826 |
+| Cards with all required fields other than examples | 227 | 227 |
+| Complete cards | 17 | 17 |
+| Held cards | 828 | 828 |
+
+ULIF headword stress coverage rises from 396 to 703 of 845 cards (net `-307`
+stress holds: `+310` newly filled headwords and `3` heteronyms now held under
+the unified competitor check: `картопляний`, `типовий`, `правильний`), with
+zero duplicate stress locators and zero changes to non-stress fields. The 142
+remaining stress holds comprise 77 monosyllabic headwords with no explicit
+acute mark in ULIF (`bound_headword_has_no_explicit_stress`), 21 cards absent
+from ULIF (`capture_absent`: 15 pilot MWEs and 6 lemmas), 11 cards with a
+`parse_error` empty ULIF capture or competitor
+(`ulif_competitor_unauthenticated`), 9 duplicate candidate cards whose frozen
+ULIF anchor belongs to a slice-1 card (`ulif_entry_owned_by_other_card`), 8
+monosyllabic unbound cards (`no_bound_vesum_entry`), 8 POS- or
+case-mismatch/abbreviation cards (`ulif_headword_pos_unresolved`), and 8
+different-stress homonym cards (`ulif_homonym_stress_ambiguous`).
