@@ -120,6 +120,17 @@ class Run:
             return json.loads(split_jsonl_lines(text)[-1])
 
 
+def bind_world_state(mp: pytest.MonkeyPatch, root: Path) -> None:
+    """Make a fixture world its own durable state root.
+
+    lu-machinery keeps review findings, receipts and task records under the durable state root and
+    ignores a caller's repository root there (``findings_db.batch_root``), so each world binds its own.
+    """
+    # The caller's task store (LU_TASKS_DIR) is kept: the cards record against it.
+    mp.setenv("LU_STATE_ROOT", str(root))
+    mp.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(Path(root) / "batch_state"))
+
+
 def run_main(main: Callable[[list[str] | None], int], argv: list[str]) -> Run:
     """Call an entry point's ``main`` in process and keep what it printed and the exit code it returned."""
     out, err = io.StringIO(), io.StringIO()
@@ -336,6 +347,7 @@ class ModuleWorld(World):
     """
 
     def __init__(self, root: Path, mp: pytest.MonkeyPatch, *, promote: bool, engine: int | None = None) -> None:
+        bind_world_state(mp, root)
         self._deferred = True  # World.__init__ writes manifests; here they wait for the plan
         super().__init__(root, mp)
         self._deferred = False
@@ -362,6 +374,7 @@ class ModuleWorld(World):
         """A prepared world opened again (no build): what a later process needs to record or read against it."""
         self = cls.__new__(cls)
         self.root, self.mp, self._deferred = Path(root), mp, False
+        bind_world_state(mp, self.root)
         self.plan_dir = self.root / "curriculum/l2-uk-en/lesson-plans" / LEVEL
         self.evidence_dir = self.root / "curriculum/l2-uk-en/evidence" / LEVEL
         self.state_dir = self.evidence_dir / "_state" / SLUG
@@ -1418,6 +1431,7 @@ def finish_plan(c: Case, info: dict[str, Any]) -> None:
     )
     mp = pytest.MonkeyPatch()
     try:
+        bind_world_state(mp, root)
         mp.setattr(plan_manifest, "verify_pack_strict", fake_verify())
         if written["verdict"] != "APPROVE":
             c.expect(
@@ -1512,6 +1526,7 @@ def finish_settle(c: Case, info: dict[str, Any]) -> None:
         c.expect(item["needs_operator"] == 1, "a source_conflict/unresolved outcome is not marked for the operator")
     mp = pytest.MonkeyPatch()
     try:
+        bind_world_state(mp, root)
         mp.setattr(plan_manifest, "verify_pack_strict", fake_verify())
         conn = findings_db.connect(db)
         try:
