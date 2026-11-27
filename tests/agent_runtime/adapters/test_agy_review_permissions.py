@@ -32,7 +32,8 @@ def _write_hook_files(cwd, home, scoped_home=None):
 
 
 @pytest.fixture(autouse=True)
-def valid_hook_files(tmp_path, monkeypatch):
+def valid_hook_files(tmp_path, monkeypatch, scratch_host_binding):
+    # Native AGY hook rendering reads the host binding (conftest scratch_host_binding).
     home = tmp_path / "ordinary-home"
     monkeypatch.setenv("HOME", str(home))
     _write_hook_files(tmp_path, home)

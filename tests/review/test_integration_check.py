@@ -167,10 +167,14 @@ def test_the_help_states_use_and_exit_codes(capsys: pytest.CaptureFixture[str]) 
 
 def prepare(root: Path) -> tuple[Path, Path, Path]:
     """prepare-real with the ledgers and dispatch records redirected to a temporary tree."""
-    receipts, tasks = root / "review-receipts", root / "tasks"  # the ledgers live beside the task store
-    receipts.mkdir()
+    # The ledgers live beside the task store, which lu-machinery 0.1.83 requires under LU_STATE_ROOT.
+    batch_state = root / "batch_state"
+    receipts, tasks = batch_state / "review-receipts", batch_state / "tasks"
+    receipts.mkdir(parents=True)
     tasks.mkdir()
     patch = pytest.MonkeyPatch()
+    patch.setenv("LU_STATE_ROOT", str(root))
+    patch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
     patch.setenv("LU_TASKS_DIR", str(tasks))
     try:
         assert ic.main(["prepare-real", "--out", str(root / "out")]) == 0

@@ -302,6 +302,10 @@ def _select_checkout(monkeypatch, checkout):
     monkeypatch.setenv("LU_PRODUCT_ROOT", str(checkout))
     monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
     monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
+    # lu-machinery 0.1.83 reads durable state from LU_STATE_ROOT, never from the primary anchor.
+    monkeypatch.setenv("LU_STATE_ROOT", str(primary))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(primary / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(primary / "batch_state" / "tasks"))
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 REGISTRY = {"devops": [5703], "harness": [6943]}
