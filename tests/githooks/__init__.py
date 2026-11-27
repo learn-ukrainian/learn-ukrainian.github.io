@@ -50,6 +50,7 @@ BINDING_ASSERTED = (
 _HOST_CONTEXT_SHELL = """
 import shlex, sys
 from pathlib import Path
+from lu_machinery import host_context as host_context_module
 from lu_machinery.host_context import (
     HostContext, HostContextError, hook_environment, invocation_checkout, load_host_context,
 )
@@ -70,7 +71,9 @@ try:
 except HostContextError as exc:
     print(f"HOOK-BOOTSTRAP-FAILED: [{exc.code}] {exc}", file=sys.stderr)
     sys.exit(2)
-for name, value in hook_environment(context).items():
+environment = hook_environment(context)
+environment["LU_MACHINERY_CODE_ROOT"] = str(Path(host_context_module.__file__).resolve().parent.parent)
+for name, value in environment.items():
     print(f"export {name}={shlex.quote(value)}")
 if checkout is not None:
     print(f"worktree_root={shlex.quote(str(checkout[0]))}")
@@ -95,6 +98,7 @@ def bind_hook_host_context(
     python: str,
     product_python: str | None = None,
     runtime_preamble: str = "",
+    machinery: Path | None = None,
 ) -> Path:
     """Bind ``env`` to a scratch ``machinery.host.v1`` file for the product checkout ``product``.
 
@@ -103,15 +107,15 @@ def bind_hook_host_context(
     ``-I -B -m lu_machinery.host_context`` runs the stand-in above and ``runtime_preamble`` (shell)
     may answer other fixture calls first. ``product_python`` (default ``python``) is the binding's
     product interpreter, which ``scripts/pre_commit/project_python.sh`` runs. ``env`` also gets the
-    binding's projection a launched session carries. The machinery checkout is a sibling of
-    ``product``, so OPSEC tooling the fixture places beside it is found. Returns the binding's state
-    root.
+    binding's projection a launched session carries. The machinery checkout defaults to a sibling of
+    ``product``, so OPSEC tooling the fixture places beside it is found; pass ``machinery`` when the
+    product is a real checkout whose parent the test does not own. Returns the binding's state root.
     """
     base = base.resolve()
     state = base / "host-state"
     state.mkdir(mode=0o700)
     # Hooks read machinery policy (OPSEC) from this primary checkout through LU_PRIMARY_REPO_ROOT.
-    machinery = product.resolve().parent / "machinery-checkout"
+    machinery = machinery or product.resolve().parent / "machinery-checkout"
     subprocess.run(["git", "init", "-q", str(machinery)], check=True, capture_output=True, timeout=60)
     shell_entry = base / "host_context_shell.py"
     shell_entry.write_text(_HOST_CONTEXT_SHELL, encoding="utf-8")
