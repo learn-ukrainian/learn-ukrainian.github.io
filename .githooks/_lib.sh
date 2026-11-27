@@ -6,11 +6,11 @@ set -euo pipefail
 hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 # The host binding (machinery#1531) governs when LU_HOST_CONTEXT is present, when the protected
 # default binding of lu_machinery.host_context exists, or when the canonical LU_PYTHON carries a
-# release that checks the binding; a signal only ever adds the requirement. Then only LU_PYTHON
-# locates the machinery library. A release that predates the check keeps its legacy validation
-# only while the binding declares that interpreter and release as the host's runtime; otherwise
-# it is refused. Without a binding, the legacy alias, then the primary checkout's interpreter,
-# then LU_PYTHON locate the library, as on 0.1.82. Git metadata never selects any of them.
+# release that checks the binding; a signal only ever adds the requirement. A canonical LU_PYTHON
+# with that check locates the machinery library and validates the binding. Otherwise the legacy
+# alias, then the primary checkout's interpreter, then LU_PYTHON locate it, as on 0.1.82; under a
+# binding, that interpreter keeps its legacy validation only while the binding declares it and
+# its release as the host's runtime, and is refused otherwise. Git metadata never selects any.
 machinery_library() {
   "$1" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/project_interpreter.sh"))'
 }
@@ -22,16 +22,17 @@ with open(sys.argv[2], encoding="utf-8") as stream:
 current = runtime["python"] == sys.argv[1] and runtime["lu_machinery"] == importlib.metadata.version("lu-machinery")
 raise SystemExit(0 if current else 1)' "$1" "$host_context_file" </dev/null >/dev/null 2>&1
 }
-host_bound=0 library=''
+host_bound=0 canonical_checks_binding=0 library=''
 if [[ -n "${LU_HOST_CONTEXT+set}" || -e /etc/machinery/host.v1.json || -L /etc/machinery/host.v1.json ]]; then
   host_bound=1
-elif [[ "${LU_PYTHON:-}" = /* && -f "$LU_PYTHON" && -x "$LU_PYTHON" ]] \
+fi
+if [[ "${LU_PYTHON:-}" = /* && -f "$LU_PYTHON" && -x "$LU_PYTHON" ]] \
   && library="$(machinery_library "$LU_PYTHON" 2>/dev/null)" \
   && (source "$library" && declare -F project_host_context) >/dev/null 2>&1; then
-  host_bound=1
+  host_bound=1 canonical_checks_binding=1
 fi
-if (( host_bound )); then
-  interpreter_setting=LU_PYTHON bootstrap_python="${LU_PYTHON:-}"
+if (( canonical_checks_binding )); then
+  interpreter_setting=LU_PYTHON bootstrap_python="$LU_PYTHON"
 else
   interpreter_setting=LEARN_UKRAINIAN_PYTHON
   bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
@@ -59,7 +60,7 @@ if declare -F project_host_context >/dev/null; then
     exit 127
   fi
 elif (( host_bound )) && ! binding_declares_runtime "$bootstrap_python"; then
-  echo "Git hook error [host_binding_unsupported]: the LU_PYTHON release predates the host binding check, and the binding does not declare it as the host's runtime." >&2
+  echo "Git hook error [host_binding_unsupported]: the selected interpreter's release predates the host binding check, and the binding does not declare it as the host's runtime." >&2
   exit 127
 else
   # An earlier release validates the Git metadata itself; it never trusts commondir for execution.
