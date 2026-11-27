@@ -54,6 +54,10 @@ GAP_SOURCES = {
 # These VESUM tags name displayed forms outside the core inflection
 # signature. Do not use them to match a VESUM entry to a ULIF homonym.
 VESUM_EXTRA_SLOTS = {"verb": {"impers"}, "adv": {"compc", "comps"}}
+# Правопис 2019 § 158, Примітка 3 д): no comma before a як phrase meaning
+# "у ролі кого, у функції чого". Mirror senses printing "Уживається, як …"
+# carry that excluded comma.
+MIRROR_ROLE_AS_COMMA = re.compile(r"\b[Уу]живається, як ")
 
 
 @dataclass(frozen=True)
@@ -413,6 +417,9 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                     # definition ending in a semicolon is incomplete.
                     if definition.rstrip().endswith(";"):
                         report(field, source, "mirror_definition_truncated", 1, sense_locator)
+                        continue
+                    if MIRROR_ROLE_AS_COMMA.search(definition):
+                        report(field, source, "mirror_definition_punctuation_erratum", 1, sense_locator)
                         continue
                     add(field, source, sense_locator, definition, label=MIRROR_ATTRIBUTION_LABEL,
                         scope="source_sense", source_key=f"{row['id']}:{order}")

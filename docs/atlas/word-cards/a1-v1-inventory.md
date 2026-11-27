@@ -451,6 +451,9 @@ stressed mirror head is shown only when the bound ULIF head or VESUM entry
 attests every reading (`mirror_stress_reading_unattested`). A mirror
 definition that ends in a semicolon stops before a subordinate sense or a
 following phrase and is held as incomplete (`mirror_definition_truncated`).
+A mirror definition that prints `Уживається, як …` carries the comma that
+Правопис 2019 § 158, Примітка 3 д) excludes before a role or function `як`,
+and is held (`mirror_definition_punctuation_erratum`).
 A spelling-keyed
 PULS or English gloss witness needs a single eligible entry. Ambiguous
 spellings and bilingual homonym partitions remain held. The
