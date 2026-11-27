@@ -42,6 +42,7 @@ from tests.launcher_libraries import (
     link_installed_machinery,
 )
 from tests.launcher_sandbox import (
+    bind_launcher_host_context,
     launcher_environment,
     launcher_wrapper_source,
     tracked_launcher_wrappers,
@@ -365,6 +366,12 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
         package=package,
     )
     _write(root / ".venv/bin/python", interpreter, 0o755)
+    bind_launcher_host_context(
+        root / package / "lib/project_interpreter.sh",
+        product=root,
+        python=root / ".venv/bin/python",
+        state=tmp_path / "host-state",
+    )
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
     signal_provider = _write(root / "signal-provider.sh", _SIGNAL_PROVIDER, 0o755)
     subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30, env=launcher_environment())

@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.githooks import BINDING_ASSERTED, bind_hook_host_context
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -27,8 +28,11 @@ REQUIRED_HOOKS = (
 
 
 def _clean_env(extra: dict[str, str] | None = None) -> dict[str, str]:
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = {
+        key: value for key, value in os.environ.items() if not key.startswith("GIT_") and key not in BINDING_ASSERTED
+    }
     env.pop("AGENT_NO_MERGE", None)
+    env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)  # the fixture is not the invoking task's checkout
     if extra:
         env.update(extra)
     # Fixture Git must bypass the agent command shims, including local bare remotes.
@@ -89,14 +93,6 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         repo / "scripts/lib/project_interpreter.sh",
         "#!/usr/bin/env bash\nsource " + shlex.quote(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))) + "\n",
     )
-    _write_executable(repo / ".venv/bin/python", (
-        "#!/bin/sh\n"
-        'if [ "${1-}" = -I ] && [ "${2-}" = -c ]; then\n'
-        'case "${3-}" in *guardrails/primary_post_checkout_heal.sh*)\n'
-        f"echo {shlex.quote(str(repo / 'scripts/guardrails/primary_post_checkout_heal.sh'))}; exit 0 ;;\n"
-        'esac\nfi\n'
-        f'exec "{_project_python()}" "$@"\n'
-    ))
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
@@ -175,13 +171,21 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     stamp_dir.mkdir()
     env = {
         "HOOK_LOG": str(hook_log),
-        "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(repo),
-        "LEARN_UKRAINIAN_PYTHON": str(repo / ".venv/bin/python"),
         "LFS_STDIN_LOG": str(lfs_stdin_log),
         "PATH": f"{bin_dir}:{os.environ['PATH']}",
         "PRE_COMMIT_HOME": str(tmp_path / "pre-commit-cache"),
         "TMPDIR": str(stamp_dir),
     }
+    # post-checkout asks the runtime for the installed heal script; the fixture records that call.
+    heal = shlex.quote(str(repo / "scripts/guardrails/primary_post_checkout_heal.sh"))
+    bind_hook_host_context(
+        tmp_path, env, product=repo, python=_project_python(),
+        runtime_preamble=(
+            'if [[ "${1-}" == -I && "${2-}" == -c && "${3-}" == *guardrails/primary_post_checkout_heal.sh* ]]; then\n'
+            f"  echo {heal}; exit 0\n"
+            "fi\n"
+        ),
+    )
 
     _git(repo, "add", ".")
     _git(repo, "commit", "-m", "initial", env=env)

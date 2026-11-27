@@ -4,23 +4,21 @@
 set -euo pipefail
 
 hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-worktree_root="$(git rev-parse --show-toplevel)"
-# Validate Git metadata with the same resolver as native hook commands before
-# accepting a primary root or interpreter. Never trust commondir for execution.
-bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
-case "$bootstrap_python" in
-  /*) ;;
-  *) echo "Set LEARN_UKRAINIAN_PYTHON to an absolute trusted interpreter path" >&2; exit 2 ;;
-esac
-source "$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/project_interpreter.sh"))')"
-project_hook_context_resolve "$worktree_root" || {
-  echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
+# The delegator that the release's installer writes supplies LU_PYTHON, the host binding's
+# machinery interpreter. Its isolated entry validates the binding before it inspects the
+# invocation's Git metadata, then names that checkout and its primary.
+if [[ "${LU_PYTHON:-}" != /* || ! -f "$LU_PYTHON" || ! -x "$LU_PYTHON" ]]; then
+  printf '%s\n' 'Git hook error [missing_interpreter_binding]: LU_PYTHON must name an absolute executable.' >&2
   exit 127
-}
-main_root="$(project_primary_root_resolve "$worktree_root")" || {
-  echo "Git hook error: primary checkout unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown})." >&2
+fi
+hook_context="$("$LU_PYTHON" -I -B -m lu_machinery.host_context shell --require-checkout)" || exit 127
+worktree_root='' main_root=''
+eval "$hook_context"
+unset hook_context
+if [[ -z "$worktree_root" || -z "$main_root" ]]; then
+  printf '%s\n' 'Git hook error [missing_checkout_binding]: the hook entry returned no checkout.' >&2
   exit 127
-}
+fi
 
 source_root="$worktree_root"
 if [[ ! -x "$source_root/scripts/pre_commit/project_python.sh" || ! -f "$source_root/.pre-commit-config.yaml" ]]; then
