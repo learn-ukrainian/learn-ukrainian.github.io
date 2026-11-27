@@ -20,6 +20,24 @@ PYTHON_BIN="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$REPO
 RELEASE_HOOKS="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path
 print(machinery_path("agents_extensions/shared/hooks"))')"
 THREAD_HANDOFF_PY="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("orchestration/thread_handoff.py"))')"
+# lu-machinery 0.1.83 hooks keep lease state under the host binding's state root, not under
+# CODEX_CANONICAL_REPO_ROOT. Each scenario's root therefore becomes the state root of its own
+# scratch binding, derived from the caller's scratch binding (LU_HOST_CONTEXT, required).
+BASE_HOST_CONTEXT="${LU_HOST_CONTEXT:?set LU_HOST_CONTEXT to a scratch host binding}"
+bind_scenario_state() {
+  local root="$1" binding="$1.host.v1.json"
+  chmod 700 "$root"
+  "$PYTHON_BIN" -I -c 'import json, os, sys
+base, root, target = sys.argv[1:4]
+with open(base, encoding="utf-8") as stream:
+    context = json.load(stream)
+context["state_root"] = root
+with os.fdopen(os.open(target, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w", encoding="utf-8") as stream:
+    json.dump(context, stream)' "$BASE_HOST_CONTEXT" "$root" "$binding"
+  export LU_HOST_CONTEXT="$binding" LU_STATE_ROOT="$root"
+  export LEARN_UKRAINIAN_BATCH_STATE_DIR="$root/batch_state" LU_TASKS_DIR="$root/batch_state/tasks"
+  unset FLEET_COMMS_ROOT LEARN_UKRAINIAN_OWNERSHIP_LEDGER LU_GITHUB_CACHE_DIR LEARN_UKRAINIAN_STATE_ROOT
+}
 RELEASE_HOOK="$RELEASE_HOOKS/release-thread-lease.sh"
 STOP_HOOK="$RELEASE_HOOKS/goal-driver-stop.sh"
 
@@ -103,16 +121,14 @@ __scenario_release_hook_tombstones_without_generation_env() {
 
 __scenario_worktree_layout_claims_lease() {
   local root="$1" fakewt="$2" session_id="$3"
-  # CI exports the checkout as both product root and primary. Leave those
-  # pointing at the checkout and the hook resolves that checkout's Python,
-  # never the venv-less worktree. The child gets the worktree as its product
-  # and the canonical fixture (the only .venv) as its primary.
+  # The hook runs from the venv-less worktree. The host binding (lu-machinery 0.1.83) names the
+  # product, the interpreter and the state root (the canonical fixture, bind_scenario_state), so
+  # the worktree supplies no product or primary setting: the binding refuses one that disagrees.
   printf '%s' "{\"session_id\":\"$session_id\"}" | \
     env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
         -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON -u CLAUDE_PROFILE_RESOLVER_PYTHON \
         -u LEARN_UKRAINIAN_PYTHON -u LEARN_UKRAINIAN_STATE_ROOT \
-    LU_PRODUCT_ROOT="$fakewt" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$root" \
     CLAUDE_PROJECT_DIR="$fakewt" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
     bash "$RELEASE_HOOKS/session-setup.sh" >/dev/null
   :
@@ -157,6 +173,7 @@ trap 'rm -rf "$TMP_ROOT"' EXIT
 #    own normal (never-blocking) output afterward.
 root="$TMP_ROOT/stop-project"
 mkdir -p "$root"
+bind_scenario_state "$root"
 session_id="fixture-session-stop"
 run_as_fake_claude_ancestor __scenario_stop_hook_advances_heartbeat_without_generation_env "$root" claude "$session_id"
 
@@ -170,6 +187,7 @@ heartbeat_at="$(lease_field "$lease" heartbeat_at)"
 #    via identity proof alone.
 root="$TMP_ROOT/release-project"
 mkdir -p "$root"
+bind_scenario_state "$root"
 session_id="fixture-session-release"
 run_as_fake_claude_ancestor __scenario_release_hook_tombstones_without_generation_env "$root" claude "$session_id"
 
@@ -185,6 +203,7 @@ released_by="$(lease_field "$lease" released_by_thread_id)"
 #    SUCCESSOR's generation — session-setup must NOT write one.
 root="$TMP_ROOT/session-setup-project"
 mkdir -p "$root"
+bind_scenario_state "$root"
 session_id="fixture-session-sidecar"
 (
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
@@ -199,6 +218,7 @@ sidecar="$root/.agent/sessions/${session_id}.generation"
 # 5. Uncheckable identity: release hook must no-op and fail closed (exit 0, lease stays held).
 root="$TMP_ROOT/uncheckable-project"
 mkdir -p "$root/.agent"
+bind_scenario_state "$root"
 session_id="fixture-session-uncheckable"
 cat <<JSON > "$root/.agent/claude-thread-lease.json"
 {
@@ -244,6 +264,7 @@ printf '%s' '{"session_id":"stub-session"}' | \
 #    outside .agent/sessions, and the release hook must skip the sidecar read.
 root="$TMP_ROOT/traversal-project"
 mkdir -p "$root"
+bind_scenario_state "$root"
 evil_id='../evil-traversal'
 (
   exec -a claude env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
@@ -283,6 +304,7 @@ export REPO_ROOT_FOR_PROBE="$REPO_ROOT"
 root="$TMP_ROOT/symlink-project"
 outside="$TMP_ROOT/symlink-outside"
 mkdir -p "$root/.agent" "$outside"
+bind_scenario_state "$root"
 ln -s "$outside" "$root/.agent/sessions"
 session_id="fixture-session-symlink"
 (
@@ -331,6 +353,7 @@ fi
 # Symlinked destination entry: real dir, symlinked file — write must refuse.
 root="$TMP_ROOT/symlink-entry-project"
 mkdir -p "$root/.agent/sessions"
+bind_scenario_state "$root"
 target="$TMP_ROOT/symlink-entry-target"
 : > "$target"
 ln -s "$target" "$root/.agent/sessions/${session_id}.json"
@@ -357,6 +380,11 @@ root="$TMP_ROOT/wt-canonical"
 fakewt="$TMP_ROOT/wt-project"
 empty_hooks="$TMP_ROOT/empty-hooks"
 mkdir -p "$root" "$empty_hooks"
+# The host binding's state root must lie outside every Git work tree, so this scenario's lease
+# state has its own directory beside the canonical checkout.
+wt_state="$TMP_ROOT/wt-state"
+mkdir -p "$wt_state"
+bind_scenario_state "$wt_state"
 ln -s "$REPO_ROOT/.venv" "$root/.venv"
 ln -s "$REPO_ROOT/.python-version" "$root/.python-version"
 # A directory with no .git at it or any ancestor is a non-Git workspace, and
@@ -375,7 +403,7 @@ ln -s "$REPO_ROOT/scripts" "$fakewt/scripts"
 ln -s "$REPO_ROOT/agents_extensions" "$fakewt/agents_extensions"
 session_id="fixture-session-worktree"
 run_as_fake_claude_ancestor __scenario_worktree_layout_claims_lease "$root" "$fakewt" "$session_id"
-lease="$(lease_file_path "$root" claude)"
+lease="$(lease_file_path "$wt_state" claude)"
 [ -f "$lease" ] || fail "worktree layout: lease was NOT claimed (venv-less project dir broke an interpreter default — r5 regression)"
 wt_owner="$(lease_field "$lease" owner_thread_id)"
 [ "$wt_owner" = "$session_id" ] || fail "worktree layout: lease owner mismatch (got '$wt_owner')"
