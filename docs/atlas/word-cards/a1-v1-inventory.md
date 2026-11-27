@@ -439,19 +439,28 @@ reasons. The surrounding card records the lemma and the admitted values with
 their source labels and locators. A held definition displays
 `ВТС not captured` when the full ВТС capture is absent.
 
-The VESUM entry supplies morphology. ULIF headword stress comes from the
+The VESUM entry supplies morphology. ULIF headword stress comes from an
 authenticated ULIF entry matching the card lemma and VESUM part of speech, or
 the card's own frozen ULIF entry, without requiring whole-paradigm equality
-with VESUM (paradigm-form stress keeps its stricter full-paradigm rule; see
-below). Definitions can come from bound official СУМ-20 or captured ВТС
-partitions. When the exact headword has no captured official article, the
-preview can use the labelled slovnyk.me copy of СУМ-20. Its definitions must be
-recoverable verbatim from an unambiguous lexical partition, with a source-local
-sense key. Its stressed headword must agree with the bound ULIF headword or
-have VESUM corroboration when ULIF omits stress. A spelling-keyed PULS or
-English gloss witness needs a single eligible entry. Ambiguous spellings and
-bilingual homonym partitions remain held. The `code_fields_complete` count
-measures cards with every required field apart from examples.
+with VESUM (paradigm-form stress and full entry correspondence keep the
+stricter binding rules below). Definitions can come from bound official СУМ-20
+or captured ВТС partitions. When the exact headword has no captured official
+article, the preview can use the labelled slovnyk.me copy of СУМ-20. Its
+definitions must be recoverable verbatim from an unambiguous lexical partition,
+with a source-local sense key. Its stressed headword must agree with the bound
+ULIF headword or have VESUM corroboration when ULIF omits stress. A doubly
+stressed mirror head is shown only when the bound ULIF head or VESUM entry
+attests every reading (`mirror_stress_reading_unattested`). A mirror
+definition that ends in a semicolon stops before a subordinate sense or a
+following phrase and is held as incomplete (`mirror_definition_truncated`).
+A mirror definition that prints `Уживається, як …` carries the comma that
+Правопис 2019 § 158, Примітка 3 д) excludes before a role or function `як`,
+and is held (`mirror_definition_punctuation_erratum`).
+A spelling-keyed
+PULS or English gloss witness needs a single eligible entry. Ambiguous
+spellings and bilingual homonym partitions remain held. The
+`code_fields_complete` count measures cards with every required field apart
+from examples.
 
 Use a fresh host-only output directory for the preview.
 
@@ -488,6 +497,65 @@ The remaining definition gaps include 81 cards with `ВТС not captured`.
 Atlas owns the entry correspondence and source gaps. The operator owns the
 remaining ВТС capture. Example review is tracked separately under #12288.
 
+### AC-06 binding rules
+
+These rules apply only to the full-data projection. The pilot assembler,
+verifier and ULIF capture keep their earlier matching rules.
+
+- **Frozen ULIF entry.** A card can show the explicit stress of its own
+  frozen ULIF entry when the cross-source match stays unresolved. Every
+  frozen column must equal the live row, and a replay of the raw article must
+  return the same digest and one lemma row with the exact, case-sensitive
+  stressed head. A VESUM comment stress that contradicts it holds the value.
+- **Class correspondences.** A case-only ULIF quantitative numeral aligns
+  with a VESUM entry whose every slot is one case plus the plural. A ULIF
+  adverb matches a VESUM pronominal adverb only when both entries are
+  invariable and the raw replay marks the ULIF entry invariable. A ULIF
+  participle matches only a VESUM adjective tagged `adjp` on every row. A
+  noun entry is compared without the gender axis when all of its possible
+  ULIF competitors are authenticated and genderless.
+- **Ownership.** A ULIF entry frozen for one card is never bound to another
+  card. Such a match is held as `ulif_entry_owned_by_other_card`.
+- **ВТС.** A separate proper-name homonym with a different case and no
+  VESUM candidate does not compete on a common card. A single ВТС partition
+  with explicit agreeing stress and grammar can bind to the card's verified
+  frozen ULIF entry. The parser also reads the `невідм., с.` header, a verb
+  header with explicit past, imperative and one aspect label, and Roman
+  numbers that sit only inside a reference to another headword. A printed
+  singular genitive, either a full form or a hyphenated ending, must agree with
+  the bound VESUM entry (`vts_header_genitive_conflicts_with_bound_entry`). An
+  article read with its first head intact binds only when the bound VESUM and
+  ULIF paradigms both contain that full genitive.
+- **Display.** A doubly stressed dictionary head shows each reading, for
+  example `за́вжди / завжди́`. The ledger keeps the exact source spelling.
+
+Same-stress and same-case homonyms such as `собака` and the two-class `після`
+article stay held. Both `замок` partitions stay held: the castle partition
+prints the genitive ending `-мка`, which the bound entry does not have.
+
+This table measures the binding rules alone, before the СУМ-20 fallback and
+Ukrlib replay below. The combined replay at the end of this page includes
+both.
+
+| Card outcome or hold reason | Before | After |
+| --- | ---: | ---: |
+| Cards with all required fields in this pass | 189 | 226 |
+| Required Ukrainian definition | 602 | 536 |
+| Required stress | 538 | 449 |
+| Required English gloss | 308 | 294 |
+| Required CEFR | 319 | 316 |
+| Required paradigm | 71 | 65 |
+| Required part of speech | 71 | 65 |
+| Unbound inventory entry | 71 | 65 |
+
+The stress fills come from 43 of the 440 cards held as
+`ulif_vesum_correspondence_unresolved` and 46 of the 56 held as
+`no_bound_vesum_entry`. The definition fills come from 63 of the cards held
+as `unbound_partition` and 3 of those held as `source_partition_unresolved`.
+Six frozen numeral cards now bind their own VESUM entry. Their duplicate
+candidate cards are held by the ownership rule. The other rows change because
+the newly bound entries now pass the existing single-entry gates.
+
 ### AC-06 examples for cards with one remaining hold
 
 The full-data preview tries the example fill when `required_examples` is
@@ -509,7 +577,33 @@ Ukrainian primers. The 95th percentile was seven words by nearest rank.
 The preview checks the other content readings, prepositions, conjunctions,
 and particles against PULS A1–A2. It uses VESUM for form, entry, part of
 speech, and register. The sentence must be complete and understandable
-on its own. The locator points into
+on its own. A sentence in exercise layout is a task item, not a model
+sentence, and is held as `example needs context or is not a complete
+sentence`. Exercise layout means one of the following:
+
+- a punctuation mark detached by a space, which leaves an answer slot;
+- a blank: underscores, an ellipsis or empty brackets;
+- a preceding segment that is only a label: an item number (`5.`, `107.1.`,
+  `63°.`, `487*.`), a Roman numeral, one letter, a sequence of them (`25 І.`),
+  a capitalized label word with a number (`Крок 2.`, `Мал. 4.`), or `§` or `№`
+  with a number;
+- a preceding segment that is only marks, which is the previous item's
+  answer slot;
+- an opening capital letter that is not a one-letter Ukrainian word, such as
+  an answer option `Б` or `Г`;
+- a one-letter word followed by a capitalized word that VESUM does not attest
+  with a capital, such as the answer option `В Нам …`. A name such as
+  `У Макса` stays allowed;
+- an answer option opened by `А` or `В` in an option list, that is a chunk
+  with two or more options `А`–`Д`, one of them `Б`, `Г` or `Д`. This holds
+  `В Стіну розбито молотком.` although `Стіну` also reads as a place name;
+- directly after the sentence, underscores, empty brackets, two or more marks
+  (a dot leader or blank answer lines, even when text follows), or one mark
+  with no word after it. These are empty answer slots or the dot leaders of a
+  table of contents.
+
+One mark or one ellipsis followed by a word stays allowed. In textbooks that
+is a question icon or an ellipsis opening the next sentence. The locator points into
 the source chunk before whitespace and stress-mark normalization. Each
 selected example records which of those changes the preview applied.
 
@@ -559,21 +653,47 @@ The per-card ledger records remaining source gaps and marks their Atlas
 owner. Mirror partition or entry ambiguity, missing captures and
 indeterminate example senses still leave evidence holds.
 
+### Combined replay with the AC-06 binding and exercise-layout rules
+
+This replay adds the AC-06 binding rules and the exercise-layout rule to
+the СУМ-20 fallback and Ukrlib replay above. Both columns use the same
+source pin, 845 cards and 2,144 inventory rows.
+
+| Card outcome or hold | СУМ-20 fallback and Ukrlib | With AC-06 binding and exercise layout |
+| --- | ---: | ---: |
+| Complete cards | 16 | 17 |
+| Held cards | 829 | 828 |
+| Cards with all required fields other than examples | 191 | 227 |
+| Example required | 827 | 826 |
+| Ukrainian definition required | 594 | 527 |
+| Stress required | 538 | 449 |
+| CEFR required | 319 | 316 |
+| English gloss required | 308 | 294 |
+| Paradigm required | 71 | 65 |
+| Part of speech required | 71 | 65 |
+| Inventory entry unbound | 71 | 65 |
+
+The newly bound entries let the mirror supply 46 more definitions and 23
+more stress values on 26 cards, mostly numerals and invariable adverbs.
+Their mirror stress agrees with the ULIF stress on every card. The corpus
+examples are six textbook examples on three cards (`професія`, `щиро`,
+`щодня`) and twelve Ukrlib quotations on ten cards. The exercise-layout rule
+holds six task items that the fallback replay admits. Five are textbook
+items for `вівторок`, `зазвичай`, `канікули`, `метро` and `середа`. The sixth
+is a verse line for `відпустка` that a dotted omission line follows.
+`вівторок`, `середа` and `відпустка` keep a Ukrlib example.
+
 ### AC-06 ULIF headword stress
 
 Headword stress in the full-data preview needs only the headword's own stress
 from an authenticated ULIF entry matching the card lemma (exact case-sensitive
-spelling without stress marks) and VESUM part of speech, or from the card's own
+spelling without stress marks) and VESUM part of speech (using the AC-06
+binding class correspondences above), or from the card's own
 raw-replay-verified frozen ULIF anchor. Whole-paradigm equality with VESUM is
 not required for the headword stress field; paradigm-form stress, inflection
 tables, definitions, glosses and CEFR levels keep their existing stricter
 correspondence rules.
 
-- **Class correspondences (headword stress only).** A ULIF `дієприкметник`
-  matches a VESUM `adj` entry tagged `adjp` on every row. An invariable ULIF
-  `прислівник` (verified from raw replay) matches an invariable VESUM
-  pronominal adverb (`adv:pron`). These expanded matches feed only headword
-  stress and do not alter full entry correspondence or inflection tables.
 - **Homonyms and authenticity.** Every card (full-match, fallback, and
   frozen-anchor) resolves ULIF headword stress through the same competitor and
   raw-replay authenticity check. When matching-POS ULIF homonyms agree on the
@@ -587,35 +707,34 @@ correspondence rules.
   `ulif_competitor_unauthenticated` on every branch (including frozen-anchor
   cards such as `щось`). A frozen ULIF anchor belongs to its own card;
   duplicate candidate cards stay held as `ulif_entry_owned_by_other_card`.
-- **Doublet display.** A doubly stressed ULIF headword renders each accepted
-  reading separated by ` / ` (for example `за́вжди / завжди́`), while the ledger
-  keeps the verbatim ULIF spelling.
 
-The comparison starts at `c0bdb1de25b9a128916f0a065db158c031b27260`, after
-#13431 (before #13431, the same replay had 602 Ukrainian definition holds, 189
-cards with all required fields other than examples, and 10 complete cards).
+The comparison starts at `2e8d2ff2e6940e0d465b0fe500646b2b6e9e8b36`, after
+#13434.
 
 | Hold reason or outcome (845 cards) | Before | After |
 | --- | ---: | ---: |
-| Required stress | 538 | 142 |
-| Required Ukrainian definition | 594 | 594 |
-| Required English gloss | 308 | 308 |
-| Required CEFR | 319 | 319 |
-| Required paradigm | 71 | 71 |
-| Required examples | 827 | 827 |
-| Cards with all required fields other than examples | 191 | 191 |
-| Complete cards | 16 | 16 |
-| Held cards | 829 | 829 |
+| Required stress | 449 | 142 |
+| Required Ukrainian definition | 527 | 527 |
+| Required English gloss | 294 | 294 |
+| Required CEFR | 316 | 316 |
+| Required paradigm | 65 | 65 |
+| Required part of speech | 65 | 65 |
+| Inventory entry unbound | 65 | 65 |
+| Required examples | 826 | 826 |
+| Cards with all required fields other than examples | 227 | 227 |
+| Complete cards | 17 | 17 |
+| Held cards | 828 | 828 |
 
-ULIF headword stress coverage rises from 307 to 703 of 845 cards (net `-396`
-stress holds: `+399` newly filled headwords and `3` heteronyms now held under
-the unified competitor check), with zero duplicate stress locators and zero
-changes to non-stress fields. The 142 remaining stress holds comprise 85
-monosyllabic headwords with no explicit acute mark in ULIF
-(`bound_headword_has_no_explicit_stress`), 21 cards absent from ULIF
-(`capture_absent`: 15 pilot MWEs and 6 lemmas), 11 cards with a `parse_error`
-empty ULIF capture or competitor (`ulif_competitor_unauthenticated`), 9
-duplicate candidate cards whose frozen ULIF anchor belongs to a slice-1 card
-(`ulif_entry_owned_by_other_card`), 8 POS- or case-mismatch/abbreviation cards
-(`ulif_headword_pos_unresolved`), and 8 different-stress homonym cards
-(`ulif_homonym_stress_ambiguous`).
+ULIF headword stress coverage rises from 396 to 703 of 845 cards (net `-307`
+stress holds: `+310` newly filled headwords and `3` heteronyms now held under
+the unified competitor check: `картопляний`, `типовий`, `правильний`), with
+zero duplicate stress locators and zero changes to non-stress fields. The 142
+remaining stress holds comprise 77 monosyllabic headwords with no explicit
+acute mark in ULIF (`bound_headword_has_no_explicit_stress`), 21 cards absent
+from ULIF (`capture_absent`: 15 pilot MWEs and 6 lemmas), 11 cards with a
+`parse_error` empty ULIF capture or competitor
+(`ulif_competitor_unauthenticated`), 9 duplicate candidate cards whose frozen
+ULIF anchor belongs to a slice-1 card (`ulif_entry_owned_by_other_card`), 8
+monosyllabic unbound cards (`no_bound_vesum_entry`), 8 POS- or
+case-mismatch/abbreviation cards (`ulif_headword_pos_unresolved`), and 8
+different-stress homonym cards (`ulif_homonym_stress_ambiguous`).

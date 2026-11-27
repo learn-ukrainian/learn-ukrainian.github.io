@@ -54,6 +54,10 @@ GAP_SOURCES = {
 # These VESUM tags name displayed forms outside the core inflection
 # signature. Do not use them to match a VESUM entry to a ULIF homonym.
 VESUM_EXTRA_SLOTS = {"verb": {"impers"}, "adv": {"compc", "comps"}}
+# Правопис 2019 § 158, Примітка 3 д): no comma before a як phrase meaning
+# "у ролі кого, у функції чого". Mirror senses printing "Уживається, як …"
+# carry that excluded comma.
+MIRROR_ROLE_AS_COMMA = re.compile(r"\b[Уу]живається, як ")
 
 
 @dataclass(frozen=True)
@@ -128,23 +132,18 @@ def ulif_candidates(sources, lemma, vesum_rows):
                           and replay["forms"][0]["is_lemma"])
         # An authenticated competitor for another spelling or class cannot
         # steal a match. An empty or unverified head can.
-        # Expanded A1 class correspondences apply only to headword stress;
-        # full entry correspondence keeps the stricter baseline rules.
-        candidates = (_entry_candidates(row, vesum_rows, lemma)
+        candidates = (_entry_candidates(row, vesum_rows, lemma, a1_classes=True, invariable=invariable)
                       if src.unstressed(head) == lemma
                       else [] if head and src.unstressed(head).casefold() == lemma.casefold() else None)
-        stress_candidates = (_entry_candidates(row, vesum_rows, lemma, a1_classes=True, invariable=invariable)
-                             if src.unstressed(head) == lemma
-                             else [] if head and src.unstressed(head).casefold() == lemma.casefold() else None)
         if reason and not candidates:
             candidates = None
         paradigm = None
         if forms and reason is None and candidates is not None:
-            paradigm = src.ulif_paradigm(forms, pronoun=row["grammatical_label"].startswith("займенник"))
+            paradigm = src.ulif_paradigm(forms, pronoun=row["grammatical_label"].startswith("займенник"),
+                                         numeral=row["grammatical_label"] == "числівник кількісний")
         out[row["id"]] = {
             "row": row, "head": head, "aspect": assembly.parse_aspect(row["grammatical_label"]),
-            "paradigm": paradigm, "forms": forms, "raw": raw, "candidates": candidates,
-            "stress_candidates": stress_candidates, "replay": replay,
+            "paradigm": paradigm, "forms": forms, "raw": raw, "candidates": candidates, "replay": replay,
             "reason": reason or (None if paradigm is not None else "ulif_paradigm_missing"),
         }
     return out
@@ -161,19 +160,20 @@ def _replayed_headword_ok(entry):
 
 
 def anchored_entry(homonyms, anchor, lemma):
-    """Return the card's frozen ULIF entry ID when a raw replay proves its headword.
+    """Return the card's frozen ULIF entry ID when a raw replay proves its stressed head.
 
     Every frozen column must equal the live row, including the article and raw
     manifest digests. The replayed article must give the same digest and one
-    lemma row with that exact, case-sensitive headword.
+    lemma row with that exact, case-sensitive and explicitly stressed head.
     """
     if anchor is None or anchor["id"] not in homonyms:
         return None
     live = homonyms[anchor["id"]]
-    replay, head = live.get("replay"), anchor["canonical_headword"]
+    replay, head = live["replay"], anchor["canonical_headword"]
     if (any(live["row"].get(key) != value for key, value in anchor.items()) or replay is None
-            or replay.get("content_sha256") != anchor["content_sha256"]
-            or src.unstressed(head) != lemma or not _replayed_headword_ok(live)):
+            or replay["content_sha256"] != anchor["content_sha256"] or replay["canonical_headword"] != head
+            or src.ACUTE not in head or src.unstressed(head) != lemma
+            or [form["form_stressed"] for form in replay["forms"] if form["is_lemma"]] != [head]):
         return None
     return anchor["id"]
 
@@ -192,7 +192,7 @@ def headword_ulif_stress(homonyms, target, lemma, vesum_stress, foreign_ulif, *,
     if unauthenticated:
         return None, "ulif_competitor_unauthenticated", tuple(unauthenticated)
     if anchor_id is not None:
-        head = src.nfc(homonyms[anchor_id]["head"])
+        head = homonyms[anchor_id]["head"]
         if vesum_stress and not vesum_stress.intersection(
             reading.casefold() for reading in src.stress_forms(head)
         ):
@@ -204,7 +204,7 @@ def headword_ulif_stress(homonyms, target, lemma, vesum_stress, foreign_ulif, *,
         return None, "no_bound_vesum_entry", ()
     matched, owned_blocked, unknown_pos = [], [], []
     for uid, entry in homonyms.items():
-        candidates = entry.get("stress_candidates", entry["candidates"])
+        candidates = entry["candidates"]
         if candidates is None:
             if src.unstressed(entry["head"]) == lemma:
                 unknown_pos.append((uid, entry))
@@ -228,13 +228,38 @@ def headword_ulif_stress(homonyms, target, lemma, vesum_stress, foreign_ulif, *,
     heads = {src.nfc(entry["head"]) for _, entry in matched}
     if len(heads) > 1:
         return None, "ulif_homonym_stress_ambiguous", tuple(uid for uid, _ in matched)
-    head = next(iter(heads))
-    if any(src.nfc(other["head"]) != head for _, other in unknown_pos):
+    canonical_head = next(iter(heads))
+    head = matched[0][1]["head"]
+    if any(src.nfc(other["head"]) != canonical_head for _, other in unknown_pos):
         return None, "ulif_competitor_pos_unmapped", tuple(uid for uid, _ in unknown_pos)
     if src.ACUTE not in head:
         return None, "bound_headword_has_no_explicit_stress", tuple(uid for uid, _ in matched)
     locator = f"ulif_dictua_entries:{','.join(str(uid) for uid, _ in matched)}/canonical_headword"
     return (head, locator), None, ()
+
+
+def separate_proper_name(homonym, lemma):
+    """A different-case ULIF name with no candidate VESUM entry for this spelling."""
+    head, row = homonym["head"], homonym["row"]
+    return (lemma.islower() and homonym["candidates"] == [] and not homonym["reason"]
+            and src.unstressed(head) != lemma
+            and is_proper_name(row["grammatical_label"], head, row["sense_gloss"]))
+
+
+def genitive_attested(part, target_rows, ulif_forms):
+    """A ВТС header's printed singular genitive must agree with the bound entry.
+
+    A hyphenated ending must end a singular genitive of the bound VESUM entry.
+    A retried implicit head needs its full form in both bound paradigms.
+    """
+    genitive = part["genitive"]
+    vesum = {row["word_form"].casefold() for row in target_rows
+             if "v_rod" in (tags := row["tags"].split(":")) and "p" not in tags}
+    if genitive.startswith("-"):
+        return any(form.endswith(genitive[1:]) for form in vesum)
+    ulif = {form["form_unstressed"].casefold() for form in ulif_forms or []
+            if not form["is_lemma"] and "v_rod" in (tags := _tag_list(form, "grammatical_tags")) and "p" not in tags}
+    return genitive in vesum and (not part.get("implicit_head") or genitive in ulif)
 
 
 def ulif_groups(sources, entry_id, identity, add, report):
@@ -321,8 +346,15 @@ def mirror_definitions(part):
     return definitions
 
 
-def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report):
-    candidates = meanings.candidates(sources, lemma)
+def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report, *,
+                    common=False, vts_anchor=None, target_rows=()):
+    """Bind dictionary partitions to the established ULIF entry.
+
+    For ВТС on a common card, a separate proper-name homonym does not compete.
+    ``vts_anchor`` is the card's replay-verified frozen ULIF entry. It can bind
+    a single ВТС partition whose explicit stress and grammar agree with it.
+    """
+    candidates = meanings.candidates(sources, lemma, a1_rules=True)
     for source, parts in candidates.items():
         field = "definition_uk"
         if source == MIRROR_SOURCE_ID and candidates["sum20"]:
@@ -340,6 +372,14 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
             continue
         # Unknown competitors prevent a unique partition match.
         competing = {key: value for key, value in homonyms.items() if value["head"]}
+        headless = len(competing) != len(homonyms)
+        bound = entry_id
+        if source == VTS:
+            if common:
+                competing = {key: value for key, value in competing.items()
+                             if key in {entry_id, vts_anchor} or not separate_proper_name(value, lemma)}
+            if bound is None and vts_anchor is not None and len(parts) == 1 and src.ACUTE in parts[0]["head"]:
+                bound = vts_anchor
         seen = set()
         for part in parts:
             locator = part["locator"]
@@ -352,11 +392,19 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
             identities = competing
             # The VESUM comment is correspondence evidence only. Its stress
             # spelling cannot itself become a learner-facing stress value.
-            if (entry_id in identities and src.ACUTE not in identities[entry_id]["head"]
+            if (bound == entry_id and entry_id in identities and src.ACUTE not in identities[entry_id]["head"]
                     and part["head"] in vesum_stress):
                 identities = {**competing, entry_id: {**competing[entry_id], "head": part["head"]}}
-            if not reason and (entry_id is None or len(competing) != len(homonyms)
-                               or not meanings.correspondence(part, identities, entry_id)):
+            # A retried implicit head stays a parser refusal until both bound
+            # paradigms attest its printed genitive. Any other printed
+            # genitive must agree with the bound entry.
+            if not reason and "genitive" in part and (bound is None or not genitive_attested(
+                    part, target_rows, homonyms[bound]["forms"])):
+                reason = ("source_partition_unresolved" if part.get("implicit_head")
+                          else "vts_header_genitive_conflicts_with_bound_entry" if bound is not None
+                          else None)
+            if not reason and (bound is None or headless
+                               or not meanings.correspondence(part, identities, bound)):
                 reason = "unbound_partition"
             if reason:
                 report(field, source, reason, 1, locator)
@@ -414,21 +462,37 @@ def modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, repor
                     for facet in (field, "stress"):
                         report(facet, source, "mirror_body_digest_mismatch", 1, locator)
                     continue
-                if src.ACUTE in part["head"]:
+                # A doubly stressed head displays each reading (stress_readings),
+                # so every reading needs the bound ULIF head or VESUM entry.
+                attested = set(vesum_stress)
+                if entry_id in homonyms and src.ACUTE in homonyms[entry_id]["head"]:
+                    attested |= {reading.casefold() for reading in src.stress_forms(homonyms[entry_id]["head"])}
+                if src.ACUTE not in part["head"]:
+                    report("stress", source, "bound_headword_has_no_explicit_stress", 1, locator)
+                elif not {reading.casefold() for reading in src.stress_forms(part["head"])} <= attested:
+                    report("stress", source, "mirror_stress_reading_unattested", 1, locator)
+                else:
                     start = part["span"][0]
                     # The comma also follows any source-local homonym number.
                     end = start + len(part["text"].partition(",")[0].rstrip(meanings.SUPERSCRIPTS))
                     add("stress", source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
                         part["head"], label=MIRROR_ATTRIBUTION_LABEL)
-                else:
-                    report("stress", source, "bound_headword_has_no_explicit_stress", 1, locator)
                 definitions = mirror_definitions(part)
                 if not definitions:
                     report(field, source, "mirror_definition_unresolved", 1, locator)
                 for order, definition, start, end in definitions:
-                    add(field, source, f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]",
-                        definition, label=MIRROR_ATTRIBUTION_LABEL, scope="source_sense",
-                        source_key=f"{row['id']}:{order}")
+                    sense_locator = f"sum20_mirror_articles:{row['id']} [article_text:{start}:{end}]"
+                    # The staged parse stops a sense at the semicolon before a
+                    # subordinate sense (//) or a following phrase, so a
+                    # definition ending in a semicolon is incomplete.
+                    if definition.rstrip().endswith(";"):
+                        report(field, source, "mirror_definition_truncated", 1, sense_locator)
+                        continue
+                    if MIRROR_ROLE_AS_COMMA.search(definition):
+                        report(field, source, "mirror_definition_punctuation_erratum", 1, sense_locator)
+                        continue
+                    add(field, source, sense_locator, definition, label=MIRROR_ATTRIBUTION_LABEL,
+                        scope="source_sense", source_key=f"{row['id']}:{order}")
             else:
                 add(field, source, locator, part["text"], label=row["dictionary_label"],
                     source_key=part["partition"])
@@ -622,6 +686,8 @@ def card_values(sources, lemma, target, register, puls_rows, unique_card, ulif_a
             if len(matches) == 1:
                 target = matches[0]
     entry_id = None
+    # The card's own frozen ULIF entry can supply its explicit stress when
+    # the cross-source correspondence stays unresolved.
     anchor_id = anchored_entry(homonyms, ulif_anchor, lemma)
     target_rows = vesum_rows.get(target, [])
     citation = [row for row in target_rows if row["word_form"] == lemma]
@@ -636,6 +702,19 @@ def card_values(sources, lemma, target, register, puls_rows, unique_card, ulif_a
             for candidate in candidates.values() for form in candidate["forms"] or [] if not form["is_lemma"]
         )
         entry_paradigms = src.vesum_paradigm([row for rows in vesum_rows.values() for row in rows], keep_gender)
+        # An adjectival sibling can set the shared gender axis. A noun entry
+        # whose every possible ULIF competitor is authenticated and genderless
+        # is compared by case and number only.
+        for key, rows in vesum_rows.items() if keep_gender else ():
+            relevant = [candidate for candidate in candidates.values()
+                        if candidate["candidates"] is None or key in candidate["candidates"]]
+            if rows[0]["pos"] == "noun" and relevant and all(
+                candidate["paradigm"] is not None and not any(
+                    tag in _tag_list(form, "grammatical_tags") for tag in src.GENDERS
+                    for form in candidate["forms"] if not form["is_lemma"])
+                for candidate in relevant
+            ):
+                entry_paradigms[key] = src.vesum_paradigm(rows, False)[key]
         entry_id = bound_ulif(candidates, entry_paradigms, target)
         owned = entry_id in foreign_ulif
         if owned:
@@ -698,22 +777,20 @@ def card_values(sources, lemma, target, register, puls_rows, unique_card, ulif_a
             for row in sources.sources.execute("SELECT id FROM ulif_forms WHERE entry_id=? ORDER BY id", (other_id,)):
                 report("paradigm", "ulif", reason, 1, f"ulif_forms:{row['id']}")
 
-    modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report)
+    common_target = bool(citation) and not any("prop" in row["tags"].split(":") for row in citation)
+    vts_anchor = None
+    if (entry_id is None and anchor_id is not None and common_target and target in (homonyms[anchor_id]["candidates"] or ())
+            and label_pos(homonyms[anchor_id]["row"]["grammatical_label"]) == pos):
+        vts_anchor = anchor_id
+    modern_meanings(sources, lemma, homonyms, entry_id, vesum_stress, add, report,
+                    common=common_target, vts_anchor=vts_anchor, target_rows=target_rows)
     if not any(value["field"] == "stress" and value["source_id"] == "sum20" for value in values):
         report("stress", "sum20", "no_bound_stressed_headword")
     unambiguous = len(vesum_rows) == len(homonyms) == 1 and entry_id is not None
     # Spelling-keyed evidence can describe a singleton VESUM lexeme. ULIF
     # provides a competing-entry check here. Its own values still need the
     # independent paradigm, aspect and stress match above.
-    competing = []
-    for homonym in homonyms.values():
-        head, row = homonym["head"], homonym["row"]
-        separate_name = (lemma.islower() and homonym["candidates"] == [] and not homonym["reason"]
-                         and src.unstressed(head) != lemma and is_proper_name(
-                             row["grammatical_label"], head, row["sense_gloss"],
-                         ))
-        if not separate_name:
-            competing.append(homonym)
+    competing = [homonym for homonym in homonyms.values() if not separate_proper_name(homonym, lemma)]
     singleton = competing[0] if len(competing) == 1 else None
     spelling_bound = bool(unique_card and len(vesum_rows) == 1 and citation and singleton
                           and singleton["forms"] and not singleton["reason"]

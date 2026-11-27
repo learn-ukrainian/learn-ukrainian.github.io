@@ -32,6 +32,38 @@ SENTENCE_TEXT = re.compile(r"[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щью�
 CONTEXT_MARKS = re.compile(r"[«»\"“”„‟‹›\[\]():;…—–]|\.{2,}")
 QUOTE_MARKS = re.compile(r'[«»"“”„‟‹›]')
 POSSIBLE_HEADING = re.compile(r"[\r\n]\s*[А-ЩЬЮЯЄІЇҐ]")
+# Exercise layout around or inside a span marks a task item, not a model
+# sentence. A mark detached by whitespace leaves an answer slot. A preceding
+# segment that is only a label (an item number such as 5., 107.1., 63°. or
+# 487*.; a Roman numeral; one letter; a sequence of them such as 25 І.; a
+# capitalized label word with a number such as Крок 2. or Мал. 4.; § or №
+# with a number) or only marks (the
+# previous item's answer slot) makes the span an exercise item. After the
+# span, underscores, empty brackets, two or more marks (a dot leader or blank
+# answer lines), or one mark that no word follows is an empty slot or a
+# table-of-contents line. One mark or one ellipsis followed by a word is a
+# textbook icon or the opening of the next sentence, so the span stays.
+DETACHED_MARK = re.compile(r"\s[,.!?]")
+LABEL_TOKEN = r"(?:\d+(?:\.\d+)*[°*]*|[IVXLCІХ]+)"
+ITEM_LABEL = re.compile(
+    rf"(?:\A|\n)[ \t]*(?:"
+    rf"(?:[§№][ \t]*|[А-ЩЬЮЯЄІЇҐ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ'’ʼ-]*\.?[ \t]+)?(?:{LABEL_TOKEN}[ \t]+)*{LABEL_TOKEN}\."
+    rf"|(?:{LABEL_TOKEN}[ \t]+)*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\."
+    rf"|[.…?!](?:\s*[.…?!])*"
+    rf")\Z"
+)
+# Answer options А–Д open a line or follow a sentence end. A chunk with two
+# or more option letters, one of them Б, Г or Д, is an option list; there an
+# option opened by А or В is a label, even before a capitalized name.
+OPTION_START = re.compile(r"(?m)(?:^[ \t]*|(?<=[.!?…] ))([АБВГД])[ \t]+(?=[А-ЩЬЮЯЄІЇҐ])")
+OPTION_SPAN = re.compile(r"[АБВГД][ \t]+[А-ЩЬЮЯЄІЇҐ]")
+MARK = r"(?>\.{3}|[.…?!])"
+SLOT_AFTER = re.compile(rf"\s*(?:_|\(\s*\)|\[\s*\]|{MARK}(?:\s*{MARK})+|{MARK}(?!\s*[^\W\d_]))")
+# One-letter Ukrainian words; any other capital letter opening a span is an
+# answer-option label (А–Г lists) or an initial split from its name. A
+# one-letter word followed by a capitalized word that VESUM does not attest
+# with a capital (not a name) is an option label too, such as В Нам ….
+ONE_LETTER_WORDS = frozenset("аівузйоєя")
 FUNCTION_LABELS = frozenset({"прийменник", "сполучник", "частка"})
 FINITE_VERB_TAGS = frozenset({"pres", "past", "futr", "impr", "impers"})
 OBLIQUE_CASES = frozenset({"v_rod", "v_dav", "v_zna", "v_oru", "v_mis"})
@@ -166,9 +198,10 @@ def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
         return "example exceeds word limit"
     if REGISTER.search(register):
         return "example has archaic or dialect register"
-    if CONTEXT_MARKS.search(text) or WORKSHEET_RE.search(text) or not SENTENCE_TEXT.fullmatch(text):
+    if (CONTEXT_MARKS.search(text) or WORKSHEET_RE.search(text) or DETACHED_MARK.search(text)
+            or not SENTENCE_TEXT.fullmatch(text)):
         return "example needs context or is not a complete sentence"
-    if len(tokens) < 2 or text.isupper():
+    if len(tokens) < 2 or text.isupper() or (len(tokens[0]) == 1 and tokens[0].lower() not in ONE_LETTER_WORDS):
         return "example needs context or is not a complete sentence"
 
     analyses = []
@@ -181,6 +214,8 @@ def refusal(text, tokens, gap, readings, puls_by_word, *, register=""):
             rows = [row for row in rows if row["word_form"].islower() == word.islower()
                     and row["word_form"].isupper() == word.isupper()]
         analyses.append(rows)
+    if len(tokens[0]) == 1 and tokens[1][0].isupper() and not analyses[1]:
+        return "example needs context or is not a complete sentence"
     target = (gap.entry_id, gap.lemma, gap.pos)
     hits = {index for index, rows in enumerate(analyses) if rows and {
         (row["entry_id"], row["lemma"], row["pos"]) for row in rows
@@ -211,6 +246,9 @@ def sentence_spans(chunk):
     """Yield whole punctuated spans, with offsets into the unmodified source row."""
     start = 0
     inside_quote = False
+    previous = ""
+    options = set(OPTION_START.findall(chunk))
+    option_list = len(options) > 1 and bool(options & {"Б", "Г", "Д"})
     for boundary in [*SENTENCE_BREAK.finditer(chunk), None]:
         end = boundary.start() if boundary else len(chunk)
         segment = chunk[start:end]
@@ -220,7 +258,10 @@ def sentence_spans(chunk):
         if raw:
             begin = start + len(segment) - len(segment.lstrip())
             quotes = QUOTE_MARKS.findall(raw)
-            yield begin, begin + len(raw), bool(inside_quote or quotes or POSSIBLE_HEADING.search(raw))
+            exercise = (ITEM_LABEL.search(previous) or SLOT_AFTER.match(chunk, begin + len(raw))
+                        or (option_list and OPTION_SPAN.match(raw)))
+            yield begin, begin + len(raw), bool(inside_quote or quotes or POSSIBLE_HEADING.search(raw) or exercise)
+            previous = raw
             if len(quotes) % 2:
                 inside_quote = not inside_quote
         if boundary:

@@ -121,7 +121,7 @@ def gap_fill_card(monkeypatch):
     })
     monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
     monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
-    monkeypatch.setattr(projection.meanings, "candidates", lambda *_: {
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
         "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [],
     })
     sources = SimpleNamespace(vesum_forms=lambda _: [row], _use=lambda *_: None,
@@ -197,7 +197,7 @@ def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", target=4
     monkeypatch.setattr(projection, "ulif_candidates", lambda *_: homonyms)
     monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
     monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
-    monkeypatch.setattr(projection.meanings, "candidates", lambda *_: {
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
         "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [],
     })
     sources = SimpleNamespace(vesum_forms=lambda _: vesum_rows, _use=lambda *_: None,
@@ -210,18 +210,17 @@ def _headword_stress_card(monkeypatch, homonyms, *, lemma="абека", target=4
     return projection.card_values(sources, lemma, target, register, [], True, ulif_anchor)
 
 
-def _ulif_homonym(entry_id, head, *, candidates=(41,), stress_candidates=None, slot_form="абеку",
-                  authenticated=True):
+def _ulif_homonym(entry_id, head, *, candidates=(41,), slot_form="абеку", authenticated=True):
     replay = ({"canonical_headword": head, "content_sha256": "fixture-sha",
                "forms": [{"is_lemma": True, "form_stressed": head}]}
               if authenticated else None)
     cand_list = list(candidates) if candidates is not None else None
-    stress_list = cand_list if stress_candidates is None else (list(stress_candidates) if stress_candidates else [])
     return {
         "row": {"id": entry_id, "normalized_query": head.replace(ACUTE, ""), "canonical_headword": head,
                 "grammatical_label": "іменник жіночого роду", "homonym_index": 1,
-                "content_sha256": "fixture-sha", "sense_gloss": ""},
-        "head": head, "aspect": None, "candidates": cand_list, "stress_candidates": stress_list,
+                "homonym_checked": 1, "status": "ok", "content_sha256": "fixture-sha",
+                "raw_response_ref": "sha256:fixture-raw", "sense_gloss": ""},
+        "head": head, "aspect": None, "candidates": cand_list,
         "reason": None if authenticated else "ulif_raw_identity_mismatch",
         "raw": {}, "replay": replay,
         "paradigm": {"slots": {("v_rod", "s"): {"forms": [slot_form]}}},
@@ -247,10 +246,9 @@ def test_headword_stress_fills_when_paradigm_slots_differ(monkeypatch):
     # Paradigm-form stress keeps its stricter whole-paradigm correspondence rule.
     assert [v for v in values if v["field"] == "paradigm" and v["source_id"] == "ulif"] == []
     assert any(o["field"] == "identity" and o["reason"] == "ulif_vesum_correspondence_unresolved" for o in observations)
-    # Expanded class matches apply only to headword stress (never binding ULIF paradigm forms),
-    # and a doublet headword shows both accepted stresses in rendered HTML while ledger keeps verbatim ULIF form.
+    # A doublet headword shows both accepted stresses in rendered HTML while ledger keeps verbatim ULIF form.
     doublet = f"а{ACUTE}бе{ACUTE}ка"
-    expanded = _ulif_homonym(10, doublet, candidates=(), stress_candidates=(41,), slot_form="абеки")
+    expanded = _ulif_homonym(10, doublet, slot_form="абеку")
     _, d_values, _, d_holds = _headword_stress_card(monkeypatch, {10: expanded})
     assert "required_stress" not in d_holds
     assert [v["value"] for v in d_values if v["field"] == "stress"] == [doublet]
@@ -311,6 +309,95 @@ def test_headword_stress_carries_ulif_source_label_and_locator(monkeypatch):
     )
     html = projection.render_card({"lemma": "абека", "status": "held", "values": stress, "holds": []})
     assert "<small>ULIF DictUA</small>" in html and stressed in html
+
+
+FROZEN_HEAD = "fi" + ACUTE + "xture"
+
+
+def frozen_homonym(**changes):
+    row = {"id": 9, "normalized_query": "fixture", "canonical_headword": FROZEN_HEAD,
+           "grammatical_label": "іменник чоловічого роду", "sense_gloss": "", "homonym_index": 1,
+           "homonym_checked": 1, "status": "ok", "content_sha256": "a" * 64,
+           "raw_response_ref": "sha256:" + "b" * 64}
+    replay = {"canonical_headword": FROZEN_HEAD, "content_sha256": "a" * 64,
+              "forms": [{"is_lemma": True, "form_stressed": FROZEN_HEAD}]}
+    homonym = {"row": row, "head": FROZEN_HEAD, "aspect": None, "candidates": [41], "reason": None,
+               "paradigm": None, "forms": None, "replay": replay}
+    for key, value in changes.items():
+        (replay if key.startswith("replay_") else row)[key.removeprefix("replay_")] = value
+    return {9: homonym}, dict(row)
+
+
+def test_frozen_ulif_stress_refuses_replay_that_differs_from_the_frozen_entry():
+    """Defect class: stress copied from a ULIF entry that is not the card's frozen entry."""
+    homonyms, anchor = frozen_homonym()
+    assert projection.anchored_entry(homonyms, anchor, "fixture") == 9
+    assert projection.anchored_entry(homonyms, anchor, "Fixture") is None
+    for change in ({"content_sha256": "c" * 64}, {"raw_response_ref": "sha256:" + "d" * 64},
+                   {"homonym_index": 2}, {"replay_content_sha256": "c" * 64},
+                   {"replay_canonical_headword": "fixtu" + ACUTE + "re"},
+                   {"replay_forms": [{"is_lemma": True, "form_stressed": "fixture"}]}):
+        changed, _ = frozen_homonym(**change)
+        assert projection.anchored_entry(changed, anchor, "fixture") is None, change
+    unstressed, frozen = frozen_homonym(canonical_headword="fixture", replay_canonical_headword="fixture",
+                                        replay_forms=[{"is_lemma": True, "form_stressed": "fixture"}])
+    unstressed[9]["head"] = "fixture"
+    assert projection.anchored_entry(unstressed, frozen, "fixture") is None
+
+
+def test_vts_partition_with_a_competing_homonym_stays_held(monkeypatch):
+    """Defect class: a ВТС definition bound while another same-spelling homonym competes."""
+    part = {"text": "definition", "head": FROZEN_HEAD, "pos": "noun", "aspect": None, "reason": None,
+            "partition": "article", "locator": "vts:fixture", "row": {"dictionary_label": "ВТС"}}
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
+        "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [part]})
+    homonyms, _ = frozen_homonym()
+    rival = {**homonyms[9], "row": {**homonyms[9]["row"], "id": 10}}
+    name = {**rival, "head": "Fi" + ACUTE + "xture", "candidates": [],
+            "row": {**rival["row"], "canonical_headword": "Fi" + ACUTE + "xture",
+                    "grammatical_label": "власна назва"}}
+
+    def outcome(competitor, common):
+        added, reported = [], []
+        projection.modern_meanings(
+            None, "fixture", {**homonyms, 10: competitor}, 9, set(),
+            lambda field, source, locator, *_, **__: added.append((field, locator)),
+            lambda field, source, reason, *_: reported.append((field, source, reason)), common=common)
+        return added, [item for item in reported if item[1] == projection.VTS]
+
+    assert outcome(rival, True) == ([], [("definition_uk", projection.VTS, "unbound_partition")])
+    assert outcome(name, False) == ([], [("definition_uk", projection.VTS, "unbound_partition")])
+    assert outcome(name, True) == ([("definition_uk", "vts:fixture")], [])
+
+
+def test_frozen_entry_fills_carry_their_source_label_and_locator(monkeypatch):
+    """Defect class: a filled stress or definition without its source label and locator."""
+    homonyms, anchor = frozen_homonym()
+    part = {"text": "definition", "head": FROZEN_HEAD, "pos": "noun", "aspect": None, "reason": None,
+            "partition": "article", "locator": "vts:fixture", "row": {"dictionary_label": "ВТС label"}}
+    monkeypatch.setattr(projection, "ulif_candidates", lambda *_: homonyms)
+    monkeypatch.setattr(projection, "entry_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection, "secondary_witnesses", lambda *_: None)
+    monkeypatch.setattr(projection.meanings, "candidates", lambda *_, **__: {
+        "sum20": [], "sum20_slovnyk_mirror": [], projection.VTS: [part]})
+    row = {"id": 2, "entry_id": 41, "word_form": "fixture", "lemma": "fixture",
+           "pos": "noun", "tags": "noun:inanim:m:v_naz", "source_comment": ""}
+    sources = SimpleNamespace(vesum_forms=lambda _: [row], _use=lambda *_: None,
+                              sources=SimpleNamespace(execute=lambda *_: []))
+    register = {"sources": [
+        {"id": "vesum", "name": "VESUM", "fields_used": ["pos", "morph_tags", "word_forms"]},
+        {"id": "ulif", "name": "ULIF", "fields_used": ["stress"]},
+        {"id": VTS, "name": "ВТС", "fields_used": ["meaning"]},
+    ]}
+    _, values, observations, _ = projection.card_values(sources, "fixture", 41, register, [], True, anchor)
+    filled = [(value["field"], value["source_label"], value["locator"], value["value"], value["source_key"])
+              for value in values if value["field"] in {"stress", "definition_uk"}]
+    assert filled == [
+        ("stress", "ULIF", "ulif_dictua_entries:9/canonical_headword", FROZEN_HEAD, None),
+        ("definition_uk", "ВТС label", "vts:fixture", "definition", "article"),
+    ]
+    assert ("identity", "ulif_vesum_correspondence_unresolved") in [
+        (item["field"], item["reason"]) for item in observations]
 
 
 @pytest.fixture
@@ -505,6 +592,42 @@ def test_example_rejects_length_and_out_of_level_words_with_reason(example_searc
     assert gap.values == []
     assert reason in gap.attempts
     assert [value["value"] for value in example_search(**args, function_word=True).values] == [sentence]
+
+
+@pytest.mark.parametrize("chunk", [
+    # Layouts from the census of the full textbook pool (PR #13427 finding F4:
+    # "У середу я планую ? ." in Вашуленко, grade two, row 80494).
+    "Ми будемо сумувати ?",
+    "Ми будемо сумувати ! .",
+    "Ми будемо ___ сумувати!",
+    "Ми будемо ( ) сумувати!",
+    "Ми будемо сумувати!\n_______",
+    "Ми будемо сумувати? . . . . . 12",
+    "Ми будемо сумувати!\n?\n?",
+    "Ми будемо сумувати!\n.\n.\nРозкажи.",
+    "Ми будемо сумувати! . . . . Тема",
+    "5. Ми будемо сумувати!",
+    "107.1. Ми будемо сумувати!",
+    "63°. Ми будемо сумувати!",
+    "ІІ. Ми будемо сумувати!",
+    "25 І. Ми будемо сумувати!",
+    "Крок 2. Ми будемо сумувати!",
+    "§ 2. Ми будемо сумувати!",
+    "Я ?\n.\nМи будемо сумувати!",
+    "Б Ми будемо сумувати!",
+    "В Ми будемо сумувати!",
+    "Б Ми будемо раді.\nВ Ми будемо сумувати!\nГ Ми будемо співати.",
+])
+def test_exercise_fragment_is_not_admitted_as_an_example(example_search, chunk):
+    """Defect class: exercise fragment admitted as an example.
+
+    A detached mark, a blank, an item label, an option letter or an empty
+    answer slot marks a task item. The otherwise eligible fixture sentence
+    must stay held with the complete-sentence reason.
+    """
+    gap = example_search(text=chunk)
+    assert gap.values == []
+    assert ("textbooks", "example needs context or is not a complete sentence") in gap.attempts
 
 
 def encoded(value):
