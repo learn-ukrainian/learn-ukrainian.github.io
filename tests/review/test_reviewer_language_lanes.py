@@ -97,7 +97,13 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(
         item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
     )
-    assert not [item for item in payload["trace"] if item["family"] == "xai"]
+    # lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127) puts pinned Cursor Grok back on the medium
+    # ladder, so it is in the trace, excluded by the language lanes.
+    xai = [item for item in payload["trace"] if item["family"] == "xai"]
+    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
+    assert all(
+        item["status"] == "excluded" and "Ukrainian-content language-lanes exclusion" in item["reason"] for item in xai
+    )
     assert "grok-4.7-cursor-fallback" in REVIEW_CANDIDATES
     assert "composer-2.5" not in {item["name"] for item in payload["trace"]}
 
