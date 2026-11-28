@@ -217,8 +217,9 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     ``fixloop verdict --check`` runs) and raise instead of silently landing a stale ``APPROVE`` a
     later database write superseded (round 6 review of #8774: this generator is what CI's
     ``--check`` runs, and it used to trust the file with no freshness check at all). CI never has
-    that database — ``batch_state/`` is gitignored — so there the committed file is generated
-    locally, where this same check already ran, and CI trusts it as-is. The import of
+    that database: it configures no durable state root (no host context, no ``LU_STATE_ROOT``), so
+    there the committed file is generated locally, where this same check already ran, and CI
+    trusts it as-is. A configured but invalid state root still raises. The import of
     ``scripts.review.fixloop`` is deferred to this branch so this module's own top-level imports
     stay light enough for CI's minimal install (PyYAML + jsonschema; see the ``Plan Validate``
     step of ``.github/workflows/ci.yml``) even though, as of #8774 r6, ``fixloop``'s own import
@@ -227,8 +228,11 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     doc = _read_mapping(roots.state / slug / "module-verdict.yaml")
     if doc is None or doc.get("verdict") != "APPROVE":
         return False
+    from lu_machinery.common.repo_root import configured_state_root
     from lu_machinery.review import findings_db
 
+    if configured_state_root() is None:
+        return True
     db_file = findings_db.db_path(roots.level, repo_root=roots.repo)
     if not db_file.is_file():
         return True
