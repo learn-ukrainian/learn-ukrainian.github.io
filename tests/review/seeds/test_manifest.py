@@ -31,13 +31,22 @@ from tests.review.test_record import World
 pytestmark = pytest.mark.reads_content
 
 
+def _state_at(monkeypatch: pytest.MonkeyPatch, root: Path) -> None:
+    # lu-machinery 0.1.83 places durable state under LU_STATE_ROOT, never the root a caller passes.
+    monkeypatch.setenv("LU_STATE_ROOT", str(root))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(root / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(root / "batch_state" / "tasks"))
+
+
 @pytest.fixture
-def env(tmp_path: Path) -> Env:
+def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
+    _state_at(monkeypatch, tmp_path)
     return Env(tmp_path)
 
 
 @pytest.fixture
 def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> World:
+    _state_at(monkeypatch, tmp_path)
     return World(tmp_path, monkeypatch)
 
 
@@ -454,6 +463,7 @@ def test_a_freeze_interrupted_before_the_lock_is_completed_by_running_it_again(
     with pytest.raises(OSError, match="disk"):
         sm.freeze_confirmation(["seed-c"], env.root)
     monkeypatch.undo()
+    _state_at(monkeypatch, env.root)  # undo() also reverted the fixture's state root
     with pytest.raises(sm.MeasurementError) as caught:
         sm.verify_confirmation_lock(env.root)
     assert caught.value.code == sm.CONFIRMATION_LOCK_MISSING
@@ -514,6 +524,7 @@ def test_a_lock_naming_a_unit_with_no_record_is_invalid(env: Env) -> None:
 def test_eligibility_refuses_a_pin_in_the_measurement_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = tmp_path / "repo"
     _, doc, _ = _setup_lesson_fixture(root, monkeypatch, lesson_n=2)
+    _state_at(monkeypatch, root)
     assert pin_refusals(doc, root) == []
     env = Env(root)
     env.add(mechanical_seed("seed-a"), "first")

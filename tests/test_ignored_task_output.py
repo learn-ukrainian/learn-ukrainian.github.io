@@ -12,7 +12,7 @@ from unittest.mock import patch
 import pytest
 from lu_machinery.fleet import ignored_task_output as output
 from lu_machinery.fleet import regenerable_output as patterns
-from lu_machinery.orchestration import merge_closeout, worktree_claims, worktree_git
+from lu_machinery.orchestration import merge_closeout, task_record_store, worktree_claims, worktree_git
 
 _closeout_REAL_RUN = subprocess.run
 
@@ -152,6 +152,13 @@ def _claims_primary(tmp_path: Path) -> Path:
     return primary
 
 
+def _claims_state_at(monkeypatch: pytest.MonkeyPatch, primary: Path) -> None:
+    # lu-machinery 0.1.83 reads task records and preserved artifacts under LU_STATE_ROOT.
+    monkeypatch.setenv("LU_STATE_ROOT", str(primary))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(primary / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(primary / "batch_state" / "tasks"))
+
+
 def _claims_record(primary: Path, task_id: str, **fields: object) -> None:
     tasks = primary / "batch_state" / "tasks"
     tasks.mkdir(parents=True, exist_ok=True)
@@ -179,6 +186,9 @@ def _boundary_boundary_tree(tmp_path, monkeypatch):
     tasks = repo / "batch_state/tasks"
     tasks.mkdir(parents=True)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    # lu-machinery 0.1.83 places durable state (preserved artifacts) under LU_STATE_ROOT.
+    monkeypatch.setenv("LU_STATE_ROOT", str(repo))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(repo / "batch_state"))
     monkeypatch.setattr(worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(worktree_git, "_active_task_ids", lambda: set())
     head = _boundary_git(tree, "rev-parse", "HEAD")
@@ -479,7 +489,8 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
         destination = tasks / "archive/output-task.json"
     else:
         destination = tasks / "output-task.20261006T020000Z.archived.json"
-    original_read = Path.read_bytes
+    # lu-machinery 0.1.84 reads each listed record through task_record_store.read_regular_bytes.
+    original_read = task_record_store.read_regular_bytes
     original_glob = Path.glob
     moved = False
     staged = tasks / ".output-task.json.moving"
@@ -498,7 +509,7 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
             source.replace(staged if move == "staging" else destination)
         return original_read(path)  # The real ENOENT from a stale glob entry.
 
-    monkeypatch.setattr(Path, "read_bytes", race)
+    monkeypatch.setattr(task_record_store, "read_regular_bytes", race)
     monkeypatch.setattr(Path, "glob", finish_staging)
     assert output.resolve_worktree_record(repo, tasks, repo_root=primary, publish_cache=publish_cache) == (
         destination,
@@ -515,7 +526,7 @@ def test_unreadable_inventory_still_fails_closed_after_bounded_retry(checkout, m
     repo, primary, tasks = checkout
     source = tasks / "output-task.json"
     source.write_text(json.dumps({"worktree_path": str(repo), "keep_worktree": True}))
-    original_read = Path.read_bytes
+    original_read = task_record_store.read_regular_bytes
     reads = 0
 
     def unreadable(path):
@@ -530,7 +541,7 @@ def test_unreadable_inventory_still_fails_closed_after_bounded_retry(checkout, m
                 return b'{"keep_worktree": true,'
         return original_read(path)
 
-    monkeypatch.setattr(Path, "read_bytes", unreadable)
+    monkeypatch.setattr(task_record_store, "read_regular_bytes", unreadable)
     with pytest.raises(ValueError, match="task identity inventory unreadable"):
         output.resolve_worktree_record(repo, tasks, repo_root=primary)
     assert reads == (1 if failure == "vanished" else 2)
@@ -1070,13 +1081,14 @@ def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, mon
     assert outside_target not in published
 
 
-def test_removal_does_not_follow_symlink(tmp_path):
+def test_removal_does_not_follow_symlink(tmp_path, monkeypatch):
     from lu_machinery.orchestration import worktree_claims as claims
     _linked = _claims_linked
     _primary = _claims_primary
     _record = _claims_record
 
     primary = _primary(tmp_path)
+    _claims_state_at(monkeypatch, primary)
     tree = _linked(primary, "codex/output-task")
     (primary / ".git/info/exclude").write_text("ignored/\n")
     outside = tmp_path / "outside-dir"
@@ -1141,6 +1153,7 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     _record = _claims_record
 
     primary = _primary(tmp_path)
+    _claims_state_at(monkeypatch, primary)
     tree = _linked(primary, "codex/output-task")
     (primary / ".git/info/exclude").write_text("ignored/\n.runtime/\n.pids/\n")
     baseline = output.creation_inventory(tree, primary=primary, task_id="output-task", run_nonce="creator-run")

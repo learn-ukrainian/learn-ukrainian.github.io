@@ -399,6 +399,10 @@ def obs_env(tmp_path, monkeypatch):
     _state_cache(tmp_path / "no-state", monkeypatch)
     monkeypatch.delenv(reg.ENV_FLAG, raising=False)
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    # lu-machinery 0.1.83 reads telemetry events under LU_STATE_ROOT.
+    monkeypatch.setenv("LU_STATE_ROOT", str(tmp_path))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(tmp_path / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "batch_state" / "tasks"))
     return tmp_path
 
 
@@ -807,6 +811,10 @@ def _primary_at(monkeypatch, root) -> None:
     )
     monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
     monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
+    # lu-machinery 0.1.83 reads durable state from LU_STATE_ROOT, never from the primary anchor.
+    monkeypatch.setenv("LU_STATE_ROOT", str(root))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(root / "batch_state"))
+    monkeypatch.setenv("LU_TASKS_DIR", str(root / "batch_state" / "tasks"))
 
 
 @pytest.fixture

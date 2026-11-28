@@ -10,6 +10,7 @@ tests with credentials. Such sessions emit one warning, without values.
 ``--noconftest`` disables credential stripping, redaction and this warning together.
 """
 
+import json
 import os
 import re
 
@@ -2151,7 +2152,7 @@ def _dispatch_task_store_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
 def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Point the dispatch task store at a per-test directory (#8654).
 
-    The directory is ``<session base>/<n>/tasks``, so ``tasks_dir().parent``
+    The directory is ``<session base>/<n>/batch_state/tasks``, so ``tasks_dir().parent``
     (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
     It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
     fixture that creates a subdirectory of ``tmp_path`` breaks tests that
@@ -2160,13 +2161,60 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     itself runs after this autouse fixture, so that override wins.
     The same directory's parent becomes ``config.BATCH_STATE_DIR`` and
     ``app.state.ctx.roots.batch_state_dir``, so Monitor requests do not open
-    the live ``.task_cache.sqlite3``.
+    the live ``.task_cache.sqlite3``. ``<session base>/<n>`` is the test's durable state
+    root: lu-machinery requires the batch state directory to be ``<state root>/batch_state``.
     """
-    isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
+    state = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ))
+    isolated = state / "batch_state" / "tasks"
     isolated.mkdir(parents=True)
+    monkeypatch.setenv("LU_STATE_ROOT", str(state))
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
     monkeypatch.setenv("LU_TASKS_DIR", str(isolated))
     _retarget_api_batch_state(monkeypatch, isolated.parent)
     return isolated
+
+
+@pytest.fixture
+def scratch_host_binding(_isolate_dispatch_task_store: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
+    """Opt-in state-role host binding at this test's own state root.
+
+    lu-machinery renders a native hook command (``agy_hook_config.native_hook_command``) with the
+    machinery interpreter its host binding names. This scratch binding names the test's state root
+    and the running interpreter, the release's loader validates it, and its interpreter is the one
+    every render here uses. The host's own binding file is never read (``pytest_configure``).
+    Mirrors machinery's ``bind_registration_runtime``.
+    """
+    from importlib.metadata import version
+
+    from lu_machinery import host_context
+    from lu_machinery.agent_runtime import agy_hook_config
+
+    state = _isolate_dispatch_task_store.parent.parent.resolve()
+    state.chmod(0o700)
+    python = str(Path(sys.executable))
+    binding = state.with_name(f"{state.name}-host.v1.json")
+    binding.write_text(
+        json.dumps(
+            {
+                "schema": host_context.SCHEMA,
+                "state_root": str(state),
+                "runtime": {"python": python, "lu_machinery": version("lu-machinery"), "wheel_sha256": "0" * 64},
+                "repos": {"machinery": str(state / "machinery"), "public": str(state / "learn-ukrainian")},
+                "products": {"public": {"repo": "public", "python": python}},
+                "default_product": "public",
+                "private_tools": {},
+                "cto": {"workspace": str(state / "cto"), "starter": str(state / "cto/start"), "config_dir": str(state)},
+                "selector_file": str(state / "selector.yaml"),
+                "monitor_url": "http://127.0.0.1:9",
+            }
+        ),
+        encoding="utf-8",
+    )
+    binding.chmod(0o600)
+    context = host_context.load_host_context(role="state", env={host_context.CONTEXT_ENV: str(binding)})
+    monkeypatch.setattr(agy_hook_config, "hook_interpreter", lambda: context.runtime.python)
+    monkeypatch.setattr(agy_hook_config, "configure_native_hook_roots", host_context.invocation_checkout)
+    return context
 
 
 @pytest.fixture(autouse=True)
@@ -3076,6 +3124,24 @@ def pytest_configure_node(node: Any) -> None:
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    # lu-machinery reads durable state only from the host binding or LU_STATE_ROOT. The binding
+    # file (host_context.DEFAULT_PATH) exists only on bound hosts and CI has none, so the suite
+    # points the default at a path that is never created and drops an inherited LU_HOST_CONTEXT,
+    # for collection, fixtures and tests alike; a test that needs a binding writes its own
+    # scratch file. An unset LU_STATE_ROOT becomes the primary anchor the suite already uses.
+    # This MonkeyPatch is not the per-test one, so a test's monkeypatch.undo() cannot restore the
+    # live path. Child processes still read the host's file.
+    from lu_machinery import host_context
+
+    host_env = pytest.MonkeyPatch()
+    config.add_cleanup(host_env.undo)
+    host_binding_dir = tempfile.TemporaryDirectory(prefix="host-binding-")
+    config.add_cleanup(host_binding_dir.cleanup)
+    host_env.delenv(host_context.CONTEXT_ENV, raising=False)
+    host_env.setattr(host_context, "DEFAULT_PATH", Path(host_binding_dir.name) / "host.v1.json")
+    anchor = (os.environ.get("LU_PRIMARY_REPO_ROOT") or os.environ.get("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT") or "").strip()
+    if not os.environ.get("LU_STATE_ROOT", "").strip() and anchor:
+        host_env.setenv("LU_STATE_ROOT", anchor)
     config.pluginmanager.register(
         _TelemetryIsolation(
             tuple(

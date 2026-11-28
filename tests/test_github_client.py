@@ -1163,6 +1163,7 @@ def test_real_cli_transport_uses_conditional_headers_and_preserves_frozen_body(t
 
 # The installed release anchors its disk cache on the configured primary checkout, never on its own location.
 PRIMARY_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+STATE_ROOT_ENV = "LU_STATE_ROOT"
 
 
 @pytest.fixture
@@ -1176,6 +1177,8 @@ def module_repository(tmp_path, monkeypatch):
     canonical = tmp_path / "canonical"
     subprocess.run(["git", "init", str(canonical)], check=True, capture_output=True, timeout=30)
     monkeypatch.setenv(PRIMARY_ROOT_ENV, str(canonical))
+    # lu-machinery 0.1.83 anchors durable state on LU_STATE_ROOT, which may name a primary checkout.
+    monkeypatch.setenv(STATE_ROOT_ENV, str(canonical))
     return canonical
 
 
@@ -1218,6 +1221,7 @@ def test_disk_cache_uses_the_configured_primary_checkout_state(module_repository
             (gitdir / "commondir").write_text(str(canonical / ".git"))
         # A linked worktree configured as the anchor is refused: the cache stays in memory.
         monkeypatch.setenv(PRIMARY_ROOT_ENV, str(worktree))
+        monkeypatch.setenv(STATE_ROOT_ENV, str(worktree))
         assert gh._cache_directory() is None
         assert not (worktree / "batch_state").exists()
 
@@ -1261,6 +1265,12 @@ def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path,
     root = tmp_path / "plain"
     root.mkdir()
     monkeypatch.setenv(PRIMARY_ROOT_ENV, str(root))
+    # lu-machinery 0.1.83 accepts a plain directory as LU_STATE_ROOT, so "plain" configures no state
+    # root at all; each damaged .git marker is configured and refused.
+    if layout == "plain":
+        monkeypatch.delenv(STATE_ROOT_ENV, raising=False)
+    else:
+        monkeypatch.setenv(STATE_ROOT_ENV, str(root))
     marker = root / ".git"
     if layout in {"invalid-gitfile", "unreadable"}:
         marker.write_text("invalid gitfile\n")

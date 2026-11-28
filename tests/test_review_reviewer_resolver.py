@@ -392,14 +392,12 @@ def test_invalid_or_conflicting_author_identity_fails_closed():
 
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
-    # #9394: OpenAI author gets Opus at critical; #9538: high is Opus too;
-    # the practical defaults at medium and low remain Sonnet.
-    for risk in ("critical", "high"):
+    # #9394: OpenAI author gets Opus at critical; #9538: high is Opus too. lu-machinery 0.1.84
+    # (REVIEW-ROTATION-GROK-1127): Opus is in the rotation group at medium and low too, ahead of
+    # the Sonnet fallback, so the OpenAI author gets Opus at every risk.
+    for risk in ("critical", "high", "medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk, claude_account=HOST_ACCOUNT))
         assert resolution.selected.name == "claude-opus-5-5", risk
-    for risk in ("medium", "low"):
-        resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk, claude_account=HOST_ACCOUNT))
-        assert resolution.selected.name == "claude-sonnet-5-5", risk
 
 
 @pytest.mark.parametrize("author_model", ("gpt-6.2-sol", "grok-4.7"))
@@ -499,9 +497,10 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
     assert resolution.selected.health == "degraded"
 
 
-def test_medium_risk_uses_sonnet_and_omits_retired_pool():
+def test_medium_risk_uses_the_rotation_and_omits_retired_pool():
+    # lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127): Sonnet is only the fallback below the group.
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert "pool" not in {entry.name for entry in resolution.trace}
 
 
@@ -530,7 +529,7 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert resolution.selected.health in {None, "healthy"}
 
 
@@ -542,8 +541,8 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
             routing_snapshot={"codex": "unhealthy", "cursor": "healthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    # Practical ladder: Astra dark → Sonnet 5.5 (Claude healthy by default).
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    # Rotation group (lu-machinery 0.1.84): Sol unhealthy, so Opus is next (Claude healthy by default).
+    assert resolution.selected.name == "claude-opus-5-5"
     terra = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "unhealthy" in terra.reason
@@ -560,7 +559,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert resolution.selected.health == "healthy"
     assert resolution.selected.capacity.freshness == credit_lane.UNKNOWN
 
@@ -604,7 +603,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
             routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    assert unhealthy.selected.name == "claude-sonnet-5-5"
+    assert unhealthy.selected.name == "claude-opus-5-5"
 
     invalid = resolve_reviewer(
         ResolverInputs(
@@ -626,7 +625,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
             routing_snapshot={"agy": "pre_launch", "grok": "near_cap", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    assert pre_launch.selected.name == "claude-sonnet-5-5"
+    assert pre_launch.selected.name == "claude-opus-5-5"
     assert pre_launch.selected.health is None
 
     unknown = resolve_reviewer(
@@ -637,7 +636,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5-5"
+    assert unknown.selected.name == missing.selected.name == "claude-opus-5-5"
     assert unknown.substitution_note is None
 
 
@@ -781,8 +780,12 @@ def test_same_tier_balancing_is_stable_and_yaml_order_independent(practical_astr
 
     assert forward.selected is not None
     assert forward.selected.name == reverse.selected.name
-    assert forward.selected.selection_score == reverse.selected.selection_score
-    assert forward.selected.selection_score is not None
+    # lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127): the score is (recent reviews, rung index,
+    # candidate index); catalog position breaks only a remaining tie, so the pick and its count
+    # and rung agree in both orders and the index is the pick's own position in each ladder.
+    assert forward.selected.selection_score[:2] == reverse.selected.selection_score[:2]
+    assert forward.selected.selection_score[2] == [c.name for c in (PRACTICAL_ASTRA, sonnet)].index(forward.selected.name)
+    assert reverse.selected.selection_score[2] == [c.name for c in (sonnet, PRACTICAL_ASTRA)].index(reverse.selected.name)
 
 
 def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(practical_astra):
@@ -1102,21 +1105,23 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 
 
 @pytest.mark.parametrize("risk", ["medium", "low"])
-def test_ladders_end_the_frontier_rungs_with_opus(risk):
+def test_ladders_put_the_rotation_group_before_the_sonnet_fallback(risk):
     ladder = REVIEW_LADDERS[risk]
-    # No Claude model reviews through Cursor (D-129, #10464), and the Cursor Grok rung retired
-    # (GROK-CANCEL-1110): Opus on AGY is the last frontier rung.
-    assert [rung[0].name for rung in ladder[:4]] == [
-        "openai_frontier_b",
-        "openai_frontier",
-        "claude-opus-5-5",
-        "claude-opus-5-5-agy",
+    # lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127): Sol, Opus, Neon and pinned Cursor Grok are
+    # one rung, and Sonnet is the fallback rung after it. No Claude model reviews through Cursor
+    # (D-129, #10464): the only Cursor candidate is xAI Grok.
+    assert [[c.name for c in rung] for rung in ladder] == [
+        [
+            "openai_frontier_b",
+            "openai_frontier",
+            "claude-opus-5-5",
+            "claude-opus-5-5-agy",
+            "gemini-4-neon-high",
+            "grok-4.7-cursor-fallback",
+        ],
+        ["claude-sonnet-5-5", "claude-sonnet-5-5-agy"],
     ]
-    assert "grok-4.7-cursor-fallback" not in {c.name for rung in ladder for c in rung}
-    assert ladder[4][0].name == "claude-sonnet-5-5"
-    assert ladder[5][0].name == "claude-sonnet-5-5-agy"
-    assert ladder[6][0].name == "gemini-4-neon-high"
-    assert len(ladder) == 7
+    assert [c.family for rung in ladder for c in rung if c.transport == "cursor"] == ["xai"]
     assert "muse" not in {c.name for rung in ladder for c in rung}
     assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
@@ -1342,10 +1347,13 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
             claude_account=HOST_ACCOUNT,
         )
     )
-    # No Cursor-transport reviewer remains (GROK-CANCEL-1110); native seats are not subject-excluded.
+    # The Cursor subject seat excludes the Cursor transport (pinned Grok, back on the ladder in
+    # lu-machinery 0.1.84) and nothing else; native seats are not subject-excluded.
     native = next(entry for entry in resolution.trace if entry.name == "claude-opus-5-5")
     assert "subject exclusion" not in (native.reason or "")
-    assert all(entry.transport != "cursor" for entry in resolution.trace)
+    cursor = [entry for entry in resolution.trace if entry.transport == "cursor"]
+    assert [entry.name for entry in cursor] == ["grok-4.7-cursor-fallback"]
+    assert all(entry.status == "excluded" and "subject exclusion" in (entry.reason or "") for entry in cursor)
     assert "composer-2.5" not in {entry.name for entry in resolution.trace}
 
 
@@ -1639,22 +1647,18 @@ _AUTHOR_MODELS = {
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_every_author_family_risk_profile_pick(family, author, risk, profile):
-    if risk == "critical":
-        expected = "gpt-6.2-sol" if family == "anthropic" else "claude-opus-5-5"
-    elif risk == "high":
-        expected = (
-            "gpt-6.2-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
-        )
-    else:
-        expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.2-sol"
+    # lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127): with no recent reviews the rotation group's
+    # catalog order decides, so Sol reviews every family but its own and Opus reviews OpenAI.
+    expected = "claude-opus-5-5" if family == "openai" else "gpt-6.2-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, claude_account=HOST_ACCOUNT))
     assert resolution.fail_closed_reason is None
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.family != family
 
 
-# This matrix isolated the Grok fallback; with Grok retired (GROK-CANCEL-1110) every
-# authorities-down state fails closed. Gemini fallback is covered separately.
+# This matrix isolates the Grok fallback: with every authority down, pinned Cursor Grok
+# (REVIEW-ROTATION-GROK-1127, lu-machinery 0.1.84) is the remaining reviewer below critical.
+# Gemini fallback is covered separately.
 _AUTHORITY_DOWN = {
     "agy": "unhealthy",
     "codex": "unhealthy",
@@ -1683,16 +1687,13 @@ _AUTHORITY_DOWN = {
 def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
     """Whole-ladder choices preserve other models' suitability at every risk."""
     if fallback:
-        # No Cursor Grok fallback remains, so no reviewer is selected.
-        expected = None
-    elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
-        expected = "openai_frontier"
-    elif risk == "critical" or (risk == "high" and (author == "gpt-6.2-sol" or profile == "infra")):
-        expected = "claude-opus-5-5"
-    elif author == "gpt-6.2-sol":
-        expected = "claude-sonnet-5-5"
+        # Cursor Grok holds no critical_review, never reviews its own xAI family, and the Cursor
+        # transport never reviews Moonshot (Cursor Composer lineage) work.
+        grok = risk != "critical" and state != "all-down" and author not in {"grok-4.7", "kimi-code/k3"}
+        expected = "grok-4.7-cursor-fallback" if grok else None
     else:
-        expected = "openai_frontier"
+        # The rotation group's catalog order decides with no recent reviews: Sol, else Opus.
+        expected = "claude-opus-5-5" if author == "gpt-6.2-sol" else "openai_frontier"
     if state == "native-near-cap":
         snapshot = {
             "agents": {route: {"status": status} for route, status in snapshot.items()},
@@ -1742,14 +1743,17 @@ def test_grok_critical_review_pin_fails_the_risk_gate(candidate, profile):
 
 
 _SOL_OPUS = {"gpt-6.2-sol", "claude-opus-5-5"}
-# Neon is the last HIGH rung (code profile only; lu-machinery 0.1.40): it reviews only when Sol and Opus cannot.
+# Neon follows Sol and Opus in the HIGH rotation group's catalog order: with no recent reviews it
+# reviews only when Sol and Opus cannot.
 _HIGH_REVIEWERS = _SOL_OPUS | {"gemini-4-neon"}
+# lu-machinery 0.1.84 (REVIEW-ROTATION-GROK-1127) adds pinned Cursor Grok to the HIGH group.
 _HIGH_SEATS = {
     "openai_frontier_b",
     "openai_frontier",
     "claude-opus-5-5",
     "claude-opus-5-5-agy",
     "gemini-4-neon-high",
+    "grok-4.7-cursor-fallback",
 }
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
 # (author, Sol state, profile) -> expected concrete reviewer (excluding the two
@@ -1758,11 +1762,7 @@ _HIGH_DENOMINATOR = {
     (author, sol, profile): (
         ("gpt-6.2-sol" if sol == "healthy" else "gemini-4-neon")
         if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
-        else (
-            "gpt-6.2-sol"
-            if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" and profile == "code"
-            else "claude-opus-5-5"
-        )
+        else ("gpt-6.2-sol" if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" else "claude-opus-5-5")
     )
     for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.2-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
     for sol in ("healthy", "unavailable")
@@ -1773,7 +1773,7 @@ _HIGH_DENOMINATOR = {
 
 @pytest.mark.parametrize("key", sorted(_HIGH_DENOMINATOR))
 def test_high_risk_resolves_to_sol_or_opus(key):
-    """The denominator admits Sol and Opus, then Neon on the code profile; the Cursor Grok transport (#9769) retired (GROK-CANCEL-1110)."""
+    """The denominator selects Sol and Opus, then Neon; pinned Cursor Grok is in the HIGH group (lu-machinery 0.1.84)."""
     author, sol, profile = key
     snapshot = _SOL_UNAVAILABLE if sol == "unavailable" else None
     resolution = resolve_reviewer(
@@ -2146,8 +2146,11 @@ def test_complete_set_with_an_unresolved_member_fails_closed(families, author_mo
 
 def test_cursor_auto_member_keeps_cursor_transport_restrictions():
     resolution = _complete({"openai", "cursor"})
-    # No Cursor-transport reviewer remains (GROK-CANCEL-1110), so none can review Cursor-authored work.
-    assert all(entry.transport != "cursor" for entry in resolution.trace)
+    # The Cursor transport (pinned Grok, back on the ladder in lu-machinery 0.1.84) never reviews
+    # Cursor-authored work.
+    cursor = [entry for entry in resolution.trace if entry.transport == "cursor"]
+    assert [entry.name for entry in cursor] == ["grok-4.7-cursor-fallback"]
+    assert all(entry.status == "excluded" for entry in cursor)
     assert resolution.selected.family == "anthropic"
 
 

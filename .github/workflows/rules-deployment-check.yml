@@ -70,9 +70,47 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      # The checkout is its own primary, so the package script's default
-      # interpreter anchor (the checkout) resolves .venv/bin/python through
-      # scripts/pre_commit/project_python.sh with its usual validation.
+      # scripts/pre_commit/project_python.sh and the deployer read the
+      # machinery.host.v1 binding. A runner has no host binding file, so the job
+      # binds this checkout through LU_HOST_CONTEXT with the state-role shape the
+      # release's consumer probe uses: the checkout's .venv is both the machinery
+      # runtime and the product interpreter.
+      - name: Bind the job's host context
+        run: |
+          set -euo pipefail
+          state="$RUNNER_TEMP/lu-host-state"
+          binding="$RUNNER_TEMP/host.v1.json"
+          install -d -m 700 "$state"
+          .venv/bin/python -I - "$binding" "$state" "$PWD" <<'PY'
+          import importlib.metadata, json, sys, tomllib
+          binding, state, root = sys.argv[1:4]
+          python = f"{root}/.venv/bin/python"
+          with open(f"{root}/uv.lock", "rb") as stream:
+              (package,) = [p for p in tomllib.load(stream)["package"] if p["name"] == "lu-machinery"]
+          unused = f"{state}-unused"
+          context = {
+              "schema": "machinery.host.v1",
+              "state_root": state,
+              "runtime": {
+                  "python": python,
+                  "lu_machinery": importlib.metadata.version("lu-machinery"),
+                  "wheel_sha256": package["wheels"][0]["hash"].removeprefix("sha256:"),
+              },
+              "repos": {"machinery": root},
+              "products": {"public": {"repo": "machinery", "python": python}},
+              "default_product": "public",
+              "private_tools": {},
+              "cto": {"workspace": unused, "starter": f"{unused}/start", "config_dir": unused},
+              "selector_file": f"{unused}/selector.yaml",
+              "monitor_url": "http://127.0.0.1",
+          }
+          with open(binding, "x", encoding="utf-8") as stream:
+              json.dump(context, stream)
+          PY
+          chmod 600 "$binding"
+          printf 'LU_HOST_CONTEXT=%s\nLU_PYTHON=%s\n' "$binding" "$PWD/.venv/bin/python" >> "$GITHUB_ENV"
+          LU_HOST_CONTEXT="$binding" .venv/bin/python -I -m lu_machinery.host_context check --role state
+
       - name: Deploy agent files from the installed release
         run: npm run --silent --if-present=false --script-shell=/bin/sh agents:deploy
 
@@ -80,12 +118,12 @@ jobs:
         run: |
           set -euo pipefail
           check=(scripts/pre_commit/project_python.sh -I -m lu_machinery.agent_deploy --project-root "$PWD" --check)
-          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" "${check[@]}"
+          "${check[@]}"
           second="$(npm run --silent --if-present=false --script-shell=/bin/sh agents:deploy)"
           printf '%s\n' "$second"
           [[ "$second" == *"; 0 changes" ]] || { echo "::error::a second deploy changed outputs"; exit 1; }
           # The pre-push gate verifies deployed files against the outgoing commit.
-          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" "${check[@]}" --print-manifest --inputs-commit "$(git rev-parse HEAD)" >/dev/null
+          "${check[@]}" --print-manifest --inputs-commit "$(git rev-parse HEAD)" >/dev/null
 
 # The installed release resolves its consumer explicitly.
 env:

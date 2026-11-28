@@ -909,10 +909,14 @@ def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
 
 
 def guard_name(command):
-    """The guard file a hook command runs: a guard path, or a native ``claude-<guard>`` hook mode."""
-    if "lu-machinery-hook-v1" in command:
-        mode = command.rsplit("lu-machinery-hook-v1", 1)[1].split()[0]
-        return "audit-primary-checkout-dirt.py" if mode == "claude-audit-hook" else mode.removeprefix("claude-") + ".py"
+    """The guard file a hook command runs: a guard path, or a native ``claude-<guard>`` hook mode.
+
+    The mode follows a v2 declaration (the tracked source) or a v1 rendered command (baselines).
+    """
+    for marker in ("lu-machinery-hook-v2", "lu-machinery-hook-v1"):
+        if marker in command:
+            mode = command.rsplit(marker, 1)[1].split()[0]
+            return "audit-primary-checkout-dirt.py" if mode == "claude-audit-hook" else mode.removeprefix("claude-") + ".py"
     return Path(command).name
 
 
@@ -977,10 +981,14 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
         on_ladder = {name for rung in ladders[risk] for name in rung}
         assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
         assert "claude-opus-5-5" in on_ladder, risk
-        assert not [name for name in on_ladder if candidates[name]["transport"] == "cursor"], risk
+        # REVIEW-ROTATION-GROK-1127: the only Cursor reviewer is pinned xAI Grok, below critical.
+        on_cursor = {candidates[name]["model_id"] for name in on_ladder if candidates[name]["transport"] == "cursor"}
+        assert on_cursor == (set() if risk == "critical" else {"grok-4.7"}), risk
     for risk in ("low", "medium", "high", "critical"):
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
-        assert not [route for route in routes if route.endswith("/cursor_fallback")]
+        cursor_routes = [route for route in routes if route.endswith("/cursor_fallback")]
+        assert cursor_routes == ([] if risk == "critical" else ["xai_reviewer/cursor_fallback"]), risk
+    assert catalog["models"]["grok-4.7"]["routing_wire_ids"]["cursor"] == "grok-4.7-high"
     assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
     assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
     opus = catalog["models"]["claude-opus-5-5"]

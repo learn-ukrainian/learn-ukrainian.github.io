@@ -17,9 +17,10 @@ host-local state, read-only:
    least one ``ok`` receipt of this review attempt.
 
 Each failure names what is missing. The database, task records and receipt ledger are
-host-local state (the primary checkout's ``batch_state``) and never in the repository, so
-a checkout without them (CI) cannot run this check: ``ReviewStateUnavailable`` says so,
-and the caller decides whether that is declared.
+host-local state (``batch_state`` under the host's configured durable state root) and never
+in the repository, so a host without them, or with no state root configured at all (CI),
+cannot run this check: ``ReviewStateUnavailable`` says so, and the caller decides whether
+that is declared.
 """
 
 from __future__ import annotations
@@ -51,11 +52,14 @@ def check_review_binding(
 ) -> dict[str, Any]:
     """Raise ``PlanReviewError(review_unbound)`` naming what is missing, else return the binding.
 
-    The findings database defaults to the one the recorder writes for ``root``; dispatch
-    records to the dispatcher's task store (``task_store_paths.tasks_dir``), whose sibling
-    ``review-receipts`` holds the attempt ledger dispatch claimed. Raises
-    ``ReviewStateUnavailable`` when this host has no findings database for the level.
+    The findings database defaults to the one the recorder writes (``findings_db.db_path``,
+    under the configured durable state root); dispatch records to the dispatcher's task store
+    (``task_store_paths.tasks_dir``), whose sibling ``review-receipts`` holds the attempt
+    ledger dispatch claimed. Raises ``ReviewStateUnavailable`` when this host has no findings
+    database for the level, including when no state root is configured. An invalid state
+    configuration still raises.
     """
+    from lu_machinery.common.repo_root import configured_state_root
     from lu_machinery.common.task_store_paths import tasks_dir as dispatch_tasks_dir
     from lu_machinery.lib.readonly_sqlite import open_readonly
     from lu_machinery.orchestration.task_record_store import relocated_result_file
@@ -66,6 +70,12 @@ def check_review_binding(
     from scripts.review.receipts import ledger
 
     root = Path(root).resolve()
+    if db_path is None and configured_state_root() is None:
+        raise ReviewStateUnavailable(
+            REVIEW_STATE_UNAVAILABLE,
+            f"no durable state root is configured on this host (no host context, no LU_STATE_ROOT), so "
+            f"there is no findings database for {level}; the plan review's dispatch binding cannot be checked",
+        )
     database = Path(db_path) if db_path is not None else findings_db.db_path(level, root)
     tasks = Path(tasks_dir) if tasks_dir is not None else dispatch_tasks_dir()
     if not database.is_file():

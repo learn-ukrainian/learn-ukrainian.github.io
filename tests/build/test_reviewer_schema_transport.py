@@ -29,7 +29,8 @@ from scripts.build import linear_pipeline as linear
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.helpers.codex_exec_stream import agent_message, completed_stream
 
-pytestmark = pytest.mark.reads_content
+# Native AGY hook rendering reads the host binding (conftest scratch_host_binding).
+pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("scratch_host_binding")]
 
 ROOT = Path(__file__).resolve().parents[2]
 ROUTES = ("claude", "codex", "gemini", "grok", "cursor", "deepseek", "glm", "agy", "acpx_agy")
@@ -102,7 +103,8 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
         # Binary lookup is the shared resolver; which() still stubs the other adapters.
         monkeypatch.setattr(module, "resolve_cursor_agent_binary", lambda: "/usr/bin/cursor-agent")
     else:
-        monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
+        # lu-machinery 0.1.83 passes which() its own search path.
+        monkeypatch.setattr(module.shutil, "which", lambda command, path=None: f"/usr/bin/{command}")
     if route == "claude":
         monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", lambda _: (2, 1, 200))
     if route == "deepseek":

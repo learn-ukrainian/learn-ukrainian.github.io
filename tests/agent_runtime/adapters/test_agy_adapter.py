@@ -19,8 +19,11 @@ CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
 
 
 @pytest.fixture(autouse=True)
-def valid_hook_files_for_existing_adapter_fixtures(tmp_path, monkeypatch, request):
-    """Existing adapter cases now include real valid wiring in disposable homes."""
+def valid_hook_files_for_existing_adapter_fixtures(tmp_path, monkeypatch, request, scratch_host_binding):
+    """Existing adapter cases now include real valid wiring in disposable homes.
+
+    Native AGY hook rendering reads the host binding (conftest ``scratch_host_binding``).
+    """
     from lu_machinery.agent_runtime import agy_hook_config as hooks
 
     if request.node.name.startswith("test_hook_gate_"):
@@ -2256,7 +2259,7 @@ def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape
 )
 def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
     from lu_machinery.agent_runtime import agy_hook_config as hooks
-    from lu_machinery.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path, main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
 
     cwd = tmp_path / "worker"
     cwd.mkdir()
@@ -2304,13 +2307,9 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
     fake = _fake_agy(tmp_path, monkeypatch, "2.0.0")
     monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
     calls = []
-    real_run = agy_module.subprocess.run
-    root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
-                    str(machinery_path("lib/project_interpreter.sh"))]
 
+    # The host binding, not a hook-roots shell child, supplies the hook roots (lu-machinery 0.1.83).
     def probe(argv, **kwargs):
-        if argv == root_command:
-            return real_run(argv, **kwargs)
         assert argv == [str(fake), "--version"], "unexpected provider subprocess"
         calls.append(argv)
         return __import__("subprocess").CompletedProcess(argv, 0, "2.0.0", "")

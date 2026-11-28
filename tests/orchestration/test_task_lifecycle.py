@@ -1253,6 +1253,12 @@ def test_carrier_preserves_identity_ac_snapshot_and_remaining_scope(
     assert path.name == "issue-42.json"
 
 
+def _state_in_repo(monkeypatch: pytest.MonkeyPatch, repo: Path) -> None:
+    # lu-machinery 0.1.83 inspects the canonical state root (LU_STATE_ROOT), here the test's own repository.
+    monkeypatch.setenv("LU_STATE_ROOT", str(repo))
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(repo / "batch_state"))
+
+
 def test_local_git_observation_cross_checks_exact_worktree_branch(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1260,6 +1266,7 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
         monkeypatch.delenv(name, raising=False)
     repo = tmp_path / "repo"
     subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True, timeout=30)
+    _state_in_repo(monkeypatch, repo)
     subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True, timeout=30)
     subprocess.run(
         ["git", "-C", str(repo), "config", "user.email", "test@example.com"],
@@ -1459,6 +1466,7 @@ def test_real_git_rejects_throwaway_signed_publisher_merge(
     monkeypatch.setenv("GNUPGHOME", str(key_home))
     repo = tmp_path / "repo"
     repo.mkdir()
+    _state_in_repo(monkeypatch, repo)
     gpg = shutil.which("gpg")
     assert gpg is not None
 
@@ -1557,6 +1565,7 @@ def test_local_git_commit_attribution(
         monkeypatch.delenv(name, raising=False)
     repo = tmp_path / "repo"
     repo.mkdir()
+    _state_in_repo(monkeypatch, repo)
 
     def git(*args: str, message: str | None = None) -> str:
         return subprocess.run(
@@ -3174,6 +3183,7 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
         monkeypatch.delenv(name, raising=False)
     repo = tmp_path / "rename-repo"
     repo.mkdir()
+    _state_in_repo(monkeypatch, repo)
 
     def git(*args: str) -> str:
         return subprocess.run(
