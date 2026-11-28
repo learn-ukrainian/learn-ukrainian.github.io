@@ -12,7 +12,7 @@ from unittest.mock import patch
 import pytest
 from lu_machinery.fleet import ignored_task_output as output
 from lu_machinery.fleet import regenerable_output as patterns
-from lu_machinery.orchestration import merge_closeout, worktree_claims, worktree_git
+from lu_machinery.orchestration import merge_closeout, task_record_store, worktree_claims, worktree_git
 
 _closeout_REAL_RUN = subprocess.run
 
@@ -489,7 +489,8 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
         destination = tasks / "archive/output-task.json"
     else:
         destination = tasks / "output-task.20261006T020000Z.archived.json"
-    original_read = Path.read_bytes
+    # lu-machinery 0.1.84 reads each listed record through task_record_store.read_regular_bytes.
+    original_read = task_record_store.read_regular_bytes
     original_glob = Path.glob
     moved = False
     staged = tasks / ".output-task.json.moving"
@@ -508,7 +509,7 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
             source.replace(staged if move == "staging" else destination)
         return original_read(path)  # The real ENOENT from a stale glob entry.
 
-    monkeypatch.setattr(Path, "read_bytes", race)
+    monkeypatch.setattr(task_record_store, "read_regular_bytes", race)
     monkeypatch.setattr(Path, "glob", finish_staging)
     assert output.resolve_worktree_record(repo, tasks, repo_root=primary, publish_cache=publish_cache) == (
         destination,
@@ -525,7 +526,7 @@ def test_unreadable_inventory_still_fails_closed_after_bounded_retry(checkout, m
     repo, primary, tasks = checkout
     source = tasks / "output-task.json"
     source.write_text(json.dumps({"worktree_path": str(repo), "keep_worktree": True}))
-    original_read = Path.read_bytes
+    original_read = task_record_store.read_regular_bytes
     reads = 0
 
     def unreadable(path):
@@ -540,7 +541,7 @@ def test_unreadable_inventory_still_fails_closed_after_bounded_retry(checkout, m
                 return b'{"keep_worktree": true,'
         return original_read(path)
 
-    monkeypatch.setattr(Path, "read_bytes", unreadable)
+    monkeypatch.setattr(task_record_store, "read_regular_bytes", unreadable)
     with pytest.raises(ValueError, match="task identity inventory unreadable"):
         output.resolve_worktree_record(repo, tasks, repo_root=primary)
     assert reads == (1 if failure == "vanished" else 2)
