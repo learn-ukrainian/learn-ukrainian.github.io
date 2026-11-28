@@ -898,7 +898,7 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
-    """C-5307 restores Grok coding and Cursor review without admitting Ukrainian review."""
+    """REVIEW-ROTATION-GROK-1127 admits code/infra review below critical without admitting Ukrainian review."""
     source = Path(__file__).resolve().parents[2]
     catalog = yaml.safe_load(machinery_path("config/model_catalog.yaml").read_text(encoding="utf-8"))
     assert "ukrainian_review" not in catalog["models"]["grok-4.7"]["roles"]
@@ -981,10 +981,15 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
         on_ladder = {name for rung in ladders[risk] for name in rung}
         assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
         assert "claude-opus-5-5" in on_ladder, risk
-        assert not [name for name in on_ladder if candidates[name]["transport"] == "cursor"], risk
+        # REVIEW-ROTATION-GROK-1127: pinned Cursor Grok below critical only.
+        assert [name for name in on_ladder if candidates[name]["transport"] == "cursor"] == (
+            [] if risk == "critical" else ["grok-4.7-cursor-fallback"]
+        ), risk
     for risk in ("low", "medium", "high", "critical"):
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
-        assert not [route for route in routes if route.endswith("/cursor_fallback")]
+        assert [route for route in routes if route.endswith("/cursor_fallback")] == (
+            [] if risk == "critical" else ["xai_reviewer/cursor_fallback"]
+        )
     assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
     assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
     opus = catalog["models"]["claude-opus-5-5"]
